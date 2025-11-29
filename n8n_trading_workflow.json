@@ -1,0 +1,271 @@
+{
+  "name": "Trading Agent Daily Analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9,
+              "triggerAtMinute": 35
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Daily 9:35 AM Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [0, 0],
+      "notes": "Runs 5 minutes after market open (9:30 AM ET)"
+    },
+    {
+      "parameters": {
+        "command": "cd /path/to/trading_agent && python run_daily_analysis.py --output /tmp/analysis_result.json --quiet && cat /tmp/analysis_result.json"
+      },
+      "id": "run-analysis",
+      "name": "Run Python Analysis",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [220, 0],
+      "notes": "UPDATE: Change /path/to/trading_agent to your actual path"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the analysis results\nconst output = $input.first().json.stdout;\nconst results = JSON.parse(output);\n\n// Extract opportunities\nconst opportunities = results.opportunities || [];\nconst summary = results.summary || {};\n\nreturn {\n  json: {\n    run_id: results.run_id,\n    timestamp: results.timestamp,\n    status: results.status,\n    has_opportunities: opportunities.length > 0,\n    buy_count: summary.buy_signals || 0,\n    total_investment: summary.total_investment_recommended || 0,\n    opportunities: opportunities,\n    summary: summary,\n    portfolio: results.portfolio || {}\n  }\n};"
+      },
+      "id": "parse-results",
+      "name": "Parse Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.has_opportunities }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-opportunities",
+      "name": "Has Opportunities?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "fromEmail": "your-email@gmail.com",
+        "toEmail": "your-email@gmail.com",
+        "subject": "🚨 Trading Alert: {{ $json.buy_count }} Buy Signals Found",
+        "emailType": "html",
+        "html": "<h2>Trading Agent Alert</h2>\n<p><strong>Run ID:</strong> {{ $json.run_id }}</p>\n<p><strong>Time:</strong> {{ $json.timestamp }}</p>\n\n<h3>Summary</h3>\n<ul>\n  <li>Opportunities Found: <strong>{{ $json.buy_count }}</strong></li>\n  <li>Total Investment: <strong>${{ $json.total_investment }}</strong></li>\n  <li>Portfolio Value: ${{ $json.portfolio.total_value }}</li>\n</ul>\n\n<h3>Opportunities</h3>\n<table border=\"1\" cellpadding=\"8\">\n  <tr>\n    <th>Symbol</th>\n    <th>Action</th>\n    <th>Shares</th>\n    <th>Price</th>\n    <th>Stop Loss</th>\n    <th>Strength</th>\n  </tr>\n  {{#each opportunities}}\n  <tr>\n    <td><strong>{{ symbol }}</strong></td>\n    <td>{{ action }}</td>\n    <td>{{ shares }}</td>\n    <td>${{ limit_price }}</td>\n    <td>${{ stop_loss }}</td>\n    <td>{{ signal_strength }}</td>\n  </tr>\n  {{/each}}\n</table>\n\n<h3>Actions</h3>\n<p>\n  <a href=\"YOUR_WEBHOOK_URL/approve?run_id={{ $json.run_id }}\" style=\"background: #22c55e; color: white; padding: 10px 20px; text-decoration: none; margin-right: 10px;\">✅ Approve All</a>\n  <a href=\"YOUR_WEBHOOK_URL/reject?run_id={{ $json.run_id }}\" style=\"background: #ef4444; color: white; padding: 10px 20px; text-decoration: none;\">❌ Reject</a>\n</p>\n\n<p style=\"color: #666; font-size: 12px;\">This is an automated alert from your trading agent.</p>"
+      },
+      "id": "send-email",
+      "name": "Send Email Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [880, -100],
+      "notes": "UPDATE: Set your email credentials in n8n"
+    },
+    {
+      "parameters": {
+        "content": "📊 **Trading Agent - No Opportunities**\n\nRun ID: {{ $json.run_id }}\nCandidates Screened: {{ $json.summary.candidates_screened }}\nStatus: No actionable opportunities found today.",
+        "options": {}
+      },
+      "id": "log-no-action",
+      "name": "Log No Action",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [880, 100],
+      "notes": "Optional: Send to Slack/Discord instead"
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "approve",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-approve",
+      "name": "Approval Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [0, 300],
+      "webhookId": "approval-webhook"
+    },
+    {
+      "parameters": {
+        "command": "cd /path/to/trading_agent && python -c \"from execution.alpaca_broker import AlpacaBroker, OrderExecutor; import json; executor = OrderExecutor(); results = executor.execute_decisions_batch(json.loads('{{ $json.opportunities | JSON.stringify }}')); print(json.dumps(results))\""
+      },
+      "id": "execute-trades",
+      "name": "Execute Trades",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [440, 300],
+      "notes": "Executes approved trades via Alpaca API"
+    },
+    {
+      "parameters": {
+        "fromEmail": "your-email@gmail.com",
+        "toEmail": "your-email@gmail.com",
+        "subject": "✅ Trades Executed Successfully",
+        "text": "Trades have been submitted to Alpaca.\n\nResults:\n{{ $json.stdout }}"
+      },
+      "id": "confirm-execution",
+      "name": "Confirm Execution",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Trades approved and submitted! Check your email for confirmation."
+      },
+      "id": "respond-approval",
+      "name": "Respond to Approval",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [880, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "reject",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-reject",
+      "name": "Rejection Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [0, 500],
+      "webhookId": "rejection-webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Trades rejected. No orders will be placed."
+      },
+      "id": "respond-rejection",
+      "name": "Respond to Rejection",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [220, 500]
+    }
+  ],
+  "connections": {
+    "Daily 9:35 AM Trigger": {
+      "main": [
+        [
+          {
+            "node": "Run Python Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Python Analysis": {
+      "main": [
+        [
+          {
+            "node": "Parse Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Results": {
+      "main": [
+        [
+          {
+            "node": "Has Opportunities?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Opportunities?": {
+      "main": [
+        [
+          {
+            "node": "Send Email Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log No Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approval Webhook": {
+      "main": [
+        [
+          {
+            "node": "Execute Trades",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Trades": {
+      "main": [
+        [
+          {
+            "node": "Confirm Execution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm Execution": {
+      "main": [
+        [
+          {
+            "node": "Respond to Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rejection Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Rejection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "trading",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "pinData": {}
+}

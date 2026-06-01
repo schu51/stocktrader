@@ -337,7 +337,11 @@ class DailyRunner:
                     logger.error(f"Error analyzing {symbol}: {e}")
                     errors.append({"symbol": symbol, "error": str(e)})
 
-            opportunities.sort(key=lambda x: x.get("signal_strength", 0), reverse=True)
+            opportunities.sort(
+                key=lambda x: (x.get("signal_strength", 0), x.get("trend_score") or 0),
+                reverse=True
+            )
+            opportunities = opportunities[:8]
 
             # 3. Execute trades (or dry-run)
             results["execution"] = self._execute_opportunities(

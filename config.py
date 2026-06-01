@@ -34,7 +34,7 @@ API_KEYS = {
 
 # SEC EDGAR requires a User-Agent header with contact info
 SEC_EDGAR_USER_AGENT = os.getenv(
-    "SEC_EDGAR_USER_AGENT", 
+    "SEC_EDGAR_USER_AGENT",
     "TradingAgent/1.0 (contact@example.com)"
 )
 
@@ -43,13 +43,13 @@ SEC_EDGAR_USER_AGENT = os.getenv(
 # =============================================================================
 
 RATE_LIMITS = {
-    "yahoo_finance": {"requests": 2000, "window_seconds": 3600},  # ~2000/hour practical
-    "alpha_vantage": {"requests": 5, "window_seconds": 60},  # 5/min, 25/day free
-    "fmp": {"requests": 5, "window_seconds": 1},  # 250/day free
+    "yahoo_finance": {"requests": 2000, "window_seconds": 3600},
+    "alpha_vantage": {"requests": 5, "window_seconds": 60},
+    "fmp": {"requests": 5, "window_seconds": 1},
     "finnhub": {"requests": 60, "window_seconds": 60},
     "fred": {"requests": 120, "window_seconds": 60},
     "sec_edgar": {"requests": 10, "window_seconds": 1},
-    "web_scraper": {"requests": 1, "window_seconds": 2},  # Be polite
+    "web_scraper": {"requests": 1, "window_seconds": 2},
 }
 
 # =============================================================================
@@ -60,14 +60,13 @@ DATA_DIR = Path(__file__).parent.parent / "data"
 DATABASE_PATH = DATA_DIR / "trading_agent.db"
 CACHE_DIR = DATA_DIR / "cache"
 
-# Cache expiration (seconds)
 CACHE_EXPIRATION = {
-    "price_data": 300,  # 5 minutes for real-time prices
-    "daily_prices": 86400,  # 24 hours for daily OHLCV
-    "fundamentals": 86400 * 7,  # 7 days for financials
-    "sec_filings": 86400,  # 24 hours for filing lists
-    "news": 3600,  # 1 hour for news
-    "earnings_calendar": 3600,  # 1 hour
+    "price_data": 300,
+    "daily_prices": 86400,
+    "fundamentals": 86400 * 7,
+    "sec_filings": 86400,
+    "news": 3600,
+    "earnings_calendar": 3600,
 }
 
 # =============================================================================
@@ -75,15 +74,12 @@ CACHE_EXPIRATION = {
 # =============================================================================
 
 STANDARDIZED_FIELDS = {
-    # Price data
     "open": "open",
-    "high": "high", 
+    "high": "high",
     "low": "low",
     "close": "close",
     "adj_close": "adj_close",
     "volume": "volume",
-    
-    # Fundamentals - Income Statement
     "revenue": "revenue",
     "gross_profit": "gross_profit",
     "operating_income": "operating_income",
@@ -91,33 +87,23 @@ STANDARDIZED_FIELDS = {
     "ebitda": "ebitda",
     "eps": "eps",
     "eps_diluted": "eps_diluted",
-    
-    # Fundamentals - Balance Sheet
     "total_assets": "total_assets",
     "total_liabilities": "total_liabilities",
     "total_equity": "total_equity",
     "cash": "cash",
     "total_debt": "total_debt",
-    
-    # Fundamentals - Cash Flow
     "operating_cash_flow": "operating_cash_flow",
     "free_cash_flow": "free_cash_flow",
     "capex": "capex",
-    
-    # Valuation Metrics
     "market_cap": "market_cap",
     "pe_ratio": "pe_ratio",
     "ps_ratio": "ps_ratio",
     "pb_ratio": "pb_ratio",
     "ev_ebitda": "ev_ebitda",
     "peg_ratio": "peg_ratio",
-    
-    # Growth Metrics
     "revenue_growth": "revenue_growth",
     "earnings_growth": "earnings_growth",
     "revenue_growth_3y": "revenue_growth_3y",
-    
-    # Quality Metrics
     "gross_margin": "gross_margin",
     "operating_margin": "operating_margin",
     "net_margin": "net_margin",
@@ -127,18 +113,24 @@ STANDARDIZED_FIELDS = {
 }
 
 # =============================================================================
-# RESEARCH ENGINE INTEGRATION - Maps data to screening criteria
+# SCREENING CRITERIA - Momentum-friendly thresholds
 # =============================================================================
 
 SCREENING_CRITERIA_MAP = {
-    # Stage 1C Quantitative Criteria
-    "market_cap_min": 500_000_000,  # $500M minimum
-    "market_cap_max": 100_000_000_000,  # $100B maximum
-    "revenue_growth_min": 0.15,  # 15% minimum
-    "gross_margin_min": 0.40,  # 40% minimum for SaaS
-    "net_retention_min": 1.10,  # 110% NRR
-    
-    # Stage 1D Qualitative Scoring Weights
+    # Market cap: liquid enough to enter/exit cleanly
+    "market_cap_min": 2_000_000_000,      # $2B minimum
+    "market_cap_max": 5_000_000_000_000,  # No ceiling on mega-caps
+
+    # Growth: momentum stocks grow fast
+    "revenue_growth_min": 0.10,            # 10% YoY minimum (flexible)
+
+    # Quality floor: we're buying strength, not cheapness
+    "gross_margin_min": 0.25,              # 25% minimum (allows hardware/infra names)
+
+    # Liquidity: must be tradeable without slippage
+    "avg_volume_min": 1_000_000,           # 1M avg daily volume minimum
+
+    # Scoring weights (used when research scoring is applied as a filter)
     "scoring_weights": {
         "product_market_fit": 0.25,
         "competitive_moat": 0.25,
@@ -148,25 +140,60 @@ SCREENING_CRITERIA_MAP = {
 }
 
 # =============================================================================
-# UNIVERSE DEFINITIONS
+# UNIVERSE - Expanded for momentum strategy
+#
+# Momentum trading requires a wide scan pool (70+ names) across multiple
+# sectors so the model can find what is actually trending at any given time.
+# A narrow SaaS-only universe creates correlation risk and misses rotations
+# into semis, infrastructure, healthcare tech, industrials, etc.
 # =============================================================================
 
-# Default universe for screening
 DEFAULT_UNIVERSE = [
+    # Mega-cap tech / AI (persistent momentum leaders)
+    "NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA",
+
+    # Semiconductors (high-beta momentum)
+    "AMD", "AVGO", "QCOM", "MRVL", "SMCI", "ON", "LAM", "AMAT", "KLAC", "ARM",
+
     # Cybersecurity
-    "CRWD", "S", "ZS", "PANW", "FTNT", "CYBR", "OKTA", "QLYS",
-    # Enterprise AI/Software
-    "DDOG", "SNOW", "MDB", "NET", "PATH", "TEAM",
+    "CRWD", "S", "ZS", "PANW", "FTNT", "CYBR", "OKTA",
+
+    # Enterprise AI / Cloud software
+    "DDOG", "SNOW", "MDB", "NET", "PATH", "TEAM", "NOW", "CRM", "WDAY",
+
     # Vertical SaaS
-    "TOST", "PCOR", "APPF", "VEEV", "NCNO",
-    # AI Infrastructure
-    "VRT", "APH", "ETN", "PWR", "CRWV", "APLD",
+    "TOST", "PCOR", "APPF", "VEEV", "NCNO", "SAMSF",
+
+    # AI infrastructure / Data center / Power
+    "VRT", "APH", "ETN", "PWR", "CRWV", "APLD", "CEG", "VST", "ANET",
+
+    # Fintech / Payments
+    "SQ", "AFRM", "SOFI", "UPST", "HOOD", "NU", "PYPL", "V", "MA",
+
+    # Consumer / Digital media
+    "SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT", "PINS",
+
+    # Healthcare tech
+    "ISRG", "DXCM", "PODD", "RXRX", "TDOC",
+
+    # Industrials / Defense / Infrastructure
+    "HWM", "GE", "RTX", "LHX", "AXON", "KTOS",
+
+    # Emerging / High-momentum themes
+    "COIN", "MSTR", "PLTR", "RDDT",
 ]
 
-# Sector classifications
+# Sector classifications (updated to match expanded universe)
 SECTOR_MAP = {
-    "cybersecurity": ["CRWD", "S", "ZS", "PANW", "FTNT", "CYBR", "OKTA", "QLYS"],
-    "enterprise_ai_software": ["DDOG", "SNOW", "MDB", "NET", "PATH", "TEAM"],
-    "vertical_saas": ["TOST", "PCOR", "APPF", "VEEV", "NCNO"],
-    "ai_infrastructure": ["VRT", "APH", "ETN", "PWR", "CRWV", "APLD"],
+    "mega_cap_tech": ["NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA"],
+    "semiconductors": ["AMD", "AVGO", "QCOM", "MRVL", "SMCI", "ON", "LAM", "AMAT", "KLAC", "ARM"],
+    "cybersecurity": ["CRWD", "S", "ZS", "PANW", "FTNT", "CYBR", "OKTA"],
+    "enterprise_ai_software": ["DDOG", "SNOW", "MDB", "NET", "PATH", "TEAM", "NOW", "CRM", "WDAY"],
+    "vertical_saas": ["TOST", "PCOR", "APPF", "VEEV", "NCNO", "SAMSF"],
+    "ai_infrastructure": ["VRT", "APH", "ETN", "PWR", "CRWV", "APLD", "CEG", "VST", "ANET"],
+    "fintech_payments": ["SQ", "AFRM", "SOFI", "UPST", "HOOD", "NU", "PYPL", "V", "MA"],
+    "consumer_digital": ["SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT", "PINS"],
+    "healthcare_tech": ["ISRG", "DXCM", "PODD", "RXRX", "TDOC"],
+    "industrials_defense": ["HWM", "GE", "RTX", "LHX", "AXON", "KTOS"],
+    "emerging_themes": ["COIN", "MSTR", "PLTR", "RDDT"],
 }

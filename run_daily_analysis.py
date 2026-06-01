@@ -3,57 +3,32 @@
 Daily Analysis Runner
 =====================
 
-Main entry point for the trading agent. Designed to be called by n8n.
-
-Features:
-- Screens universe for opportunities
-- Generates trading signals with enhanced momentum
-- Outputs JSON for n8n consumption
-- Tracks persistent performers
-- Supports different run modes
+Main entry point for the trading agent.
 
 Usage:
-    # Full analysis (default)
+    # Dry run (default) - shows signals, no orders placed
     python run_daily_analysis.py
-    
-    # Quick scan (faster, fewer candidates)
-    python run_daily_analysis.py --mode quick
-    
-    # Specific symbols only
-    python run_daily_analysis.py --symbols TOST,VRT,S
-    
-    # Output to file (for n8n)
-    python run_daily_analysis.py --output /path/to/output.json
 
-Output Format (JSON):
-    {
-        "run_id": "20241129_093000",
-        "timestamp": "2024-11-29T09:30:00",
-        "status": "success",
-        "summary": {
-            "candidates_screened": 25,
-            "buy_signals": 3,
-            "hold_signals": 22,
-            "total_investment_recommended": 8500.00
-        },
-        "opportunities": [
-            {
-                "symbol": "TOST",
-                "action": "BUY",
-                "shares": 94,
-                "limit_price": 42.50,
-                "stop_loss": 34.00,
-                "position_size_pct": 4.0,
-                "signal_strength": 0.73,
-                "confidence": 0.97,
-                "trend_score": 76,
-                "reasons": [...],
-                "risks": [...]
-            }
-        ],
-        "performers_update": [...],
-        "errors": []
-    }
+    # Execute trades - submits orders to Alpaca
+    python run_daily_analysis.py --execute
+
+    # Execute with higher confidence bar
+    python run_daily_analysis.py --execute --min-confidence 0.75
+
+    # Quick scan (fewer candidates, faster)
+    python run_daily_analysis.py --mode quick
+
+    # Specific symbols only
+    python run_daily_analysis.py --symbols NVDA,META,CRWD
+
+    # Write results to file
+    python run_daily_analysis.py --execute --output /path/to/output.json
+
+Execution safety gates (all must pass before any order is submitted):
+    1. --execute flag must be set (default is dry-run)
+    2. Market must currently be open (Alpaca clock check)
+    3. Signal confidence >= --min-confidence (default 0.65)
+    4. Limit price and share count must be valid
 """
 
 import argparse
@@ -65,7 +40,6 @@ from datetime import datetime, date
 from pathlib import Path
 from typing import Dict, List, Optional
 
-# Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_framework import (
@@ -73,7 +47,6 @@ from decision_framework import (
 )
 from screening.universe_screener import UniverseScreener
 
-# Try to import data infrastructure
 try:
     from data_infrastructure import DataOrchestrator
     DATA_AVAILABLE = True
@@ -81,45 +54,40 @@ except ImportError:
     DATA_AVAILABLE = False
     DataOrchestrator = None
 
-# Try to import Alpaca
+# Support both root-level and execution/ subdirectory layouts
 try:
-    from execution.alpaca_broker import AlpacaBroker
+    from alpaca_broker import AlpacaBroker, OrderExecutor
     ALPACA_AVAILABLE = True
 except ImportError:
-    ALPACA_AVAILABLE = False
-    AlpacaBroker = None
+    try:
+        from execution.alpaca_broker import AlpacaBroker, OrderExecutor
+        ALPACA_AVAILABLE = True
+    except ImportError:
+        ALPACA_AVAILABLE = False
+        AlpacaBroker = None
+        OrderExecutor = None
 
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
+MIN_CONFIDENCE_DEFAULT = 0.65
+
 
 class DailyRunner:
-    """
-    Orchestrates the daily analysis workflow.
-    """
-    
-    def __init__(self, 
+    """Orchestrates the daily analysis and optional trade execution workflow."""
+
+    def __init__(self,
                  portfolio_value: float = 100000,
                  data_dir: Path = None):
-        """
-        Initialize daily runner.
-        
-        Args:
-            portfolio_value: Total portfolio value (for sizing)
-            data_dir: Directory for persistent data
-        """
         self.data_dir = Path(data_dir or os.getenv("TRADING_AGENT_DATA_DIR", "./trading_data"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Initialize components
+
         self.screener = UniverseScreener(data_dir=self.data_dir / "screening")
-        
-        # Initialize data orchestrator if available
+
         self.orchestrator = None
         if DATA_AVAILABLE:
             try:
@@ -127,38 +95,40 @@ class DailyRunner:
                 logger.info("Data infrastructure initialized")
             except Exception as e:
                 logger.warning(f"Could not initialize data infrastructure: {e}")
-        
-        # Initialize decision engine
+
         self.engine = DecisionEngine(
             data_orchestrator=self.orchestrator,
             data_dir=self.data_dir / "decisions"
         )
-        
-        # Portfolio state (load from Alpaca if available, else use default)
+
+        self.broker = None
         self.portfolio = self._initialize_portfolio(portfolio_value)
-        
-        # Research scores cache (would be loaded from your Stage 1D analysis)
         self.research_scores = self._load_research_scores()
-    
+
     def _initialize_portfolio(self, default_value: float) -> PortfolioState:
-        """Initialize portfolio state, preferring Alpaca data if available."""
+        """Load portfolio from Alpaca if available, otherwise use default value."""
         if ALPACA_AVAILABLE:
             try:
-                broker = AlpacaBroker()
-                account = broker.get_account()
-                
+                self.broker = AlpacaBroker()
+                account = self.broker.get_account()
+
                 if "error" not in account:
+                    logger.info(
+                        f"Loaded Alpaca portfolio: "
+                        f"${account['portfolio_value']:,.2f} total, "
+                        f"${account['buying_power']:,.2f} buying power"
+                    )
                     return PortfolioState(
                         timestamp=datetime.now(),
                         total_value=account["portfolio_value"],
                         cash=account["cash"],
                         invested=account["long_market_value"],
-                        available_cash=account["buying_power"] * 0.95  # Keep 5% buffer
+                        available_cash=account["buying_power"] * 0.95  # 5% buffer
                     )
             except Exception as e:
-                logger.warning(f"Could not get Alpaca portfolio: {e}")
-        
-        # Default portfolio
+                logger.warning(f"Could not connect to Alpaca: {e}")
+
+        logger.info(f"Using default portfolio value: ${default_value:,.2f}")
         return PortfolioState(
             timestamp=datetime.now(),
             total_value=default_value,
@@ -166,34 +136,30 @@ class DailyRunner:
             invested=0,
             available_cash=default_value * 0.95
         )
-    
+
     def _load_research_scores(self) -> Dict[str, ResearchScore]:
         """
-        Load research scores from file or return empty dict.
-        
-        In practice, you would:
-        1. Export your Stage 1D scores to a JSON file
-        2. This method loads them
-        
-        File format (research_scores.json):
+        Load research scores from research_scores.json if present.
+
+        File format:
         {
-            "TOST": {
+            "NVDA": {
                 "overall_score": 4.40,
                 "conviction_tier": "HIGH",
                 "thesis": "...",
-                "bear_case_price": 34,
-                "base_case_price": 58,
-                "bull_case_price": 73
+                "bear_case_price": 100,
+                "base_case_price": 160,
+                "bull_case_price": 200
             }
         }
         """
         scores_file = self.data_dir / "research_scores.json"
-        
+
         if scores_file.exists():
             try:
                 with open(scores_file) as f:
                     data = json.load(f)
-                
+
                 scores = {}
                 for symbol, info in data.items():
                     scores[symbol] = ResearchScore(
@@ -208,128 +174,129 @@ class DailyRunner:
                         key_risks=info.get("key_risks", []),
                         catalysts=info.get("catalysts", [])
                     )
-                
+
                 logger.info(f"Loaded {len(scores)} research scores")
                 return scores
-                
+
             except Exception as e:
                 logger.warning(f"Error loading research scores: {e}")
-        
+
         return {}
-    
+
     def run(self,
             mode: str = "full",
             symbols: List[str] = None,
-            max_candidates: int = 30) -> Dict:
+            max_candidates: int = 30,
+            execute: bool = False,
+            min_confidence: float = MIN_CONFIDENCE_DEFAULT) -> Dict:
         """
-        Run daily analysis.
-        
+        Run daily analysis and optionally execute trades.
+
         Args:
             mode: "full", "quick", or "symbols"
-            symbols: Specific symbols to analyze (for "symbols" mode)
+            symbols: Specific symbols (for "symbols" mode)
             max_candidates: Max candidates to screen
-        
-        Returns:
-            Analysis results as JSON-serializable dict
+            execute: If True, submit qualifying BUY orders to Alpaca
+            min_confidence: Minimum signal confidence required for execution
         """
         run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
         start_time = datetime.now()
-        
-        logger.info(f"Starting daily analysis run {run_id} (mode: {mode})")
-        
+
+        logger.info(
+            f"Starting run {run_id} | mode={mode} | "
+            f"execute={'YES' if execute else 'DRY-RUN'} | "
+            f"min_confidence={min_confidence}"
+        )
+
         results = {
             "run_id": run_id,
             "timestamp": start_time.isoformat(),
             "mode": mode,
+            "execute": execute,
             "status": "running",
             "summary": {},
             "opportunities": [],
             "holds": [],
+            "execution": {},
             "performers_update": [],
             "portfolio": {},
             "errors": []
         }
-        
+
         try:
-            # 1. Get candidates to screen
+            # 1. Get candidates
             if symbols:
                 candidates = [{"symbol": s.upper(), "source": "manual"} for s in symbols]
             elif mode == "quick":
                 candidates = self.screener.get_screening_candidates(max_candidates=15)
             else:
                 candidates = self.screener.get_screening_candidates(max_candidates=max_candidates)
-            
+
             logger.info(f"Screening {len(candidates)} candidates")
-            
-            # 2. Analyze each candidate
+
+            # 2. Generate signals for each candidate
             opportunities = []
             holds = []
             errors = []
-            
+
             for candidate in candidates:
                 symbol = candidate["symbol"]
-                
+
                 try:
-                    # Get research score if available
                     research = self.research_scores.get(symbol)
-                    
-                    # Evaluate entry
+
                     decision = self.engine.evaluate_entry(
                         symbol=symbol,
                         portfolio=self.portfolio,
                         research_score=research,
-                        auto_fetch=True  # Let engine fetch price history
+                        auto_fetch=True
                     )
-                    
-                    # Convert to output format
+
                     decision_dict = self._decision_to_dict(decision)
-                    
+
                     if decision.action == "BUY":
                         opportunities.append(decision_dict)
-                        
-                        # Track as performer
                         self.screener.track_performer(
                             symbol=symbol,
                             score=decision.signal.strength if decision.signal else 0,
                             signal="BUY",
                             sector=candidate.get("sector", ""),
                             thesis=candidate.get("theme", ""),
-                            note=f"Signal strength: {decision.signal.strength:.2f}" if decision.signal else ""
+                            note=f"confidence={decision_dict.get('confidence', 0):.2f}"
                         )
                     else:
-                        holds.append({
-                            "symbol": symbol,
-                            "reason": decision.primary_reason[:100]
-                        })
-                        
+                        holds.append({"symbol": symbol, "reason": decision.primary_reason[:100]})
+
                 except Exception as e:
                     logger.error(f"Error analyzing {symbol}: {e}")
                     errors.append({"symbol": symbol, "error": str(e)})
-            
-            # 3. Sort opportunities by strength
+
             opportunities.sort(key=lambda x: x.get("signal_strength", 0), reverse=True)
-            
+
+            # 3. Execute trades (or dry-run)
+            results["execution"] = self._execute_opportunities(
+                opportunities, execute, min_confidence
+            )
+
             # 4. Build summary
             total_investment = sum(o.get("position_value", 0) for o in opportunities)
-            
+            executed_count = results["execution"].get("submitted", 0)
+
             results["summary"] = {
                 "candidates_screened": len(candidates),
                 "buy_signals": len(opportunities),
                 "hold_signals": len(holds),
                 "errors": len(errors),
                 "total_investment_recommended": round(total_investment, 2),
+                "orders_submitted": executed_count,
                 "portfolio_value": self.portfolio.total_value,
                 "available_cash": self.portfolio.available_cash
             }
-            
+
             results["opportunities"] = opportunities
-            results["holds"] = holds[:10]  # Top 10 holds
+            results["holds"] = holds[:10]
             results["errors"] = errors
-            
-            # 5. Get persistent performers
             results["performers_update"] = self.screener.get_persistent_performers(min_times_seen=2)
-            
-            # 6. Portfolio info
             results["portfolio"] = {
                 "total_value": self.portfolio.total_value,
                 "cash": self.portfolio.cash,
@@ -337,22 +304,149 @@ class DailyRunner:
                 "available_cash": self.portfolio.available_cash,
                 "num_positions": self.portfolio.num_positions
             }
-            
             results["status"] = "success"
-            
+
         except Exception as e:
             logger.error(f"Analysis run failed: {e}")
             results["status"] = "error"
             results["errors"].append({"error": str(e)})
-        
-        # Timing
-        end_time = datetime.now()
-        results["duration_seconds"] = (end_time - start_time).total_seconds()
-        
-        logger.info(f"Analysis complete: {len(results['opportunities'])} opportunities found")
-        
+
+        results["duration_seconds"] = (datetime.now() - start_time).total_seconds()
+        logger.info(
+            f"Run complete: {len(results['opportunities'])} signals, "
+            f"{results['execution'].get('submitted', 0)} orders submitted"
+        )
+
         return results
-    
+
+    def _execute_opportunities(self,
+                               opportunities: List[Dict],
+                               execute: bool,
+                               min_confidence: float) -> Dict:
+        """
+        Submit qualifying BUY orders to Alpaca, or log dry-run output.
+
+        Safety gates (all must pass per opportunity):
+          1. --execute flag is set
+          2. Alpaca is available and connected
+          3. Market is currently open
+          4. Signal confidence >= min_confidence
+          5. Valid limit_price and shares > 0
+        """
+        if not opportunities:
+            return {"status": "skipped", "reason": "No BUY signals to execute"}
+
+        if not execute:
+            # Dry-run: log what would be submitted
+            qualified = [
+                o for o in opportunities
+                if o.get("confidence", 0) >= min_confidence
+                and o.get("limit_price")
+                and o.get("shares", 0) > 0
+            ]
+            logger.info(
+                f"DRY-RUN: {len(qualified)}/{len(opportunities)} signals meet "
+                f"confidence >= {min_confidence}. Run with --execute to submit orders."
+            )
+            for o in qualified:
+                logger.info(
+                    f"  Would submit: BUY {o['shares']} {o['symbol']} "
+                    f"@ ${o['limit_price']:.2f} | stop=${o.get('stop_loss', 0):.2f} | "
+                    f"confidence={o['confidence']:.2f}"
+                )
+            return {
+                "status": "dry_run",
+                "would_submit": len(qualified),
+                "skipped_low_confidence": len(opportunities) - len(qualified)
+            }
+
+        # Live execution
+        if not ALPACA_AVAILABLE or not self.broker:
+            return {"status": "error", "reason": "Alpaca not available - check API keys"}
+
+        # Gate 1: market must be open
+        try:
+            if not self.broker.is_market_open():
+                logger.warning("Execution skipped: market is closed")
+                return {"status": "skipped", "reason": "Market is closed"}
+        except Exception as e:
+            return {"status": "error", "reason": f"Could not check market status: {e}"}
+
+        executor = OrderExecutor(self.broker)
+        execution_results = []
+        submitted = 0
+        skipped = 0
+
+        for opp in opportunities:
+            symbol = opp["symbol"]
+            confidence = opp.get("confidence", 0)
+            limit_price = opp.get("limit_price")
+            shares = opp.get("shares", 0)
+
+            # Gate 2: confidence threshold
+            if confidence < min_confidence:
+                logger.info(f"Skipping {symbol}: confidence {confidence:.2f} < {min_confidence}")
+                skipped += 1
+                execution_results.append({
+                    "symbol": symbol,
+                    "status": "skipped",
+                    "reason": f"confidence {confidence:.2f} below threshold {min_confidence}"
+                })
+                continue
+
+            # Gate 3: valid order parameters
+            if not limit_price or shares <= 0:
+                logger.warning(f"Skipping {symbol}: invalid limit_price or shares")
+                skipped += 1
+                execution_results.append({
+                    "symbol": symbol,
+                    "status": "skipped",
+                    "reason": "invalid limit_price or shares"
+                })
+                continue
+
+            # Submit order
+            try:
+                result = executor.execute_decision(opp)
+                status = result.get("status", "error")
+
+                if status == "submitted":
+                    submitted += 1
+                    logger.info(
+                        f"ORDER SUBMITTED: BUY {shares} {symbol} "
+                        f"@ ${limit_price:.2f} | stop=${opp.get('stop_loss', 0):.2f} | "
+                        f"order_id={result.get('order_id')}"
+                    )
+                else:
+                    logger.warning(f"Order not submitted for {symbol}: {result.get('reason')}")
+
+                execution_results.append({
+                    "symbol": symbol,
+                    "shares": shares,
+                    "limit_price": limit_price,
+                    "stop_loss": opp.get("stop_loss"),
+                    "confidence": confidence,
+                    "status": status,
+                    "order_id": result.get("order_id"),
+                    "reason": result.get("reason")
+                })
+
+            except Exception as e:
+                logger.error(f"Error executing order for {symbol}: {e}")
+                execution_results.append({
+                    "symbol": symbol,
+                    "status": "error",
+                    "reason": str(e)
+                })
+
+        return {
+            "status": "executed",
+            "submitted": submitted,
+            "skipped": skipped,
+            "total_attempted": len(opportunities),
+            "details": execution_results
+        }
+
     def _decision_to_dict(self, decision) -> Dict:
         """Convert Decision object to JSON-serializable dict."""
         return {
@@ -373,58 +467,58 @@ class DailyRunner:
             "risks": decision.risks[:3],
             "requires_confirmation": decision.requires_confirmation
         }
-    
+
     def _extract_trend_score(self, reasons: List[str]) -> Optional[int]:
         """Extract trend score from supporting reasons."""
         for reason in reasons:
             if "Trend Score:" in reason:
                 try:
-                    # Extract number from "📊 Trend Score: 76/100 (STRONG_UP)"
                     score_part = reason.split(":")[1].split("/")[0]
                     return int(score_part.strip())
-                except:
+                except Exception:
                     pass
         return None
 
 
 def main():
     parser = argparse.ArgumentParser(description="Daily Trading Analysis")
-    
+
+    parser.add_argument("--execute", action="store_true",
+                        help="Submit orders to Alpaca (default: dry-run only)")
+    parser.add_argument("--min-confidence", type=float, default=MIN_CONFIDENCE_DEFAULT,
+                        help=f"Minimum signal confidence to execute (default: {MIN_CONFIDENCE_DEFAULT})")
     parser.add_argument("--mode", choices=["full", "quick", "symbols"], default="full",
-                       help="Analysis mode")
+                        help="Analysis mode")
     parser.add_argument("--symbols", type=str, default=None,
-                       help="Comma-separated symbols to analyze")
+                        help="Comma-separated symbols to analyze")
     parser.add_argument("--max-candidates", type=int, default=30,
-                       help="Max candidates to screen")
+                        help="Max candidates to screen")
     parser.add_argument("--portfolio-value", type=float, default=100000,
-                       help="Portfolio value for position sizing")
+                        help="Portfolio value for position sizing (used if Alpaca unavailable)")
     parser.add_argument("--output", type=str, default=None,
-                       help="Output file path (JSON)")
+                        help="Write results to JSON file")
     parser.add_argument("--data-dir", type=str, default=None,
-                       help="Data directory path")
+                        help="Data directory path")
     parser.add_argument("--quiet", action="store_true",
-                       help="Suppress console output")
-    
+                        help="Suppress console output (log file still written)")
+
     args = parser.parse_args()
-    
-    # Parse symbols
-    symbols = None
-    if args.symbols:
-        symbols = [s.strip() for s in args.symbols.split(",")]
-    
-    # Run analysis
+
+    symbols = [s.strip() for s in args.symbols.split(",")] if args.symbols else None
+
     runner = DailyRunner(
         portfolio_value=args.portfolio_value,
         data_dir=args.data_dir
     )
-    
+
     results = runner.run(
         mode=args.mode if not symbols else "symbols",
         symbols=symbols,
-        max_candidates=args.max_candidates
+        max_candidates=args.max_candidates,
+        execute=args.execute,
+        min_confidence=args.min_confidence
     )
-    
-    # Output
+
     if args.output:
         output_path = Path(args.output)
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -432,37 +526,51 @@ def main():
             json.dump(results, f, indent=2)
         if not args.quiet:
             print(f"Results written to {args.output}")
-    
+
     if not args.quiet:
-        # Print summary
         print("\n" + "=" * 60)
         print("DAILY ANALYSIS SUMMARY")
         print("=" * 60)
-        print(f"Run ID: {results['run_id']}")
-        print(f"Status: {results['status']}")
-        print(f"Duration: {results.get('duration_seconds', 0):.1f}s")
+        print(f"Run ID:    {results['run_id']}")
+        print(f"Status:    {results['status']}")
+        print(f"Mode:      {'EXECUTE' if args.execute else 'DRY-RUN'}")
+        print(f"Duration:  {results.get('duration_seconds', 0):.1f}s")
         print()
-        
+
         summary = results.get("summary", {})
-        print(f"Candidates Screened: {summary.get('candidates_screened', 0)}")
-        print(f"Buy Signals: {summary.get('buy_signals', 0)}")
-        print(f"Hold Signals: {summary.get('hold_signals', 0)}")
-        print(f"Total Investment: ${summary.get('total_investment_recommended', 0):,.2f}")
+        print(f"Candidates Screened:  {summary.get('candidates_screened', 0)}")
+        print(f"Buy Signals:          {summary.get('buy_signals', 0)}")
+        print(f"Hold Signals:         {summary.get('hold_signals', 0)}")
+        print(f"Orders Submitted:     {summary.get('orders_submitted', 0)}")
+        print(f"Total Investment:     ${summary.get('total_investment_recommended', 0):,.2f}")
         print()
-        
+
+        execution = results.get("execution", {})
+        exec_status = execution.get("status", "")
+        if exec_status == "dry_run":
+            print(f"DRY-RUN: {execution.get('would_submit', 0)} orders would be submitted.")
+            print("Run with --execute to place real orders.")
+        elif exec_status == "executed":
+            print(f"EXECUTION: {execution.get('submitted', 0)} orders submitted, "
+                  f"{execution.get('skipped', 0)} skipped.")
+        elif exec_status == "skipped":
+            print(f"EXECUTION SKIPPED: {execution.get('reason', '')}")
+        print()
+
         if results["opportunities"]:
-            print("OPPORTUNITIES:")
+            print("SIGNALS:")
             for opp in results["opportunities"]:
-                print(f"  📈 {opp['symbol']}: BUY {opp['shares']} @ ${opp['limit_price']:.2f}")
-                print(f"     Position: {opp['position_size_pct']:.1f}%, Stop: ${opp['stop_loss']:.2f}")
-                print(f"     Strength: {opp['signal_strength']:.2f}, Trend: {opp.get('trend_score', 'N/A')}")
-                print()
+                marker = "SUBMITTED" if args.execute else "WOULD BUY"
+                print(f"  [{marker}] {opp['symbol']}: {opp['shares']} shares "
+                      f"@ ${opp.get('limit_price', 0):.2f}")
+                print(f"    Stop: ${opp.get('stop_loss', 0):.2f} | "
+                      f"Confidence: {opp.get('confidence', 0):.2f} | "
+                      f"Strength: {opp.get('signal_strength', 0):.2f}")
         else:
-            print("No opportunities found today.")
-        
+            print("No BUY signals today.")
+
         print("=" * 60)
-    
-    # Return results for programmatic use
+
     return results
 
 

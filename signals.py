@@ -155,14 +155,21 @@ class SignalGenerator:
         # Use full trend analysis MA cross if available
         if self._last_trend_analysis and self._last_trend_analysis.ma_cross:
             mc = self._last_trend_analysis.ma_cross
-            if mc.trend_strength in ["strong_down", "down"]:
-                reasons.append("Trend gate: bearish MA alignment - wait for trend reversal")
-                return Signal.HOLD
-            if mc.trend_strength == "neutral" and mc.price_vs_50 == "below":
-                reasons.append("Trend gate: price below 50MA in neutral trend - entry blocked")
+            # Require full golden alignment: price > 50MA AND 50MA > 200MA
+            # "strong_up" satisfies both; "up" with ma_50_vs_200="above" also qualifies.
+            # Everything else (neutral, down, strong_down, or up with 50MA < 200MA) is blocked.
+            if mc.ma_50_vs_200 != "above" or mc.trend_strength not in ["strong_up", "up"]:
+                reasons.append(
+                    f"Trend gate: 50MA must be above 200MA (blocked: {mc.trend_strength}, "
+                    f"50MA vs 200MA: {mc.ma_50_vs_200})"
+                )
                 return Signal.HOLD
 
         # Fallback: raw MA data from market snapshot
+        elif market_data and market_data.sma_50 and market_data.sma_200 and market_data.current_price:
+            if not (market_data.current_price > market_data.sma_50 > market_data.sma_200):
+                reasons.append("Trend gate: price > 50MA > 200MA required - entry blocked")
+                return Signal.HOLD
         elif market_data and market_data.sma_50 and market_data.current_price:
             if market_data.current_price < market_data.sma_50:
                 reasons.append("Trend gate: price below 50-day MA - entry blocked")

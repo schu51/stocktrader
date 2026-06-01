@@ -198,10 +198,10 @@ class SignalGenerator:
         reasons = []
         score = analysis.composite_score
 
-        if score >= 70:
+        if score >= 75:
             signal = Signal.STRONG_BUY
             reasons.append(f"Strong uptrend (momentum score: {score:.0f}/100)")
-        elif score >= 55:
+        elif score >= 62:
             signal = Signal.BUY
             reasons.append(f"Uptrend confirmed (momentum score: {score:.0f}/100)")
         elif score >= 45:
@@ -425,6 +425,15 @@ class SignalGenerator:
 
         if signals_present == 0:
             confidence = 0.0
+        elif signals_present == 1 and momentum and self._last_trend_analysis:
+            # Only momentum present: derive confidence from composite score for real differentiation
+            score = self._last_trend_analysis.composite_score
+            if score >= 70:
+                confidence = 0.85
+            elif score >= 55:
+                confidence = 0.70
+            else:
+                confidence = 0.55
         else:
             agreement = self._calculate_agreement([fundamental, momentum, sentiment])
             data_quality = signals_present / 3

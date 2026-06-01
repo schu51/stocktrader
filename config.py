@@ -248,7 +248,7 @@ class MomentumConfig:
     macd_slow_period:              int   = 26
     macd_signal_period:            int   = 9
     rsi_period:                    int   = 14
-    trend_confirmation_threshold:  float = 55.0  # Raised for momentum strategy
+    trend_confirmation_threshold:  float = 60.0  # Raised to reduce over-signaling
 
 
 @dataclass

@@ -8,11 +8,11 @@ from datetime import datetime, date, timedelta
 from typing import Dict, List, Optional, Tuple
 import logging
 
-from .config import (
+from config import (
     ConvictionTier, RiskConfig, ExitRules, PortfolioConstraints,
     DecisionConfig, DEFAULT_CONFIG, DecisionType
 )
-from .models import Position, PortfolioState, Decision, PositionStatus
+from models import Position, PortfolioState, Decision, PositionStatus
 
 logger = logging.getLogger(__name__)
 

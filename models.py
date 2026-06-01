@@ -10,7 +10,7 @@ from typing import Dict, List, Optional, Any
 from enum import Enum
 import json
 
-from .config import (
+from config import (
     Signal, ConvictionTier, PositionStatus, DecisionType
 )
 

@@ -13,11 +13,11 @@ from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 import logging
 
-from .config import (
+from config import (
     ConvictionTier, PositionSizingConfig, PortfolioConstraints,
     RiskConfig, DecisionConfig, DEFAULT_CONFIG
 )
-from .models import (
+from models import (
     Position, PortfolioState, ResearchScore, TradingSignal
 )
 

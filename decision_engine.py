@@ -15,18 +15,18 @@ import logging
 import json
 from pathlib import Path
 
-from .config import (
+from config import (
     Signal, ConvictionTier, PositionStatus, DecisionType,
     DecisionConfig, DEFAULT_CONFIG
 )
-from .models import (
+from models import (
     Position, PortfolioState, Decision, TradingSignal,
     ResearchScore, MarketSnapshot, WatchlistEntry
 )
-from .signals import SignalGenerator
-from .position_sizing import PositionSizer
-from .risk_manager import RiskManager
-from .momentum import PriceBar, TrendAnalysis
+from signals import SignalGenerator
+from position_sizing import PositionSizer
+from risk_manager import RiskManager
+from momentum import PriceBar, TrendAnalysis
 
 # Try to import data infrastructure (optional dependency)
 try:

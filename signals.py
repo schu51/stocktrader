@@ -14,14 +14,14 @@ from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 import logging
 
-from .config import (
+from config import (
     Signal, ConvictionTier, SignalThresholds, DecisionConfig, DEFAULT_CONFIG,
     MomentumConfig, ProductValueOverride
 )
-from .models import (
+from models import (
     TradingSignal, ResearchScore, MarketSnapshot
 )
-from .momentum import MomentumAnalyzer, TrendAnalysis, PriceBar, TrendDirection
+from momentum import MomentumAnalyzer, TrendAnalysis, PriceBar, TrendDirection
 
 logger = logging.getLogger(__name__)
 

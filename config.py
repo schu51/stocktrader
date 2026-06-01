@@ -183,6 +183,164 @@ DEFAULT_UNIVERSE = [
     "COIN", "MSTR", "PLTR", "RDDT",
 ]
 
+# =============================================================================
+# TRADING ENGINE TYPES
+# Enums and dataclasses used by signals.py, decision_engine.py, models.py,
+# position_sizing.py, and risk_manager.py.
+# =============================================================================
+
+from enum import Enum
+from dataclasses import dataclass, field
+from typing import Dict
+
+
+class Signal(Enum):
+    STRONG_BUY  = "STRONG_BUY"
+    BUY         = "BUY"
+    HOLD        = "HOLD"
+    SELL        = "SELL"
+    STRONG_SELL = "STRONG_SELL"
+
+
+class ConvictionTier(Enum):
+    HIGH        = "HIGH"
+    MEDIUM      = "MEDIUM"
+    LOW         = "LOW"
+    SPECULATIVE = "SPECULATIVE"
+
+
+class PositionStatus(Enum):
+    OPEN    = "OPEN"
+    CLOSED  = "CLOSED"
+    PENDING = "PENDING"
+
+
+class DecisionType(Enum):
+    INITIATE        = "INITIATE"
+    ADD_TO_POSITION = "ADD_TO_POSITION"
+    REDUCE          = "REDUCE"
+    REDUCE_POSITION = "REDUCE_POSITION"
+    EXIT            = "EXIT"
+    EXIT_POSITION   = "EXIT_POSITION"
+    STOP_LOSS       = "STOP_LOSS"
+    TAKE_PROFIT     = "TAKE_PROFIT"
+    HOLD            = "HOLD"
+
+
+@dataclass
+class SignalThresholds:
+    strong_buy_score:            float = 4.5
+    buy_score:                   float = 3.8
+    hold_score_min:              float = 3.0
+    sell_score:                  float = 2.5
+    strong_buy_upside:           float = 0.30
+    buy_upside:                  float = 0.15
+    sell_downside:               float = -0.10
+    bullish_sentiment_threshold: float = 0.60
+    bearish_sentiment_threshold: float = 0.40
+    momentum_buy_threshold:      float = 0.05
+    momentum_sell_threshold:     float = -0.05
+
+
+@dataclass
+class MomentumConfig:
+    macd_fast_period:              int   = 12
+    macd_slow_period:              int   = 26
+    macd_signal_period:            int   = 9
+    rsi_period:                    int   = 14
+    trend_confirmation_threshold:  float = 55.0  # Raised for momentum strategy
+
+
+@dataclass
+class ProductValueOverride:
+    enabled:                bool  = False  # Disabled in momentum strategy
+    min_overall_score:      float = 4.5
+    min_product_market_fit: float = 4.5
+
+
+@dataclass
+class PositionSizingConfig:
+    target_volatility:           float = 0.15
+    max_position_volatility:     float = 0.30
+    kelly_fraction:              float = 0.25
+    min_edge:                    float = 0.0
+    scale_in_tranches:           int   = 1
+    scale_in_threshold:          float = 0.05
+    target_position_by_conviction: Dict = field(default_factory=lambda: {
+        ConvictionTier.HIGH:        0.05,
+        ConvictionTier.MEDIUM:      0.03,
+        ConvictionTier.LOW:         0.02,
+        ConvictionTier.SPECULATIVE: 0.01,
+    })
+    max_position_by_conviction: Dict = field(default_factory=lambda: {
+        ConvictionTier.HIGH:        0.08,
+        ConvictionTier.MEDIUM:      0.05,
+        ConvictionTier.LOW:         0.03,
+        ConvictionTier.SPECULATIVE: 0.02,
+    })
+
+
+@dataclass
+class PortfolioConstraints:
+    max_positions:         int   = 20
+    max_single_position:   float = 0.08
+    min_cash_allocation:   float = 0.05
+    target_cash_allocation: float = 0.10
+    top_5_max_allocation:  float = 0.40
+
+
+@dataclass
+class RiskConfig:
+    max_risk_per_trade:          float = 0.02
+    max_portfolio_drawdown:      float = 0.15
+    max_daily_loss:              float = 0.03
+    reduce_into_earnings:        bool  = True
+    earnings_position_reduction: float = 0.50
+
+
+@dataclass
+class ExitRules:
+    trailing_stop_activation: float = 0.15  # Activate after 15% gain
+    trailing_stop_distance:   float = 0.08  # 8% trailing stop
+    stop_loss_by_conviction: Dict = field(default_factory=lambda: {
+        ConvictionTier.HIGH:        0.07,
+        ConvictionTier.MEDIUM:      0.08,
+        ConvictionTier.LOW:         0.10,
+        ConvictionTier.SPECULATIVE: 0.12,
+    })
+
+
+@dataclass
+class EntryRules:
+    # Research score minimum (0.0 = no requirement, rely on MA trend gate instead)
+    min_overall_score:          float = 0.0
+    # Max decline from 52w high allowed (0.99 = effectively disabled, MA gate handles this)
+    max_decline_from_high_pct:  float = 0.99
+    require_above_sma:          bool  = True
+    max_pe_ratio:               float = 500.0
+    max_ps_ratio:               float = 50.0
+    min_upside_pct:             float = -100.0
+    min_gross_margin:           float = 0.0
+    min_revenue_growth:         float = 0.0
+
+
+@dataclass
+class DecisionConfig:
+    signal_thresholds:     SignalThresholds     = field(default_factory=SignalThresholds)
+    momentum_config:       MomentumConfig       = field(default_factory=MomentumConfig)
+    product_override:      ProductValueOverride  = field(default_factory=ProductValueOverride)
+    position_sizing:       PositionSizingConfig  = field(default_factory=PositionSizingConfig)
+    portfolio_constraints: PortfolioConstraints  = field(default_factory=PortfolioConstraints)
+    risk_config:           RiskConfig            = field(default_factory=RiskConfig)
+    exit_rules:            ExitRules             = field(default_factory=ExitRules)
+    entry_rules:           EntryRules            = field(default_factory=EntryRules)
+    require_confirmation:  bool                  = False  # Auto-execute without manual confirm
+
+
+DEFAULT_CONFIG = DecisionConfig()
+
+
+# =============================================================================
 # Sector classifications (updated to match expanded universe)
 SECTOR_MAP = {
     "mega_cap_tech": ["NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA"],

@@ -42,10 +42,10 @@ from typing import Dict, List, Optional
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from decision_framework import (
-    DecisionEngine, DecisionConfig, PortfolioState, ResearchScore, ConvictionTier
-)
-from screening.universe_screener import UniverseScreener
+from decision_engine import DecisionEngine
+from config import DecisionConfig, ConvictionTier
+from models import PortfolioState, ResearchScore
+from universe_screener import UniverseScreener
 
 try:
     from data_infrastructure import DataOrchestrator
@@ -75,6 +75,67 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 MIN_CONFIDENCE_DEFAULT = 0.65
+
+
+def fetch_market_data(symbol: str):
+    """
+    Fetch market snapshot and price history via yfinance.
+    Returns (MarketSnapshot, List[PriceBar]) or (None, None) on failure.
+    """
+    try:
+        import yfinance as yf
+        from models import MarketSnapshot
+        from momentum import PriceBar
+
+        ticker = yf.Ticker(symbol)
+        hist = ticker.history(period="1y")
+        if hist.empty:
+            return None, None
+
+        info = ticker.fast_info
+
+        closes = hist["Close"].values
+        sma_50  = float(closes[-50:].mean())  if len(closes) >= 50  else None
+        sma_200 = float(closes[-200:].mean()) if len(closes) >= 200 else None
+
+        current_price = float(closes[-1])
+
+        snapshot = MarketSnapshot(
+            symbol=symbol,
+            timestamp=datetime.now(),
+            current_price=current_price,
+            previous_close=float(closes[-2]) if len(closes) >= 2 else current_price,
+            day_change_pct=float((closes[-1] / closes[-2] - 1) * 100) if len(closes) >= 2 else 0,
+            day_high=float(hist["High"].iloc[-1]),
+            day_low=float(hist["Low"].iloc[-1]),
+            week_52_high=float(hist["High"].max()),
+            week_52_low=float(hist["Low"].min()),
+            volume=int(hist["Volume"].iloc[-1]),
+            avg_volume=int(hist["Volume"].tail(20).mean()),
+            market_cap=float(getattr(info, "market_cap", 0) or 0),
+            sma_50=sma_50,
+            sma_200=sma_200,
+        )
+
+        price_bars = []
+        for idx, row in hist.tail(252).iterrows():
+            try:
+                price_bars.append(PriceBar(
+                    date=idx.date(),
+                    open=float(row["Open"]),
+                    high=float(row["High"]),
+                    low=float(row["Low"]),
+                    close=float(row["Close"]),
+                    volume=int(row["Volume"]),
+                ))
+            except Exception:
+                continue
+
+        return snapshot, price_bars
+
+    except Exception as e:
+        logger.warning(f"yfinance fetch failed for {symbol}: {e}")
+        return None, None
 
 
 class DailyRunner:
@@ -245,11 +306,16 @@ class DailyRunner:
                 try:
                     research = self.research_scores.get(symbol)
 
+                    # Fetch live market data via yfinance (fallback when DataOrchestrator unavailable)
+                    market_snapshot, price_bars = fetch_market_data(symbol)
+
                     decision = self.engine.evaluate_entry(
                         symbol=symbol,
                         portfolio=self.portfolio,
                         research_score=research,
-                        auto_fetch=True
+                        market_snapshot=market_snapshot,
+                        price_history=price_bars,
+                        auto_fetch=bool(self.orchestrator)
                     )
 
                     decision_dict = self._decision_to_dict(decision)

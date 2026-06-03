@@ -289,13 +289,14 @@ class DailyRunner:
             exit_results = self._evaluate_exits(execute=execute)
             results["exits"] = exit_results
 
-            # 1. Get candidates
+            # 1. Get candidates — prefer RS-ranked screener output if available and fresh
             if symbols:
                 candidates = [{"symbol": s.upper(), "source": "manual"} for s in symbols]
             elif mode == "quick":
                 candidates = self.screener.get_screening_candidates(max_candidates=15)
             else:
-                candidates = self.screener.get_screening_candidates(max_candidates=max_candidates)
+                candidates = self._load_screener_candidates(max_candidates) or \
+                             self.screener.get_screening_candidates(max_candidates=max_candidates)
 
             logger.info(f"Screening {len(candidates)} candidates")
 
@@ -623,6 +624,34 @@ class DailyRunner:
 
         except Exception as e:
             logger.warning(f"Could not write dashboard data: {e}")
+
+    def _load_screener_candidates(self, max_candidates: int = 30) -> Optional[List[Dict]]:
+        """
+        Load RS-ranked candidates from screener.json if generated today.
+        Falls back to None (caller uses static list) if stale or missing.
+        """
+        screener_file = Path(__file__).parent / "docs" / "data" / "screener.json"
+        if not screener_file.exists():
+            logger.info("screener.json not found — using static universe")
+            return None
+        try:
+            data = json.loads(screener_file.read_text())
+            generated = (data.get("generated_at") or "")[:10]
+            today = datetime.now().strftime("%Y-%m-%d")
+            if generated != today:
+                logger.info(f"screener.json is from {generated} — using static universe")
+                return None
+            candidates = data.get("candidates", [])[:max_candidates]
+            regime = data.get("market_regime", {}).get("regime", "unknown")
+            leaders = ", ".join(data.get("sector_leaders", [])[:3])
+            logger.info(
+                f"Screener loaded: {len(candidates)} RS-ranked candidates "
+                f"| regime={regime} | leaders={leaders}"
+            )
+            return candidates
+        except Exception as e:
+            logger.warning(f"Could not load screener.json: {e}")
+            return None
 
     # =========================================================================
     # PRE-ENTRY FILTERS

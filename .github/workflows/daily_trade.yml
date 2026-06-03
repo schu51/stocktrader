@@ -8,9 +8,9 @@ on:
 jobs:
   trade:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20        # Extra time for screener (~3-5 min) + trading run
     permissions:
-      contents: write           # Needed to push dashboard data
+      contents: write
 
     steps:
       - name: Checkout latest model
@@ -25,6 +25,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Run momentum screener
+        run: python screener.py
+        # Writes docs/data/screener.json — RS-ranked candidates for the trading run.
+        # If screener fails, trading run falls back to static DEFAULT_UNIVERSE.
+        continue-on-error: true
+
       - name: Run analysis and execute trades
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
@@ -32,11 +38,11 @@ jobs:
           ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
         run: python run_daily_analysis.py --execute
 
-      - name: Commit dashboard data
+      - name: Commit dashboard + screener data
         if: always()
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
-          git add docs/data/
-          git diff --staged --quiet || git commit -m "Dashboard data update [skip ci]"
+          git add docs/data/ docs/data/screener.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Dashboard + screener data update [skip ci]"
           git push

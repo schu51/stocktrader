@@ -356,7 +356,7 @@ DEFAULT_CONFIG = DecisionConfig()
 SECTOR_MAP = {
     "mega_cap_tech": ["NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA"],
     "semiconductors": ["AMD", "AVGO", "QCOM", "MRVL", "SMCI", "ON", "LAM", "AMAT", "KLAC", "ARM"],
-    "cybersecurity": ["CRWD", "S", "ZS", "PANW", "FTNT", "CYBR", "OKTA"],
+    "cybersecurity": ["CRWD", "ZS", "PANW", "FTNT", "CYBR", "OKTA"],
     "enterprise_ai_software": ["DDOG", "SNOW", "MDB", "NET", "PATH", "TEAM", "NOW", "CRM", "WDAY"],
     "vertical_saas": ["TOST", "PCOR", "APPF", "VEEV", "NCNO", "SAMSF"],
     "ai_infrastructure": ["VRT", "APH", "ETN", "PWR", "CRWV", "APLD", "CEG", "VST", "ANET"],

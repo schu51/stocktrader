@@ -38,15 +38,15 @@ FALLBACK_UNIVERSE = [
     # Mega-cap tech
     "NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA",
     # Semiconductors
-    "AMD", "AVGO", "QCOM", "MRVL", "ARM", "SMCI", "ON", "AMAT", "KLAC", "LAM", "MCHP", "TXN",
+    "AMD", "AVGO", "QCOM", "MRVL", "ARM", "SMCI", "ON", "AMAT", "KLAC", "LRCX", "MCHP", "TXN",
     # Cybersecurity
-    "CRWD", "PANW", "FTNT", "ZS", "OKTA", "S", "CYBR",
+    "CRWD", "PANW", "FTNT", "ZS", "OKTA", "CYBR",
     # Enterprise software / cloud
     "DDOG", "SNOW", "MDB", "NET", "NOW", "CRM", "WDAY", "TEAM", "PATH", "HUBS",
     # AI infra / power
     "VRT", "ETN", "PWR", "ANET", "CEG", "VST", "APH",
     # Fintech
-    "COIN", "NU", "AFRM", "SQ", "SOFI", "V", "MA", "PYPL",
+    "COIN", "NU", "AFRM", "BLOCK", "SOFI", "V", "MA", "PYPL",
     # Consumer / media
     "SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT",
     # Healthcare tech
@@ -72,11 +72,18 @@ def get_universe() -> List[str]:
     tickers = set()
 
     try:
+        import ssl
         import pandas as pd
-        table = pd.read_html(
-            "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
-            header=0,
-        )
+        # macOS often rejects Wikipedia's cert chain; bypass for this read-only fetch
+        _orig_ctx = ssl._create_default_https_context
+        ssl._create_default_https_context = ssl._create_unverified_context
+        try:
+            table = pd.read_html(
+                "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
+                header=0,
+            )
+        finally:
+            ssl._create_default_https_context = _orig_ctx  # always restore
         sp500 = table[0]["Symbol"].str.replace(".", "-", regex=False).tolist()
         tickers.update(sp500)
         logger.info(f"Fetched {len(sp500)} S&P 500 tickers from Wikipedia")
@@ -88,7 +95,7 @@ def get_universe() -> List[str]:
     ndx_supplement = [
         "NVDA", "META", "GOOGL", "MSFT", "AMZN", "TSLA", "AAPL",
         "AMD", "AVGO", "QCOM", "MRVL", "ARM", "SMCI", "ON", "AMAT", "KLAC",
-        "CRWD", "PANW", "ZS", "FTNT", "OKTA", "S", "CYBR",
+        "CRWD", "PANW", "ZS", "FTNT", "OKTA", "CYBR",
         "DDOG", "SNOW", "MDB", "NET", "NOW", "WDAY", "TEAM", "PATH",
         "COIN", "NU", "AFRM", "SOFI", "HOOD", "UPST",
         "SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT", "RDDT",

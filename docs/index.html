@@ -456,6 +456,32 @@
     .has-tooltip { cursor: default; }
     .has-tooltip:hover td { background: rgba(0, 212, 255, 0.03); }
 
+    /* ─── Activity Feed ─────────────────────────────────────────────────────── */
+    .activity-feed { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex; align-items: baseline; gap: 8px;
+      padding: 6px 0; border-bottom: 1px solid var(--border-sub);
+      font-size: 11px; line-height: 1.4;
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-badge {
+      font-size: 8px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 2px 5px; border-radius: 2px;
+      flex-shrink: 0; white-space: nowrap;
+    }
+    .badge-entry  { background: rgba(245,162,10,0.15); color: var(--amber); }
+    .badge-exit-p { background: rgba(0,201,138,0.12);  color: var(--green); }
+    .badge-exit-l { background: rgba(240,62,95,0.12);  color: var(--red);   }
+    .badge-stop   { background: rgba(0,212,255,0.10);  color: var(--blue);  }
+    .activity-sym {
+      font-weight: 700; font-size: 12px; letter-spacing: 0.04em;
+      color: var(--text); flex-shrink: 0;
+    }
+    .activity-detail {
+      font-family: var(--font-mono); font-size: 10px; color: var(--text-sec);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
     /* ─── Responsive ────────────────────────────────────────────────────────── */
     @media (max-width: 900px) {
       .pane-layout { grid-template-columns: 1fr; }
@@ -515,6 +541,14 @@
       <div class="section-label">Performance <span class="section-meta" id="chart-range"></span></div>
       <div class="chart-wrap">
         <canvas id="portfolio-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Activity Today -->
+    <div>
+      <div class="section-label amber">Activity <span class="section-meta">· Today</span></div>
+      <div id="activity-feed" class="activity-feed">
+        <div class="empty">No activity yet</div>
       </div>
     </div>
 
@@ -663,6 +697,7 @@ function render(d, history) {
 
   renderStrip(d, a);
   renderMetrics(a, run);
+  renderActivity(run, d.exits);
   renderPositions(d.positions || []);
   renderSignals(run);
   renderPerformers(d.persistent_performers || []);
@@ -673,6 +708,71 @@ function render(d, history) {
 }
 
 /* ── Status Strip ──────────────────────────────────────────────────────────── */
+/* ── Activity Feed ─────────────────────────────────────────────────────────── */
+function renderActivity(run, exits) {
+  const feed = document.getElementById('activity-feed');
+  if (!feed) return;
+  feed.innerHTML = '';
+
+  const events = [];
+  const exitsData = exits || {};
+
+  // EXIT events (show first — most operationally relevant)
+  (exitsData.exits_triggered || []).forEach(e => {
+    const pnl = e.pnl_pct || 0;
+    events.push({
+      type: pnl >= 0 ? 'EXIT_P' : 'EXIT_L',
+      symbol: e.symbol,
+      detail: `${(e.reason || e.trigger || '').replace(/_/g,' ').toLowerCase()}  ${fmtPct(pnl)}`,
+      order: 1,
+    });
+  });
+
+  // STOP UPDATE events
+  (exitsData.stops_updated || []).forEach(e => {
+    events.push({
+      type: 'STOP',
+      symbol: e.symbol,
+      detail: `stop → $${fmt2(e.new_stop)}  ${e.tier || ''}`,
+      order: 2,
+    });
+  });
+
+  // ENTRY events from execution_details
+  const execDetails = (run && run.execution_details) || [];
+  execDetails.filter(e => e.status === 'submitted').forEach(e => {
+    events.push({
+      type: 'ENTRY',
+      symbol: e.symbol,
+      detail: `${e.shares}sh @ $${fmt2(e.limit_price || 0)}  stop $${fmt2(e.stop_loss || 0)}  conf ${Math.round((e.confidence||0)*100)}%`,
+      order: 3,
+    });
+  });
+
+  if (!events.length) {
+    feed.innerHTML = '<div class="empty">No activity today</div>';
+    return;
+  }
+
+  events.sort((a, b) => a.order - b.order).slice(0, 15).forEach(ev => {
+    const badgeMap = {
+      ENTRY:  ['badge-entry',  'ENTRY'],
+      EXIT_P: ['badge-exit-p', 'EXIT'],
+      EXIT_L: ['badge-exit-l', 'EXIT'],
+      STOP:   ['badge-stop',   'STOP'],
+    };
+    const [cls, lbl] = badgeMap[ev.type] || ['badge-entry', ev.type];
+    const item = document.createElement('div');
+    item.className = 'activity-item';
+    item.innerHTML = `
+      <span class="activity-badge ${cls}">${lbl}</span>
+      <span class="activity-sym">${ev.symbol}</span>
+      <span class="activity-detail">${ev.detail}</span>
+    `;
+    feed.appendChild(item);
+  });
+}
+
 function renderStrip(d, a) {
   const healthy = d.model_status === 'healthy';
   setStatus(healthy ? 'live' : 'error', healthy ? 'Live' : 'Error');

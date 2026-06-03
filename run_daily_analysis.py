@@ -166,6 +166,57 @@ class DailyRunner:
         self.portfolio = self._initialize_portfolio(portfolio_value)
         self.research_scores = self._load_research_scores()
 
+    def _build_portfolio_state(self) -> PortfolioState:
+        """
+        Build a fully-hydrated PortfolioState with Position objects from live Alpaca data.
+        Called at run-time so positions reflect current reality.
+        Unlocks: pre_trade_risk_check, check_positions_for_exit, assess_portfolio_risk.
+        """
+        from models import Position
+        from config import PositionStatus
+
+        if not self.broker:
+            return self.portfolio
+
+        account = self.broker.get_account()
+        raw     = self.broker.get_positions() or []
+        total_value = float(account.get("portfolio_value", self.portfolio.total_value))
+
+        positions = {}
+        total_unrealized = 0.0
+        for p in raw:
+            mv  = float(p["market_value"])
+            pnl = float(p["unrealized_pl"])
+            total_unrealized += pnl
+            pos = Position(
+                symbol=p["symbol"],
+                status=PositionStatus.OPEN,
+                shares=int(p["qty"]),
+                avg_cost=float(p["avg_entry_price"]),
+                current_price=float(p["current_price"]),
+                market_value=mv,
+                unrealized_pnl=pnl,
+                unrealized_pnl_pct=float(p["unrealized_plpc"]) * 100,
+                current_allocation=mv / total_value if total_value > 0 else 0.0,
+            )
+            positions[p["symbol"]] = pos
+
+        cash = float(account.get("cash", self.portfolio.cash))
+        bp   = float(account.get("buying_power", self.portfolio.buying_power))
+
+        return PortfolioState(
+            timestamp=datetime.now(),
+            total_value=total_value,
+            cash=cash,
+            invested=float(account.get("long_market_value", 0)),
+            positions=positions,
+            num_positions=len(positions),
+            cash_allocation=cash / total_value if total_value > 0 else 0.0,
+            available_cash=bp * 0.95,
+            buying_power=bp,
+            total_unrealized_pnl=total_unrealized,
+        )
+
     def _initialize_portfolio(self, default_value: float) -> PortfolioState:
         """Load portfolio from Alpaca if available, otherwise use default value."""
         if ALPACA_AVAILABLE:
@@ -279,6 +330,8 @@ class DailyRunner:
             "opportunities": [],
             "holds": [],
             "execution": {},
+            "exits": {},
+            "risk_assessment": {},
             "performers_update": [],
             "portfolio": {},
             "errors": []
@@ -288,6 +341,21 @@ class DailyRunner:
             # 0. Evaluate exits on ALL open positions before looking for new entries
             exit_results = self._evaluate_exits(execute=execute)
             results["exits"] = exit_results
+
+            # Build rich portfolio state with real Position objects (unlocks engine methods)
+            live_portfolio = self._build_portfolio_state()
+
+            # Portfolio risk assessment
+            try:
+                risk = self.engine.risk_manager.assess_portfolio_risk(live_portfolio)
+                results["risk_assessment"] = risk
+                logger.info(
+                    f"Portfolio risk: {risk.get('risk_level','?')} "
+                    f"(score {risk.get('overall_risk_score', 0):.0f})"
+                )
+            except Exception as e:
+                logger.warning(f"Risk assessment failed: {e}")
+                results["risk_assessment"] = {}
 
             # 1. Get candidates — prefer RS-ranked screener output if available and fresh
             if symbols:
@@ -383,7 +451,7 @@ class DailyRunner:
 
             # 3. Execute trades (or dry-run)
             results["execution"] = self._execute_opportunities(
-                opportunities, execute, min_confidence
+                opportunities, execute, min_confidence, portfolio=live_portfolio
             )
 
             # 4. Build summary
@@ -590,6 +658,13 @@ class DailyRunner:
                     "execution_details": exec_details,
                 },
                 "persistent_performers": run_results.get("performers_update", []),
+                "exits": run_results.get("exits", {
+                    "exits_triggered": [],
+                    "stops_updated": [],
+                    "positions_checked": 0,
+                    "mode": "DRY-RUN",
+                }),
+                "risk_assessment": run_results.get("risk_assessment", {}),
             }
 
             with open(docs_dir / "latest.json", "w") as f:
@@ -1009,6 +1084,56 @@ class DailyRunner:
                     )
                 result["stops_updated"].append(stop_action)
 
+        # Engine-level exit checks: partial profit taking (40%+ gain),
+        # time stop (90 days), earnings proximity reduction
+        already_exited = {e["symbol"] for e in result["exits_triggered"]}
+        try:
+            live_portfolio = self._build_portfolio_state()
+            current_prices = {p["symbol"]: float(p["current_price"]) for p in positions}
+            engine_decisions = self.engine.check_positions_for_exit(
+                portfolio=live_portfolio,
+                current_prices=current_prices,
+                earnings_calendar={},
+            )
+            for dec in [d for d in engine_decisions if d.symbol not in already_exited]:
+                pos_obj = live_portfolio.positions.get(dec.symbol)
+                pnl_pct = pos_obj.unrealized_pnl_pct if pos_obj else 0
+                entry = {
+                    "symbol":  dec.symbol,
+                    "trigger": dec.decision_type.value,
+                    "reason":  dec.primary_reason,
+                    "pnl_pct": round(pnl_pct, 2),
+                    "qty":     dec.shares,
+                    "executed": False,
+                }
+                if execute and dec.action == "SELL":
+                    try:
+                        r = self.broker.close_position(dec.symbol, qty=dec.shares)
+                        entry["executed"] = "error" not in r
+                        entry["order_id"] = r.get("id")
+                        if entry["executed"]:
+                            self._log_trade(
+                                action="EXIT",
+                                symbol=dec.symbol,
+                                shares=dec.shares,
+                                price=current_prices.get(dec.symbol, 0),
+                                exit_reason=dec.decision_type.value,
+                            )
+                            logger.info(
+                                f"ENGINE EXIT: {dec.symbol} — {dec.primary_reason} "
+                                f"| P&L: {pnl_pct:+.1f}%"
+                            )
+                    except Exception as e:
+                        entry["error"] = str(e)
+                else:
+                    logger.info(
+                        f"ENGINE EXIT (dry-run): {dec.symbol} — {dec.primary_reason} "
+                        f"| P&L: {pnl_pct:+.1f}%"
+                    )
+                result["exits_triggered"].append(entry)
+        except Exception as e:
+            logger.warning(f"engine.check_positions_for_exit failed: {e}")
+
         exits   = len(result["exits_triggered"])
         updates = len(result["stops_updated"])
         logger.info(
@@ -1020,7 +1145,8 @@ class DailyRunner:
     def _execute_opportunities(self,
                                opportunities: List[Dict],
                                execute: bool,
-                               min_confidence: float) -> Dict:
+                               min_confidence: float,
+                               portfolio: PortfolioState = None) -> Dict:
         """
         Submit qualifying BUY orders to Alpaca, or log dry-run output.
 
@@ -1102,6 +1228,44 @@ class DailyRunner:
                     "reason": "invalid limit_price or shares"
                 })
                 continue
+
+            # Gate 4: live bid price override (use Alpaca bid instead of stale yfinance close)
+            if self.broker:
+                try:
+                    quote = self.broker.get_latest_quote(symbol)
+                    bid = float(quote.get("bp", 0) or quote.get("bid_price", 0) or 0)
+                    if bid > 0:
+                        limit_price = round(bid, 2)
+                        opp["limit_price"] = limit_price
+                except Exception:
+                    pass  # keep yfinance close as fallback
+
+            # Gate 5: pre-trade risk check
+            portfolio_for_check = portfolio or self.portfolio
+            try:
+                risk_check = self.engine.risk_manager.pre_trade_risk_check(
+                    symbol=symbol,
+                    action="BUY",
+                    shares=shares,
+                    price=limit_price,
+                    portfolio=portfolio_for_check,
+                )
+                if not risk_check.get("approved", True):
+                    failed = [
+                        c["message"] for c in risk_check.get("checks", [])
+                        if c.get("status") == "FAILED"
+                    ]
+                    reason = "; ".join(failed) or "risk check failed"
+                    logger.info(f"Skipping {symbol}: risk check blocked — {reason}")
+                    skipped += 1
+                    execution_results.append({
+                        "symbol": symbol,
+                        "status": "skipped",
+                        "reason": f"risk: {reason}",
+                    })
+                    continue
+            except Exception as e:
+                logger.debug(f"Risk check unavailable for {symbol}: {e}")
 
             # Submit order
             try:

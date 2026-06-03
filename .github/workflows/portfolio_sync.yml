@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 1
+          fetch-depth: 0            # Full history needed for rebase
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -34,14 +34,14 @@ jobs:
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
           ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
         run: python portfolio_sync.py
-        # Script always exits 0 — failures write sync_error to latest.json
 
-      - name: Commit and push updated data
+      - name: Commit and push
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
           git add docs/data/latest.json docs/data/intraday.json
-          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git diff --staged --quiet && echo "Nothing to commit" && exit 0
           git commit -m "Portfolio sync [skip ci]"
-          git pull --rebase origin main
+          git fetch origin main
+          git rebase origin/main
           git push

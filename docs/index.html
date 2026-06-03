@@ -669,6 +669,84 @@
   </div>
 </div>
 
+<!-- ── Activity Tooltip ──────────────────────────────────────────────────────── -->
+<div class="pos-tooltip" id="activity-tooltip">
+  <div class="tt-head">
+    <span class="tt-name" id="att-name">—</span>
+    <span class="tt-meta">
+      <span id="att-sector">—</span>
+      <span class="sep">·</span>
+      <span id="att-industry">—</span>
+    </span>
+  </div>
+  <!-- Entry section -->
+  <div id="att-entry-body">
+    <div class="tt-summary" id="att-reasons">—</div>
+    <div class="tt-stats">
+      <div class="tt-stat">
+        <div class="tt-stat-label">Shares</div>
+        <div class="tt-stat-val" id="att-shares">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">Entry</div>
+        <div class="tt-stat-val" id="att-entry">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">Stop</div>
+        <div class="tt-stat-val" id="att-stop">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">Risk</div>
+        <div class="tt-stat-val" id="att-risk">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">Trend Score</div>
+        <div class="tt-stat-val" id="att-trend">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">Confidence</div>
+        <div class="tt-stat-val" id="att-conf">—</div>
+      </div>
+    </div>
+  </div>
+  <!-- Exit section -->
+  <div id="att-exit-body">
+    <div class="tt-summary" id="att-trigger">—</div>
+    <div class="tt-stats">
+      <div class="tt-stat">
+        <div class="tt-stat-label">Exit Price</div>
+        <div class="tt-stat-val" id="att-exit-price">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">P&amp;L</div>
+        <div class="tt-stat-val" id="att-exit-pnl">—</div>
+      </div>
+    </div>
+  </div>
+  <!-- Stop section -->
+  <div id="att-stop-body">
+    <div class="tt-summary" id="att-stop-tier">—</div>
+    <div class="tt-stats">
+      <div class="tt-stat">
+        <div class="tt-stat-label">New Stop</div>
+        <div class="tt-stat-val" id="att-new-stop">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">Current</div>
+        <div class="tt-stat-val" id="att-current">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">P&amp;L</div>
+        <div class="tt-stat-val" id="att-stop-pnl">—</div>
+      </div>
+      <div class="tt-stat">
+        <div class="tt-stat-label">Buffer</div>
+        <div class="tt-stat-val" id="att-buffer">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <div class="footer-strip">
   <span id="footer-updated">—</span>
@@ -681,23 +759,25 @@ let chart = null;
 /* ── Data Loading ──────────────────────────────────────────────────────────── */
 async function load() {
   try {
-    const [latest, history] = await Promise.all([
-      fetch('data/latest.json?t=' + Date.now()).then(r => r.json()),
-      fetch('data/history.json?t=' + Date.now()).then(r => r.json())
+    const t = Date.now();
+    const [latest, history, companies] = await Promise.all([
+      fetch('data/latest.json?t=' + t).then(r => r.json()),
+      fetch('data/history.json?t=' + t).then(r => r.json()),
+      fetch('data/companies.json?t=' + t).then(r => r.json()).catch(() => ({})),
     ]);
-    render(latest, history);
+    render(latest, history, companies);
   } catch (e) {
     setStatus('error', 'No data');
   }
 }
 
-function render(d, history) {
+function render(d, history, companies) {
   const a = d.account || {};
   const run = d.todays_run || {};
 
   renderStrip(d, a);
   renderMetrics(a, run);
-  renderActivity(run, d.exits);
+  renderActivity(run, d.exits, companies || {});
   renderPositions(d.positions || []);
   renderSignals(run);
   renderPerformers(d.persistent_performers || []);
@@ -709,43 +789,76 @@ function render(d, history) {
 
 /* ── Status Strip ──────────────────────────────────────────────────────────── */
 /* ── Activity Feed ─────────────────────────────────────────────────────────── */
-function renderActivity(run, exits) {
+function renderActivity(run, exits, companies) {
   const feed = document.getElementById('activity-feed');
   if (!feed) return;
   feed.innerHTML = '';
 
-  const events = [];
-  const exitsData = exits || {};
+  const exitsData  = exits || {};
+  const sigMap     = {};  // symbol → signal object (for ENTRY reasons)
+  (run && run.signals || []).forEach(s => { sigMap[s.symbol] = s; });
 
-  // EXIT events (show first — most operationally relevant)
+  const events = [];
+
+  // EXIT events
   (exitsData.exits_triggered || []).forEach(e => {
     const pnl = e.pnl_pct || 0;
     events.push({
-      type: pnl >= 0 ? 'EXIT_P' : 'EXIT_L',
+      type:   pnl >= 0 ? 'EXIT_P' : 'EXIT_L',
       symbol: e.symbol,
       detail: `${(e.reason || e.trigger || '').replace(/_/g,' ').toLowerCase()}  ${fmtPct(pnl)}`,
-      order: 1,
+      order:  1,
+      tooltip: {
+        kind:    'exit',
+        symbol:  e.symbol,
+        company: companies[e.symbol] || {},
+        trigger: (e.reason || e.trigger || '').replace(/_/g,' '),
+        pnl_pct: pnl,
+        price:   e.current,
+        qty:     e.qty,
+      },
     });
   });
 
   // STOP UPDATE events
   (exitsData.stops_updated || []).forEach(e => {
     events.push({
-      type: 'STOP',
+      type:   'STOP',
       symbol: e.symbol,
       detail: `stop → $${fmt2(e.new_stop)}  ${e.tier || ''}`,
-      order: 2,
+      order:  2,
+      tooltip: {
+        kind:       'stop',
+        symbol:     e.symbol,
+        company:    companies[e.symbol] || {},
+        new_stop:   e.new_stop,
+        current:    e.current,
+        tier:       e.tier,
+        pnl_pct:    e.pnl_pct,
+      },
     });
   });
 
   // ENTRY events from execution_details
   const execDetails = (run && run.execution_details) || [];
   execDetails.filter(e => e.status === 'submitted').forEach(e => {
+    const sig = sigMap[e.symbol] || {};
     events.push({
-      type: 'ENTRY',
+      type:   'ENTRY',
       symbol: e.symbol,
       detail: `${e.shares}sh @ $${fmt2(e.limit_price || 0)}  stop $${fmt2(e.stop_loss || 0)}  conf ${Math.round((e.confidence||0)*100)}%`,
-      order: 3,
+      order:  3,
+      tooltip: {
+        kind:        'entry',
+        symbol:      e.symbol,
+        company:     companies[e.symbol] || {},
+        shares:      e.shares,
+        limit_price: e.limit_price,
+        stop_loss:   e.stop_loss,
+        confidence:  e.confidence,
+        trend_score: sig.trend_score,
+        reasons:     sig.reasons || [],
+      },
     });
   });
 
@@ -754,21 +867,26 @@ function renderActivity(run, exits) {
     return;
   }
 
+  const badgeMap = {
+    ENTRY:  ['badge-entry',  'ENTRY'],
+    EXIT_P: ['badge-exit-p', 'EXIT'],
+    EXIT_L: ['badge-exit-l', 'EXIT'],
+    STOP:   ['badge-stop',   'STOP'],
+  };
+
   events.sort((a, b) => a.order - b.order).slice(0, 15).forEach(ev => {
-    const badgeMap = {
-      ENTRY:  ['badge-entry',  'ENTRY'],
-      EXIT_P: ['badge-exit-p', 'EXIT'],
-      EXIT_L: ['badge-exit-l', 'EXIT'],
-      STOP:   ['badge-stop',   'STOP'],
-    };
     const [cls, lbl] = badgeMap[ev.type] || ['badge-entry', ev.type];
     const item = document.createElement('div');
-    item.className = 'activity-item';
+    item.className = 'activity-item has-tooltip';
     item.innerHTML = `
       <span class="activity-badge ${cls}">${lbl}</span>
       <span class="activity-sym">${ev.symbol}</span>
       <span class="activity-detail">${ev.detail}</span>
     `;
+    if (ev.tooltip) {
+      item.addEventListener('mouseenter', () => showActivityTooltip(ev.tooltip));
+      item.addEventListener('mouseleave', hideActivityTooltip);
+    }
     feed.appendChild(item);
   });
 }
@@ -889,19 +1007,96 @@ function hideTooltip() {
   document.getElementById('pos-tooltip').style.display = 'none';
 }
 
+/* ── Activity Tooltip ──────────────────────────────────────────────────────── */
+function showActivityTooltip(data) {
+  const tt = document.getElementById('activity-tooltip');
+  const c  = data.company || {};
+
+  // Company header (shared)
+  set('att-name',     c.name     || data.symbol);
+  set('att-sector',   c.sector   || '—');
+  set('att-industry', c.industry || '—');
+
+  // Show/hide section bodies
+  const entryBody = document.getElementById('att-entry-body');
+  const exitBody  = document.getElementById('att-exit-body');
+  const stopBody  = document.getElementById('att-stop-body');
+  entryBody.style.display = 'none';
+  exitBody.style.display  = 'none';
+  stopBody.style.display  = 'none';
+
+  if (data.kind === 'entry') {
+    entryBody.style.display = 'block';
+
+    // Format reasons as serif italic summary
+    const reasons = (data.reasons || [])
+      .slice(0, 3)
+      .map(r => r.replace(/\(momentum score: \d+\/100\)/,'').replace(/\(golden alignment\)/,'').trim())
+      .filter(r => r.length > 4)
+      .join(' · ');
+    set('att-reasons', reasons || 'Momentum signal confirmed');
+
+    set('att-shares', data.shares ?? '—');
+    set('att-entry',  data.limit_price ? '$' + fmt2(data.limit_price) : '—');
+    set('att-stop',   data.stop_loss   ? '$' + fmt2(data.stop_loss)   : '—');
+
+    const riskPct = (data.limit_price && data.stop_loss)
+      ? fmtPct(((data.stop_loss - data.limit_price) / data.limit_price) * 100)
+      : '—';
+    const riskEl = document.getElementById('att-risk');
+    riskEl.textContent = riskPct;
+    riskEl.className   = 'tt-stat-val neg';
+
+    set('att-trend', data.trend_score ? data.trend_score + ' / 100' : '—');
+    set('att-conf',  data.confidence  ? Math.round(data.confidence * 100) + '%' : '—');
+
+  } else if (data.kind === 'exit') {
+    exitBody.style.display = 'block';
+    set('att-trigger',    data.trigger || '—');
+    set('att-exit-price', data.price   ? '$' + fmt2(data.price) : '—');
+    const pnlEl = document.getElementById('att-exit-pnl');
+    pnlEl.textContent = data.pnl_pct != null ? fmtPct(data.pnl_pct) : '—';
+    pnlEl.className   = 'tt-stat-val ' + colorClass(data.pnl_pct || 0);
+
+  } else if (data.kind === 'stop') {
+    stopBody.style.display = 'block';
+    set('att-stop-tier', data.tier || '—');
+    set('att-new-stop',  data.new_stop ? '$' + fmt2(data.new_stop) : '—');
+    set('att-current',   data.current  ? '$' + fmt2(data.current)  : '—');
+    const stopPnlEl = document.getElementById('att-stop-pnl');
+    stopPnlEl.textContent = data.pnl_pct != null ? fmtPct(data.pnl_pct) : '—';
+    stopPnlEl.className   = 'tt-stat-val ' + colorClass(data.pnl_pct || 0);
+
+    const buffer = (data.current && data.new_stop)
+      ? fmtPct(((data.current - data.new_stop) / data.current) * 100)
+      : '—';
+    set('att-buffer', buffer);
+  }
+
+  tt.style.display = 'block';
+}
+
+function hideActivityTooltip() {
+  document.getElementById('activity-tooltip').style.display = 'none';
+}
+
+/* ── Shared tooltip mouse tracking ────────────────────────────────────────── */
 document.addEventListener('mousemove', e => {
-  const tt = document.getElementById('pos-tooltip');
-  if (tt.style.display === 'none') return;
+  const pad = 16, w = 290;
 
-  const pad = 16, w = 290, h = tt.offsetHeight || 200;
-  let left = e.clientX + pad;
-  let top  = e.clientY + pad;
-
-  if (left + w > window.innerWidth  - pad) left = e.clientX - w - pad;
-  if (top  + h > window.innerHeight - pad) top  = e.clientY - h - pad;
-
-  tt.style.left = left + 'px';
-  tt.style.top  = top  + 'px';
+  [
+    document.getElementById('pos-tooltip'),
+    document.getElementById('activity-tooltip'),
+  ].forEach(tt => {
+    if (!tt || tt.style.display === 'none') return;
+    const h = tt.offsetHeight || 200;
+    let left = e.clientX + pad;
+    let top  = e.clientY + pad;
+    if (left + w > window.innerWidth  - pad) left = e.clientX - w - pad;
+    if (top  + h > window.innerHeight - pad) top  = e.clientY - h - pad;
+    tt.style.left = left + 'px';
+    tt.style.top  = top  + 'px';
+  });
 });
 
 /* ── Signal Cards ──────────────────────────────────────────────────────────── */

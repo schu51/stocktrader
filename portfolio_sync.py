@@ -8,8 +8,8 @@ Does NOT:  generate signals, run screener, evaluate exits, place orders.
 Does:      update account values, positions + P&L, market open status.
 Preserves: todays_run, signals, exits, risk_assessment, performers.
 
-Run time: ~5 seconds. Never exits with code 1 — failures are logged but
-the workflow step always succeeds so [skip ci] commits still land.
+Always writes sync_at to latest.json so the dashboard can show last sync time
+even when Alpaca is unreachable — status shows "sync_error" in that case.
 """
 
 import json
@@ -22,21 +22,44 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)
 
-# Repo root → allows importing alpaca_broker regardless of working directory
 ROOT = Path(__file__).parent.resolve()
 sys.path.insert(0, str(ROOT))
 
-DOCS_DATA    = ROOT / "docs" / "data"
-LATEST_JSON  = DOCS_DATA / "latest.json"
+DOCS_DATA      = ROOT / "docs" / "data"
+LATEST_JSON    = DOCS_DATA / "latest.json"
 COMPANIES_JSON = DOCS_DATA / "companies.json"
 
 
+def load_existing() -> dict:
+    if LATEST_JSON.exists():
+        try:
+            return json.loads(LATEST_JSON.read_text())
+        except Exception as e:
+            logger.warning(f"Could not read latest.json: {e}")
+    return {}
+
+
+def write_sync_error(existing: dict, error: str):
+    """Always write at minimum a sync_at + sync_error so dashboard shows real time."""
+    DOCS_DATA.mkdir(parents=True, exist_ok=True)
+    updated = {
+        **existing,
+        "sync_at":    datetime.now().isoformat(),
+        "sync_error": error,
+    }
+    LATEST_JSON.write_text(json.dumps(updated, indent=2))
+    logger.warning(f"Wrote sync_error to latest.json: {error}")
+
+
 def main():
-    logger.info("Portfolio sync starting")
-    logger.info(f"Working dir: {os.getcwd()}")
-    logger.info(f"Script root: {ROOT}")
-    logger.info(f"ALPACA_API_KEY set: {bool(os.getenv('ALPACA_API_KEY'))}")
-    logger.info(f"ALPACA_SECRET_KEY set: {bool(os.getenv('ALPACA_SECRET_KEY'))}")
+    logger.info("=== Portfolio Sync Starting ===")
+    logger.info(f"CWD:              {os.getcwd()}")
+    logger.info(f"ROOT:             {ROOT}")
+    logger.info(f"ALPACA_API_KEY:   {'SET' if os.getenv('ALPACA_API_KEY') else 'MISSING'}")
+    logger.info(f"ALPACA_SECRET_KEY:{'SET' if os.getenv('ALPACA_SECRET_KEY') else 'MISSING'}")
+    logger.info(f"ALPACA_PAPER:     {os.getenv('ALPACA_PAPER', 'not set')}")
+
+    existing = load_existing()
 
     # ── Alpaca connection ──────────────────────────────────────────────────
     try:
@@ -45,8 +68,8 @@ def main():
         logger.info(f"Alpaca connected: {broker.mode.value} mode")
     except Exception as e:
         logger.error(f"Alpaca connection failed: {e}")
-        logger.error("Sync aborted — latest.json not updated")
-        return  # exit cleanly, don't crash the workflow step
+        write_sync_error(existing, str(e))
+        return
 
     # ── Fetch live data ────────────────────────────────────────────────────
     try:
@@ -55,10 +78,13 @@ def main():
         market_open = broker.is_market_open()
     except Exception as e:
         logger.error(f"Alpaca data fetch failed: {e}")
+        write_sync_error(existing, str(e))
         return
 
     if "error" in account:
-        logger.error(f"Account error: {account['error']}")
+        msg = f"Account error: {account['error']}"
+        logger.error(msg)
+        write_sync_error(existing, msg)
         return
 
     logger.info(
@@ -66,14 +92,6 @@ def main():
         f"| {len(positions)} positions "
         f"| market={'OPEN' if market_open else 'CLOSED'}"
     )
-
-    # ── Load existing latest.json (preserve signals, exits, etc.) ─────────
-    existing = {}
-    if LATEST_JSON.exists():
-        try:
-            existing = json.loads(LATEST_JSON.read_text())
-        except Exception as e:
-            logger.warning(f"Could not read latest.json: {e}")
 
     # ── Load company metadata cache ────────────────────────────────────────
     companies = {}
@@ -109,7 +127,7 @@ def main():
         if sym in companies:
             pos["company"] = dict(companies[sym])
 
-        # Preserve 52w fields from previous run (don't change intraday)
+        # Preserve 52w + existing company data from previous run
         prev = next((x for x in existing.get("positions", []) if x.get("symbol") == sym), {})
         if prev.get("company"):
             merged = {**prev["company"], **pos.get("company", {})}
@@ -129,24 +147,25 @@ def main():
         "unrealized_pnl":    round(total_unrealized, 2),
     }
 
-    # ── Merge: update live fields, keep everything else unchanged ──────────
+    # ── Merge and write ────────────────────────────────────────────────────
     updated = {
         **existing,
-        "generated_at": datetime.now().isoformat(),
+        "generated_at": existing.get("generated_at", datetime.now().isoformat()),
         "sync_at":      datetime.now().isoformat(),
+        "sync_error":   None,
         "market_open":  market_open,
         "model_status": existing.get("model_status", "healthy"),
         "account":      updated_account,
         "positions":    updated_positions,
     }
 
-    # ── Write ──────────────────────────────────────────────────────────────
     DOCS_DATA.mkdir(parents=True, exist_ok=True)
     LATEST_JSON.write_text(json.dumps(updated, indent=2))
     logger.info(
         f"latest.json updated — {len(updated_positions)} positions, "
         f"P&L ${total_unrealized:+,.2f}"
     )
+    logger.info("=== Portfolio Sync Complete ===")
 
 
 if __name__ == "__main__":

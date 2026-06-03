@@ -3,7 +3,7 @@ name: Portfolio Sync
 on:
   schedule:
     - cron: '0,30 13-22 * * 1-5'   # Every 30 min, 6 AM–3 PM PT (13–22 UTC), Mon–Fri
-  workflow_dispatch:                  # Manual trigger any time
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -29,17 +29,19 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Sync portfolio from Alpaca
-        continue-on-error: true          # Log failure but never block the commit step
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
           ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
         run: python portfolio_sync.py
+        # Script always exits 0 — failures write sync_error to latest.json
 
-      - name: Commit updated dashboard data
+      - name: Commit and push updated data
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
           git add docs/data/latest.json
-          git diff --staged --quiet || git commit -m "Portfolio sync [skip ci]"
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "Portfolio sync [skip ci]"
+          git pull --rebase origin main
           git push

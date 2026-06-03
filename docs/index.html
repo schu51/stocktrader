@@ -895,9 +895,11 @@ function renderActivity(run, exits, companies) {
 function renderStrip(d, a) {
   const healthy = d.model_status === 'healthy';
 
-  // Market open status drives the live dot
+  // Market open status drives the live dot; sync_error overrides
   const marketOpen = d.market_open;
-  if (marketOpen === true) {
+  if (d.sync_error) {
+    setStatus('error', 'Sync Error');
+  } else if (marketOpen === true) {
     setStatus('live', 'Market Open');
   } else if (marketOpen === false) {
     setStatus('closed', 'Market Closed');

@@ -165,7 +165,35 @@ def main():
         f"latest.json updated — {len(updated_positions)} positions, "
         f"P&L ${total_unrealized:+,.2f}"
     )
+
+    # Append intraday data point for the 1D chart filter
+    _append_intraday(DOCS_DATA, updated_account["portfolio_value"])
+
     logger.info("=== Portfolio Sync Complete ===")
+
+
+def _append_intraday(docs_dir: Path, portfolio_value: float):
+    """
+    Append a timestamped data point to docs/data/intraday.json.
+    Resets automatically when the date changes.
+    Format: {"date": "YYYY-MM-DD", "points": [{"time": "HH:MM", "value": float}, ...]}
+    """
+    intraday_file = docs_dir / "intraday.json"
+    today = datetime.now().strftime("%Y-%m-%d")
+    now_time = datetime.now().strftime("%H:%M")
+
+    intraday = {"date": today, "points": []}
+    if intraday_file.exists():
+        try:
+            existing = json.loads(intraday_file.read_text())
+            if existing.get("date") == today:
+                intraday = existing  # same day — keep existing points
+        except Exception:
+            pass
+
+    intraday["points"].append({"time": now_time, "value": round(portfolio_value, 2)})
+    intraday_file.write_text(json.dumps(intraday, indent=2))
+    logger.info(f"Intraday point added: {now_time} = ${portfolio_value:,.2f} ({len(intraday['points'])} points today)")
 
 
 if __name__ == "__main__":

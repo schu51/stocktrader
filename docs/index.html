@@ -457,6 +457,24 @@
     .has-tooltip { cursor: default; }
     .has-tooltip:hover td { background: rgba(0, 212, 255, 0.03); }
 
+    /* ─── Chart Filters ─────────────────────────────────────────────────────── */
+    .chart-filters { display: flex; gap: 2px; margin-left: auto; }
+    .cf {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 2px 6px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: color 0.1s, border-color 0.1s;
+    }
+    .cf:hover { color: var(--text-sec); border-color: var(--border-mid); }
+    .cf.active { color: var(--amber); border-color: var(--amber); }
+
     /* ─── Activity Feed ─────────────────────────────────────────────────────── */
     .activity-feed { display: flex; flex-direction: column; gap: 0; }
     .activity-item {
@@ -539,7 +557,17 @@
 
     <!-- Portfolio Chart -->
     <div>
-      <div class="section-label">Performance <span class="section-meta" id="chart-range"></span></div>
+      <div class="section-label">
+        Performance
+        <span class="section-meta" id="chart-range"></span>
+        <span class="chart-filters" id="chart-filters">
+          <button class="cf" data-f="1D">1D</button>
+          <button class="cf" data-f="1W">1W</button>
+          <button class="cf" data-f="1M">1M</button>
+          <button class="cf active" data-f="3M">3M</button>
+          <button class="cf" data-f="ALL">ALL</button>
+        </span>
+      </div>
       <div class="chart-wrap">
         <canvas id="portfolio-chart"></canvas>
       </div>
@@ -761,20 +789,24 @@ let chart = null;
 async function load() {
   try {
     const t = Date.now();
-    const [latest, history, companies] = await Promise.all([
-      fetch('data/latest.json?t=' + t).then(r => r.json()),
-      fetch('data/history.json?t=' + t).then(r => r.json()),
-      fetch('data/companies.json?t=' + t).then(r => r.json()).catch(() => ({})),
+    const [latest, history, companies, intraday] = await Promise.all([
+      fetch('data/latest.json?t='   + t).then(r => r.json()),
+      fetch('data/history.json?t='  + t).then(r => r.json()),
+      fetch('data/companies.json?t='+ t).then(r => r.json()).catch(() => ({})),
+      fetch('data/intraday.json?t=' + t).then(r => r.json()).catch(() => null),
     ]);
-    render(latest, history, companies);
+    render(latest, history, companies, intraday);
   } catch (e) {
     setStatus('error', 'No data');
   }
 }
 
-function render(d, history, companies) {
+function render(d, history, companies, intraday) {
   const a = d.account || {};
   const run = d.todays_run || {};
+  // Store globally so filter buttons can redraw without a full reload
+  window._history  = history;
+  window._intraday = intraday;
 
   renderStrip(d, a);
   renderMetrics(a, run);
@@ -782,7 +814,7 @@ function render(d, history, companies) {
   renderPositions(d.positions || []);
   renderSignals(run);
   renderPerformers(d.persistent_performers || []);
-  renderChart(history);
+  renderChart(getActiveFilter(), history, intraday);
   renderHistory(history);
 
   set('footer-updated', 'Last updated ' + fmtDateTime(d.generated_at));
@@ -1206,28 +1238,68 @@ function renderPerformers(performers) {
 }
 
 /* ── Portfolio Chart ───────────────────────────────────────────────────────── */
-function renderChart(history) {
-  if (!history.length) return;
+/* ── Chart filter helpers ──────────────────────────────────────────────────── */
+function getActiveFilter() {
+  const active = document.querySelector('.cf.active');
+  return active ? active.dataset.f : '3M';
+}
+
+function getChartData(filter, history, intraday) {
+  if (filter === '1D') {
+    // Use 30-min sync points from today
+    const pts = (intraday && intraday.points) || [];
+    if (!pts.length) {
+      // Fall back to last two history points if no intraday data yet
+      const recent = history.slice(-2);
+      return {
+        labels: recent.map(h => h.date),
+        values: recent.map(h => h.portfolio_value || 0),
+        rangeLabel: 'Today (30-min)',
+        isDot: true,
+      };
+    }
+    return {
+      labels: pts.map(p => p.time),
+      values: pts.map(p => p.value || 0),
+      rangeLabel: (intraday.date || 'Today') + ' · 30-min',
+      isDot: true,
+    };
+  }
+
+  const days = filter === '1W' ? 7 : filter === '1M' ? 30 : filter === '3M' ? 90 : 9999;
+  const sliced = history.slice(-days);
+  const label  = sliced.length >= 2
+    ? sliced[0].date + ' → ' + sliced[sliced.length - 1].date
+    : filter;
+  return {
+    labels:     sliced.map(h => h.date),
+    values:     sliced.map(h => h.portfolio_value || 0),
+    rangeLabel: label,
+    isDot:      sliced.length <= 20,
+  };
+}
+
+function renderChart(filter, history, intraday) {
   const ctx = document.getElementById('portfolio-chart');
+  const { labels, values, rangeLabel, isDot } = getChartData(filter, history, intraday);
+
+  if (!labels.length) return;
 
   if (chart) chart.destroy();
-
-  if (history.length >= 2) {
-    set('chart-range', history[0].date + ' → ' + history[history.length - 1].date);
-  }
+  set('chart-range', rangeLabel);
 
   chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: history.map(h => h.date),
+      labels,
       datasets: [{
-        data: history.map(h => h.portfolio_value || 0),
+        data: values,
         borderColor: '#00d4ff',
         backgroundColor: 'rgba(0, 212, 255, 0.04)',
         borderWidth: 1.5,
         fill: true,
-        tension: 0.3,
-        pointRadius: history.length > 15 ? 0 : 2,
+        tension: filter === '1D' ? 0.1 : 0.3,
+        pointRadius: isDot ? 2 : 0,
         pointHoverRadius: 4,
         pointBackgroundColor: '#00d4ff'
       }]
@@ -1235,7 +1307,7 @@ function renderChart(history) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      animation: { duration: 600 },
+      animation: { duration: 400 },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -1255,25 +1327,27 @@ function renderChart(history) {
       scales: {
         x: {
           grid: { color: 'rgba(26,39,64,0.6)', drawTicks: false },
-          ticks: {
-            color: '#3d5470',
-            font: { family: 'SF Mono, Menlo, monospace', size: 9 },
-            maxTicksLimit: 8,
-            maxRotation: 0
-          }
+          ticks: { color: '#3d5470', font: { family: 'SF Mono, Menlo, monospace', size: 9 }, maxTicksLimit: 8, maxRotation: 0 }
         },
         y: {
           grid: { color: 'rgba(26,39,64,0.6)' },
-          ticks: {
-            color: '#3d5470',
-            font: { family: 'SF Mono, Menlo, monospace', size: 9 },
-            callback: v => '$' + (v / 1000).toFixed(0) + 'k'
-          }
+          ticks: { color: '#3d5470', font: { family: 'SF Mono, Menlo, monospace', size: 9 }, callback: v => '$' + (v / 1000).toFixed(0) + 'k' }
         }
       }
     }
   });
 }
+
+/* ── Filter button wiring ──────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.cf').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cf').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderChart(btn.dataset.f, window._history || [], window._intraday || null);
+    });
+  });
+});
 
 /* ── Run History ───────────────────────────────────────────────────────────── */
 function renderHistory(history) {

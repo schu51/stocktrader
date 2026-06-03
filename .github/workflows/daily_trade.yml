@@ -9,6 +9,8 @@ jobs:
   trade:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write           # Needed to push dashboard data
 
     steps:
       - name: Checkout latest model
@@ -30,11 +32,11 @@ jobs:
           ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
         run: python run_daily_analysis.py --execute
 
-      - name: Upload run log
+      - name: Commit dashboard data
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: run-log-${{ github.run_id }}
-          path: |
-            trading_data/
-          retention-days: 30
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add docs/data/
+          git diff --staged --quiet || git commit -m "Dashboard data update [skip ci]"
+          git push

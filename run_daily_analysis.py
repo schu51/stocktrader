@@ -387,7 +387,107 @@ class DailyRunner:
             f"{results['execution'].get('submitted', 0)} orders submitted"
         )
 
+        self._write_dashboard_data(results, execute)
         return results
+
+    def _write_dashboard_data(self, run_results: dict, execute: bool = False):
+        """Write docs/data/latest.json and docs/data/history.json for the dashboard."""
+        try:
+            docs_dir = Path(__file__).parent / "docs" / "data"
+            docs_dir.mkdir(parents=True, exist_ok=True)
+
+            # Fetch live Alpaca positions
+            positions = []
+            if self.broker:
+                for p in (self.broker.get_positions() or []):
+                    positions.append({
+                        "symbol": p["symbol"],
+                        "qty": int(p["qty"]),
+                        "avg_cost": round(float(p["avg_entry_price"]), 2),
+                        "current_price": round(float(p["current_price"]), 2),
+                        "market_value": round(float(p["market_value"]), 2),
+                        "unrealized_pnl": round(float(p["unrealized_pl"]), 2),
+                        "unrealized_pnl_pct": round(float(p["unrealized_plpc"]) * 100, 2),
+                        "stop_loss": None,
+                    })
+
+            # Build signal list with execution status
+            exec_details = run_results.get("execution", {}).get("details", [])
+            executed = {d["symbol"] for d in exec_details if d.get("status") == "submitted"}
+            signals = [
+                {
+                    "symbol": o["symbol"],
+                    "action": o["action"],
+                    "shares": o.get("shares"),
+                    "limit_price": o.get("limit_price"),
+                    "stop_loss": o.get("stop_loss"),
+                    "confidence": o.get("confidence"),
+                    "signal_strength": o.get("signal_strength"),
+                    "trend_score": o.get("trend_score"),
+                    "executed": o["symbol"] in executed,
+                }
+                for o in run_results.get("opportunities", [])
+            ]
+
+            acct = run_results.get("portfolio", {})
+            total_unrealized = sum(p["unrealized_pnl"] for p in positions)
+
+            latest = {
+                "generated_at": datetime.now().isoformat(),
+                "run_id": run_results.get("run_id", ""),
+                "model_status": "healthy" if run_results.get("status") == "success" else "error",
+                "account": {
+                    "portfolio_value": acct.get("total_value", 0),
+                    "cash": acct.get("cash", 0),
+                    "buying_power": acct.get("available_cash", 0),
+                    "long_market_value": acct.get("invested", 0),
+                    "unrealized_pnl": total_unrealized,
+                },
+                "positions": positions,
+                "todays_run": {
+                    "mode": "EXECUTE" if execute else "DRY-RUN",
+                    "candidates_screened": run_results.get("summary", {}).get("candidates_screened", 0),
+                    "buy_signals": run_results.get("summary", {}).get("buy_signals", 0),
+                    "orders_submitted": run_results.get("summary", {}).get("orders_submitted", 0),
+                    "total_invested": run_results.get("summary", {}).get("total_investment_recommended", 0),
+                    "signals": signals,
+                    "execution_details": exec_details,
+                },
+                "persistent_performers": run_results.get("performers_update", []),
+            }
+
+            with open(docs_dir / "latest.json", "w") as f:
+                json.dump(latest, f, indent=2)
+
+            # Append/update history.json
+            history_file = docs_dir / "history.json"
+            history = json.loads(history_file.read_text()) if history_file.exists() else []
+
+            today = datetime.now().strftime("%Y-%m-%d")
+            entry = {
+                "date": today,
+                "run_id": run_results.get("run_id", ""),
+                "mode": "EXECUTE" if execute else "DRY-RUN",
+                "candidates_screened": run_results.get("summary", {}).get("candidates_screened", 0),
+                "buy_signals": run_results.get("summary", {}).get("buy_signals", 0),
+                "orders_submitted": run_results.get("summary", {}).get("orders_submitted", 0),
+                "portfolio_value": acct.get("total_value", 0),
+                "status": run_results.get("status", "unknown"),
+            }
+
+            idx = next((i for i, h in enumerate(history) if h["date"] == today), None)
+            if idx is not None:
+                history[idx] = entry
+            else:
+                history.append(entry)
+
+            with open(history_file, "w") as f:
+                json.dump(history[-90:], f, indent=2)
+
+            logger.info("Dashboard data written to docs/data/")
+
+        except Exception as e:
+            logger.warning(f"Could not write dashboard data: {e}")
 
     def _execute_opportunities(self,
                                opportunities: List[Dict],

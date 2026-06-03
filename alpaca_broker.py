@@ -343,23 +343,23 @@ class AlpacaBroker:
         }
         
         if limit_price:
-            order_data["limit_price"] = str(limit_price)
-        
+            order_data["limit_price"] = str(round(float(limit_price), 2))
+
         if stop_price:
-            order_data["stop_price"] = str(stop_price)
-        
+            order_data["stop_price"] = str(round(float(stop_price), 2))
+
         if client_order_id:
             order_data["client_order_id"] = client_order_id
-        
+
         # Bracket order (entry with stop loss and/or take profit)
         if stop_loss or take_profit:
             order_data["order_class"] = "bracket"
-            
+
             if stop_loss:
-                order_data["stop_loss"] = {"stop_price": str(stop_loss)}
-            
+                order_data["stop_loss"] = {"stop_price": str(round(float(stop_loss), 2))}
+
             if take_profit:
-                order_data["take_profit"] = {"limit_price": str(take_profit)}
+                order_data["take_profit"] = {"limit_price": str(round(float(take_profit), 2))}
         
         result = self._request("POST", "/v2/orders", data=order_data)
         

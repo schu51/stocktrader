@@ -11,6 +11,11 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: write
+    # Credentials at job level so every step inherits them
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
 
     steps:
       - name: Checkout
@@ -28,11 +33,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Verify credentials are available
+        run: |
+          echo "ALPACA_API_KEY set: $( [ -n "$ALPACA_API_KEY" ] && echo YES || echo NO )"
+          echo "ALPACA_SECRET_KEY set: $( [ -n "$ALPACA_SECRET_KEY" ] && echo YES || echo NO )"
+          echo "ALPACA_PAPER: $ALPACA_PAPER"
+
       - name: Sync portfolio from Alpaca
-        env:
-          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
-          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
-          ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
         run: python portfolio_sync.py
 
       - name: Commit and push

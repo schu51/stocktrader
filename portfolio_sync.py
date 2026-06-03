@@ -40,11 +40,11 @@ def load_existing() -> dict:
 
 
 def write_sync_error(existing: dict, error: str):
-    """Always write at minimum a sync_at + sync_error so dashboard shows real time."""
+    """Preserve existing data + flag sync_error. Does NOT update sync_at so the
+    dashboard continues showing the last successful sync time, not the error time."""
     DOCS_DATA.mkdir(parents=True, exist_ok=True)
     updated = {
         **existing,
-        "sync_at":    datetime.now().isoformat(),
         "sync_error": error,
     }
     LATEST_JSON.write_text(json.dumps(updated, indent=2))

@@ -308,6 +308,11 @@ class ExitRules:
         ConvictionTier.LOW:         0.10,
         ConvictionTier.SPECULATIVE: 0.12,
     })
+    # Partial profit taking: sell take_profit_partial_size at take_profit_partial gain
+    take_profit_partial:      float = 0.40   # Take partial profits at 40% gain
+    take_profit_partial_size: float = 0.40   # Sell 40% of position at that level
+    # Time stop: flag for review after max_holding_period_days days
+    max_holding_period_days:  int   = 90
 
 
 @dataclass
@@ -322,6 +327,12 @@ class EntryRules:
     min_upside_pct:             float = -100.0
     min_gross_margin:           float = 0.0
     min_revenue_growth:         float = 0.0
+    # RSI overbought filter: skip entry if RSI above this threshold
+    rsi_overbought_block:       float = 78.0
+    # Earnings blackout: skip entry if earnings within this many days
+    earnings_blackout_days:     int   = 5
+    # Sector concentration: max allocation to any single sector
+    max_sector_allocation:      float = 0.35  # 35% max in one sector
 
 
 @dataclass

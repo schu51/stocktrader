@@ -304,15 +304,45 @@ class DailyRunner:
             holds = []
             errors = []
 
+            # Get current sector allocations for concentration check
+            sector_allocations = self._get_sector_allocations()
+
             for candidate in candidates:
                 symbol = candidate["symbol"]
 
                 try:
                     research = self.research_scores.get(symbol)
 
-                    # Fetch live market data via yfinance (fallback when DataOrchestrator unavailable)
+                    # Fetch live market data via yfinance
                     market_snapshot, price_bars = fetch_market_data(symbol)
 
+                    # ── Pre-entry filters ──────────────────────────────────────
+
+                    # Earnings blackout: skip if earnings within N days
+                    earnings_skip, earnings_reason = self._check_earnings_proximity(symbol)
+                    if earnings_skip:
+                        holds.append({"symbol": symbol, "reason": earnings_reason})
+                        logger.info(f"Skipping {symbol}: {earnings_reason}")
+                        continue
+
+                    # RSI overbought: skip if RSI above threshold
+                    rsi_skip, rsi_reason = self._check_rsi_at_entry(price_bars)
+                    if rsi_skip:
+                        holds.append({"symbol": symbol, "reason": rsi_reason})
+                        logger.info(f"Skipping {symbol}: {rsi_reason}")
+                        continue
+
+                    # Sector concentration: skip if sector already at limit
+                    sector = candidate.get("sector", "")
+                    sector_skip, sector_reason = self._check_sector_concentration(
+                        sector, sector_allocations
+                    )
+                    if sector_skip:
+                        holds.append({"symbol": symbol, "reason": sector_reason})
+                        logger.info(f"Skipping {symbol}: {sector_reason}")
+                        continue
+
+                    # ── Signal generation ──────────────────────────────────────
                     decision = self.engine.evaluate_entry(
                         symbol=symbol,
                         portfolio=self.portfolio,
@@ -324,13 +354,16 @@ class DailyRunner:
 
                     decision_dict = self._decision_to_dict(decision)
 
+                    # Apply momentum score scaling to position size
+                    decision_dict = self._scale_size_by_momentum(decision_dict)
+
                     if decision.action == "BUY":
                         opportunities.append(decision_dict)
                         self.screener.track_performer(
                             symbol=symbol,
                             score=decision.signal.strength if decision.signal else 0,
                             signal="BUY",
-                            sector=candidate.get("sector", ""),
+                            sector=sector,
                             thesis=candidate.get("theme", ""),
                             note=f"confidence={decision_dict.get('confidence', 0):.2f}"
                         )
@@ -591,6 +624,208 @@ class DailyRunner:
         except Exception as e:
             logger.warning(f"Could not write dashboard data: {e}")
 
+    # =========================================================================
+    # PRE-ENTRY FILTERS
+    # =========================================================================
+
+    def _check_earnings_proximity(self, symbol: str) -> tuple:
+        """
+        Returns (skip: bool, reason: str).
+        Blocks entry if earnings are within EntryRules.earnings_blackout_days.
+        """
+        blackout = self.engine.config.entry_rules.earnings_blackout_days
+        try:
+            import yfinance as yf
+            cal = yf.Ticker(symbol).calendar
+            if cal is not None:
+                dates = cal.get("Earnings Date") if hasattr(cal, "get") else None
+                if dates is None and hasattr(cal, "T"):
+                    row = cal.T.get("Earnings Date") if "Earnings Date" in cal.T.columns else None
+                    dates = row.values.tolist() if row is not None else None
+                if dates:
+                    from datetime import timezone
+                    for ed in (dates if isinstance(dates, list) else [dates]):
+                        try:
+                            if hasattr(ed, "date"):
+                                ed = ed.date()
+                            days = (ed - date.today()).days
+                            if 0 <= days <= blackout:
+                                return True, f"Earnings in {days}d — blackout {blackout}d window"
+                        except Exception:
+                            pass
+        except Exception:
+            pass
+        return False, ""
+
+    def _check_rsi_at_entry(self, price_bars) -> tuple:
+        """
+        Returns (skip: bool, reason: str).
+        Blocks entry if RSI is above the overbought threshold.
+        """
+        threshold = self.engine.config.entry_rules.rsi_overbought_block
+        if not price_bars or len(price_bars) < 15:
+            return False, ""
+        try:
+            from momentum import MomentumAnalyzer
+            analyzer = MomentumAnalyzer()
+            closes = [b.close for b in price_bars]
+            rsi_result = analyzer._calculate_rsi(closes)
+            if rsi_result and rsi_result.rsi > threshold:
+                return True, f"RSI {rsi_result.rsi:.0f} > {threshold} — overbought, wait for pullback"
+        except Exception:
+            pass
+        return False, ""
+
+    def _get_sector_allocations(self) -> dict:
+        """
+        Returns dict of sector → current allocation fraction of portfolio.
+        Uses SECTOR_MAP from config and live Alpaca positions.
+        """
+        from config import SECTOR_MAP
+        if not self.broker:
+            return {}
+        try:
+            positions = self.broker.get_positions() or []
+            total_value = self.portfolio.total_value or 1
+            # Build symbol → sector lookup
+            sym_to_sector = {}
+            for sector, syms in SECTOR_MAP.items():
+                for s in syms:
+                    sym_to_sector[s] = sector
+
+            allocations = {}
+            for p in positions:
+                sector = sym_to_sector.get(p["symbol"], "other")
+                allocations[sector] = allocations.get(sector, 0) + float(p["market_value"])
+
+            return {s: v / total_value for s, v in allocations.items()}
+        except Exception:
+            return {}
+
+    def _check_sector_concentration(self, sector: str, allocations: dict) -> tuple:
+        """
+        Returns (skip: bool, reason: str).
+        Blocks entry if adding to this sector would exceed max_sector_allocation.
+        """
+        if not sector:
+            return False, ""
+        max_alloc = self.engine.config.entry_rules.max_sector_allocation
+        # Map display sector name to config sector key
+        sector_key = sector.lower().replace(" ", "_").replace("-", "_")
+        current = max(
+            allocations.get(sector_key, 0),
+            allocations.get(sector.lower(), 0)
+        )
+        if current >= max_alloc:
+            return True, (
+                f"Sector '{sector}' already at {current*100:.0f}% "
+                f"(max {max_alloc*100:.0f}%)"
+            )
+        return False, ""
+
+    def _scale_size_by_momentum(self, decision_dict: dict) -> dict:
+        """
+        Scale position shares up or down based on trend_score.
+        Higher momentum score → more capital allocated within portfolio limits.
+
+        Tiers:
+          score >= 85 : 1.3× (strong trend, overweight)
+          score >= 75 : 1.0× (baseline)
+          score >= 65 : 0.75× (marginal trend, underweight)
+          score <  65 : 0.60× (weak, minimum size)
+        """
+        score = decision_dict.get("trend_score") or 70
+        shares = decision_dict.get("shares") or 0
+        limit_price = decision_dict.get("limit_price") or 0
+
+        if score >= 85:
+            multiplier = 1.30
+        elif score >= 75:
+            multiplier = 1.00
+        elif score >= 65:
+            multiplier = 0.75
+        else:
+            multiplier = 0.60
+
+        if multiplier != 1.0 and shares > 0:
+            new_shares = max(1, round(shares * multiplier))
+            decision_dict["shares"] = new_shares
+            decision_dict["position_value"] = round(new_shares * limit_price, 2)
+            decision_dict["momentum_scale"] = multiplier
+
+        return decision_dict
+
+    # =========================================================================
+    # TRADE LOG
+    # =========================================================================
+
+    def _log_trade(self, action: str, symbol: str, shares: int, price: float,
+                   stop_loss: float = None, trend_score: int = None,
+                   confidence: float = None, exit_reason: str = None,
+                   trade_id: str = None):
+        """
+        Append-only trade log. Records every entry and exit with outcome data.
+        Stored in docs/data/trades.json — the feedback loop foundation.
+        """
+        try:
+            trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
+            trades = json.loads(trades_file.read_text()) if trades_file.exists() else []
+
+            today = datetime.now().strftime("%Y-%m-%d")
+            ts    = datetime.now().isoformat()
+
+            if action == "BUY":
+                trades.append({
+                    "trade_id":    f"TRD-{datetime.now().strftime('%Y%m%d%H%M%S')}-{symbol}",
+                    "symbol":      symbol,
+                    "status":      "OPEN",
+                    "entry_date":  today,
+                    "entry_ts":    ts,
+                    "entry_price": round(price, 2),
+                    "shares":      shares,
+                    "stop_loss":   round(stop_loss, 2) if stop_loss else None,
+                    "trend_score": trend_score,
+                    "confidence":  confidence,
+                    "exit_date":   None,
+                    "exit_price":  None,
+                    "exit_reason": None,
+                    "pnl_usd":     None,
+                    "pnl_pct":     None,
+                    "hold_days":   None,
+                })
+                logger.info(f"Trade logged: BUY {shares} {symbol} @ ${price:.2f}")
+
+            elif action in ("SELL", "EXIT"):
+                # Find the matching open trade and close it
+                for t in reversed(trades):
+                    if t["symbol"] == symbol and t["status"] == "OPEN":
+                        entry = t["entry_price"]
+                        pnl_pct = ((price - entry) / entry) * 100 if entry else 0
+                        pnl_usd = (price - entry) * t["shares"]
+                        entry_dt = date.fromisoformat(t["entry_date"]) if t.get("entry_date") else date.today()
+                        hold_days = (date.today() - entry_dt).days
+
+                        t.update({
+                            "status":      "CLOSED",
+                            "exit_date":   today,
+                            "exit_ts":     ts,
+                            "exit_price":  round(price, 2),
+                            "exit_reason": exit_reason or "UNKNOWN",
+                            "pnl_usd":     round(pnl_usd, 2),
+                            "pnl_pct":     round(pnl_pct, 2),
+                            "hold_days":   hold_days,
+                        })
+                        logger.info(
+                            f"Trade closed: {symbol} @ ${price:.2f} | "
+                            f"P&L: {pnl_pct:+.1f}% | Reason: {exit_reason}"
+                        )
+                        break
+
+            trades_file.write_text(json.dumps(trades, indent=2))
+
+        except Exception as e:
+            logger.warning(f"Could not log trade for {symbol}: {e}")
+
     def _evaluate_exits(self, execute: bool = False) -> dict:
         """
         Evaluate ALL open Alpaca positions for exit signals and trailing stop updates.
@@ -667,6 +902,14 @@ class DailyRunner:
                             f"EXIT EXECUTED: {sym} — price below 50MA "
                             f"(${current:.2f} < ${sma50:.2f}) | P&L: {pnl_pct:+.1f}%"
                         )
+                        if action["executed"]:
+                            self._log_trade(
+                                action="EXIT",
+                                symbol=sym,
+                                shares=qty,
+                                price=current,
+                                exit_reason="PRICE_BELOW_50MA",
+                            )
                     except Exception as e:
                         action["error"] = str(e)
                 else:
@@ -842,6 +1085,15 @@ class DailyRunner:
                         f"ORDER SUBMITTED: BUY {shares} {symbol} "
                         f"@ ${limit_price:.2f} | stop=${opp.get('stop_loss', 0):.2f} | "
                         f"order_id={result.get('order_id')}"
+                    )
+                    self._log_trade(
+                        action="BUY",
+                        symbol=symbol,
+                        shares=shares,
+                        price=limit_price,
+                        stop_loss=opp.get("stop_loss"),
+                        trend_score=opp.get("trend_score"),
+                        confidence=confidence,
                     )
                 else:
                     logger.warning(f"Order not submitted for {symbol}: {result.get('reason')}")

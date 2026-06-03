@@ -390,6 +390,100 @@ class DailyRunner:
         self._write_dashboard_data(results, execute)
         return results
 
+    def _get_company_cache(self, symbols: list, docs_dir: Path) -> dict:
+        """
+        Return company metadata for each symbol, using a local cache file.
+        Static fields (name, sector, description) are cached; only fetched once per symbol.
+        """
+        import yfinance as yf
+
+        cache_file = docs_dir / "companies.json"
+        cache = {}
+        if cache_file.exists():
+            try:
+                cache = json.loads(cache_file.read_text())
+            except Exception:
+                pass
+
+        uncached = [s for s in symbols if s not in cache]
+        if uncached:
+            logger.info(f"Fetching company info for {len(uncached)} new symbols: {uncached}")
+            for sym in uncached:
+                try:
+                    info = yf.Ticker(sym).info
+                    cap = info.get("marketCap") or 0
+                    if cap > 1e12:
+                        cap_str = f"${cap/1e12:.1f}T"
+                    elif cap > 1e9:
+                        cap_str = f"${cap/1e9:.1f}B"
+                    elif cap > 1e6:
+                        cap_str = f"${cap/1e6:.0f}M"
+                    else:
+                        cap_str = "—"
+
+                    summary = (info.get("longBusinessSummary") or "").strip()
+                    if len(summary) > 240:
+                        summary = summary[:240].rsplit(" ", 1)[0] + "…"
+
+                    cache[sym] = {
+                        "name":       info.get("longName") or info.get("shortName") or sym,
+                        "sector":     info.get("sector") or "",
+                        "industry":   info.get("industry") or "",
+                        "summary":    summary,
+                        "market_cap": cap_str,
+                    }
+                except Exception:
+                    cache[sym] = {
+                        "name": sym, "sector": "", "industry": "",
+                        "summary": "", "market_cap": "—",
+                    }
+            try:
+                cache_file.write_text(json.dumps(cache, indent=2))
+            except Exception:
+                pass
+
+        return cache
+
+    def _enrich_positions(self, positions: list, docs_dir: Path) -> list:
+        """Add company metadata and 52-week context to each position."""
+        import yfinance as yf
+
+        if not positions:
+            return positions
+
+        symbols = [p["symbol"] for p in positions]
+        company_cache = self._get_company_cache(symbols, docs_dir)
+
+        for p in positions:
+            sym = p["symbol"]
+            meta = company_cache.get(sym, {})
+
+            # Fetch 52w range via fast_info (much faster than .info)
+            week_52_high = week_52_low = pct_from_high = None
+            try:
+                fi = yf.Ticker(sym).fast_info
+                week_52_high = round(float(fi.year_high), 2) if fi.year_high else None
+                week_52_low  = round(float(fi.year_low), 2)  if fi.year_low  else None
+                if week_52_high and week_52_high > 0:
+                    pct_from_high = round(
+                        ((week_52_high - p["current_price"]) / week_52_high) * 100, 1
+                    )
+            except Exception:
+                pass
+
+            p["company"] = {
+                "name":         meta.get("name", sym),
+                "sector":       meta.get("sector", ""),
+                "industry":     meta.get("industry", ""),
+                "summary":      meta.get("summary", ""),
+                "market_cap":   meta.get("market_cap", "—"),
+                "week_52_high": week_52_high,
+                "week_52_low":  week_52_low,
+                "pct_from_high": pct_from_high,
+            }
+
+        return positions
+
     def _write_dashboard_data(self, run_results: dict, execute: bool = False):
         """Write docs/data/latest.json and docs/data/history.json for the dashboard."""
         try:
@@ -411,6 +505,9 @@ class DailyRunner:
                         "stop_loss": None,
                     })
 
+            # Enrich positions with company metadata and 52w context
+            positions = self._enrich_positions(positions, docs_dir)
+
             # Build signal list with execution status
             exec_details = run_results.get("execution", {}).get("details", [])
             executed = {d["symbol"] for d in exec_details if d.get("status") == "submitted"}
@@ -424,6 +521,7 @@ class DailyRunner:
                     "confidence": o.get("confidence"),
                     "signal_strength": o.get("signal_strength"),
                     "trend_score": o.get("trend_score"),
+                    "reasons": o.get("reasons", []),
                     "executed": o["symbol"] in executed,
                 }
                 for o in run_results.get("opportunities", [])

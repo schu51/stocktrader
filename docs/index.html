@@ -386,6 +386,76 @@
       justify-content: space-between;
     }
 
+    /* ─── Position Tooltip ──────────────────────────────────────────────────── */
+    .pos-tooltip {
+      position: fixed;
+      z-index: 999;
+      pointer-events: none;
+      width: 290px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-mid);
+      border-radius: 3px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.75), 0 0 0 1px rgba(0,212,255,0.07);
+      display: none;
+      overflow: hidden;
+    }
+    .tt-head {
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .tt-name {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+      margin-bottom: 3px;
+    }
+    .tt-meta {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .tt-meta .sep { margin: 0 5px; color: var(--border-mid); }
+    .tt-summary {
+      padding: 10px 14px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 11px;
+      line-height: 1.55;
+      color: var(--text-sec);
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .tt-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .tt-stat {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .tt-stat:nth-last-child(-n+2) { border-bottom: none; }
+    .tt-stat-label {
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .tt-stat-val {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+    }
+    /* Rows that have tooltips get a subtle cue on hover */
+    .has-tooltip { cursor: default; }
+    .has-tooltip:hover td { background: rgba(0, 212, 255, 0.03); }
+
     /* ─── Responsive ────────────────────────────────────────────────────────── */
     @media (max-width: 900px) {
       .pane-layout { grid-template-columns: 1fr; }
@@ -534,6 +604,37 @@
   </table>
 </div>
 
+<!-- ── Position Tooltip ──────────────────────────────────────────────────────── -->
+<div class="pos-tooltip" id="pos-tooltip">
+  <div class="tt-head">
+    <span class="tt-name" id="tt-name">—</span>
+    <span class="tt-meta">
+      <span id="tt-sector">—</span>
+      <span class="sep">·</span>
+      <span id="tt-industry">—</span>
+    </span>
+  </div>
+  <div class="tt-summary" id="tt-summary">—</div>
+  <div class="tt-stats">
+    <div class="tt-stat">
+      <div class="tt-stat-label">Mkt Cap</div>
+      <div class="tt-stat-val" id="tt-cap">—</div>
+    </div>
+    <div class="tt-stat">
+      <div class="tt-stat-label">From 52W High</div>
+      <div class="tt-stat-val" id="tt-from-high">—</div>
+    </div>
+    <div class="tt-stat">
+      <div class="tt-stat-label">52W High</div>
+      <div class="tt-stat-val" id="tt-52h">—</div>
+    </div>
+    <div class="tt-stat">
+      <div class="tt-stat-label">52W Low</div>
+      <div class="tt-stat-val" id="tt-52l">—</div>
+    </div>
+  </div>
+</div>
+
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <div class="footer-strip">
   <span id="footer-updated">—</span>
@@ -643,6 +744,11 @@ function renderPositions(positions) {
       <td class="num ${colorClass(pct)}">${fmtPct(pct)}</td>
       <td class="num stop">${p.stop_loss ? '$' + fmt2(p.stop_loss) : '—'}</td>
     `;
+    if (p.company) {
+      tr.classList.add('has-tooltip');
+      tr.addEventListener('mouseenter', () => showTooltip(p));
+      tr.addEventListener('mouseleave', hideTooltip);
+    }
     tbody.appendChild(tr);
   });
 
@@ -651,6 +757,52 @@ function renderPositions(positions) {
   totEl.textContent = fmtSigned(totalPnl) + ' total P&L';
   totEl.className = 'section-meta-pnl ' + colorClass(totalPnl);
 }
+
+/* ── Position Tooltip ──────────────────────────────────────────────────────── */
+function showTooltip(p) {
+  const c = p.company || {};
+  const tt = document.getElementById('pos-tooltip');
+
+  set('tt-name',     c.name     || p.symbol);
+  set('tt-sector',   c.sector   || '—');
+  set('tt-industry', c.industry || '—');
+  set('tt-summary',  c.summary  || 'No description available.');
+  set('tt-cap',      c.market_cap || '—');
+
+  const fromHigh = c.pct_from_high;
+  const fromHighEl = document.getElementById('tt-from-high');
+  if (fromHigh != null) {
+    fromHighEl.textContent = (fromHigh > 0 ? '-' : '+') + Math.abs(fromHigh) + '%';
+    fromHighEl.className = 'tt-stat-val ' + (fromHigh > 5 ? 'neg' : fromHigh < -5 ? 'pos' : '');
+  } else {
+    fromHighEl.textContent = '—';
+    fromHighEl.className = 'tt-stat-val';
+  }
+
+  set('tt-52h', c.week_52_high ? '$' + fmt2(c.week_52_high) : '—');
+  set('tt-52l', c.week_52_low  ? '$' + fmt2(c.week_52_low)  : '—');
+
+  tt.style.display = 'block';
+}
+
+function hideTooltip() {
+  document.getElementById('pos-tooltip').style.display = 'none';
+}
+
+document.addEventListener('mousemove', e => {
+  const tt = document.getElementById('pos-tooltip');
+  if (tt.style.display === 'none') return;
+
+  const pad = 16, w = 290, h = tt.offsetHeight || 200;
+  let left = e.clientX + pad;
+  let top  = e.clientY + pad;
+
+  if (left + w > window.innerWidth  - pad) left = e.clientX - w - pad;
+  if (top  + h > window.innerHeight - pad) top  = e.clientY - h - pad;
+
+  tt.style.left = left + 'px';
+  tt.style.top  = top  + 'px';
+});
 
 /* ── Signal Cards ──────────────────────────────────────────────────────────── */
 function renderSignals(run) {

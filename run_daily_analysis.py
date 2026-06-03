@@ -597,6 +597,8 @@ class DailyRunner:
             docs_dir.mkdir(parents=True, exist_ok=True)
 
             # Fetch live Alpaca positions
+            # If Alpaca is unavailable, preserve existing positions from last good run
+            # rather than overwriting with an empty list.
             positions = []
             if self.broker:
                 for p in (self.broker.get_positions() or []):
@@ -610,6 +612,20 @@ class DailyRunner:
                         "unrealized_pnl_pct": round(float(p["unrealized_plpc"]) * 100, 2),
                         "stop_loss": None,
                     })
+            else:
+                # Alpaca unavailable — preserve last known positions so dashboard
+                # doesn't show empty portfolio with $100k default value
+                existing_latest = docs_dir / "latest.json"
+                if existing_latest.exists():
+                    try:
+                        prev = json.loads(existing_latest.read_text())
+                        positions = prev.get("positions", [])
+                        logger.warning(
+                            f"Alpaca unavailable — preserving {len(positions)} positions "
+                            f"from last known state"
+                        )
+                    except Exception:
+                        pass
 
             # Enrich positions with company metadata and 52w context
             positions = self._enrich_positions(positions, docs_dir)

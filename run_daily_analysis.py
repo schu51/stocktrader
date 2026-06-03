@@ -285,6 +285,10 @@ class DailyRunner:
         }
 
         try:
+            # 0. Evaluate exits on ALL open positions before looking for new entries
+            exit_results = self._evaluate_exits(execute=execute)
+            results["exits"] = exit_results
+
             # 1. Get candidates
             if symbols:
                 candidates = [{"symbol": s.upper(), "source": "manual"} for s in symbols]
@@ -586,6 +590,160 @@ class DailyRunner:
 
         except Exception as e:
             logger.warning(f"Could not write dashboard data: {e}")
+
+    def _evaluate_exits(self, execute: bool = False) -> dict:
+        """
+        Evaluate ALL open Alpaca positions for exit signals and trailing stop updates.
+
+        Runs before entry screening every session. Checks positions the model
+        doesn't even track (e.g. old strategy holds) — no position is invisible.
+
+        Exit triggers:
+          HARD EXIT  — price closed below 50-day MA (trend gate violated)
+          TRAIL UPD  — position up 25%+: raise stop to break-even
+                     — position up 50%+: trail at 15% below current price
+                     — position up 100%+: trail at 10% below current price
+
+        Returns a summary dict logged to run results and dashboard.
+        """
+        import yfinance as yf
+
+        result = {
+            "exits_triggered": [],
+            "stops_updated": [],
+            "positions_checked": 0,
+            "mode": "EXECUTE" if execute else "DRY-RUN",
+        }
+
+        if not self.broker:
+            result["error"] = "Alpaca not available"
+            return result
+
+        positions = self.broker.get_positions() or []
+        result["positions_checked"] = len(positions)
+
+        if not positions:
+            return result
+
+        for pos in positions:
+            sym         = pos["symbol"]
+            qty         = int(pos["qty"])
+            avg_cost    = float(pos["avg_entry_price"])
+            current     = float(pos["current_price"])
+            pnl_pct     = float(pos["unrealized_plpc"]) * 100
+
+            # Fetch price history for MA calculation
+            try:
+                hist   = yf.Ticker(sym).history(period="1y")
+                closes = hist["Close"].values
+                if len(closes) < 50:
+                    continue
+                sma50  = float(closes[-50:].mean())
+                sma200 = float(closes[-200:].mean()) if len(closes) >= 200 else None
+            except Exception as e:
+                logger.warning(f"Could not fetch data for {sym}: {e}")
+                continue
+
+            # ── Hard exit: price below 50MA ─────────────────────────────────
+            if current < sma50:
+                pct_below = (sma50 - current) / sma50 * 100
+                action = {
+                    "symbol":    sym,
+                    "trigger":   "PRICE_BELOW_50MA",
+                    "current":   round(current, 2),
+                    "sma50":     round(sma50, 2),
+                    "pct_below": round(pct_below, 2),
+                    "pnl_pct":   round(pnl_pct, 2),
+                    "qty":       qty,
+                    "executed":  False,
+                    "reason":    f"Price ${current:.2f} is {pct_below:.1f}% below 50MA ${sma50:.2f}",
+                }
+                if execute:
+                    try:
+                        close_result = self.broker.close_position(sym)
+                        action["executed"] = "error" not in close_result
+                        action["order_id"] = close_result.get("id")
+                        logger.info(
+                            f"EXIT EXECUTED: {sym} — price below 50MA "
+                            f"(${current:.2f} < ${sma50:.2f}) | P&L: {pnl_pct:+.1f}%"
+                        )
+                    except Exception as e:
+                        action["error"] = str(e)
+                else:
+                    logger.info(
+                        f"EXIT SIGNAL (dry-run): {sym} — price ${current:.2f} "
+                        f"below 50MA ${sma50:.2f} | P&L: {pnl_pct:+.1f}%"
+                    )
+                result["exits_triggered"].append(action)
+                continue  # Skip stop update — position is being closed
+
+            # ── Trailing stop update ─────────────────────────────────────────
+            # Only update if position is in profit AND above 50MA
+            if pnl_pct >= 25:
+                if pnl_pct >= 100:
+                    new_stop = round(current * 0.90, 2)   # 10% trail
+                    tier     = "100%+ gain → 10% trail"
+                elif pnl_pct >= 50:
+                    new_stop = round(current * 0.85, 2)   # 15% trail
+                    tier     = "50%+ gain → 15% trail"
+                else:
+                    new_stop = round(avg_cost * 1.01, 2)  # break-even + 1%
+                    tier     = "25%+ gain → break-even stop"
+
+                stop_action = {
+                    "symbol":    sym,
+                    "trigger":   "TRAILING_STOP_UPDATE",
+                    "new_stop":  new_stop,
+                    "pnl_pct":   round(pnl_pct, 2),
+                    "current":   round(current, 2),
+                    "tier":      tier,
+                    "executed":  False,
+                }
+
+                if execute:
+                    try:
+                        # Cancel any existing stop sell orders for this symbol
+                        open_orders = self.broker.get_orders(
+                            status="open", symbols=[sym]
+                        )
+                        for o in open_orders:
+                            if o.get("side") == "sell" and o.get("type") in (
+                                "stop", "stop_limit", "trailing_stop"
+                            ):
+                                self.broker.cancel_order(o["id"])
+                                logger.info(f"Cancelled stop order {o['id']} for {sym}")
+
+                        # Place new stop order
+                        stop_result = self.broker.place_order(
+                            symbol=sym,
+                            qty=qty,
+                            side="sell",
+                            order_type="stop",
+                            stop_price=new_stop,
+                            time_in_force="gtc",
+                        )
+                        stop_action["executed"] = "error" not in stop_result
+                        stop_action["order_id"] = stop_result.get("id")
+                        logger.info(
+                            f"STOP UPDATED: {sym} → ${new_stop:.2f} ({tier}) | "
+                            f"P&L: {pnl_pct:+.1f}%"
+                        )
+                    except Exception as e:
+                        stop_action["error"] = str(e)
+                else:
+                    logger.info(
+                        f"STOP UPDATE (dry-run): {sym} → ${new_stop:.2f} "
+                        f"({tier}) | P&L: {pnl_pct:+.1f}%"
+                    )
+                result["stops_updated"].append(stop_action)
+
+        exits   = len(result["exits_triggered"])
+        updates = len(result["stops_updated"])
+        logger.info(
+            f"Exit evaluation complete: {exits} exits triggered, "
+            f"{updates} stops updated ({result['mode']})"
+        )
+        return result
 
     def _execute_opportunities(self,
                                opportunities: List[Dict],

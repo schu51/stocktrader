@@ -1,0 +1,45 @@
+name: Portfolio Sync
+
+on:
+  schedule:
+    - cron: '0,30 13-22 * * 1-5'   # Every 30 min, 6 AM–3 PM PT (13–22 UTC), Mon–Fri
+  workflow_dispatch:                  # Manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Pull latest so we don't clobber the daily trade commit
+          ref: main
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Sync portfolio from Alpaca
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+        run: python portfolio_sync.py
+
+      - name: Commit updated dashboard data
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add docs/data/latest.json
+          git diff --staged --quiet || git commit -m "Portfolio sync [skip ci]"
+          git push

@@ -88,7 +88,8 @@
       margin-right: 5px;
       animation: pulse-live 2.4s ease-in-out infinite;
     }
-    .live-dot.error { background: var(--red); animation: none; }
+    .live-dot.error  { background: var(--red);    animation: none; }
+    .live-dot.closed { background: var(--amber);  animation: none; }
     @keyframes pulse-live {
       0%, 100% { box-shadow: 0 0 0 0 rgba(0, 201, 138, 0.5); }
       50%       { box-shadow: 0 0 0 5px rgba(0, 201, 138, 0); }
@@ -893,13 +894,24 @@ function renderActivity(run, exits, companies) {
 
 function renderStrip(d, a) {
   const healthy = d.model_status === 'healthy';
-  setStatus(healthy ? 'live' : 'error', healthy ? 'Live' : 'Error');
 
-  const runId = d.run_id ? 'Run ' + d.run_id.slice(-6) : '—';
-  const runTime = d.generated_at
-    ? new Date(d.generated_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })
+  // Market open status drives the live dot
+  const marketOpen = d.market_open;
+  if (marketOpen === true) {
+    setStatus('live', 'Market Open');
+  } else if (marketOpen === false) {
+    setStatus('closed', 'Market Closed');
+  } else {
+    setStatus(healthy ? 'live' : 'error', healthy ? 'Live' : 'Error');
+  }
+
+  // Show sync time (portfolio_sync updates generated_at every 30 min)
+  const syncAt  = d.sync_at || d.generated_at;
+  const runTime = syncAt
+    ? new Date(syncAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })
     : '—';
-  set('strip-run', runId + ' · ' + runTime);
+  const runId = d.run_id ? 'Run ' + d.run_id.slice(-6) : '—';
+  set('strip-run', runId + ' · Synced ' + runTime);
 
   const el = document.getElementById('strip-value');
   el.textContent = a.portfolio_value ? '$' + fmt2(a.portfolio_value) : '—';
@@ -913,7 +925,8 @@ function renderStrip(d, a) {
 function setStatus(state, label) {
   const dot = document.getElementById('status-dot');
   const txt = document.getElementById('status-text');
-  dot.className = 'live-dot' + (state === 'error' ? ' error' : '');
+  const mod = state === 'error' ? ' error' : state === 'closed' ? ' closed' : '';
+  dot.className = 'live-dot' + mod;
   txt.textContent = label;
 }
 

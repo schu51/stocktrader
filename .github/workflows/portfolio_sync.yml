@@ -35,20 +35,11 @@ jobs:
           ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
         run: python portfolio_sync.py
 
-      - name: Show data files after sync
-        run: |
-          echo "=== intraday.json ==="
-          cat docs/data/intraday.json || echo "NOT FOUND"
-          echo ""
-          echo "=== git status ==="
-          git status docs/data/
-
       - name: Commit and push
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
-          git add docs/data/
-          git status --short
+          git add docs/data/latest.json
           git diff --staged --quiet && echo "Nothing to commit" && exit 0
           git commit -m "Portfolio sync [skip ci]"
           git fetch origin main

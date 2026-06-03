@@ -159,41 +159,25 @@ def main():
         "positions":    updated_positions,
     }
 
+    # Append intraday point for the 1D chart filter directly into latest.json
+    today = datetime.now().strftime("%Y-%m-%d")
+    now_time = datetime.now().strftime("%H:%M")
+    prev_intraday = existing.get("intraday_today", {})
+    if prev_intraday.get("date") == today:
+        intraday_points = prev_intraday.get("points", [])
+    else:
+        intraday_points = []
+    intraday_points.append({"time": now_time, "value": round(updated_account["portfolio_value"], 2)})
+    updated["intraday_today"] = {"date": today, "points": intraday_points}
+
     DOCS_DATA.mkdir(parents=True, exist_ok=True)
     LATEST_JSON.write_text(json.dumps(updated, indent=2))
     logger.info(
         f"latest.json updated — {len(updated_positions)} positions, "
-        f"P&L ${total_unrealized:+,.2f}"
+        f"P&L ${total_unrealized:+,.2f}, "
+        f"intraday point {now_time} added ({len(intraday_points)} pts today)"
     )
-
-    # Append intraday data point for the 1D chart filter
-    _append_intraday(DOCS_DATA, updated_account["portfolio_value"])
-
     logger.info("=== Portfolio Sync Complete ===")
-
-
-def _append_intraday(docs_dir: Path, portfolio_value: float):
-    """
-    Append a timestamped data point to docs/data/intraday.json.
-    Resets automatically when the date changes.
-    Format: {"date": "YYYY-MM-DD", "points": [{"time": "HH:MM", "value": float}, ...]}
-    """
-    intraday_file = docs_dir / "intraday.json"
-    today = datetime.now().strftime("%Y-%m-%d")
-    now_time = datetime.now().strftime("%H:%M")
-
-    intraday = {"date": today, "points": []}
-    if intraday_file.exists():
-        try:
-            existing = json.loads(intraday_file.read_text())
-            if existing.get("date") == today:
-                intraday = existing  # same day — keep existing points
-        except Exception:
-            pass
-
-    intraday["points"].append({"time": now_time, "value": round(portfolio_value, 2)})
-    intraday_file.write_text(json.dumps(intraday, indent=2))
-    logger.info(f"Intraday point added: {now_time} = ${portfolio_value:,.2f} ({len(intraday['points'])} points today)")
 
 
 if __name__ == "__main__":

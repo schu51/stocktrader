@@ -789,13 +789,13 @@ let chart = null;
 async function load() {
   try {
     const t = Date.now();
-    const [latest, history, companies, intraday] = await Promise.all([
+    const [latest, history, companies] = await Promise.all([
       fetch('data/latest.json?t='   + t).then(r => r.json()),
       fetch('data/history.json?t='  + t).then(r => r.json()),
       fetch('data/companies.json?t='+ t).then(r => r.json()).catch(() => ({})),
-      fetch('data/intraday.json?t=' + t).then(r => r.json()).catch(() => null),
     ]);
-    render(latest, history, companies, intraday);
+    // Intraday data lives inside latest.json — no separate file needed
+    render(latest, history, companies, latest.intraday_today || null);
   } catch (e) {
     setStatus('error', 'No data');
   }

@@ -1,166 +1,193 @@
 {
-  "generated_at": "2026-06-03T18:21:31.227242",
-  "run_id": "20260603_182122",
+  "generated_at": "2026-06-04T14:35:11.761077",
+  "run_id": "20260604_143456",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 114295.18,
-    "cash": 33912.4,
-    "buying_power": 275614.722,
-    "long_market_value": 80382.78,
-    "unrealized_pnl": 14876.65
+    "portfolio_value": 114102.2,
+    "cash": 29892.33,
+    "buying_power": 252773.66299999997,
+    "long_market_value": 84209.87,
+    "unrealized_pnl": 10808.24
   },
   "positions": [
     {
       "symbol": "ALNT",
-      "qty": 55,
+      "qty": 33,
       "avg_cost": 53.53,
-      "current_price": 79.16,
-      "market_value": 4353.8,
-      "unrealized_pnl": 1409.65,
-      "unrealized_pnl_pct": 47.88,
+      "current_price": 85.5,
+      "market_value": 2821.5,
+      "unrealized_pnl": 1055.01,
+      "unrealized_pnl_pct": 59.72,
       "stop_loss": null,
       "company": {
         "name": "Allient Inc.",
         "sector": "Technology",
         "industry": "Electronic Components",
         "summary": "Allient Inc., together with its subsidiaries, designs, manufactures, and sells precision and specialty-controlled motion components and systems for various industries in the United States, Canada, South America, Europe, and the\u2026",
-        "market_cap": "$1.5B"
+        "market_cap": "$1.5B",
+        "week_52_high": 87.46,
+        "week_52_low": 31.14,
+        "pct_from_high": 2.2
       }
     },
     {
       "symbol": "AMAT",
-      "qty": 7,
-      "avg_cost": 496.89,
-      "current_price": 501.12,
-      "market_value": 3507.84,
-      "unrealized_pnl": 29.58,
-      "unrealized_pnl_pct": 0.85,
+      "qty": 13,
+      "avg_cost": 492.14,
+      "current_price": 491.51,
+      "market_value": 6389.63,
+      "unrealized_pnl": -8.22,
+      "unrealized_pnl_pct": -0.13,
       "stop_loss": null,
       "company": {
         "name": "Applied Materials, Inc.",
         "sector": "Technology",
         "industry": "Semiconductor Equipment & Materials",
         "summary": "Applied Materials, Inc. provides materials engineering solutions, equipment, services, and software to the semiconductor and related industries in the United States, China, Korea, Taiwan, Japan, Southeast Asia, Europe, and internationally.\u2026",
-        "market_cap": "$399.5B"
+        "market_cap": "$399.5B",
+        "week_52_high": 508.26,
+        "week_52_low": 154.47,
+        "pct_from_high": 3.3
       }
     },
     {
       "symbol": "AMD",
       "qty": 6,
       "avg_cost": 540.69,
-      "current_price": 533.38,
-      "market_value": 3200.28,
-      "unrealized_pnl": -43.87,
-      "unrealized_pnl_pct": -1.35,
+      "current_price": 516.79,
+      "market_value": 3100.71,
+      "unrealized_pnl": -143.44,
+      "unrealized_pnl_pct": -4.42,
       "stop_loss": null,
       "company": {
         "name": "Advanced Micro Devices, Inc.",
         "sector": "Technology",
         "industry": "Semiconductors",
         "summary": "Advanced Micro Devices, Inc. operates as a semiconductor company internationally. It operates in three segments: Data Center, Client and Gaming, and Embedded. The company offers artificial intelligence (AI) accelerators, microprocessors,\u2026",
-        "market_cap": "$874.5B"
+        "market_cap": "$874.5B",
+        "week_52_high": 546.44,
+        "week_52_low": 114.71,
+        "pct_from_high": 5.4
       }
     },
     {
       "symbol": "AMKR",
       "qty": 80,
       "avg_cost": 37.55,
-      "current_price": 72.9,
-      "market_value": 5832.0,
-      "unrealized_pnl": 2828.0,
-      "unrealized_pnl_pct": 94.14,
+      "current_price": 73.59,
+      "market_value": 5887.4,
+      "unrealized_pnl": 2883.4,
+      "unrealized_pnl_pct": 95.98,
       "stop_loss": null,
       "company": {
         "name": "Amkor Technology, Inc.",
         "sector": "Technology",
         "industry": "Semiconductor Equipment & Materials",
         "summary": "Amkor Technology, Inc. provides outsourced semiconductor packaging and test services in the United States, Japan, Europe, and the Asia Pacific. It offers turnkey packaging and test services, including semiconductor wafer bump, wafer probe,\u2026",
-        "market_cap": "$19.4B"
+        "market_cap": "$19.4B",
+        "week_52_high": 79.5,
+        "week_52_low": 18.65,
+        "pct_from_high": 7.4
       }
     },
     {
       "symbol": "ARM",
       "qty": 9,
       "avg_cost": 385.51,
-      "current_price": 394.9,
-      "market_value": 3554.1,
-      "unrealized_pnl": 84.51,
-      "unrealized_pnl_pct": 2.44,
+      "current_price": 381.57,
+      "market_value": 3434.13,
+      "unrealized_pnl": -35.46,
+      "unrealized_pnl_pct": -1.02,
       "stop_loss": null,
       "company": {
         "name": "Arm Holdings plc",
         "sector": "Technology",
         "industry": "Semiconductors",
         "summary": "Arm Holdings plc researches, develops, licenses, and markets central processing unit (CPU) intellectual property (IP), graphics processing unit IP, systems IP, compute subsystems (CSS), and associated software, tools and related services.\u2026",
-        "market_cap": "$419.3B"
+        "market_cap": "$419.3B",
+        "week_52_high": 427.99,
+        "week_52_low": 100.02,
+        "pct_from_high": 10.8
       }
     },
     {
       "symbol": "AVGO",
       "qty": 14,
       "avg_cost": 478.28,
-      "current_price": 422.8,
-      "market_value": 5919.2,
-      "unrealized_pnl": -776.68,
-      "unrealized_pnl_pct": -11.6,
+      "current_price": 408.73,
+      "market_value": 5722.16,
+      "unrealized_pnl": -973.72,
+      "unrealized_pnl_pct": -14.54,
       "stop_loss": null,
       "company": {
         "name": "Broadcom Inc.",
         "sector": "Technology",
         "industry": "Semiconductors",
         "summary": "Broadcom Inc. designs, develops, and supplies various semiconductor devices and infrastructure software solutions internationally. The company operates in two segments: Semiconductor Solutions and Infrastructure Software. The company\u2026",
-        "market_cap": "$2.3T"
+        "market_cap": "$2.3T",
+        "week_52_high": 495.0,
+        "week_52_low": 241.11,
+        "pct_from_high": 17.4
       }
     },
     {
       "symbol": "BHE",
       "qty": 66,
       "avg_cost": 45.09,
-      "current_price": 86.06,
-      "market_value": 5679.96,
-      "unrealized_pnl": 2704.02,
-      "unrealized_pnl_pct": 90.86,
+      "current_price": 87.45,
+      "market_value": 5771.7,
+      "unrealized_pnl": 2795.76,
+      "unrealized_pnl_pct": 93.95,
       "stop_loss": null,
       "company": {
         "name": "Benchmark Electronics, Inc.",
         "sector": "Technology",
         "industry": "Electronic Components",
         "summary": "Benchmark Electronics, Inc., together with its subsidiaries, offers product design, engineering services, technology solutions, and manufacturing services in the Americas, Asia, and Europe. It provides design and engineering services and\u2026",
-        "market_cap": "$3.2B"
+        "market_cap": "$3.2B",
+        "week_52_high": 89.4,
+        "week_52_low": 34.44,
+        "pct_from_high": 2.2
       }
     },
     {
       "symbol": "COHU",
       "qty": 123,
       "avg_cost": 24.29,
-      "current_price": 57.7,
-      "market_value": 7097.1,
-      "unrealized_pnl": 4109.43,
-      "unrealized_pnl_pct": 137.55,
+      "current_price": 54.84,
+      "market_value": 6745.32,
+      "unrealized_pnl": 3757.65,
+      "unrealized_pnl_pct": 125.77,
       "stop_loss": null,
       "company": {
         "name": "Cohu, Inc.",
         "sector": "Technology",
         "industry": "Semiconductor Equipment & Materials",
         "summary": "Cohu, Inc., through its subsidiaries, provides semiconductor test equipment and services in the United States, Taiwan, China, Malaysia, the Philippines, Singapore, and internationally. It supplies test and inspection metrology automation\u2026",
-        "market_cap": "$2.7B"
+        "market_cap": "$2.7B",
+        "week_52_high": 58.47,
+        "week_52_low": 17.71,
+        "pct_from_high": 6.2
       }
     },
     {
       "symbol": "CRWD",
-      "qty": 8,
-      "avg_cost": 745.61,
-      "current_price": 661.9,
-      "market_value": 5295.2,
-      "unrealized_pnl": -669.66,
-      "unrealized_pnl_pct": -11.23,
+      "qty": 11,
+      "avg_cost": 729.84,
+      "current_price": 680.48,
+      "market_value": 7485.28,
+      "unrealized_pnl": -542.92,
+      "unrealized_pnl_pct": -6.76,
       "stop_loss": null,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
         "sector": "Technology",
         "industry": "Software - Infrastructure",
         "summary": "CrowdStrike Holdings, Inc. provides cybersecurity solutions in the United States and internationally. Its unified platform provides cloud-delivered protection of endpoints, cloud workloads, identity, and data through a software as a\u2026",
-        "market_cap": "$191.8B"
+        "market_cap": "$191.8B",
+        "week_52_high": 785.66,
+        "week_52_low": 342.72,
+        "pct_from_high": 13.4
       }
     },
     {
@@ -177,119 +204,150 @@
         "sector": "Technology",
         "industry": "Software - Infrastructure",
         "summary": "Cantaloupe, Inc., a digital payments and software services company, provides technology solutions for the self-service commerce market. The company offers a suite of solutions, including micro-payment processing, self-checkout kiosks,\u2026",
-        "market_cap": "$826M"
+        "market_cap": "$826M",
+        "week_52_high": 11.21,
+        "week_52_low": 8.21,
+        "pct_from_high": 0.1
       }
     },
     {
       "symbol": "DDOG",
-      "qty": 14,
-      "avg_cost": 246.56,
-      "current_price": 249.45,
-      "market_value": 3492.3,
-      "unrealized_pnl": 40.46,
-      "unrealized_pnl_pct": 1.17,
-      "stop_loss": null
+      "qty": 24,
+      "avg_cost": 246.58,
+      "current_price": 246.38,
+      "market_value": 5913.24,
+      "unrealized_pnl": -4.6,
+      "unrealized_pnl_pct": -0.08,
+      "stop_loss": null,
+      "company": {
+        "name": "Datadog, Inc.",
+        "sector": "Technology",
+        "industry": "Software - Application",
+        "summary": "Datadog, Inc. operates an observability and security platform for cloud applications in the United States and internationally. The company's products comprise infrastructure and application performance monitoring, log management,\u2026",
+        "market_cap": "$87.7B",
+        "week_52_high": 278.7,
+        "week_52_low": 98.01,
+        "pct_from_high": 11.6
+      }
     },
     {
       "symbol": "KLAC",
-      "qty": 1,
-      "avg_cost": 2052.47,
-      "current_price": 2134.82,
-      "market_value": 2134.82,
-      "unrealized_pnl": 82.35,
-      "unrealized_pnl_pct": 4.01,
+      "qty": 2,
+      "avg_cost": 2047.36,
+      "current_price": 2071.62,
+      "market_value": 4143.24,
+      "unrealized_pnl": 48.52,
+      "unrealized_pnl_pct": 1.19,
       "stop_loss": null,
       "company": {
         "name": "KLA Corporation",
         "sector": "Technology",
         "industry": "Semiconductor Equipment & Materials",
         "summary": "KLA Corporation, together with its subsidiaries, designs, manufactures, and markets process control, process-enabling, and yield management solutions for the semiconductor and related electronics industries worldwide. The company operates\u2026",
-        "market_cap": "$272.4B"
-      }
-    },
-    {
-      "symbol": "LASR",
-      "qty": 85,
-      "avg_cost": 33.82,
-      "current_price": 74.66,
-      "market_value": 6346.1,
-      "unrealized_pnl": 3471.56,
-      "unrealized_pnl_pct": 120.77,
-      "stop_loss": null,
-      "company": {
-        "name": "nLIGHT, Inc.",
-        "sector": "Technology",
-        "industry": "Semiconductors",
-        "summary": "nLIGHT, Inc. engages in the design, development, manufacture, and sale of semiconductor and fiber lasers for aerospace and defense, industrial, and microfabrication applications. It operates through two segments, Laser Products and\u2026",
-        "market_cap": "$4.5B"
+        "market_cap": "$272.4B",
+        "week_52_high": 2145.52,
+        "week_52_low": 777.42,
+        "pct_from_high": 3.4
       }
     },
     {
       "symbol": "MRVL",
       "qty": 22,
       "avg_cost": 303.49,
-      "current_price": 293.49,
-      "market_value": 6456.78,
-      "unrealized_pnl": -219.93,
-      "unrealized_pnl_pct": -3.29,
+      "current_price": 294.07,
+      "market_value": 6469.65,
+      "unrealized_pnl": -207.06,
+      "unrealized_pnl_pct": -3.1,
       "stop_loss": null,
       "company": {
         "name": "Marvell Technology, Inc.",
         "sector": "Technology",
         "industry": "Semiconductors",
         "summary": "Marvell Technology, Inc., together with its subsidiaries, provides data infrastructure semiconductor solutions and spanning the data center core to network edge in the United States, Argentina, China, India, Israel, Japan, Singapore, South\u2026",
-        "market_cap": "$274.9B"
+        "market_cap": "$274.9B",
+        "week_52_high": 324.2,
+        "week_52_low": 61.44,
+        "pct_from_high": 9.3
       }
     },
     {
       "symbol": "NET",
       "qty": 26,
       "avg_cost": 262.9,
-      "current_price": 254.0,
-      "market_value": 6604.0,
-      "unrealized_pnl": -231.53,
-      "unrealized_pnl_pct": -3.39,
+      "current_price": 271.22,
+      "market_value": 7051.72,
+      "unrealized_pnl": 216.19,
+      "unrealized_pnl_pct": 3.16,
       "stop_loss": null,
       "company": {
         "name": "Cloudflare, Inc.",
         "sector": "Technology",
         "industry": "Software - Infrastructure",
         "summary": "Cloudflare, Inc. operates as a cloud services provider that delivers a range of services to businesses worldwide. The company provides a cloud-based security solution to secure a range of combination of platforms, including public and\u2026",
-        "market_cap": "$93.3B"
+        "market_cap": "$93.3B",
+        "week_52_high": 274.63,
+        "week_52_low": 158.83,
+        "pct_from_high": 1.2
+      }
+    },
+    {
+      "symbol": "PANW",
+      "qty": 9,
+      "avg_cost": 273.5,
+      "current_price": 269.58,
+      "market_value": 2426.22,
+      "unrealized_pnl": -35.28,
+      "unrealized_pnl_pct": -1.43,
+      "stop_loss": null,
+      "company": {
+        "name": "Palo Alto Networks, Inc.",
+        "sector": "Technology",
+        "industry": "Software - Infrastructure",
+        "summary": "Palo Alto Networks, Inc. provides cybersecurity solutions in the Americas, Europe, the Middle East, Africa, the Asia Pacific, and Japan. It offers Prisma Access, a secure access service edge solution; Strata Cloud Manager, a network\u2026",
+        "market_cap": "$219.7B",
+        "week_52_high": 302.95,
+        "week_52_low": 139.57,
+        "pct_from_high": 11.0
       }
     },
     {
       "symbol": "PDFS",
       "qty": 110,
       "avg_cost": 26.97,
-      "current_price": 55.51,
-      "market_value": 6106.1,
-      "unrealized_pnl": 3139.4,
-      "unrealized_pnl_pct": 105.82,
+      "current_price": 54.59,
+      "market_value": 6004.9,
+      "unrealized_pnl": 3038.2,
+      "unrealized_pnl_pct": 102.41,
       "stop_loss": null,
       "company": {
         "name": "PDF Solutions, Inc.",
         "sector": "Technology",
         "industry": "Software - Application",
         "summary": "PDF Solutions, Inc. provides proprietary software, physical intellectual property for integrated circuit designs, electrical measurement hardware tools, proven methodologies, and professional services in the United States, Japan, China,\u2026",
-        "market_cap": "$2.3B"
+        "market_cap": "$2.3B",
+        "week_52_high": 56.95,
+        "week_52_low": 18.12,
+        "pct_from_high": 4.1
       }
     },
     {
       "symbol": "SOFI",
       "qty": 100,
       "avg_cost": 28.94,
-      "current_price": 16.56,
-      "market_value": 1656.0,
-      "unrealized_pnl": -1238.0,
-      "unrealized_pnl_pct": -42.78,
+      "current_price": 17.01,
+      "market_value": 1700.85,
+      "unrealized_pnl": -1193.15,
+      "unrealized_pnl_pct": -41.23,
       "stop_loss": null,
       "company": {
         "name": "SoFi Technologies, Inc.",
         "sector": "Financial Services",
         "industry": "Credit Services",
         "summary": "SoFi Technologies, Inc. provides various financial services in the United States, Latin America, Canada, and Hong Kong. The company operates through three segments: Lending, Technology Platform, and Financial Services. It offers lending\u2026",
-        "market_cap": "$21.7B"
+        "market_cap": "$21.7B",
+        "week_52_high": 32.73,
+        "week_52_low": 13.46,
+        "pct_from_high": 48.0
       }
     }
   ],
@@ -297,15 +355,15 @@
     "mode": "EXECUTE",
     "candidates_screened": 23,
     "buy_signals": 8,
-    "orders_submitted": 0,
-    "total_invested": 20447.16,
+    "orders_submitted": 8,
+    "total_invested": 24802.43,
     "signals": [
       {
-        "symbol": "KLAC",
+        "symbol": "AMAT",
         "action": "BUY",
-        "shares": 1,
-        "limit_price": 2121.405029296875,
-        "stop_loss": 1951.69,
+        "shares": 6,
+        "limit_price": 468.22,
+        "stop_loss": 452.46,
         "confidence": 0.85,
         "signal_strength": 1.0,
         "trend_score": 83,
@@ -316,148 +374,325 @@
           "RSI in healthy uptrend range (69)",
           "Price above 50 & 200 MA with bullish alignment"
         ],
-        "executed": false
+        "executed": true
       },
       {
-        "symbol": "ASML",
+        "symbol": "KLAC",
         "action": "BUY",
         "shares": 1,
-        "limit_price": 1731.6099853515625,
-        "stop_loss": 1593.08,
-        "confidence": 0.85,
-        "signal_strength": 1.0,
-        "trend_score": 83,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 83/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 83/100)",
-          "MACD histogram expanding bullish",
-          "RSI in healthy uptrend range (68)",
-          "Price above 50 & 200 MA with bullish alignment"
-        ],
-        "executed": false
-      },
-      {
-        "symbol": "TSM",
-        "action": "BUY",
-        "shares": 6,
-        "limit_price": 439.12548828125,
-        "stop_loss": 404.0,
-        "confidence": 0.85,
-        "signal_strength": 1.0,
-        "trend_score": 83,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 83/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 83/100)",
-          "MACD histogram expanding bullish",
-          "RSI in healthy uptrend range (65)",
-          "Price above 50 & 200 MA with bullish alignment"
-        ],
-        "executed": false
-      },
-      {
-        "symbol": "QCOM",
-        "action": "BUY",
-        "shares": 11,
-        "limit_price": 250.32000732421875,
-        "stop_loss": 230.29,
-        "confidence": 0.85,
-        "signal_strength": 1.0,
-        "trend_score": 82,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 82/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 82/100)",
-          "MACD histogram expanding bullish",
-          "RSI in healthy uptrend range (65)",
-          "Golden Cross (50>200 MA) 5 days ago"
-        ],
-        "executed": false
-      },
-      {
-        "symbol": "GNRC",
-        "action": "BUY",
-        "shares": 10,
-        "limit_price": 283.44500732421875,
-        "stop_loss": 260.77,
+        "limit_price": 2054.79,
+        "stop_loss": 1905.89,
         "confidence": 0.85,
         "signal_strength": 1.0,
         "trend_score": 81,
         "reasons": [
           "\ud83d\udcca Trend Score: 81/100 (STRONG_UP)",
           "Strong uptrend (momentum score: 81/100)",
-          "MACD histogram expanding bullish",
-          "RSI in healthy uptrend range (65)",
-          "Price above 50 & 200 MA with bullish alignment"
+          "RSI in healthy uptrend range (64)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Price above all VWAP levels (daily, weekly, monthly)"
         ],
-        "executed": false
-      },
-      {
-        "symbol": "NET",
-        "action": "BUY",
-        "shares": 11,
-        "limit_price": 266.5299987792969,
-        "stop_loss": 245.21,
-        "confidence": 0.85,
-        "signal_strength": 1.0,
-        "trend_score": 81,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 81/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 81/100)",
-          "MACD histogram expanding bullish",
-          "RSI in healthy uptrend range (68)",
-          "Golden Cross (50>200 MA) 19 days ago"
-        ],
-        "executed": false
+        "executed": true
       },
       {
         "symbol": "ON",
         "action": "BUY",
-        "shares": 22,
-        "limit_price": 133.52000427246094,
-        "stop_loss": 122.84,
+        "shares": 26,
+        "limit_price": 122.53,
+        "stop_loss": 119.06,
         "confidence": 0.85,
         "signal_strength": 1.0,
-        "trend_score": 80,
+        "trend_score": 79,
         "reasons": [
-          "\ud83d\udcca Trend Score: 80/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 80/100)",
-          "MACD histogram expanding bullish",
+          "\ud83d\udcca Trend Score: 79/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 79/100)",
+          "RSI in healthy uptrend range (67)",
           "Price above 50 & 200 MA with bullish alignment",
           "Price above all VWAP levels (daily, weekly, monthly)"
         ],
-        "executed": false
+        "executed": true
       },
       {
-        "symbol": "AMAT",
+        "symbol": "ASML",
         "action": "BUY",
-        "shares": 5,
-        "limit_price": 500.42999267578125,
-        "stop_loss": 460.4,
+        "shares": 2,
+        "limit_price": 1702.01,
+        "stop_loss": 1572.46,
         "confidence": 0.85,
         "signal_strength": 1.0,
-        "trend_score": 80,
+        "trend_score": 79,
         "reasons": [
-          "\ud83d\udcca Trend Score: 80/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 80/100)",
-          "MACD histogram expanding bullish",
+          "\ud83d\udcca Trend Score: 79/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 79/100)",
+          "RSI in healthy uptrend range (66)",
           "Price above 50 & 200 MA with bullish alignment",
           "Price above all VWAP levels (daily, weekly, monthly)"
         ],
-        "executed": false
+        "executed": true
+      },
+      {
+        "symbol": "LRCX",
+        "action": "BUY",
+        "shares": 10,
+        "limit_price": 311.78,
+        "stop_loss": 304.71,
+        "confidence": 0.85,
+        "signal_strength": 1.0,
+        "trend_score": 78,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 78/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 78/100)",
+          "RSI in healthy uptrend range (65)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Price above all VWAP levels (daily, weekly, monthly)"
+        ],
+        "executed": true
+      },
+      {
+        "symbol": "FCX",
+        "action": "BUY",
+        "shares": 48,
+        "limit_price": 70.08,
+        "stop_loss": 64.5,
+        "confidence": 0.85,
+        "signal_strength": 1.0,
+        "trend_score": 78,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 78/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 78/100)",
+          "RSI in healthy uptrend range (63)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Strong uptrend confirmed (score: 78)"
+        ],
+        "executed": true
+      },
+      {
+        "symbol": "TSM",
+        "action": "BUY",
+        "shares": 7,
+        "limit_price": 438.01,
+        "stop_loss": 403.34,
+        "confidence": 0.85,
+        "signal_strength": 1.0,
+        "trend_score": 77,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 77/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 77/100)",
+          "RSI in healthy uptrend range (64)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Price above all VWAP levels (daily, weekly, monthly)"
+        ],
+        "executed": true
+      },
+      {
+        "symbol": "NET",
+        "action": "BUY",
+        "shares": 12,
+        "limit_price": 253.08,
+        "stop_loss": 249.24,
+        "confidence": 0.85,
+        "signal_strength": 1.0,
+        "trend_score": 77,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 77/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 77/100)",
+          "RSI in healthy uptrend range (69)",
+          "Golden Cross (50>200 MA) 20 days ago",
+          "Price above 50 & 200 MA with bullish alignment"
+        ],
+        "executed": true
       }
     ],
-    "execution_details": []
+    "execution_details": [
+      {
+        "symbol": "AMAT",
+        "shares": 6,
+        "limit_price": 468.22,
+        "stop_loss": 452.46,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "2aca9828-2dbb-4335-8b6f-ba9cffcbb56b",
+        "reason": null
+      },
+      {
+        "symbol": "KLAC",
+        "shares": 1,
+        "limit_price": 2054.79,
+        "stop_loss": 1905.89,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "f04a066a-cf19-441e-b3ed-8d81c53b5938",
+        "reason": null
+      },
+      {
+        "symbol": "ON",
+        "shares": 26,
+        "limit_price": 122.53,
+        "stop_loss": 119.06,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "1a791cb9-6307-4ea4-9318-e59397ba46ca",
+        "reason": null
+      },
+      {
+        "symbol": "ASML",
+        "shares": 2,
+        "limit_price": 1702.01,
+        "stop_loss": 1572.46,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "f840a949-c9c6-474a-a123-d2d0395e47b9",
+        "reason": null
+      },
+      {
+        "symbol": "LRCX",
+        "shares": 10,
+        "limit_price": 311.78,
+        "stop_loss": 304.71,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "9db5a459-7ce1-4e90-b4b2-8b5e71cd565f",
+        "reason": null
+      },
+      {
+        "symbol": "FCX",
+        "shares": 48,
+        "limit_price": 70.08,
+        "stop_loss": 64.5,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "a9c7f389-63df-4b6f-83cc-81c60afe85e7",
+        "reason": null
+      },
+      {
+        "symbol": "TSM",
+        "shares": 7,
+        "limit_price": 438.01,
+        "stop_loss": 403.34,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "7714a3e9-8d3e-43ae-b1da-82b63707ab40",
+        "reason": null
+      },
+      {
+        "symbol": "NET",
+        "shares": 12,
+        "limit_price": 253.08,
+        "stop_loss": 249.24,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "6032fa69-baf2-4050-bb89-8cca70141f31",
+        "reason": null
+      }
+    ]
   },
   "persistent_performers": [],
   "exits": {
-    "exits_triggered": [],
-    "stops_updated": [],
-    "positions_checked": 0,
-    "mode": "EXECUTE",
-    "error": "Alpaca not available"
+    "exits_triggered": [
+      {
+        "symbol": "ALNT",
+        "trigger": "REDUCE",
+        "reason": "Partial profit taking at 59.7% gain",
+        "pnl_pct": 59.72,
+        "qty": 13,
+        "executed": false,
+        "order_id": null
+      },
+      {
+        "symbol": "AMKR",
+        "trigger": "REDUCE",
+        "reason": "Partial profit taking at 95.8% gain",
+        "pnl_pct": 95.79,
+        "qty": 32,
+        "executed": false,
+        "order_id": null
+      },
+      {
+        "symbol": "BHE",
+        "trigger": "REDUCE",
+        "reason": "Partial profit taking at 93.9% gain",
+        "pnl_pct": 93.95,
+        "qty": 26,
+        "executed": false,
+        "order_id": null
+      },
+      {
+        "symbol": "COHU",
+        "trigger": "REDUCE",
+        "reason": "Partial profit taking at 125.8% gain",
+        "pnl_pct": 125.77,
+        "qty": 49,
+        "executed": false,
+        "order_id": null
+      },
+      {
+        "symbol": "PDFS",
+        "trigger": "REDUCE",
+        "reason": "Partial profit taking at 102.4% gain",
+        "pnl_pct": 102.41,
+        "qty": 44,
+        "executed": false,
+        "order_id": null
+      }
+    ],
+    "stops_updated": [
+      {
+        "symbol": "ALNT",
+        "trigger": "TRAILING_STOP_UPDATE",
+        "new_stop": 72.67,
+        "pnl_pct": 59.72,
+        "current": 85.5,
+        "tier": "50%+ gain \u2192 15% trail",
+        "executed": true,
+        "order_id": "a08aea81-f633-490c-b28d-69e6e4e7183e"
+      },
+      {
+        "symbol": "AMKR",
+        "trigger": "TRAILING_STOP_UPDATE",
+        "new_stop": 62.49,
+        "pnl_pct": 95.79,
+        "current": 73.52,
+        "tier": "50%+ gain \u2192 15% trail",
+        "executed": true,
+        "order_id": "c3539fe4-dbef-44da-9531-ac912ae19696"
+      },
+      {
+        "symbol": "BHE",
+        "trigger": "TRAILING_STOP_UPDATE",
+        "new_stop": 74.33,
+        "pnl_pct": 93.95,
+        "current": 87.45,
+        "tier": "50%+ gain \u2192 15% trail",
+        "executed": true,
+        "order_id": "a171b0db-513d-4543-ae00-11166f448528"
+      },
+      {
+        "symbol": "COHU",
+        "trigger": "TRAILING_STOP_UPDATE",
+        "new_stop": 49.36,
+        "pnl_pct": 125.77,
+        "current": 54.84,
+        "tier": "100%+ gain \u2192 10% trail",
+        "executed": true,
+        "order_id": "5734a874-a7c0-4d2d-a2bb-7167b6b1bc2f"
+      },
+      {
+        "symbol": "PDFS",
+        "trigger": "TRAILING_STOP_UPDATE",
+        "new_stop": 49.13,
+        "pnl_pct": 102.41,
+        "current": 54.59,
+        "tier": "100%+ gain \u2192 10% trail",
+        "executed": true,
+        "order_id": "f8b74b21-e20b-4929-86e8-09346a9b4bc7"
+      }
+    ],
+    "positions_checked": 17,
+    "mode": "EXECUTE"
   },
   "risk_assessment": {
-    "timestamp": "2026-06-03T18:21:22.704121",
-    "portfolio_value": 100000,
+    "timestamp": "2026-06-04T14:35:01.143944",
+    "portfolio_value": 114080.11,
     "risk_metrics": {
       "drawdown": {
         "current_drawdown": 0,
@@ -468,30 +703,214 @@
         "status": "NO_DATA"
       },
       "cash_allocation": {
-        "current_pct": 0.0,
+        "current_pct": 26.2,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
-        "status": "LOW"
+        "status": "OK"
       }
     },
-    "concentration_risk": {},
-    "position_risks": [],
-    "overall_risk_score": 20,
+    "concentration_risk": {
+      "largest_position": "CRWD",
+      "largest_allocation_pct": 6.56,
+      "top_5_allocation_pct": 29.91,
+      "max_allowed_top_5_pct": 40.0,
+      "num_positions": 17,
+      "herfindahl_index": 0.036153216685133334
+    },
+    "position_risks": [
+      {
+        "symbol": "ALNT",
+        "allocation_pct": 2.47,
+        "unrealized_pnl_pct": 59.72,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "AMAT",
+        "allocation_pct": 5.6,
+        "unrealized_pnl_pct": -0.14,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "AMD",
+        "allocation_pct": 2.72,
+        "unrealized_pnl_pct": -4.4,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "AMKR",
+        "allocation_pct": 5.16,
+        "unrealized_pnl_pct": 95.85,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "ARM",
+        "allocation_pct": 3.01,
+        "unrealized_pnl_pct": -0.9,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "AVGO",
+        "allocation_pct": 5.01,
+        "unrealized_pnl_pct": -14.57,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "BHE",
+        "allocation_pct": 5.06,
+        "unrealized_pnl_pct": 93.95,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "COHU",
+        "allocation_pct": 5.91,
+        "unrealized_pnl_pct": 125.77,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "CRWD",
+        "allocation_pct": 6.56,
+        "unrealized_pnl_pct": -6.85,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "CTLP",
+        "allocation_pct": 2.76,
+        "unrealized_pnl_pct": 5.26,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "DDOG",
+        "allocation_pct": 5.18,
+        "unrealized_pnl_pct": -0.11,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "KLAC",
+        "allocation_pct": 3.63,
+        "unrealized_pnl_pct": 1.19,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "MRVL",
+        "allocation_pct": 5.66,
+        "unrealized_pnl_pct": -3.25,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "NET",
+        "allocation_pct": 6.18,
+        "unrealized_pnl_pct": 3.06,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "PANW",
+        "allocation_pct": 2.13,
+        "unrealized_pnl_pct": -1.46,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "PDFS",
+        "allocation_pct": 5.26,
+        "unrealized_pnl_pct": 102.41,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
+        "symbol": "SOFI",
+        "allocation_pct": 1.49,
+        "unrealized_pnl_pct": -41.21,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS",
+          "LARGE_LOSS"
+        ]
+      }
+    ],
+    "overall_risk_score": 28.6,
     "recommendations": [
-      "Cash allocation (0.0%) below minimum - reduce positions"
+      "ALNT: Add stop-loss protection",
+      "AMAT: Add stop-loss protection",
+      "AMD: Add stop-loss protection",
+      "AMKR: Add stop-loss protection",
+      "ARM: Add stop-loss protection",
+      "AVGO: Add stop-loss protection",
+      "BHE: Add stop-loss protection",
+      "COHU: Add stop-loss protection",
+      "CRWD: Add stop-loss protection",
+      "CTLP: Add stop-loss protection",
+      "DDOG: Add stop-loss protection",
+      "KLAC: Add stop-loss protection",
+      "MRVL: Add stop-loss protection",
+      "NET: Add stop-loss protection",
+      "PANW: Add stop-loss protection",
+      "PDFS: Add stop-loss protection",
+      "SOFI: Add stop-loss protection",
+      "SOFI: Review thesis - down 41.2%"
     ],
     "risk_level": "LOW"
-  },
-  "sync_at": "2026-06-04T05:50:30.212715+00:00",
-  "sync_error": null,
-  "market_open": false,
-  "intraday_today": {
-    "date": "2026-06-03",
-    "points": [
-      {
-        "time": "22:50",
-        "value": 114295.18
-      }
-    ]
   }
 }

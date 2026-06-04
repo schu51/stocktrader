@@ -16,7 +16,7 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
@@ -150,8 +150,8 @@ def main():
     # ── Merge and write ────────────────────────────────────────────────────
     updated = {
         **existing,
-        "generated_at": existing.get("generated_at", datetime.now().isoformat()),
-        "sync_at":      datetime.now().isoformat(),
+        "generated_at": existing.get("generated_at", datetime.now(timezone.utc).isoformat()),
+        "sync_at":      datetime.now(timezone.utc).isoformat(),
         "sync_error":   None,
         "market_open":  market_open,
         "model_status": existing.get("model_status", "healthy"),

@@ -941,8 +941,9 @@ function renderStrip(d, a) {
 
   // Show sync time (portfolio_sync updates generated_at every 30 min)
   const syncAt  = d.sync_at || d.generated_at;
+  const tz = 'America/Los_Angeles';
   const runTime = syncAt
-    ? new Date(syncAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' })
+    ? new Date(syncAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz, timeZoneName: 'short' })
     : '—';
   const runId = d.run_id ? 'Run ' + d.run_id.slice(-6) : '—';
   set('strip-run', runId + ' · Synced ' + runTime);
@@ -1393,8 +1394,9 @@ function fmtSigned(n) {
 function fmtDateTime(iso) {
   if (!iso) return '—';
   const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-    + ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const tz = 'America/Los_Angeles';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: tz })
+    + ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz });
 }
 
 /* ── Init ──────────────────────────────────────────────────────────────────── */

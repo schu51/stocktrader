@@ -400,12 +400,35 @@ def run_screener(
             continue
 
         # Build candidate record
-        rs_score = raw_scores.get(sym, 0)
-        sector   = sym_to_sector.get(sym, "other")
+        rs_score  = raw_scores.get(sym, 0)
+        sector    = sym_to_sector.get(sym, "other")
         is_leader = sector in top_sectors
 
-        # Sector boost: top-sector stocks get a 5% score lift in ranking
-        effective_score = rs_rank * (1.05 if is_leader else 1.0)
+        # Forward thesis score — WHERE is this stock going, not just where it's been
+        try:
+            vol_arr = None
+            if volumes is not None and sym in volumes.columns:
+                vol_arr = volumes[sym].dropna().values
+            if vol_arr is None or len(vol_arr) < 40:
+                vol_arr = np.ones(len(price_arr))
+
+            from forward_thesis import score_forward_thesis
+            thesis = score_forward_thesis(
+                sym, price_arr, vol_arr,
+                include_earnings=False,  # Skip slow earnings call; pre-market agent handles it
+            )
+            thesis_score = thesis["thesis_score"]
+            thesis_grade = thesis["thesis_grade"]
+            setup_reason = thesis["setup_reason"]
+        except Exception:
+            thesis_score = 50.0
+            thesis_grade = "B"
+            setup_reason = ""
+
+        # Combined ranking: 60% RS rank (proven momentum) + 40% forward thesis
+        # RS rank tells us the trend is real. Thesis tells us why it continues.
+        sector_boost    = 1.05 if is_leader else 1.0
+        effective_score = (0.60 * rs_rank + 0.40 * thesis_score) * sector_boost
 
         ret_1m = float((price_arr[-1] / price_arr[-21] - 1) * 100) if len(price_arr) >= 21 else None
         ret_3m = float((price_arr[-1] / price_arr[-63] - 1) * 100) if len(price_arr) >= 63 else None
@@ -414,7 +437,10 @@ def run_screener(
         candidates.append({
             "symbol":          sym,
             "rs_rank":         rs_rank,
-            "rs_score":        round(rs_score * 100, 1),  # as percent
+            "rs_score":        round(rs_score * 100, 1),
+            "thesis_score":    round(thesis_score, 1),
+            "thesis_grade":    thesis_grade,
+            "setup_reason":    setup_reason,
             "effective_score": round(effective_score, 1),
             "sector":          sector,
             "sector_leader":   is_leader,
@@ -429,7 +455,7 @@ def run_screener(
             "priority":        0 if is_leader else 1,
         })
 
-    # Sort by effective score (RS rank + sector boost)
+    # Sort by effective score (RS rank + forward thesis + sector boost)
     candidates.sort(key=lambda x: x["effective_score"], reverse=True)
     candidates = candidates[:top_n]
 

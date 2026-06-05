@@ -308,10 +308,17 @@ class ExitRules:
         ConvictionTier.LOW:         0.10,
         ConvictionTier.SPECULATIVE: 0.12,
     })
-    # Partial profit taking: sell take_profit_partial_size at take_profit_partial gain
-    take_profit_partial:      float = 0.40   # Take partial profits at 40% gain
-    take_profit_partial_size: float = 0.40   # Sell 40% of position at that level
-    # Time stop: flag for review after max_holding_period_days days
+    # Tightened trailing stop tiers (protect compounding gains aggressively)
+    trail_100_pct:            float = 0.08   # 100%+ gain → 8% trail
+    trail_50_pct:             float = 0.10   # 50%+ gain → 10% trail
+    trail_25_pct:             float = 0.015  # 25%+ gain → break-even + 1.5%
+    # Partial profit taking
+    take_profit_partial:      float = 0.40
+    take_profit_partial_size: float = 0.40
+    # Time-stop loss: close if underwater after N days (capital discipline)
+    time_stop_loss_days:      int   = 5      # Days before time-stop fires
+    time_stop_loss_threshold: float = -0.05  # -5% triggers time-stop
+    # Max holding period for review
     max_holding_period_days:  int   = 90
 
 

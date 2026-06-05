@@ -897,33 +897,47 @@ class DailyRunner:
 
     def _scale_size_by_momentum(self, decision_dict: dict) -> dict:
         """
-        Scale position shares up or down based on trend_score.
-        Higher momentum score → more capital allocated within portfolio limits.
+        Scale position shares by momentum score AND RS rank.
+
+        Insight: the model was too diversified — 3% positions can't move the
+        needle. Top RS names (90+) with strong scores deserve 1.5× sizing.
+        Weak setups get cut. Capital follows conviction.
 
         Tiers:
-          score >= 85 : 1.3× (strong trend, overweight)
-          score >= 75 : 1.0× (baseline)
-          score >= 65 : 0.75× (marginal trend, underweight)
-          score <  65 : 0.60× (weak, minimum size)
+          rs_rank >= 90 AND score >= 80 : 1.5× (elite momentum, overweight)
+          score >= 85                   : 1.3× (strong, overweight)
+          score >= 75                   : 1.0× (baseline)
+          score >= 68                   : 0.75× (marginal)
+          score <  68                   : 0.50× (weak — barely passes gate)
         """
-        score = decision_dict.get("trend_score") or 70
-        shares = decision_dict.get("shares") or 0
+        score    = decision_dict.get("trend_score") or 70
+        rs_rank  = decision_dict.get("rs_rank") or 0
+        shares   = decision_dict.get("shares") or 0
         limit_price = decision_dict.get("limit_price") or 0
 
-        if score >= 85:
+        if rs_rank >= 90 and score >= 80:
+            multiplier = 1.50   # Elite: size up meaningfully
+        elif score >= 85:
             multiplier = 1.30
         elif score >= 75:
             multiplier = 1.00
-        elif score >= 65:
+        elif score >= 68:
             multiplier = 0.75
         else:
-            multiplier = 0.60
+            multiplier = 0.50   # Barely passed — minimum sizing
+
+        # Cash deployment boost: if >15% cash idle, deploy more aggressively
+        # into high-conviction signals rather than letting it sit
+        if self.portfolio.total_value > 0:
+            cash_pct = self.portfolio.available_cash / self.portfolio.total_value
+            if cash_pct > 0.15 and score >= 75 and multiplier >= 1.0:
+                multiplier = min(multiplier * 1.20, 2.0)  # Up to 20% boost to deploy cash
 
         if multiplier != 1.0 and shares > 0:
             new_shares = max(1, round(shares * multiplier))
             decision_dict["shares"] = new_shares
             decision_dict["position_value"] = round(new_shares * limit_price, 2)
-            decision_dict["momentum_scale"] = multiplier
+            decision_dict["momentum_scale"] = round(multiplier, 2)
 
         return decision_dict
 
@@ -1092,17 +1106,72 @@ class DailyRunner:
                 result["exits_triggered"].append(action)
                 continue  # Skip stop update — position is being closed
 
+            # ── Time-stop loss rule ──────────────────────────────────────────
+            # Position held >5 trading days AND still >5% underwater → close.
+            # Dead weight burns opportunity cost — capital discipline matters.
+            entry_date = None
+            try:
+                trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
+                if trades_file.exists():
+                    trades = json.loads(trades_file.read_text())
+                    open_trade = next(
+                        (t for t in reversed(trades)
+                         if t.get("symbol") == sym and t.get("status") == "OPEN"),
+                        None
+                    )
+                    if open_trade and open_trade.get("entry_date"):
+                        from datetime import date as date_type
+                        entry_date = date_type.fromisoformat(open_trade["entry_date"])
+            except Exception:
+                pass
+
+            if entry_date and pnl_pct < -5:
+                from datetime import date as date_type
+                hold_days = (date_type.today() - entry_date).days
+                if hold_days >= 5:
+                    action = {
+                        "symbol":    sym,
+                        "trigger":   "TIME_STOP_LOSS",
+                        "current":   round(current, 2),
+                        "pnl_pct":   round(pnl_pct, 2),
+                        "hold_days": hold_days,
+                        "qty":       qty,
+                        "executed":  False,
+                        "reason":    f"Down {pnl_pct:.1f}% after {hold_days} days — time-stop loss",
+                    }
+                    if execute:
+                        try:
+                            close_result = self.broker.close_position(sym)
+                            action["executed"] = "error" not in close_result
+                            action["order_id"] = close_result.get("id")
+                            logger.info(
+                                f"TIME-STOP EXIT: {sym} — {hold_days}d held, "
+                                f"{pnl_pct:+.1f}% P&L — cutting loss"
+                            )
+                            if action["executed"]:
+                                self._log_trade("EXIT", sym, qty, current,
+                                                exit_reason="TIME_STOP_LOSS")
+                        except Exception as e:
+                            action["error"] = str(e)
+                    else:
+                        logger.info(
+                            f"TIME-STOP (dry-run): {sym} — {hold_days}d, "
+                            f"{pnl_pct:+.1f}% — would close"
+                        )
+                    result["exits_triggered"].append(action)
+                    continue
+
             # ── Trailing stop update ─────────────────────────────────────────
-            # Only update if position is in profit AND above 50MA
+            # Tightened tiers: protect gains more aggressively as they compound.
             if pnl_pct >= 25:
                 if pnl_pct >= 100:
-                    new_stop = round(current * 0.90, 2)   # 10% trail
-                    tier     = "100%+ gain → 10% trail"
+                    new_stop = round(current * 0.92, 2)   # 8% trail (tightened from 10%)
+                    tier     = "100%+ gain → 8% trail"
                 elif pnl_pct >= 50:
-                    new_stop = round(current * 0.85, 2)   # 15% trail
-                    tier     = "50%+ gain → 15% trail"
+                    new_stop = round(current * 0.90, 2)   # 10% trail (tightened from 15%)
+                    tier     = "50%+ gain → 10% trail"
                 else:
-                    new_stop = round(avg_cost * 1.01, 2)  # break-even + 1%
+                    new_stop = round(avg_cost * 1.015, 2) # break-even + 1.5%
                     tier     = "25%+ gain → break-even stop"
 
                 stop_action = {

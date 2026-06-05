@@ -201,7 +201,7 @@ class SignalGenerator:
         if score >= 75:
             signal = Signal.STRONG_BUY
             reasons.append(f"Strong uptrend (momentum score: {score:.0f}/100)")
-        elif score >= 62:
+        elif score >= 68:
             signal = Signal.BUY
             reasons.append(f"Uptrend confirmed (momentum score: {score:.0f}/100)")
         elif score >= 45:

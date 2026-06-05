@@ -961,6 +961,19 @@ class DailyRunner:
             ts    = datetime.now().isoformat()
 
             if action == "BUY":
+                # Guard against duplicate entries when analysis runs multiple times per day
+                # at the same fill price (same order re-logged on re-run).
+                duplicate = any(
+                    t["symbol"] == symbol
+                    and t["status"] == "OPEN"
+                    and t["entry_date"] == today
+                    and t.get("entry_price") == round(price, 2)
+                    for t in trades
+                )
+                if duplicate:
+                    logger.info(f"Skipping duplicate trade log: {symbol} @ ${price:.2f} already open today")
+                    return
+
                 trades.append({
                     "trade_id":    f"TRD-{datetime.now().strftime('%Y%m%d%H%M%S')}-{symbol}",
                     "symbol":      symbol,
@@ -1459,6 +1472,14 @@ class DailyRunner:
                     quote = self.broker.get_latest_quote(symbol)
                     bid = float(quote.get("bp", 0) or quote.get("bid_price", 0) or 0)
                     if bid > 0:
+                        # Recalculate stop_loss to maintain the same % distance from the
+                        # actual fill price. Without this, a stale yfinance close > bid
+                        # causes the stop to land above the entry price.
+                        orig_limit = limit_price
+                        stop_loss_orig = opp.get("stop_loss")
+                        if stop_loss_orig and orig_limit > 0 and orig_limit > stop_loss_orig:
+                            stop_pct = (orig_limit - stop_loss_orig) / orig_limit
+                            opp["stop_loss"] = round(bid * (1 - stop_pct), 2)
                         limit_price = round(bid, 2)
                         opp["limit_price"] = limit_price
                 except Exception:

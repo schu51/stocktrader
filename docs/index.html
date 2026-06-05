@@ -491,7 +491,8 @@
     .badge-entry  { background: rgba(245,162,10,0.15); color: var(--amber); }
     .badge-exit-p { background: rgba(0,201,138,0.12);  color: var(--green); }
     .badge-exit-l { background: rgba(240,62,95,0.12);  color: var(--red);   }
-    .badge-stop   { background: rgba(0,212,255,0.10);  color: var(--blue);  }
+    .badge-stop   { background: rgba(0,212,255,0.10);  color: var(--blue);   }
+    .badge-bb     { background: rgba(255,208,96,0.12); color: var(--warn);  }
     .activity-sym {
       font-weight: 700; font-size: 12px; letter-spacing: 0.04em;
       color: var(--text); flex-shrink: 0;
@@ -853,13 +854,25 @@ function renderActivity(run, exits, companies) {
     });
   });
 
+  // BOLLINGER BAND middle band warnings
+  (exitsData.bb_warnings || []).forEach(e => {
+    events.push({
+      type:   'BB',
+      symbol: e.symbol,
+      detail: `below BB mid $${fmt2(e.bb_middle)} · P&L ${fmtPct(e.pnl_pct)} — consider reducing`,
+      order:  2,
+      tooltip: { kind: 'exit', symbol: e.symbol, company: companies[e.symbol] || {},
+                 trigger: 'Below BB middle band', pnl_pct: e.pnl_pct, price: e.current },
+    });
+  });
+
   // STOP UPDATE events
   (exitsData.stops_updated || []).forEach(e => {
     events.push({
       type:   'STOP',
       symbol: e.symbol,
       detail: `stop → $${fmt2(e.new_stop)}  ${e.tier || ''}`,
-      order:  2,
+      order:  3,
       tooltip: {
         kind:       'stop',
         symbol:     e.symbol,
@@ -902,6 +915,7 @@ function renderActivity(run, exits, companies) {
 
   const badgeMap = {
     ENTRY:  ['badge-entry',  'ENTRY'],
+    BB:     ['badge-bb',     'BB ⚠'],
     EXIT_P: ['badge-exit-p', 'EXIT'],
     EXIT_L: ['badge-exit-l', 'EXIT'],
     STOP:   ['badge-stop',   'STOP'],

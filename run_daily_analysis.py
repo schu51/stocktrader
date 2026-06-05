@@ -401,6 +401,13 @@ class DailyRunner:
                         logger.info(f"Skipping {symbol}: {rsi_reason}")
                         continue
 
+                    # Bollinger Band overextended: skip if price in top 10% of band
+                    bb_skip, bb_reason = self._check_bb_at_entry(price_bars)
+                    if bb_skip:
+                        holds.append({"symbol": symbol, "reason": bb_reason})
+                        logger.info(f"Skipping {symbol}: {bb_reason}")
+                        continue
+
                     # Sector concentration: skip if sector already at limit
                     sector = candidate.get("sector", "")
                     sector_skip, sector_reason = self._check_sector_concentration(
@@ -677,6 +684,7 @@ class DailyRunner:
                 "exits": run_results.get("exits", {
                     "exits_triggered": [],
                     "stops_updated": [],
+                    "bb_warnings": [],
                     "positions_checked": 0,
                     "mode": "DRY-RUN",
                 }),
@@ -795,6 +803,50 @@ class DailyRunner:
         except Exception:
             pass
         return False, ""
+
+    def _check_bb_at_entry(self, price_bars) -> tuple:
+        """
+        Returns (skip: bool, reason: str).
+        Blocks entry when price is in the top 10% of its Bollinger Band
+        (%B > 0.90) — overextended, better to wait for a pullback toward
+        the middle band before entering.
+
+        Also returns the %B value for informational use even when not blocking.
+        """
+        if not price_bars or len(price_bars) < 20:
+            return False, ""
+        try:
+            closes = [b.close for b in price_bars]
+            bb_slice = closes[-20:]
+            bb_middle = sum(bb_slice) / len(bb_slice)
+            variance = sum((x - bb_middle) ** 2 for x in bb_slice) / len(bb_slice)
+            bb_std    = variance ** 0.5
+            bb_upper  = bb_middle + 2 * bb_std
+            bb_lower  = bb_middle - 2 * bb_std
+            price     = closes[-1]
+            band_width = bb_upper - bb_lower
+
+            if band_width <= 0:
+                return False, ""
+
+            pct_b = (price - bb_lower) / band_width
+
+            if pct_b > 0.90:
+                return True, (
+                    f"BB overextended: %%B={pct_b:.2f} — price near upper band "
+                    f"(${bb_upper:.2f}), wait for pullback to middle (${bb_middle:.2f})"
+                )
+        except Exception:
+            pass
+        return False, ""
+
+    @staticmethod
+    def _bb_middle(price_bars, period: int = 20) -> float:
+        """Return the 20-day Bollinger Band middle (SMA) from price bars."""
+        if not price_bars or len(price_bars) < period:
+            return 0.0
+        closes = [b.close for b in price_bars[-period:]]
+        return sum(closes) / len(closes)
 
     def _get_sector_allocations(self) -> dict:
         """
@@ -1099,6 +1151,42 @@ class DailyRunner:
                         f"({tier}) | P&L: {pnl_pct:+.1f}%"
                     )
                 result["stops_updated"].append(stop_action)
+
+        # Bollinger Band middle band monitor: price below 20-day SMA on a
+        # profitable position → flag for potential reduction (not auto-close)
+        already_flagged = {e["symbol"] for e in result["exits_triggered"]}
+        for pos in positions:
+            sym = pos["symbol"]
+            if sym in already_flagged:
+                continue
+            pnl_pct = float(pos.get("unrealized_plpc", 0) if "unrealized_plpc" in pos
+                            else (pos.get("unrealized_pnl_pct", 0)))
+            if pnl_pct < 10:  # Only monitor profitable positions worth protecting
+                continue
+            try:
+                import yfinance as yf
+                hist = yf.Ticker(sym).history(period="60d")
+                closes = hist["Close"].values
+                if len(closes) < 20:
+                    continue
+                bb_mid = float(closes[-20:].mean())
+                current = float(pos.get("current_price", closes[-1]))
+                if current < bb_mid:
+                    result["bb_warnings"] = result.get("bb_warnings", [])
+                    result["bb_warnings"].append({
+                        "symbol":   sym,
+                        "trigger":  "MIDDLE_BAND_CROSS",
+                        "reason":   f"Price ${current:.2f} crossed below BB middle ${bb_mid:.2f} — consider reducing",
+                        "pnl_pct":  round(pnl_pct, 2),
+                        "current":  round(current, 2),
+                        "bb_middle": round(bb_mid, 2),
+                    })
+                    logger.info(
+                        f"BB WARNING: {sym} below middle band (${current:.2f} < ${bb_mid:.2f}) "
+                        f"| P&L: {pnl_pct:+.1f}% — consider reducing position"
+                    )
+            except Exception:
+                continue
 
         # Engine-level exit checks: partial profit taking (40%+ gain),
         # time stop (90 days), earnings proximity reduction

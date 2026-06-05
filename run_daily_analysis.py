@@ -1106,9 +1106,17 @@ class DailyRunner:
                 result["exits_triggered"].append(action)
                 continue  # Skip stop update — position is being closed
 
-            # ── Time-stop loss rule ──────────────────────────────────────────
-            # Position held >5 trading days AND still >5% underwater → close.
-            # Dead weight burns opportunity cost — capital discipline matters.
+            # ── Thesis-invalidation check ────────────────────────────────────
+            # Exit when the MOMENTUM THESIS breaks — not on a clock.
+            # A stock down 8% in a week but still above 50MA > 200MA with
+            # strong RS is in a healthy pullback within a trend. That's
+            # normal. We don't exit on that. We exit when:
+            #   1. 50MA alignment breaks (already caught above)
+            #   2. Position has deteriorated for 20+ days with no trend intact
+            #   3. Loss exceeds 15% (hard stop — thesis was clearly wrong)
+            #
+            # Short-term time-stops on momentum positions destroy alpha.
+            # Give thesis time to play out (20 trading days = ~4 weeks).
             entry_date = None
             try:
                 trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
@@ -1125,19 +1133,21 @@ class DailyRunner:
             except Exception:
                 pass
 
-            if entry_date and pnl_pct < -5:
+            if entry_date:
                 from datetime import date as date_type
                 hold_days = (date_type.today() - entry_date).days
-                if hold_days >= 5:
+
+                # Hard stop: down >15% at any point = thesis was wrong at entry
+                if pnl_pct < -15:
                     action = {
                         "symbol":    sym,
-                        "trigger":   "TIME_STOP_LOSS",
+                        "trigger":   "HARD_LOSS_STOP",
                         "current":   round(current, 2),
                         "pnl_pct":   round(pnl_pct, 2),
                         "hold_days": hold_days,
                         "qty":       qty,
                         "executed":  False,
-                        "reason":    f"Down {pnl_pct:.1f}% after {hold_days} days — time-stop loss",
+                        "reason":    f"Down {pnl_pct:.1f}% — entry thesis was wrong, taking loss",
                     }
                     if execute:
                         try:
@@ -1145,21 +1155,62 @@ class DailyRunner:
                             action["executed"] = "error" not in close_result
                             action["order_id"] = close_result.get("id")
                             logger.info(
-                                f"TIME-STOP EXIT: {sym} — {hold_days}d held, "
-                                f"{pnl_pct:+.1f}% P&L — cutting loss"
+                                f"HARD-STOP EXIT: {sym} — {pnl_pct:+.1f}% after "
+                                f"{hold_days}d — entry thesis invalidated"
                             )
                             if action["executed"]:
                                 self._log_trade("EXIT", sym, qty, current,
-                                                exit_reason="TIME_STOP_LOSS")
+                                                exit_reason="HARD_LOSS_STOP")
                         except Exception as e:
                             action["error"] = str(e)
                     else:
                         logger.info(
-                            f"TIME-STOP (dry-run): {sym} — {hold_days}d, "
-                            f"{pnl_pct:+.1f}% — would close"
+                            f"HARD-STOP (dry-run): {sym} — {pnl_pct:+.1f}% "
+                            f"after {hold_days}d — would close"
                         )
                     result["exits_triggered"].append(action)
                     continue
+
+                # Long thesis review: held 20+ days AND still >8% underwater
+                # AND trend shows no recovery (50MA still below entry price).
+                # This is not a pullback — this is a failed thesis.
+                if hold_days >= 20 and pnl_pct < -8:
+                    if sma50 and sma50 < avg_cost:
+                        action = {
+                            "symbol":    sym,
+                            "trigger":   "THESIS_FAILED",
+                            "current":   round(current, 2),
+                            "pnl_pct":   round(pnl_pct, 2),
+                            "hold_days": hold_days,
+                            "qty":       qty,
+                            "executed":  False,
+                            "reason":    (
+                                f"Down {pnl_pct:.1f}% after {hold_days} days — "
+                                f"50MA (${sma50:.2f}) still below entry (${avg_cost:.2f}), "
+                                f"trend never recovered"
+                            ),
+                        }
+                        if execute:
+                            try:
+                                close_result = self.broker.close_position(sym)
+                                action["executed"] = "error" not in close_result
+                                action["order_id"] = close_result.get("id")
+                                logger.info(
+                                    f"THESIS-FAILED EXIT: {sym} — {hold_days}d, "
+                                    f"{pnl_pct:+.1f}%, 50MA never recovered"
+                                )
+                                if action["executed"]:
+                                    self._log_trade("EXIT", sym, qty, current,
+                                                    exit_reason="THESIS_FAILED")
+                            except Exception as e:
+                                action["error"] = str(e)
+                        else:
+                            logger.info(
+                                f"THESIS-FAILED (dry-run): {sym} — {hold_days}d, "
+                                f"{pnl_pct:+.1f}% — would close"
+                            )
+                        result["exits_triggered"].append(action)
+                        continue
 
             # ── Trailing stop update ─────────────────────────────────────────
             # Tightened tiers: protect gains more aggressively as they compound.

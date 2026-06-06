@@ -1345,6 +1345,15 @@ class DailyRunner:
                 }
                 if execute and dec.action == "SELL":
                     try:
+                        # Cancel any open stop orders first — they reserve shares and
+                        # cause Alpaca 403 "insufficient qty" when we try to sell a partial.
+                        open_orders = self.broker.get_orders(status="open", symbols=[dec.symbol])
+                        for o in open_orders:
+                            if o.get("side") == "sell" and o.get("type") in (
+                                "stop", "stop_limit", "trailing_stop"
+                            ):
+                                self.broker.cancel_order(o["id"])
+
                         r = self.broker.close_position(dec.symbol, qty=dec.shares)
                         entry["executed"] = "error" not in r
                         entry["order_id"] = r.get("id")

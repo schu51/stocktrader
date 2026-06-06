@@ -31,6 +31,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+import numpy as np
+
 logger = logging.getLogger(__name__)
 
 # ── Fallback universe (used when Wikipedia fetch fails) ──────────────────────

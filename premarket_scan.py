@@ -10,7 +10,8 @@ from datetime import datetime, timezone
 import pytz
 
 warnings.filterwarnings("ignore")
-sys.path.insert(0, "/home/user/stocktrader")
+import os as _os
+sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 
 import yfinance as yf
 import pandas as pd
@@ -257,12 +258,69 @@ gap_down_avoid = [f["ticker"] for f in gap_flags if f["pct_chg"] < -3.0 or
 gap_up_priority = [f["ticker"] for f in gap_flags if f["pct_chg"] > 3.0 and
                    any("gap UP" in r for r in f["reasons"])]
 
-print("\n  TOP 5 BUY CANDIDATES (STRONG trend + best momentum score):")
-top5 = [s for s in scored if s["ticker"] not in gap_down_avoid][:5]
+print("\n  TOP 10 BUY CANDIDATES (STRONG trend + best momentum score):")
+top10 = [s for s in scored if s["ticker"] not in gap_down_avoid][:10]
+
+# Forward thesis: earnings acceleration + setup quality on top 10 candidates
+# This is the expensive path (yfinance earnings call per ticker) — run only on finalists.
+print("\n  [Running forward thesis on top 10 candidates...]\n")
+
+try:
+    from forward_thesis import score_forward_thesis, score_earnings_acceleration
+
+    thesis_results = {}
+    for s in top10:
+        ticker = s["ticker"]
+        try:
+            prices = close[ticker].dropna().values
+            vols = volume[ticker].dropna().values if ticker in volume.columns else np.ones(len(prices))
+            thesis = score_forward_thesis(ticker, prices, vols, include_earnings=True)
+            thesis_results[ticker] = thesis
+        except Exception as e:
+            thesis_results[ticker] = {
+                "thesis_score": 50,
+                "thesis_grade": "?",
+                "earnings_score": 0,
+                "setup_score": 0,
+                "accumulation_score": 0,
+                "earnings_reason": "unavailable",
+                "setup_reason": "",
+                "accumulation_reason": "",
+            }
+
+    print(f"  {'#':<3} {'TKR':<7} {'GRD':<5} {'THZ':>4}  {'EARN':>5}  {'SETUP':>5}  {'ACCUM':>5}  {'5d':>6}  {'20d':>6}  NOTE")
+    print(f"  {'─'*95}")
+    for i, s in enumerate(top10, 1):
+        t = thesis_results.get(s["ticker"], {})
+        grade  = t.get("thesis_grade", "?")
+        thz    = t.get("thesis_score", 0)
+        earn   = t.get("earnings_score", 0)
+        setup  = t.get("setup_score", 0)
+        accum  = t.get("accumulation_score", 0)
+        note   = t.get("earnings_reason", "")[:40]
+        extra  = " ← gap-up!" if s["ticker"] in gap_up_priority else ""
+        print(
+            f"  {i:<3} {s['ticker']:<7} {grade:<5} {thz:>4.0f}  {earn:>5.0f}  {setup:>5.0f}  "
+            f"{accum:>5.0f}  {s['ret_5d']:>+5.1f}%  {s['ret_20d']:>+5.1f}%  {note}{extra}"
+        )
+
+    top5 = [s for s in top10 if thesis_results.get(s["ticker"], {}).get("thesis_grade", "C") in ("A", "B")][:5]
+    if not top5:
+        top5 = top10[:5]
+
+except Exception as e:
+    print(f"  [Forward thesis skipped: {e}]")
+    top5 = top10[:5]
+    thesis_results = {}
+
+print(f"\n  TOP 5 HIGH-CONVICTION ENTRIES (Grade A/B thesis):")
 for i, s in enumerate(top5, 1):
-    extra = " ← gap-up momentum!" if s["ticker"] in gap_up_priority else ""
-    print(f"    {i}. {s['ticker']:6s}  price {s['price']:>8.2f}  50MA {s['ma50']:>8.2f}  "
-          f"5d {s['ret_5d']:+.1f}%  20d {s['ret_20d']:+.1f}%  score {s['score']:.4f}{extra}")
+    t = thesis_results.get(s["ticker"], {})
+    grade   = t.get("thesis_grade", "?")
+    note    = t.get("setup_reason", "")[:50]
+    extra   = " ← gap-up momentum!" if s["ticker"] in gap_up_priority else ""
+    print(f"    {i}. {s['ticker']:6s}  [{grade}]  price {s['price']:>8.2f}  50MA {s['ma50']:>8.2f}  "
+          f"5d {s['ret_5d']:+.1f}%  20d {s['ret_20d']:+.1f}%  {note}{extra}")
 
 if gap_down_avoid:
     print(f"\n  NEAR-TERM AVOIDS (gap down / crossed 50MA): {gap_down_avoid}")

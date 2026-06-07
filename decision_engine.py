@@ -356,14 +356,31 @@ class DecisionEngine:
         if research_score:
             conviction = research_score.conviction_tier
         
-        # 3. Get current price
-        current_price = 0
-        if market_snapshot:
-            current_price = market_snapshot.current_price
-        elif screening_data:
-            current_price = screening_data.get("unified", {}).get("analyst", {}).get("current_price", 0)
-        elif price_history:
+        # 3. Get current price — prefer the freshest source available.
+        # price_history[-1].close is from yfinance (live daily bar); market_snapshot
+        # and screening_data are fetched earlier and may be slightly staler.
+        current_price = 0.0
+        if price_history:
             current_price = price_history[-1].close
+        if market_snapshot and market_snapshot.current_price > 0:
+            current_price = market_snapshot.current_price  # overwrite only if valid
+        if current_price <= 0 and screening_data:
+            current_price = screening_data.get("unified", {}).get("analyst", {}).get("current_price", 0)
+
+        if current_price <= 0:
+            return Decision(
+                decision_id=f"DEC-{datetime.now().strftime('%Y%m%d%H%M%S')}-{symbol}",
+                timestamp=datetime.now(),
+                symbol=symbol,
+                decision_type=DecisionType.HOLD,
+                action="HOLD",
+                shares=0,
+                limit_price=0,
+                position_size_pct=0,
+                primary_reason="Cannot determine current price — entry blocked",
+                status="PENDING",
+                created_by="decision_engine"
+            )
         
         # 4. Check entry rules
         entry_check = self._check_entry_rules(
@@ -832,6 +849,9 @@ class DecisionEngine:
             )
         
         # 3. Check partial profit taking
+        # unrealized_pnl_pct is stored as a percentage (e.g. 40.0 for +40%).
+        # take_profit_partial is a decimal fraction (e.g. 0.40). Multiply by 100
+        # to convert to the same scale before comparing.
         if position.unrealized_pnl_pct >= exit_rules.take_profit_partial * 100:
             partial_shares = int(shares * exit_rules.take_profit_partial_size)
             

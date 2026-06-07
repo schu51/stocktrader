@@ -326,8 +326,8 @@ class ExitRules:
 class EntryRules:
     # Research score minimum (0.0 = no requirement, rely on MA trend gate instead)
     min_overall_score:          float = 0.0
-    # Max decline from 52w high allowed (0.99 = effectively disabled, MA gate handles this)
-    max_decline_from_high_pct:  float = 0.99
+    # Max decline from 52w high — rejects falling knives regardless of MA alignment
+    max_decline_from_high_pct:  float = 0.35  # Reject if down > 35% from 52-week high
     require_above_sma:          bool  = True
     max_pe_ratio:               float = 500.0
     max_ps_ratio:               float = 50.0

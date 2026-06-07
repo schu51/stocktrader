@@ -423,17 +423,46 @@ class RiskManager:
                     "status": "PASSED"
                 })
         
+        # Check 7 (BUY only): warn when open positions lack stop-loss orders.
+        # The trailing stop logic places stops for positions up 25%+; below that
+        # threshold positions rely on the thesis-invalidation and 50MA hard exit.
+        # Flag as WARNING (not FAILED) so it doesn't block new entries — the
+        # position-level exit logic is the backstop.
+        if action == "BUY" and portfolio.positions:
+            unprotected = [
+                sym for sym, pos in portfolio.positions.items()
+                if getattr(pos, "stop_loss_price", None) is None
+                and getattr(pos, "trailing_stop_price", None) is None
+            ]
+            if unprotected:
+                result["checks"].append({
+                    "check": "OPEN_POSITIONS_LACK_STOPS",
+                    "status": "WARNING",
+                    "message": (
+                        f"{len(unprotected)} open position(s) have no recorded stop: "
+                        f"{', '.join(unprotected[:5])}"
+                    )
+                })
+                result["warnings"].append(
+                    f"Open positions without stops: {', '.join(unprotected[:5])}"
+                )
+            else:
+                result["checks"].append({
+                    "check": "OPEN_POSITIONS_LACK_STOPS",
+                    "status": "PASSED"
+                })
+
         # Summary
         failed_checks = sum(1 for c in result["checks"] if c["status"] == "FAILED")
         warning_checks = sum(1 for c in result["checks"] if c["status"] == "WARNING")
-        
+
         result["summary"] = {
             "total_checks": len(result["checks"]),
             "passed": len(result["checks"]) - failed_checks - warning_checks,
             "warnings": warning_checks,
             "failed": failed_checks
         }
-        
+
         return result
     
     # =========================================================================

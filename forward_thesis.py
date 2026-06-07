@@ -63,17 +63,39 @@ def score_earnings_acceleration(symbol: str) -> Tuple[float, str]:
         # Quarterly financials
         qf = ticker.quarterly_financials
         if qf is None or qf.empty:
-            return 5.0, "no earnings data"
+            return 0.0, "no earnings data"
 
-        score = 5.0
+        score = 0.0
         reasons = []
 
-        # EPS acceleration
-        eps_rows = [r for r in qf.index if 'earnings' in r.lower() or 'income' in r.lower()]
-        rev_rows = [r for r in qf.index if 'revenue' in r.lower() or 'total revenue' in r.lower()]
+        # EPS row — try canonical names in priority order to avoid picking
+        # "Total Income" or "Other Income" before "Net Income"
+        _EPS_CANDIDATES = [
+            "Net Income", "Net Income Common Stockholders",
+            "Normalized Income", "Net Income From Continuing Operation Net Minority Interest",
+        ]
+        _REV_CANDIDATES = [
+            "Total Revenue", "Revenue", "Net Revenue", "Sales",
+        ]
 
-        if eps_rows and len(qf.columns) >= 4:
-            eps_vals = qf.loc[eps_rows[0]].dropna().values[:4]
+        eps_row = next((r for r in _EPS_CANDIDATES if r in qf.index), None)
+        if eps_row is None:
+            # Fallback: first row with 'income' but not 'other' or 'total other'
+            eps_row = next(
+                (r for r in qf.index
+                 if 'income' in r.lower() and 'other' not in r.lower()),
+                None
+            )
+
+        rev_row = next((r for r in _REV_CANDIDATES if r in qf.index), None)
+        if rev_row is None:
+            rev_row = next(
+                (r for r in qf.index if 'revenue' in r.lower()),
+                None
+            )
+
+        if eps_row and len(qf.columns) >= 4:
+            eps_vals = qf.loc[eps_row].dropna().values[:4]
             if len(eps_vals) >= 3:
                 # Quarter-over-quarter growth rates
                 eps_growth = []
@@ -97,8 +119,8 @@ def score_earnings_acceleration(symbol: str) -> Tuple[float, str]:
                         score += 5
                         reasons.append("EPS losses narrowing")
 
-        if rev_rows and len(qf.columns) >= 4:
-            rev_vals = qf.loc[rev_rows[0]].dropna().values[:4]
+        if rev_row and len(qf.columns) >= 4:
+            rev_vals = qf.loc[rev_row].dropna().values[:4]
             if len(rev_vals) >= 3 and rev_vals[-1] != 0:
                 rev_growth = [(rev_vals[i] - rev_vals[i+1]) / abs(rev_vals[i+1])
                               for i in range(len(rev_vals)-1) if rev_vals[i+1] != 0]
@@ -115,7 +137,7 @@ def score_earnings_acceleration(symbol: str) -> Tuple[float, str]:
 
     except Exception as e:
         logger.debug(f"Earnings acceleration check failed for {symbol}: {e}")
-        return 5.0, "earnings unavailable"
+        return 0.0, "earnings unavailable"
 
 
 def score_setup_quality(closes: np.ndarray, volumes: np.ndarray) -> Tuple[float, str]:

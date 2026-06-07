@@ -536,10 +536,11 @@ def run_screener(
             thesis_score = thesis["thesis_score"]
             thesis_grade = thesis["thesis_grade"]
             setup_reason = thesis["setup_reason"]
-        except Exception:
-            thesis_score = 50.0
-            thesis_grade = "B"
-            setup_reason = ""
+        except Exception as e:
+            logger.warning(f"Thesis scoring failed for {sym}: {e}")
+            thesis_score = 0.0
+            thesis_grade = "D"
+            setup_reason = "scoring error"
 
         # Combined ranking: 60% RS rank (proven momentum) + 40% forward thesis
         # RS rank tells us the trend is real. Thesis tells us why it continues.
@@ -584,7 +585,7 @@ def run_screener(
         "universe_size":   len(universe),
         "rs_qualifying":   len(universe) - rejected["rs_rank"],
         "quality_pass":    len(universe) - rejected["rs_rank"] - rejected["quality"],
-        "tech_gate_pass":  len(candidates) + len([c for c in candidates]),
+        "tech_gate_pass":  len(candidates),
         "final_count":     len(candidates),
         "sector_leaders":  sector_leaders[:6],
         "rejection_stats": rejected,

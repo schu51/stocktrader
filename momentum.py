@@ -391,17 +391,21 @@ class MomentumAnalyzer:
         )
     
     def _calculate_ema(self, data: List[float], period: int) -> List[float]:
-        """Calculate Exponential Moving Average."""
+        """
+        Calculate EMA, returning a list the same length as data.
+        The first (period-1) values are NaN — callers must account for this.
+        """
         if len(data) < period:
-            return []
-        
+            return [float('nan')] * len(data)
+
         multiplier = 2 / (period + 1)
-        ema = [sum(data[:period]) / period]  # Start with SMA
-        
+        result = [float('nan')] * (period - 1)
+        result.append(sum(data[:period]) / period)  # seed with SMA
+
         for price in data[period:]:
-            ema.append((price - ema[-1]) * multiplier + ema[-1])
-        
-        return ema
+            result.append((price - result[-1]) * multiplier + result[-1])
+
+        return result
     
     def _calculate_sma(self, data: List[float], period: int) -> List[float]:
         """Calculate Simple Moving Average."""
@@ -419,34 +423,41 @@ class MomentumAnalyzer:
         if len(closes) < self.macd_slow + self.macd_signal:
             return None
         
-        # Calculate EMAs
+        # Calculate full-length EMAs (same length as closes, NaN for warm-up bars)
         fast_ema = self._calculate_ema(closes, self.macd_fast)
         slow_ema = self._calculate_ema(closes, self.macd_slow)
-        
+
         if not fast_ema or not slow_ema:
             return None
-        
-        # Align EMAs (they have different lengths)
-        offset = self.macd_slow - self.macd_fast
-        fast_ema = fast_ema[offset:]
-        
-        # Calculate MACD line
-        macd_line = [f - s for f, s in zip(fast_ema, slow_ema)]
-        
-        # Calculate signal line (EMA of MACD)
-        signal_line = self._calculate_ema(macd_line, self.macd_signal)
-        
-        if not signal_line:
+
+        # MACD line: valid only where both EMAs are non-NaN (i.e. from slow period onward)
+        import math
+        macd_line = [
+            f - s
+            for f, s in zip(fast_ema, slow_ema)
+            if not (math.isnan(f) or math.isnan(s))
+        ]
+
+        if not macd_line:
             return None
-        
-        # Current values
-        current_macd = macd_line[-1]
-        current_signal = signal_line[-1]
+
+        # Calculate signal line (EMA of MACD line)
+        signal_line = self._calculate_ema(macd_line, self.macd_signal)
+
+        # Drop NaN warm-up from signal line
+        signal_valid = [x for x in signal_line if not math.isnan(x)]
+
+        if not signal_valid:
+            return None
+
+        # Current values — use last valid entries
+        current_macd     = macd_line[-1]
+        current_signal   = signal_valid[-1]
         current_histogram = current_macd - current_signal
-        
+
         # Previous histogram for direction
-        if len(macd_line) > 1 and len(signal_line) > 1:
-            prev_histogram = macd_line[-2] - signal_line[-2]
+        if len(macd_line) > 1 and len(signal_valid) > 1:
+            prev_histogram = macd_line[-2] - signal_valid[-2]
             
             if abs(current_histogram) > abs(prev_histogram):
                 histogram_direction = "expanding"
@@ -602,10 +613,10 @@ class MomentumAnalyzer:
         return MACrossResult(
             price=current_price,
             sma_50=round(sma_50, 2),
-            sma_200=round(sma_200, 2) if sma_200 else 0,
+            sma_200=round(sma_200, 2) if sma_200 else None,
             price_vs_50=price_vs_50,
-            price_vs_200=price_vs_200 if price_vs_200 else "unknown",
-            ma_50_vs_200=ma_50_vs_200 if ma_50_vs_200 else "unknown",
+            price_vs_200=price_vs_200 or "unknown",
+            ma_50_vs_200=ma_50_vs_200 or "unknown",
             crossover_type=crossover_type,
             days_since_crossover=days_since_crossover,
             trend_strength=trend_strength

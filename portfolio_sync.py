@@ -76,6 +76,7 @@ def main():
         account     = broker.get_account()
         positions   = broker.get_positions() or []
         market_open = broker.is_market_open()
+        open_orders = broker.get_orders(status="open") or []
     except Exception as e:
         logger.error(f"Alpaca data fetch failed: {e}")
         write_sync_error(existing, str(e))
@@ -87,9 +88,22 @@ def main():
         write_sync_error(existing, msg)
         return
 
+    # Build stop-price map: symbol → stop_price from active stop/stop_limit orders
+    stop_map: dict = {}
+    for o in open_orders:
+        if o.get("side") == "sell" and o.get("type") in ("stop", "stop_limit", "trailing_stop"):
+            sym = o.get("symbol", "")
+            sp  = o.get("stop_price") or o.get("trail_price")
+            if sym and sp:
+                try:
+                    stop_map[sym] = round(float(sp), 2)
+                except (TypeError, ValueError):
+                    pass
+
     logger.info(
         f"Fetched: portfolio=${account['portfolio_value']:,.2f} "
         f"| {len(positions)} positions "
+        f"| {len(stop_map)} active stops "
         f"| market={'OPEN' if market_open else 'CLOSED'}"
     )
 
@@ -120,7 +134,7 @@ def main():
             "market_value":       round(mv, 2),
             "unrealized_pnl":     round(pnl, 2),
             "unrealized_pnl_pct": round(pnl_pct, 2),
-            "stop_loss":          None,
+            "stop_loss":          stop_map.get(sym),
         }
 
         # Attach cached company metadata (no fresh API calls)

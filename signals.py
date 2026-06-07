@@ -155,10 +155,12 @@ class SignalGenerator:
         # Use full trend analysis MA cross if available
         if self._last_trend_analysis and self._last_trend_analysis.ma_cross:
             mc = self._last_trend_analysis.ma_cross
-            # Require full golden alignment: price > 50MA AND 50MA > 200MA
-            # "strong_up" satisfies both; "up" with ma_50_vs_200="above" also qualifies.
-            # Everything else (neutral, down, strong_down, or up with 50MA < 200MA) is blocked.
-            if mc.ma_50_vs_200 != "above" or mc.trend_strength not in ["strong_up", "up"]:
+            # Require golden alignment: price > 50MA AND 50MA > 200MA.
+            # "unknown" means < 200 days history — treat as neutral, not bearish.
+            # Only reject if we explicitly know 50MA is BELOW 200MA.
+            ma_confirmed_below = mc.ma_50_vs_200 == "below"
+            trend_weak = mc.trend_strength not in ["strong_up", "up"]
+            if ma_confirmed_below or (mc.ma_50_vs_200 == "above" and trend_weak):
                 reasons.append(
                     f"Trend gate: 50MA must be above 200MA (blocked: {mc.trend_strength}, "
                     f"50MA vs 200MA: {mc.ma_50_vs_200})"

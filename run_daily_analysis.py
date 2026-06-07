@@ -344,6 +344,7 @@ class DailyRunner:
 
             # Build rich portfolio state with real Position objects (unlocks engine methods)
             live_portfolio = self._build_portfolio_state()
+            self.portfolio = live_portfolio  # keep instance state current for sizing calcs
 
             # Portfolio risk assessment
             try:
@@ -765,22 +766,28 @@ class DailyRunner:
         try:
             import yfinance as yf
             cal = yf.Ticker(symbol).calendar
-            if cal is not None:
-                dates = cal.get("Earnings Date") if hasattr(cal, "get") else None
-                if dates is None and hasattr(cal, "T"):
-                    row = cal.T.get("Earnings Date") if "Earnings Date" in cal.T.columns else None
-                    dates = row.values.tolist() if row is not None else None
-                if dates:
-                    from datetime import timezone
-                    for ed in (dates if isinstance(dates, list) else [dates]):
-                        try:
-                            if hasattr(ed, "date"):
-                                ed = ed.date()
-                            days = (ed - date.today()).days
-                            if 0 <= days <= blackout:
-                                return True, f"Earnings in {days}d — blackout {blackout}d window"
-                        except Exception:
-                            pass
+            if cal is None:
+                return False, ""
+
+            # yfinance returns inconsistent types across versions — normalise here.
+            dates = []
+            if isinstance(cal, dict):
+                raw = cal.get("Earnings Date", [])
+                dates = raw if isinstance(raw, list) else [raw]
+            elif hasattr(cal, "columns") and "Earnings Date" in cal.columns:
+                dates = cal["Earnings Date"].dropna().tolist()
+            elif hasattr(cal, "index") and "Earnings Date" in cal.index:
+                raw = cal.loc["Earnings Date"]
+                dates = raw.tolist() if hasattr(raw, "tolist") else [raw]
+
+            for ed in dates:
+                try:
+                    ed = ed.date() if hasattr(ed, "date") else date.fromisoformat(str(ed)[:10])
+                    days = (ed - date.today()).days
+                    if 0 <= days <= blackout:
+                        return True, f"Earnings in {days}d — blackout {blackout}d window"
+                except Exception:
+                    continue
         except Exception:
             pass
         return False, ""
@@ -1141,14 +1148,12 @@ class DailyRunner:
                         None
                     )
                     if open_trade and open_trade.get("entry_date"):
-                        from datetime import date as date_type
-                        entry_date = date_type.fromisoformat(open_trade["entry_date"])
+                        entry_date = date.fromisoformat(open_trade["entry_date"])
             except Exception:
                 pass
 
             if entry_date:
-                from datetime import date as date_type
-                hold_days = (date_type.today() - entry_date).days
+                hold_days = (date.today() - entry_date).days
 
                 # Hard stop: down >15% at any point = thesis was wrong at entry
                 if pnl_pct < -15:
@@ -1292,8 +1297,12 @@ class DailyRunner:
             sym = pos["symbol"]
             if sym in already_flagged:
                 continue
-            pnl_pct = float(pos.get("unrealized_plpc", 0) if "unrealized_plpc" in pos
-                            else (pos.get("unrealized_pnl_pct", 0)))
+            # unrealized_plpc from Alpaca is a decimal (0.15 = +15%); convert to pct.
+            # unrealized_pnl_pct from our own position dict is already a percentage.
+            if "unrealized_plpc" in pos:
+                pnl_pct = float(pos["unrealized_plpc"]) * 100
+            else:
+                pnl_pct = float(pos.get("unrealized_pnl_pct", 0))
             if pnl_pct < 10:  # Only monitor profitable positions worth protecting
                 continue
             try:
@@ -1519,7 +1528,13 @@ class DailyRunner:
                     })
                     continue
             except Exception as e:
-                logger.debug(f"Risk check unavailable for {symbol}: {e}")
+                logger.warning(f"Risk check raised exception for {symbol}: {e} — skipping for safety")
+                skipped += 1
+                execution_results.append({
+                    "symbol": symbol, "status": "skipped",
+                    "reason": f"risk check error: {e}"
+                })
+                continue
 
             # Submit order
             try:

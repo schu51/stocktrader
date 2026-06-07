@@ -361,15 +361,63 @@ DEFAULT_CONFIG = DecisionConfig()
 # =============================================================================
 # Sector classifications (updated to match expanded universe)
 SECTOR_MAP = {
-    "mega_cap_tech": ["NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA"],
-    "semiconductors": ["AMD", "AVGO", "QCOM", "MRVL", "SMCI", "ON", "LAM", "AMAT", "KLAC", "ARM"],
-    "cybersecurity": ["CRWD", "ZS", "PANW", "FTNT", "CYBR", "OKTA"],
-    "enterprise_ai_software": ["DDOG", "SNOW", "MDB", "NET", "PATH", "TEAM", "NOW", "CRM", "WDAY"],
-    "vertical_saas": ["TOST", "PCOR", "APPF", "VEEV", "NCNO", "SAMSF"],
-    "ai_infrastructure": ["VRT", "APH", "ETN", "PWR", "CRWV", "APLD", "CEG", "VST", "ANET"],
-    "fintech_payments": ["SQ", "AFRM", "SOFI", "UPST", "HOOD", "NU", "PYPL", "V", "MA"],
-    "consumer_digital": ["SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT", "PINS"],
-    "healthcare_tech": ["ISRG", "DXCM", "PODD", "RXRX", "TDOC"],
-    "industrials_defense": ["HWM", "GE", "RTX", "LHX", "AXON", "KTOS"],
-    "emerging_themes": ["COIN", "MSTR", "PLTR", "RDDT"],
+    # ── Tech / Growth (hand-curated, maps to Finviz "technology") ────────────
+    "technology": [
+        "NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA",
+        "AMD", "AVGO", "QCOM", "MRVL", "SMCI", "ON", "AMAT", "KLAC", "LRCX", "ARM", "TXN",
+        "CRWD", "ZS", "PANW", "FTNT", "OKTA",
+        "DDOG", "SNOW", "MDB", "NET", "NOW", "CRM", "WDAY", "TEAM", "PATH",
+        "VRT", "APH", "ANET", "PLTR", "RDDT", "MSTR",
+        "ORCL", "ADBE", "INTU", "CDNS", "SNPS", "NFLX", "UBER", "ABNB",
+    ],
+    # ── Healthcare ───────────────────────────────────────────────────────────
+    "healthcare": [
+        "LLY", "NVO", "ABBV", "UNH", "JNJ", "MRK", "TMO", "ABT", "DHR",
+        "ISRG", "DXCM", "PODD", "REGN", "VRTX", "MRNA", "BIIB", "GILD",
+        "HCA", "CI", "ELV", "CVS", "MCK",
+    ],
+    # ── Financials ───────────────────────────────────────────────────────────
+    "financials": [
+        "BRK-B", "JPM", "BAC", "WFC", "GS", "MS", "BLK", "SCHW", "AXP",
+        "V", "MA", "PYPL", "COIN", "NU", "AFRM", "SOFI", "HOOD", "UPST",
+        "CB", "PGR", "TRV", "AON", "MMC",
+    ],
+    # ── Consumer Cyclical ────────────────────────────────────────────────────
+    "consumer_cyclical": [
+        "AMZN", "TSLA", "HD", "MCD", "NKE", "SBUX", "LOW", "TJX", "BKNG",
+        "SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT", "PINS",
+        "ABNB", "LVS", "MGM", "CCL", "RCL",
+    ],
+    # ── Industrials ──────────────────────────────────────────────────────────
+    "industrials": [
+        "CAT", "DE", "UPS", "FDX", "HON", "GE", "MMM", "RTX", "LMT", "NOC",
+        "ETN", "PWR", "URI", "GNRC", "HWM", "GEV",
+        "AXON", "KTOS", "LHX",
+    ],
+    # ── Communication Services ───────────────────────────────────────────────
+    "communication_services": [
+        "GOOGL", "META", "NFLX", "DIS", "CMCSA", "T", "VZ", "TMUS",
+        "SNAP", "PINS", "RDDT", "SPOT",
+    ],
+    # ── Consumer Defensive ───────────────────────────────────────────────────
+    "consumer_defensive": [
+        "COST", "WMT", "PG", "KO", "PEP", "PM", "MO", "CL", "GIS", "K",
+    ],
+    # ── Energy ───────────────────────────────────────────────────────────────
+    "energy": [
+        "XOM", "CVX", "COP", "EOG", "SLB", "OXY", "MPC", "VLO", "PSX",
+        "CEG", "VST", "NEE", "AEP", "SO",
+    ],
+    # ── Basic Materials ──────────────────────────────────────────────────────
+    "basic_materials": [
+        "LIN", "APD", "SHW", "ECL", "NEM", "GOLD", "FCX", "AA", "NUE", "X",
+    ],
+    # ── Real Estate ──────────────────────────────────────────────────────────
+    "real_estate": [
+        "PLD", "AMT", "EQIX", "CCI", "SPG", "O", "WELL", "AVB", "EQR",
+    ],
+    # ── Utilities ────────────────────────────────────────────────────────────
+    "utilities": [
+        "NEE", "DUK", "SO", "AEP", "XEL", "SRE", "D", "PCG", "EXC",
+    ],
 }

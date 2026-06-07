@@ -27,6 +27,7 @@ import argparse
 import json
 import logging
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -35,82 +36,183 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-# ── Fallback universe (used when Wikipedia fetch fails) ──────────────────────
-FALLBACK_UNIVERSE = [
+# Finviz sector name → internal key used throughout the screener
+_FINVIZ_SECTOR_NORM: Dict[str, str] = {
+    "Technology":             "technology",
+    "Healthcare":             "healthcare",
+    "Financial":              "financials",
+    "Consumer Cyclical":      "consumer_cyclical",
+    "Industrials":            "industrials",
+    "Communication Services": "communication_services",
+    "Consumer Defensive":     "consumer_defensive",
+    "Energy":                 "energy",
+    "Basic Materials":        "basic_materials",
+    "Real Estate":            "real_estate",
+    "Utilities":              "utilities",
+}
+
+# ── Fallback universe (used when Finviz is unreachable) ──────────────────────
+# Covers the growth/momentum names the strategy focuses on; sector tags are
+# assigned from config.SECTOR_MAP when Finviz data is unavailable.
+FALLBACK_UNIVERSE: Dict[str, str] = {
     # Mega-cap tech
-    "NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA",
+    **{s: "technology" for s in [
+        "NVDA", "META", "GOOGL", "MSFT", "AMZN", "AAPL", "TSLA",
+        "ORCL", "ADBE", "INTU", "CDNS", "SNPS", "NFLX", "UBER", "ABNB",
+    ]},
     # Semiconductors
-    "AMD", "AVGO", "QCOM", "MRVL", "ARM", "SMCI", "ON", "AMAT", "KLAC", "LRCX", "MCHP", "TXN",
-    # Cybersecurity
-    "CRWD", "PANW", "FTNT", "ZS", "OKTA", "CYBR",
-    # Enterprise software / cloud
-    "DDOG", "SNOW", "MDB", "NET", "NOW", "CRM", "WDAY", "TEAM", "PATH", "HUBS",
-    # AI infra / power
-    "VRT", "ETN", "PWR", "ANET", "CEG", "VST", "APH",
-    # Fintech
-    "COIN", "NU", "AFRM", "BLOCK", "SOFI", "V", "MA", "PYPL",
+    **{s: "technology" for s in [
+        "AMD", "AVGO", "QCOM", "MRVL", "ARM", "SMCI", "ON",
+        "AMAT", "KLAC", "LRCX", "MCHP", "TXN", "ASML", "TSM",
+    ]},
+    # Cybersecurity / enterprise software
+    **{s: "technology" for s in [
+        "CRWD", "PANW", "FTNT", "ZS", "OKTA",
+        "DDOG", "SNOW", "MDB", "NET", "NOW", "CRM", "WDAY", "TEAM",
+        "VRT", "ANET", "APH",
+    ]},
+    # Fintech / payments
+    **{s: "financials" for s in ["COIN", "NU", "AFRM", "SOFI", "V", "MA", "PYPL"]},
     # Consumer / media
-    "SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT",
-    # Healthcare tech
-    "ISRG", "DXCM", "PODD",
-    # Defense / industrials
-    "AXON", "KTOS", "HWM", "GE", "RTX",
-    # Emerging
-    "PLTR", "RDDT", "MSTR",
-    # S&P 500 large-cap momentum names
-    "ORCL", "ADBE", "INTU", "CDNS", "SNPS", "ANSS", "FTNT", "ROP",
-    "LRCX", "ASML", "TSM", "NFLX", "UBER", "ABNB",
-    "LLY", "NVO", "REGN", "VRTX",
-    "FCX", "NEM", "GOLD",
-    "URI", "PWR", "GNRC",
-]
+    **{s: "consumer_cyclical" for s in ["SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT"]},
+    # Healthcare
+    **{s: "healthcare" for s in ["ISRG", "DXCM", "PODD", "LLY", "NVO", "REGN", "VRTX"]},
+    # Industrials / defense / energy
+    **{s: "industrials" for s in ["AXON", "HWM", "GE", "RTX", "ETN", "PWR", "URI", "GNRC"]},
+    **{s: "energy" for s in ["CEG", "VST"]},
+    **{s: "basic_materials" for s in ["FCX", "NEM", "GOLD"]},
+    # Emerging / thematic
+    **{s: "technology" for s in ["PLTR", "RDDT", "MSTR"]},
+}
 
 
-def get_universe() -> List[str]:
+def _scrape_finviz_index(session, index_filter: str) -> Dict[str, str]:
     """
-    Fetch S&P 500 components from Wikipedia + Nasdaq 100 supplement.
-    Falls back to FALLBACK_UNIVERSE if Wikipedia is unreachable.
+    Paginate through one Finviz index filter and return {ticker: sector}.
+    Stops when a page returns fewer than 20 rows (last page).
     """
-    tickers = set()
+    from bs4 import BeautifulSoup
+
+    base = f"https://finviz.com/screener.ashx?v=111&f={index_filter}&o=ticker"
+    results: Dict[str, str] = {}
+
+    for start in range(1, 1200, 20):
+        try:
+            resp = session.get(f"{base}&r={start}", timeout=15)
+            if resp.status_code != 200:
+                logger.warning(f"Finviz {index_filter} HTTP {resp.status_code} at r={start}")
+                break
+
+            soup = BeautifulSoup(resp.text, "lxml")
+            rows = soup.select("tr.styled-row")
+            if not rows:
+                break
+
+            for row in rows:
+                cells = row.find_all("td")
+                if len(cells) < 4:
+                    continue
+                ticker = cells[1].get_text(strip=True)
+                sector = cells[3].get_text(strip=True)
+                if ticker and 2 <= len(ticker) <= 5 and ticker.replace("-", "").isalpha():
+                    results[ticker] = _FINVIZ_SECTOR_NORM.get(sector, "other")
+
+            if len(rows) < 20:
+                break  # Last page reached
+
+            time.sleep(0.4)
+
+        except Exception as e:
+            logger.warning(f"Finviz fetch error ({index_filter} r={start}): {e}")
+            break
+
+    return results
+
+
+def _fetch_finviz_universe() -> Dict[str, str]:
+    """
+    Fetch S&P 500 and Nasdaq 100 from Finviz as separate requests and merge.
+
+    Finviz treats comma-separated index filters as AND (intersection), so we
+    fetch each index independently and union the results.  S&P 500 sector
+    takes precedence; Nasdaq-only names inherit the sector from the NDX fetch.
+
+    Returns {ticker: normalized_sector} for ~550–600 stocks.
+    """
+    import requests
+
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/124.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://finviz.com/screener.ashx",
+    })
+
+    sp500 = _scrape_finviz_index(session, "idx_sp500")
+    logger.info(f"Finviz S&P 500: {len(sp500)} tickers")
+
+    ndx = _scrape_finviz_index(session, "idx_ndx")
+    logger.info(f"Finviz Nasdaq 100: {len(ndx)} tickers")
+
+    # Merge: S&P 500 sector wins; add any NDX-only names
+    merged = {**ndx, **sp500}
+    return merged
+
+
+def get_universe() -> Dict[str, str]:
+    """
+    Build the scan universe as {ticker: sector}.
+
+    Primary source: Finviz screener (S&P 500 + Nasdaq 100) — gives real sectors
+    for every stock so leadership scoring works across all 11 GICS sectors.
+
+    Falls back to FALLBACK_UNIVERSE (tech-heavy hand-curated list) if Finviz
+    is unreachable.
+
+    NDX growth names not already in the Finviz result are merged in after.
+    """
+    universe: Dict[str, str] = {}
 
     try:
-        import ssl
-        import pandas as pd
-        # macOS often rejects Wikipedia's cert chain; bypass for this read-only fetch
-        _orig_ctx = ssl._create_default_https_context
-        ssl._create_default_https_context = ssl._create_unverified_context
-        try:
-            table = pd.read_html(
-                "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
-                header=0,
-            )
-        finally:
-            ssl._create_default_https_context = _orig_ctx  # always restore
-        sp500 = table[0]["Symbol"].str.replace(".", "-", regex=False).tolist()
-        tickers.update(sp500)
-        logger.info(f"Fetched {len(sp500)} S&P 500 tickers from Wikipedia")
+        universe = _fetch_finviz_universe()
+        if len(universe) >= 100:
+            logger.info(f"Finviz: fetched {len(universe)} tickers with sectors")
+        else:
+            raise ValueError(f"Finviz returned only {len(universe)} tickers — too few")
     except Exception as e:
-        logger.warning(f"Wikipedia fetch failed ({e}) — using fallback universe")
-        tickers.update(FALLBACK_UNIVERSE)
+        logger.warning(f"Finviz fetch failed ({e}) — using fallback universe")
+        universe = dict(FALLBACK_UNIVERSE)
 
-    # Nasdaq 100 / growth supplement — names often not in S&P 500
-    ndx_supplement = [
-        "NVDA", "META", "GOOGL", "MSFT", "AMZN", "TSLA", "AAPL",
-        "AMD", "AVGO", "QCOM", "MRVL", "ARM", "SMCI", "ON", "AMAT", "KLAC",
-        "CRWD", "PANW", "ZS", "FTNT", "OKTA", "CYBR",
-        "DDOG", "SNOW", "MDB", "NET", "NOW", "WDAY", "TEAM", "PATH",
-        "COIN", "NU", "AFRM", "SOFI", "HOOD", "UPST",
-        "SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT", "RDDT",
-        "PLTR", "AXON", "KTOS",
-        "VRT", "ETN", "PWR", "ANET", "CEG", "VST",
-        "MSTR", "NFLX", "UBER", "ABNB",
-    ]
-    tickers.update(ndx_supplement)
+    # NDX high-growth supplement — names sometimes missing from S&P 500 filter
+    ndx_supplement: Dict[str, str] = {
+        **{s: "technology" for s in [
+            "NVDA", "META", "AMD", "AVGO", "MRVL", "ARM", "SMCI",
+            "CRWD", "PANW", "ZS", "FTNT",
+            "DDOG", "SNOW", "MDB", "NET", "WDAY", "TEAM",
+            "VRT", "ANET", "CEG", "VST",
+            "NFLX", "UBER", "ABNB", "PLTR", "RDDT",
+        ]},
+        **{s: "financials"        for s in ["COIN", "NU", "AFRM", "SOFI", "HOOD", "UPST"]},
+        **{s: "consumer_cyclical" for s in ["SHOP", "DUOL", "APP", "TTD", "RBLX", "SPOT"]},
+    }
+    # Only add supplement entries that aren't already from Finviz
+    for sym, sector in ndx_supplement.items():
+        if sym not in universe:
+            universe[sym] = sector
 
-    # Keep only clean alphabetic tickers, 2–5 characters
-    cleaned = sorted({t for t in tickers if t.isalpha() and 2 <= len(t) <= 5})
-    logger.info(f"Total universe: {len(cleaned)} tickers")
-    return cleaned
+    # Drop anything that looks like a bad ticker
+    universe = {
+        t: s for t, s in universe.items()
+        if 2 <= len(t) <= 5 and t.replace("-", "").isalpha()
+    }
+
+    logger.info(f"Total universe: {len(universe)} tickers")
+    return universe
 
 
 def batch_download(tickers: List[str]) -> Optional[object]:
@@ -265,17 +367,31 @@ def get_market_regime() -> Dict:
         }
 
 
-def get_sector_leaders(rs_ranks: Dict[str, int]) -> List[str]:
+def get_sector_leaders(
+    rs_ranks: Dict[str, int],
+    ticker_sectors: Dict[str, str] = None,
+) -> List[str]:
     """
-    Rank sectors by average RS rank of their known members.
-    Returns sectors ordered best-to-worst.
+    Rank sectors by average RS rank of their members.
+
+    When ticker_sectors (Finviz-sourced) is provided, every stock in the
+    universe contributes to its sector score — not just the hand-coded
+    SECTOR_MAP names.  Requires at least 3 members per sector for a
+    meaningful average (avoids noise from thin sectors).
     """
-    from config import SECTOR_MAP
+    if ticker_sectors:
+        sector_to_syms: Dict[str, List[str]] = {}
+        for sym, sector in ticker_sectors.items():
+            if sym in rs_ranks:
+                sector_to_syms.setdefault(sector, []).append(sym)
+    else:
+        from config import SECTOR_MAP
+        sector_to_syms = {s: list(syms) for s, syms in SECTOR_MAP.items()}
 
     sector_scores = {}
-    for sector, syms in SECTOR_MAP.items():
+    for sector, syms in sector_to_syms.items():
         member_ranks = [rs_ranks[s] for s in syms if s in rs_ranks]
-        if member_ranks:
+        if len(member_ranks) >= 3:
             sector_scores[sector] = sum(member_ranks) / len(member_ranks)
 
     return sorted(sector_scores, key=lambda s: sector_scores[s], reverse=True)
@@ -314,8 +430,9 @@ def run_screener(
     logger.info("MOMENTUM SCREENER")
     logger.info("=" * 50)
 
-    # 1. Universe
+    # 1. Universe — dict {ticker: sector} from Finviz (or fallback)
     universe = get_universe()
+    tickers  = list(universe.keys())
 
     # 2. Market regime
     regime = get_market_regime()
@@ -323,21 +440,18 @@ def run_screener(
     logger.info(f"Regime: {regime['regime'].upper()} | RS threshold: {threshold}")
 
     # 3. Batch download
-    data = batch_download(universe)
+    data = batch_download(tickers)
     if data is None:
         logger.error("Download failed — screener aborted")
         return {"error": "download_failed", "candidates": []}
 
     # 4. RS scores + percentile rank
-    raw_scores = calculate_rs_scores(universe, data)
+    raw_scores = calculate_rs_scores(tickers, data)
     rs_ranks   = percentile_rank(raw_scores)
 
     # 5 + 6 + 7. Quality gate + technical gate + sector boost
-    from config import SECTOR_MAP
-    sym_to_sector = {s: sector for sector, syms in SECTOR_MAP.items() for s in syms}
-
-    # Sector leaders for boost
-    sector_leaders = get_sector_leaders(rs_ranks)
+    # Sector comes from Finviz universe dict — covers all 11 GICS sectors.
+    sector_leaders = get_sector_leaders(rs_ranks, universe)
     top_sectors    = set(sector_leaders[:3])
 
     # Get volume data for quality filter
@@ -403,7 +517,7 @@ def run_screener(
 
         # Build candidate record
         rs_score  = raw_scores.get(sym, 0)
-        sector    = sym_to_sector.get(sym, "other")
+        sector    = universe.get(sym, "other")
         is_leader = sector in top_sectors
 
         # Forward thesis score — WHERE is this stock going, not just where it's been

@@ -609,6 +609,23 @@ class DailyRunner:
             # rather than overwriting with an empty list.
             positions = []
             if self.broker:
+                # Build stop-price map from active Alpaca stop/stop_limit orders
+                stop_map: dict = {}
+                try:
+                    for o in (self.broker.get_orders(status="open") or []):
+                        if o.get("side") == "sell" and o.get("type") in (
+                            "stop", "stop_limit"
+                        ):
+                            sym = o.get("symbol", "")
+                            sp  = o.get("stop_price")
+                            if sym and sp:
+                                try:
+                                    stop_map[sym] = round(float(sp), 2)
+                                except (TypeError, ValueError):
+                                    pass
+                except Exception:
+                    pass
+
                 for p in (self.broker.get_positions() or []):
                     positions.append({
                         "symbol": p["symbol"],
@@ -618,7 +635,7 @@ class DailyRunner:
                         "market_value": round(float(p["market_value"]), 2),
                         "unrealized_pnl": round(float(p["unrealized_pl"]), 2),
                         "unrealized_pnl_pct": round(float(p["unrealized_plpc"]) * 100, 2),
-                        "stop_loss": None,
+                        "stop_loss": stop_map.get(p["symbol"]),
                     })
             else:
                 # Alpaca unavailable — preserve last known positions so dashboard

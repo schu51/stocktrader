@@ -163,7 +163,7 @@ def score_setup_quality(closes: np.ndarray, volumes: np.ndarray) -> Tuple[float,
        5 pts: highly extended or failed setup
     """
     if len(closes) < 60:
-        return 10.0, "insufficient history"
+        return 0.0, "insufficient history"
 
     current = float(closes[-1])
 
@@ -249,7 +249,7 @@ def score_institutional_accumulation(closes: np.ndarray, volumes: np.ndarray) ->
     Also checks: is volume expanding on recent up days? (last 2 weeks)
     """
     if len(closes) < 40 or len(volumes) < 40:
-        return 10.0, "insufficient volume data"
+        return 0.0, "insufficient volume data"
 
     # Last 60 sessions (or available)
     n = min(60, len(closes))
@@ -261,7 +261,7 @@ def score_institutional_accumulation(closes: np.ndarray, volumes: np.ndarray) ->
     down_vols = [v[i] for i in range(1, n) if c[i] < c[i-1]]
 
     if not up_vols or not down_vols:
-        return 10.0, "insufficient up/down days"
+        return 0.0, "insufficient up/down days"
 
     avg_up_vol   = float(np.mean(up_vols))
     avg_down_vol = float(np.mean(down_vols))

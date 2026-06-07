@@ -479,9 +479,9 @@ class MomentumAnalyzer:
         
         # Check for crossover
         crossover = None
-        if len(macd_line) >= 2 and len(signal_line) >= 2:
+        if len(macd_line) >= 2 and len(signal_valid) >= 2:
             prev_macd = macd_line[-2]
-            prev_signal = signal_line[-2]
+            prev_signal = signal_valid[-2]
             
             if prev_macd <= prev_signal and current_macd > current_signal:
                 crossover = "bullish_cross"

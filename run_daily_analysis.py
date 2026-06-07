@@ -1378,6 +1378,32 @@ class DailyRunner:
                                 f"ENGINE EXIT: {dec.symbol} — {dec.primary_reason} "
                                 f"| P&L: {pnl_pct:+.1f}%"
                             )
+
+                            # Re-place stop for the residual position.
+                            # Cancelling the stop was required to free qty for the
+                            # partial close; without this the remaining shares are
+                            # completely unprotected until the next daily run.
+                            remaining = (pos_obj.shares if pos_obj else 0) - dec.shares
+                            cur_price  = current_prices.get(dec.symbol, 0)
+                            if remaining > 0 and cur_price > 0:
+                                residual_stop = round(cur_price * 0.90, 2)  # 10% trail
+                                try:
+                                    self.broker.place_order(
+                                        symbol=dec.symbol,
+                                        qty=remaining,
+                                        side="sell",
+                                        order_type="stop",
+                                        stop_price=residual_stop,
+                                        time_in_force="gtc",
+                                    )
+                                    logger.info(
+                                        f"RESIDUAL STOP: {dec.symbol} {remaining} shares "
+                                        f"@ ${residual_stop:.2f} (10% trail, post-partial-exit)"
+                                    )
+                                except Exception as se:
+                                    logger.warning(
+                                        f"Could not place residual stop for {dec.symbol}: {se}"
+                                    )
                     except Exception as e:
                         entry["error"] = str(e)
                 else:

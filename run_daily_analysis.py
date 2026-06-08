@@ -204,6 +204,11 @@ class DailyRunner:
         cash = float(account.get("cash", self.portfolio.cash))
         bp   = float(account.get("buying_power", self.portfolio.buying_power))
 
+        # Use cash (not buying_power) so the model never trades on margin.
+        # buying_power in Alpaca margin accounts is 2-3× cash; using it as the
+        # sizing constraint caused the account to go negative.
+        available = max(0.0, cash) * 0.95
+
         return PortfolioState(
             timestamp=datetime.now(),
             total_value=total_value,
@@ -212,7 +217,7 @@ class DailyRunner:
             positions=positions,
             num_positions=len(positions),
             cash_allocation=cash / total_value if total_value > 0 else 0.0,
-            available_cash=bp * 0.95,
+            available_cash=available,
             buying_power=bp,
             total_unrealized_pnl=total_unrealized,
         )
@@ -235,7 +240,7 @@ class DailyRunner:
                         total_value=account["portfolio_value"],
                         cash=account["cash"],
                         invested=account["long_market_value"],
-                        available_cash=account["buying_power"] * 0.95  # 5% buffer
+                        available_cash=max(0.0, float(account["cash"])) * 0.95
                     )
             except Exception as e:
                 logger.warning(f"Could not connect to Alpaca: {e}")

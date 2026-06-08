@@ -156,7 +156,7 @@ def main():
     updated_account = {
         "portfolio_value":   float(account["portfolio_value"]),
         "cash":              float(account["cash"]),
-        "buying_power":      float(account["buying_power"]) * 0.95,
+        "buying_power":      max(0.0, float(account["cash"])) * 0.95,
         "long_market_value": float(account["long_market_value"]),
         "unrealized_pnl":    round(total_unrealized, 2),
     }

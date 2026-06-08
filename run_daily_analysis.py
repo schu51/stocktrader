@@ -1523,12 +1523,22 @@ class DailyRunner:
 
             # Gate 3: valid order parameters
             if not limit_price or shares <= 0:
-                logger.warning(f"Skipping {symbol}: invalid limit_price or shares")
+                if limit_price and shares == 0:
+                    at_cap = self.portfolio.num_positions >= self.engine.config.portfolio_constraints.max_positions
+                    reason = (
+                        f"position size calculated as 0 — portfolio at max capacity "
+                        f"({self.portfolio.num_positions}/{self.engine.config.portfolio_constraints.max_positions} positions)"
+                        if at_cap else
+                        "position size calculated as 0 — insufficient cash or constraints"
+                    )
+                else:
+                    reason = "invalid limit_price or shares"
+                logger.warning(f"Skipping {symbol}: {reason}")
                 skipped += 1
                 execution_results.append({
                     "symbol": symbol,
                     "status": "skipped",
-                    "reason": "invalid limit_price or shares"
+                    "reason": reason
                 })
                 continue
 

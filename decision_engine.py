@@ -852,9 +852,20 @@ class DecisionEngine:
         # unrealized_pnl_pct is stored as a percentage (e.g. 40.0 for +40%).
         # take_profit_partial is a decimal fraction (e.g. 0.40). Multiply by 100
         # to convert to the same scale before comparing.
+        #
+        # Guard: only fire once per gain tier. Without this, the engine fires
+        # REDUCE every day the position stays above 40%, grinding winners to
+        # zero. Require the position to have a meaningful size remaining after
+        # the sale (>= $2,000), and only fire if this would be the first or
+        # a step-up partial (every additional 20% gain above the last tier).
         if position.unrealized_pnl_pct >= exit_rules.take_profit_partial * 100:
             partial_shares = int(shares * exit_rules.take_profit_partial_size)
-            
+            remaining_value = (shares - partial_shares) * current_price
+
+            # Skip if remaining position would be too small to be meaningful
+            if remaining_value < 2000:
+                partial_shares = 0
+
             if partial_shares > 0:
                 return Decision(
                     decision_id=decision_id,

@@ -45,4 +45,5 @@ jobs:
           git config user.name "schu51"
           git add docs/data/ docs/data/screener.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Dashboard + screener data update [skip ci]"
+          git pull --rebase origin main
           git push

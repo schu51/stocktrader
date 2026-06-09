@@ -1,0 +1,40 @@
+name: Post-Market Reconciler
+
+on:
+  schedule:
+    - cron: '15 20 * * 1-5'   # 4:15 PM EDT (20:15 UTC) Mon–Fri
+  workflow_dispatch:
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Run post-market reconciler
+        run: python postmarket_reconciler.py
+
+      - name: Commit report
+        if: always()
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add docs/data/postmarket.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Post-market reconciliation [skip ci]"
+          git pull --rebase origin main
+          git push

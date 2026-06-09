@@ -1,0 +1,136 @@
+{
+  "date": "2026-06-09",
+  "generated_at": "2026-06-09T08:30:00.894307",
+  "portfolio": {
+    "value": 113685.2,
+    "cash": 6864.07,
+    "total_unrealized": 1461.0900000000001,
+    "positions": 20,
+    "winners": 10,
+    "losers": 10,
+    "risk_level": "MODERATE",
+    "risk_score": 43.5
+  },
+  "execution": {
+    "signals_generated": 1,
+    "orders_executed": 0,
+    "orders_skipped": 1,
+    "skip_reasons": [
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
+    ],
+    "candidates_screened": 30
+  },
+  "exits": {
+    "triggered": 0,
+    "stops_updated": 5,
+    "detail": []
+  },
+  "closed_today": [],
+  "positions_at_risk": [
+    {
+      "symbol": "ARM",
+      "pnl_pct": -10.6,
+      "value": 3101.94,
+      "has_stop": false,
+      "risk": "deep_loss"
+    },
+    {
+      "symbol": "CRWD",
+      "pnl_pct": -9.1,
+      "value": 12904.3,
+      "has_stop": false,
+      "risk": "deep_loss"
+    },
+    {
+      "symbol": "AMD",
+      "pnl_pct": -9.07,
+      "value": 2949.96,
+      "has_stop": false,
+      "risk": "deep_loss"
+    },
+    {
+      "symbol": "NET",
+      "pnl_pct": -8.81,
+      "value": 9206.64,
+      "has_stop": false,
+      "risk": "deep_loss"
+    },
+    {
+      "symbol": "MRVL",
+      "pnl_pct": -6.84,
+      "value": 6219.84,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "ON",
+      "pnl_pct": -5.99,
+      "value": 3208.92,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "FCX",
+      "pnl_pct": -5.51,
+      "value": 3178.32,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "DDOG",
+      "pnl_pct": -5.44,
+      "value": 5596.08,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "PANW",
+      "pnl_pct": -3.78,
+      "value": 2368.35,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "GNRC",
+      "pnl_pct": -1.75,
+      "value": 3304.08,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "TSM",
+      "pnl_pct": 0.13,
+      "value": 5203.92,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "CTLP",
+      "pnl_pct": 5.26,
+      "value": 3147.2,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "AMAT",
+      "pnl_pct": 9.37,
+      "value": 20866.2,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "LRCX",
+      "pnl_pct": 9.43,
+      "value": 11155.52,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "KLAC",
+      "pnl_pct": 10.23,
+      "value": 11223.3,
+      "has_stop": false,
+      "risk": "no_stop"
+    }
+  ]
+}

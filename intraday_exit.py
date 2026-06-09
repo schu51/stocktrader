@@ -71,24 +71,31 @@ def _log_exit(symbol: str, price: float, qty: int, trigger: str):
                     "hold_days":   hold_days,
                 })
                 break
-        TRADES_FILE.write_text(json.dumps(trades, indent=2))
+        # Atomic write: temp file + rename, so a concurrent reader never sees
+        # a half-written trades.json (intraday_exit and the daily runner can
+        # both touch this file).
+        import os
+        tmp = TRADES_FILE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(trades, indent=2))
+        os.replace(tmp, TRADES_FILE)
     except Exception as e:
         logger.warning(f"Could not log exit for {symbol}: {e}")
 
 
-def evaluate_position(pos: Dict) -> Optional[Dict]:
+def evaluate_position(pos: Dict, sma50: Optional[float]) -> Optional[Dict]:
     """
     Check one position for exit triggers.
     Returns an action dict if the position should be closed, None to hold.
+
+    sma50 is supplied by the caller (from the batched daily cache) rather than
+    fetched per-position, to avoid one yfinance call per position per run.
     """
-    from exit_logic import check_exit_triggers, fetch_sma50
+    from exit_logic import check_exit_triggers
 
     sym      = pos["symbol"]
     current  = float(pos["current_price"])
     avg_cost = float(pos["avg_entry_price"])
     pnl_pct  = float(pos["unrealized_plpc"]) * 100
-
-    sma50 = fetch_sma50(sym)
 
     should_exit, trigger, reason = check_exit_triggers(
         symbol=sym,
@@ -174,6 +181,10 @@ def main():
     positions = broker.get_positions() or []
     logger.info(f"Evaluating {len(positions)} positions")
 
+    # Build 50MA for all held symbols in ONE batched call (cached for the day)
+    from exit_logic import get_sma50_map
+    sma_map = get_sma50_map([p["symbol"] for p in positions])
+
     exits_triggered = []
     stops_updated   = []
 
@@ -181,7 +192,7 @@ def main():
         sym = pos["symbol"]
 
         # --- Exit evaluation ---
-        action = evaluate_position(pos)
+        action = evaluate_position(pos, sma_map.get(sym))
         if action:
             logger.warning(
                 f"EXIT TRIGGERED: {sym} — {action['trigger']} | {action['reason']} "

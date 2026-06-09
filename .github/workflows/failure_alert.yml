@@ -13,6 +13,7 @@ jobs:
     timeout-minutes: 3
     permissions:
       contents: write
+      issues: write          # needed to open a notification issue
 
     steps:
       - uses: actions/checkout@v4
@@ -43,3 +44,13 @@ jobs:
           git diff --staged --quiet || git commit -m "ALERT: Daily trade run failed [skip ci]"
           git pull --rebase origin main
           git push
+
+      - name: Open notification issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          gh issue create \
+            --title "🚨 Daily trade run failed ${DATE}" \
+            --body "The Daily Trade Execution workflow failed. Run log: ${RUN_URL}"

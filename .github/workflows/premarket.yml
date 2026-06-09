@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
-          git add docs/data/premarket.json 2>/dev/null || true
+          git add docs/data/premarket.json docs/data/sma50_cache.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Premarket brief [skip ci]"
           git pull --rebase origin main
           git push

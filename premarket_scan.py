@@ -390,3 +390,17 @@ _out = _pl.Path(__file__).parent / "docs" / "data" / "premarket.json"
 _out.parent.mkdir(parents=True, exist_ok=True)
 _out.write_text(_json.dumps(_brief, indent=2))
 print(f"\n  Brief written to {_out}")
+
+# ── Warm the shared 50MA cache for the intraday exit monitor ────────────────
+# We already have a full price download in `close`; compute 50MA once here so
+# the intraday agent (runs ~14×/day) reads the cache instead of re-fetching.
+try:
+    from exit_logic import _write_sma50_cache
+    _sma_values = {}
+    for _t in valid_tickers:
+        _series = close[_t].dropna().values
+        _sma_values[_t] = float(_series[-50:].mean()) if len(_series) >= 50 else None
+    _write_sma50_cache(_sma_values)
+    print(f"  50MA cache warmed for {len(_sma_values)} tickers")
+except Exception as _e:
+    print(f"  [50MA cache warm skipped: {_e}]")

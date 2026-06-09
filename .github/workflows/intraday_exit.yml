@@ -36,7 +36,7 @@ jobs:
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
-          git add docs/data/intraday_exit.json docs/data/trades.json 2>/dev/null || true
+          git add docs/data/intraday_exit.json docs/data/trades.json docs/data/sma50_cache.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Intraday exit check [skip ci]"
           git pull --rebase origin main
           git push

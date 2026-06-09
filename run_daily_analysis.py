@@ -1024,8 +1024,9 @@ class DailyRunner:
                 logger.info(f"Trade logged: BUY {shares} {symbol} @ ${price:.2f}")
 
             elif action in ("SELL", "EXIT"):
-                # Find the matching open trade and close it
-                for t in reversed(trades):
+                # Close all open lots for the symbol (full position exit)
+                closed_count = 0
+                for t in trades:
                     if t["symbol"] == symbol and t["status"] == "OPEN":
                         entry = t["entry_price"]
                         pnl_pct = ((price - entry) / entry) * 100 if entry else 0
@@ -1047,7 +1048,9 @@ class DailyRunner:
                             f"Trade closed: {symbol} @ ${price:.2f} | "
                             f"P&L: {pnl_pct:+.1f}% | Reason: {exit_reason}"
                         )
-                        break
+                        closed_count += 1
+                if closed_count == 0:
+                    logger.warning(f"No open trade found to close for {symbol}")
 
             trades_file.write_text(json.dumps(trades, indent=2))
 

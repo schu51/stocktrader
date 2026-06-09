@@ -56,7 +56,7 @@
   {
     "trade_id": "TRD-20260604070114-ARM",
     "symbol": "ARM",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-04",
     "entry_ts": "2026-06-04T07:01:14.038517",
     "entry_price": 319.49,
@@ -64,12 +64,13 @@
     "stop_loss": 293.93,
     "trend_score": 75,
     "confidence": 0.85,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-06-09",
+    "exit_ts": "2026-06-09T16:30:58.176237",
+    "exit_price": 305.0,
+    "exit_reason": "HARD_LOSS_STOP",
+    "pnl_usd": -130.41,
+    "pnl_pct": -4.54,
+    "hold_days": 5
   },
   {
     "trade_id": "TRD-20260604070115-CRWD",

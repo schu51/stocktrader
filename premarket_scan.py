@@ -354,3 +354,39 @@ print(f"""
   RECOMMENDATION: {recommendation}
 """)
 print("=" * 65)
+
+# ── Write JSON brief for dashboard ──────────────────────────────────────────
+import json as _json
+import pathlib as _pl
+
+_brief = {
+    "generated_at":    now_pt.isoformat(),
+    "recommendation":  recommendation,
+    "trend_buckets": {
+        "strong": len(strong),
+        "mixed":  len(mixed),
+        "weak":   len(weak),
+    },
+    "gap_alerts":      gap_flags,
+    "avoids":          gap_down_avoid,
+    "gap_up_priority": gap_up_priority,
+    "top_candidates": [
+        {
+            "ticker":       s["ticker"],
+            "price":        s["price"],
+            "ma50":         s["ma50"],
+            "ret_5d":       s["ret_5d"],
+            "ret_20d":      s["ret_20d"],
+            "score":        s["score"],
+            "gap_up":       s["ticker"] in gap_up_priority,
+            "thesis_grade": thesis_results.get(s["ticker"], {}).get("thesis_grade", "?"),
+            "thesis_score": thesis_results.get(s["ticker"], {}).get("thesis_score", 0),
+        }
+        for s in top5
+    ],
+}
+
+_out = _pl.Path(__file__).parent / "docs" / "data" / "premarket.json"
+_out.parent.mkdir(parents=True, exist_ok=True)
+_out.write_text(_json.dumps(_brief, indent=2))
+print(f"\n  Brief written to {_out}")

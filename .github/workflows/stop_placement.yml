@@ -1,0 +1,40 @@
+name: Stop Placement
+
+on:
+  schedule:
+    - cron: '31 13 * * 1-5'   # 9:31 AM EDT (13:31 UTC) Mon–Fri — 1 min after open
+  workflow_dispatch:
+
+jobs:
+  place-stops:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Place missing stop orders
+        run: python stop_placement.py
+
+      - name: Commit result
+        if: always()
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add docs/data/stop_placement.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Stop placement [skip ci]"
+          git pull --rebase origin main
+          git push

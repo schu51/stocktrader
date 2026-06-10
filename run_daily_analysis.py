@@ -441,7 +441,7 @@ class DailyRunner:
                     decision_dict["rs_rank"]      = candidate.get("rs_rank")
                     decision_dict["thesis_score"] = candidate.get("thesis_score")
                     decision_dict["thesis_grade"] = candidate.get("thesis_grade")
-                    decision_dict["sector"]       = candidate.get("sector")
+                    decision_dict["sector"]       = candidate.get("sector", "")
 
                     # Apply momentum score scaling to position size
                     decision_dict = self._scale_size_by_momentum(decision_dict)
@@ -986,7 +986,7 @@ class DailyRunner:
         try:
             wf = Path(__file__).parent / "docs" / "data" / "weights.json"
             if wf.exists():
-                return int(json.loads(wf.read_text()).get("active", {}).get("version", 1))
+                return int(json.loads(wf.read_text()).get("active", {}).get("version") or 1)
         except Exception:
             pass
         return 1

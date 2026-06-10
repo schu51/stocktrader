@@ -38,7 +38,7 @@
   {
     "trade_id": "TRD-20260604070112-NET",
     "symbol": "NET",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-04",
     "entry_ts": "2026-06-04T07:01:12.902074",
     "entry_price": 247.76,
@@ -46,12 +46,13 @@
     "stop_loss": 242.19,
     "trend_score": 77,
     "confidence": 0.85,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-06-10",
+    "exit_price": 223.24,
+    "exit_reason": "HARD_LOSS_STOP",
+    "pnl_usd": -294.3,
+    "pnl_pct": -9.9,
+    "hold_days": 6,
+    "exit_ts": "2026-06-10T16:45:40.312046"
   },
   {
     "trade_id": "TRD-20260604070114-ARM",

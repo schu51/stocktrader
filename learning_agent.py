@@ -79,3 +79,75 @@ def is_locked(w_rs: float, w_thesis: float, rejected: List[Dict]) -> bool:
                 and abs(w_thesis - r["w_thesis"]) <= LOCK_TOLERANCE):
             return True
     return False
+
+
+def closed_instrumented_trades(trades: List[Dict]) -> List[Dict]:
+    """Closed trades that carry weight_version (i.e. post-instrumentation)."""
+    return [
+        t for t in trades
+        if t.get("status") == "CLOSED"
+        and t.get("weight_version") is not None
+        and t.get("pnl_pct") is not None
+        and t.get("rs_rank") is not None
+        and t.get("thesis_score") is not None
+    ]
+
+
+def mean_pnl_for_version(trades: List[Dict], version: int) -> Optional[float]:
+    """Mean pnl_pct of closed trades tagged with the given weight version."""
+    vals = [t["pnl_pct"] for t in trades if t.get("weight_version") == version]
+    if not vals:
+        return None
+    return sum(vals) / len(vals)
+
+
+def judge_provisional(weights: Dict, trades: List[Dict]):
+    """
+    Evaluate a provisional weight set against its champion.
+
+    Returns (updated_weights, action) where action is one of:
+      "probation" — provisional has < PROBATION trades; no change
+      "promoted"  — provisional >= champion mean pnl; becomes champion
+      "reverted"  — provisional < champion mean pnl; champion restored, set locked
+    """
+    active = weights["active"]
+    if active.get("state") != "provisional":
+        return weights, "none"
+
+    prov_version = active["version"]
+    prov_trades  = [t for t in trades if t.get("weight_version") == prov_version]
+
+    if len(prov_trades) < PROBATION:
+        return weights, "probation"
+
+    prov_mean = mean_pnl_for_version(trades, prov_version)
+    champ_mean = weights["champion"].get("mean_pnl")
+    if champ_mean is None or prov_mean >= champ_mean:
+        weights["champion"] = {
+            "version":  active["version"],
+            "w_rs":     active["w_rs"],
+            "w_thesis": active["w_thesis"],
+            "state":    "champion",
+            "mean_pnl": prov_mean,
+            "n_trades": len(prov_trades),
+            "promoted_at": datetime.now().isoformat(),
+        }
+        weights["active"] = dict(weights["champion"])
+        return weights, "promoted"
+    else:
+        weights["rejected"].append({
+            "w_rs":       active["w_rs"],
+            "w_thesis":   active["w_thesis"],
+            "rejected_at": datetime.now().isoformat(),
+            "mean_pnl":   prov_mean,
+        })
+        champ = weights["champion"]
+        weights["active"] = {
+            "version":  champ["version"],
+            "w_rs":     champ["w_rs"],
+            "w_thesis": champ["w_thesis"],
+            "state":    "champion",
+            "applied_at": datetime.now().isoformat(),
+            "derived_from_trades": champ.get("n_trades", 0),
+        }
+        return weights, "reverted"

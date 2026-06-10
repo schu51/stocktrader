@@ -151,3 +151,120 @@ def judge_provisional(weights: Dict, trades: List[Dict]):
             "derived_from_trades": champ.get("n_trades", 0),
         }
         return weights, "reverted"
+
+
+def _write_report(report: Dict):
+    try:
+        DOCS_DATA.mkdir(parents=True, exist_ok=True)
+        REPORT_FILE.write_text(json.dumps(report, indent=2))
+    except Exception as e:
+        logger.warning(f"Could not write report: {e}")
+
+
+def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
+    """
+    Core agent logic: given the full trades list and a weights file path, run the
+    gates and rollback, persist weights, return the report dict.
+    """
+    import numpy as np
+    from learning_stats import ols_fit, zscore, derive_weights
+
+    weights = load_weights(weights_path)
+    instrumented = closed_instrumented_trades(trades)
+
+    report = {
+        "generated_at": datetime.now().isoformat(),
+        "trades_so_far": len(instrumented),
+    }
+
+    # --- Rollback check FIRST: judge any provisional on probation ---
+    if weights["active"].get("state") == "provisional":
+        weights, action = judge_provisional(weights, instrumented)
+        if action == "probation":
+            report["status"] = "probation"
+            save_weights(weights_path, weights)
+            _write_report(report)
+            return report
+        if action in ("promoted", "reverted"):
+            report["status"] = action
+            report["active_version"] = weights["active"]["version"]
+            save_weights(weights_path, weights)
+            _write_report(report)
+            return report
+
+    # --- Sample-size gate ---
+    if len(instrumented) < MIN_SAMPLE:
+        report["status"] = "accumulating"
+        save_weights(weights_path, weights)
+        _write_report(report)
+        return report
+
+    # --- Regression ---
+    rs   = np.array([t["rs_rank"] for t in instrumented], dtype=float)
+    th   = np.array([t["thesis_score"] for t in instrumented], dtype=float)
+    pnl  = np.array([t["pnl_pct"] for t in instrumented], dtype=float)
+    X = np.column_stack([zscore(rs), zscore(th)])
+    fit = ols_fit(X, pnl)
+
+    derived = derive_weights(
+        coef_rs=fit["coef"][0], t_rs=fit["t"][0],
+        coef_thesis=fit["coef"][1], t_thesis=fit["t"][1],
+    )
+
+    if derived is None:
+        report["status"] = "no_significance"
+        report["t_rs"] = float(fit["t"][0])
+        report["t_thesis"] = float(fit["t"][1])
+        save_weights(weights_path, weights)
+        _write_report(report)
+        return report
+
+    w_rs, w_thesis = derived
+
+    # --- Lock check ---
+    if is_locked(w_rs, w_thesis, weights["rejected"]):
+        report["status"] = "locked_skip"
+        report["derived"] = {"w_rs": w_rs, "w_thesis": w_thesis}
+        save_weights(weights_path, weights)
+        _write_report(report)
+        return report
+
+    # --- Apply new provisional weights ---
+    new_version = weights["active"]["version"] + 1
+    weights["active"] = {
+        "version":  new_version,
+        "w_rs":     round(w_rs, 4),
+        "w_thesis": round(w_thesis, 4),
+        "state":    "provisional",
+        "applied_at": datetime.now().isoformat(),
+        "derived_from_trades": len(instrumented),
+        "trades_under_this_version": 0,
+    }
+    weights["history"].append({
+        "version": new_version, "w_rs": round(w_rs, 4), "w_thesis": round(w_thesis, 4),
+        "t_rs": float(fit["t"][0]), "t_thesis": float(fit["t"][1]),
+        "applied_at": datetime.now().isoformat(),
+    })
+    save_weights(weights_path, weights)
+
+    report["status"] = "applied"
+    report["active_version"] = new_version
+    report["new_weights"] = {"w_rs": round(w_rs, 4), "w_thesis": round(w_thesis, 4)}
+    report["t_rs"] = float(fit["t"][0])
+    report["t_thesis"] = float(fit["t"][1])
+    _write_report(report)
+    return report
+
+
+def main():
+    logger.info("=== Learning Agent Starting ===")
+    trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
+    report = run(trades)
+    logger.info(f"Status: {report['status']} | instrumented trades: {report['trades_so_far']}")
+    if report.get("new_weights"):
+        logger.info(f"New weights: {report['new_weights']}")
+    logger.info("=== Learning Agent Complete ===")
+
+
+if __name__ == "__main__":
+    main()

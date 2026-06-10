@@ -112,3 +112,48 @@ def test_judge_provisional_still_on_probation():
     result, action = judge_provisional(weights, trades)
     assert action == "probation"
     assert result["active"]["version"] == 2
+
+
+def test_run_accumulating_under_min_sample(tmp_path):
+    import learning_agent as la
+    wf = tmp_path / "weights.json"
+    trades = [_trade(f"T{i}", 5.0, 1) for i in range(20)]
+    report = la.run(trades, wf)
+    assert report["status"] == "accumulating"
+    assert report["trades_so_far"] == 20
+    assert la.load_weights(wf)["active"]["version"] == 1
+
+
+def test_run_applies_new_weights(tmp_path):
+    import numpy as np
+    import learning_agent as la
+    wf = tmp_path / "weights.json"
+    rng = np.random.default_rng(3)
+    trades = []
+    for i in range(40):
+        rs = float(rng.uniform(50, 99))
+        th = float(rng.uniform(0, 100))
+        pnl = 0.3 * rs + rng.normal(0, 2)
+        trades.append(_trade(f"T{i}", pnl, 1, rs_rank=rs, thesis_score=th))
+    report = la.run(trades, wf)
+    assert report["status"] == "applied"
+    new = la.load_weights(wf)["active"]
+    assert new["version"] == 2
+    assert new["w_rs"] > new["w_thesis"]
+    assert new["state"] == "provisional"
+
+
+def test_run_no_significance_keeps_weights(tmp_path):
+    import numpy as np
+    import learning_agent as la
+    wf = tmp_path / "weights.json"
+    rng = np.random.default_rng(4)
+    trades = [
+        _trade(f"T{i}", float(rng.normal(0, 5)), 1,
+               rs_rank=float(rng.uniform(50, 99)),
+               thesis_score=float(rng.uniform(0, 100)))
+        for i in range(40)
+    ]
+    report = la.run(trades, wf)
+    assert report["status"] == "no_significance"
+    assert la.load_weights(wf)["active"]["version"] == 1

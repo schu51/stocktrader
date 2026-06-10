@@ -1,0 +1,36 @@
+name: Learning Agent
+
+on:
+  schedule:
+    - cron: '0 12 * * 6'   # Saturday 12:00 UTC — after the trading week
+  workflow_dispatch:
+
+jobs:
+  learn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Run learning agent
+        run: python learning_agent.py
+
+      - name: Commit weights + report
+        if: always()
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add docs/data/weights.json docs/data/learning_report.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Learning agent update [skip ci]"
+          git pull --rebase origin main
+          git push

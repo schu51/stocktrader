@@ -36,6 +36,25 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
+_WEIGHTS_PATH = Path(__file__).parent / "docs" / "data" / "weights.json"
+
+
+def _load_ranking_weights():
+    """
+    Read learned ranking weights from weights.json. Fall back to the 0.60/0.40
+    default if the file is absent, malformed, or the weights don't sum to ~1.
+    """
+    try:
+        if _WEIGHTS_PATH.exists():
+            active = json.loads(_WEIGHTS_PATH.read_text()).get("active", {})
+            w_rs = float(active.get("w_rs", 0.60))
+            w_thesis = float(active.get("w_thesis", 0.40))
+            if abs((w_rs + w_thesis) - 1.0) < 0.01:
+                return w_rs, w_thesis
+    except Exception:
+        pass
+    return 0.60, 0.40
+
 # Finviz sector name → internal key used throughout the screener
 _FINVIZ_SECTOR_NORM: Dict[str, str] = {
     "Technology":             "technology",
@@ -469,6 +488,9 @@ def run_screener(
     candidates = []
     rejected   = {"rs_rank": 0, "quality": 0, "technical": 0}
 
+    w_rs, w_thesis = _load_ranking_weights()
+    logger.info(f"Ranking weights: RS={w_rs:.2f}, thesis={w_thesis:.2f}")
+
     for sym in universe:
         # Get price series
         try:
@@ -545,7 +567,7 @@ def run_screener(
         # Combined ranking: 60% RS rank (proven momentum) + 40% forward thesis
         # RS rank tells us the trend is real. Thesis tells us why it continues.
         sector_boost    = 1.05 if is_leader else 1.0
-        effective_score = (0.60 * rs_rank + 0.40 * thesis_score) * sector_boost
+        effective_score = (w_rs * rs_rank + w_thesis * thesis_score) * sector_boost
 
         ret_1m = float((price_arr[-1] / price_arr[-21] - 1) * 100) if len(price_arr) >= 21 else None
         ret_3m = float((price_arr[-1] / price_arr[-63] - 1) * 100) if len(price_arr) >= 63 else None

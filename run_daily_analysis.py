@@ -436,6 +436,13 @@ class DailyRunner:
 
                     decision_dict = self._decision_to_dict(decision)
 
+                    # Carry screener entry features through for trade logging
+                    # (the learning agent regresses outcomes on these).
+                    decision_dict["rs_rank"]      = candidate.get("rs_rank")
+                    decision_dict["thesis_score"] = candidate.get("thesis_score")
+                    decision_dict["thesis_grade"] = candidate.get("thesis_grade")
+                    decision_dict["sector"]       = candidate.get("sector")
+
                     # Apply momentum score scaling to position size
                     decision_dict = self._scale_size_by_momentum(decision_dict)
 
@@ -974,10 +981,22 @@ class DailyRunner:
     # TRADE LOG
     # =========================================================================
 
+    def _active_weight_version(self) -> int:
+        """Read the active ranking-weight version for trade tagging. Defaults to 1."""
+        try:
+            wf = Path(__file__).parent / "docs" / "data" / "weights.json"
+            if wf.exists():
+                return int(json.loads(wf.read_text()).get("active", {}).get("version", 1))
+        except Exception:
+            pass
+        return 1
+
     def _log_trade(self, action: str, symbol: str, shares: int, price: float,
                    stop_loss: float = None, trend_score: int = None,
                    confidence: float = None, exit_reason: str = None,
-                   trade_id: str = None):
+                   trade_id: str = None, rs_rank: int = None,
+                   thesis_score: float = None, thesis_grade: str = None,
+                   sector: str = None, weight_version: int = None):
         """
         Append-only trade log. Records every entry and exit with outcome data.
         Stored in docs/data/trades.json — the feedback loop foundation.
@@ -1012,8 +1031,13 @@ class DailyRunner:
                     "entry_price": round(price, 2),
                     "shares":      shares,
                     "stop_loss":   round(stop_loss, 2) if stop_loss else None,
-                    "trend_score": trend_score,
-                    "confidence":  confidence,
+                    "trend_score":    trend_score,
+                    "confidence":     confidence,
+                    "rs_rank":        rs_rank,
+                    "thesis_score":   thesis_score,
+                    "thesis_grade":   thesis_grade,
+                    "sector":         sector,
+                    "weight_version": weight_version,
                     "exit_date":   None,
                     "exit_price":  None,
                     "exit_reason": None,
@@ -1614,6 +1638,11 @@ class DailyRunner:
                         stop_loss=opp.get("stop_loss"),
                         trend_score=opp.get("trend_score"),
                         confidence=confidence,
+                        rs_rank=opp.get("rs_rank"),
+                        thesis_score=opp.get("thesis_score"),
+                        thesis_grade=opp.get("thesis_grade"),
+                        sector=opp.get("sector"),
+                        weight_version=self._active_weight_version(),
                     )
                 else:
                     logger.warning(f"Order not submitted for {symbol}: {result.get('reason')}")

@@ -157,3 +157,26 @@ def test_run_no_significance_keeps_weights(tmp_path):
     report = la.run(trades, wf)
     assert report["status"] == "no_significance"
     assert la.load_weights(wf)["active"]["version"] == 1
+
+
+def test_screener_weights_loader_default(tmp_path, monkeypatch):
+    import screener
+    monkeypatch.setattr(screener, "_WEIGHTS_PATH", tmp_path / "nope.json")
+    w_rs, w_thesis = screener._load_ranking_weights()
+    assert (w_rs, w_thesis) == (0.60, 0.40)
+
+
+def test_screener_weights_loader_reads_active(tmp_path, monkeypatch):
+    import json, screener
+    wf = tmp_path / "weights.json"
+    wf.write_text(json.dumps({"active": {"w_rs": 0.7, "w_thesis": 0.3}}))
+    monkeypatch.setattr(screener, "_WEIGHTS_PATH", wf)
+    assert screener._load_ranking_weights() == (0.7, 0.3)
+
+
+def test_screener_weights_loader_rejects_bad_sum(tmp_path, monkeypatch):
+    import json, screener
+    wf = tmp_path / "weights.json"
+    wf.write_text(json.dumps({"active": {"w_rs": 0.7, "w_thesis": 0.7}}))
+    monkeypatch.setattr(screener, "_WEIGHTS_PATH", wf)
+    assert screener._load_ranking_weights() == (0.60, 0.40)

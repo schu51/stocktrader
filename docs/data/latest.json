@@ -3,21 +3,21 @@
   "run_id": "20260610_165726",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 107410.11,
+    "portfolio_value": 107067.2,
     "cash": 29782.55,
     "buying_power": 28293.422499999997,
-    "long_market_value": 77627.56,
-    "unrealized_pnl": -462.37
+    "long_market_value": 77284.65,
+    "unrealized_pnl": -805.28
   },
   "positions": [
     {
       "symbol": "ALNT",
       "qty": 5,
       "avg_cost": 53.53,
-      "current_price": 85.76,
-      "market_value": 428.8,
-      "unrealized_pnl": 161.15,
-      "unrealized_pnl_pct": 60.21,
+      "current_price": 85.7,
+      "market_value": 428.5,
+      "unrealized_pnl": 160.85,
+      "unrealized_pnl_pct": 60.1,
       "stop_loss": 77.34,
       "company": {
         "name": "Allient Inc.",
@@ -54,10 +54,10 @@
       "symbol": "BHE",
       "qty": 9,
       "avg_cost": 45.09,
-      "current_price": 84.0,
-      "market_value": 756.0,
-      "unrealized_pnl": 350.19,
-      "unrealized_pnl_pct": 86.29,
+      "current_price": 82.85,
+      "market_value": 745.65,
+      "unrealized_pnl": 339.84,
+      "unrealized_pnl_pct": 83.74,
       "stop_loss": 76.55,
       "company": {
         "name": "Benchmark Electronics, Inc.",
@@ -94,10 +94,10 @@
       "symbol": "CRWD",
       "qty": 20,
       "avg_cost": 709.8,
-      "current_price": 644.5,
-      "market_value": 12890.0,
-      "unrealized_pnl": -1306.02,
-      "unrealized_pnl_pct": -9.2,
+      "current_price": 639.8,
+      "market_value": 12796.0,
+      "unrealized_pnl": -1400.02,
+      "unrealized_pnl_pct": -9.86,
       "stop_loss": null,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "DDOG",
       "qty": 24,
       "avg_cost": 246.58,
-      "current_price": 225.71,
-      "market_value": 5417.04,
-      "unrealized_pnl": -500.8,
-      "unrealized_pnl_pct": -8.46,
+      "current_price": 225.0,
+      "market_value": 5400.0,
+      "unrealized_pnl": -517.84,
+      "unrealized_pnl_pct": -8.75,
       "stop_loss": 226.85,
       "company": {
         "name": "Datadog, Inc.",
@@ -174,10 +174,10 @@
       "symbol": "KLAC",
       "qty": 5,
       "avg_cost": 2036.37,
-      "current_price": 2120.0,
-      "market_value": 10600.0,
-      "unrealized_pnl": 418.16,
-      "unrealized_pnl_pct": 4.11,
+      "current_price": 2115.0,
+      "market_value": 10575.0,
+      "unrealized_pnl": 393.16,
+      "unrealized_pnl_pct": 3.86,
       "stop_loss": 1873.46,
       "company": {
         "name": "KLA Corporation",
@@ -194,10 +194,10 @@
       "symbol": "LRCX",
       "qty": 32,
       "avg_cost": 318.58,
-      "current_price": 321.8,
-      "market_value": 10297.6,
-      "unrealized_pnl": 102.93,
-      "unrealized_pnl_pct": 1.01,
+      "current_price": 315.11,
+      "market_value": 10083.52,
+      "unrealized_pnl": -111.15,
+      "unrealized_pnl_pct": -1.09,
       "stop_loss": 293.1,
       "company": {
         "name": "Lam Research Corporation",
@@ -214,10 +214,10 @@
       "symbol": "PANW",
       "qty": 9,
       "avg_cost": 273.5,
-      "current_price": 259.2,
-      "market_value": 2332.83,
-      "unrealized_pnl": -128.67,
-      "unrealized_pnl_pct": -5.23,
+      "current_price": 259.99,
+      "market_value": 2339.91,
+      "unrealized_pnl": -121.59,
+      "unrealized_pnl_pct": -4.94,
       "stop_loss": 251.62,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -234,10 +234,10 @@
       "symbol": "TSM",
       "qty": 12,
       "avg_cost": 433.1,
-      "current_price": 406.12,
-      "market_value": 4873.44,
-      "unrealized_pnl": -323.81,
-      "unrealized_pnl_pct": -6.23,
+      "current_price": 407.02,
+      "market_value": 4884.22,
+      "unrealized_pnl": -313.03,
+      "unrealized_pnl_pct": -6.02,
       "stop_loss": 398.46,
       "company": {
         "name": "Taiwan Semiconductor Manufacturing Company Limited",
@@ -559,7 +559,7 @@
     ],
     "risk_level": "MODERATE"
   },
-  "sync_at": "2026-06-10T22:12:25.005606+00:00",
+  "sync_at": "2026-06-10T23:59:09.954716+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -572,6 +572,10 @@
       {
         "time": "22:12",
         "value": 107410.11
+      },
+      {
+        "time": "23:59",
+        "value": 107067.2
       }
     ]
   }

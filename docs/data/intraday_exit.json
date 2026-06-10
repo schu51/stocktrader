@@ -1,48 +1,25 @@
 {
-  "generated_at": "2026-06-10T16:45:40.465316",
-  "positions_checked": 16,
+  "generated_at": "2026-06-10T19:44:45.308610",
+  "positions_checked": 13,
   "exits_triggered": [
     {
-      "symbol": "GNRC",
+      "symbol": "APA",
       "trigger": "PRICE_BELOW_50MA",
-      "reason": "$240.00 is 1.0% below 50MA $242.35",
-      "qty": 12,
-      "price": 240.0,
-      "pnl_pct": -14.36,
+      "reason": "$38.15 is 0.8% below 50MA $38.47",
+      "qty": 63,
+      "price": 38.15,
+      "pnl_pct": -0.94,
       "executed": true,
-      "order_id": "850400fd-0c59-42a2-91b7-a420f4893e18"
-    },
-    {
-      "symbol": "MRVL",
-      "trigger": "HARD_LOSS_STOP",
-      "reason": "Down -15.5% \u2014 entry thesis invalidated",
-      "qty": 22,
-      "price": 256.4901,
-      "pnl_pct": -15.49,
-      "executed": true,
-      "order_id": "6b00f44f-bdea-437e-b12f-aad44d18c10f"
-    },
-    {
-      "symbol": "NET",
-      "trigger": "HARD_LOSS_STOP",
-      "reason": "Down -16.0% \u2014 entry thesis invalidated",
-      "qty": 38,
-      "price": 223.235,
-      "pnl_pct": -15.97,
-      "executed": true,
-      "order_id": "d7103af3-9d65-45d8-84e5-3a1640d553af"
-    },
-    {
-      "symbol": "ON",
-      "trigger": "HARD_LOSS_STOP",
-      "reason": "Down -16.0% \u2014 entry thesis invalidated",
-      "qty": 26,
-      "price": 110.23,
-      "pnl_pct": -16.04,
-      "executed": true,
-      "order_id": "d844b459-75b7-4a22-a3e9-aba86a09b38a"
+      "order_id": "b87bdbab-49b1-4d0a-8060-d91a7abea90d"
     }
   ],
-  "stops_updated": [],
+  "stops_updated": [
+    {
+      "symbol": "ALNT",
+      "new_stop": 77.34,
+      "tier": "50%+ gain \u2192 10% trail",
+      "pnl_pct": 60.53
+    }
+  ],
   "mode": "EXECUTE"
 }

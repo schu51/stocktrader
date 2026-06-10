@@ -407,7 +407,7 @@
   {
     "trade_id": "TRD-20260610165741-APA",
     "symbol": "APA",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-10",
     "entry_ts": "2026-06-10T16:57:41.506232",
     "entry_price": 38.51,
@@ -420,11 +420,12 @@
     "thesis_grade": "B",
     "sector": "energy",
     "weight_version": 1,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-06-10",
+    "exit_price": 38.15,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -22.68,
+    "pnl_pct": -0.93,
+    "hold_days": 0,
+    "exit_ts": "2026-06-10T19:44:45.254159"
   }
 ]

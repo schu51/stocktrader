@@ -1,161 +1,101 @@
 {
-  "date": "2026-06-09",
-  "generated_at": "2026-06-09T21:58:30.890675",
+  "date": "2026-06-10",
+  "generated_at": "2026-06-10T22:19:57.459156",
   "portfolio": {
-    "value": 109798.99,
-    "cash": 9942.06,
-    "total_unrealized": -1781.8999999999996,
-    "positions": 16,
-    "winners": 8,
-    "losers": 8,
+    "value": 107410.11,
+    "cash": 29782.55,
+    "total_unrealized": -462.3599999999999,
+    "positions": 12,
+    "winners": 7,
+    "losers": 5,
     "risk_level": "MODERATE",
-    "risk_score": 43.5
+    "risk_score": 32.6
   },
   "execution": {
-    "signals_generated": 1,
-    "orders_executed": 0,
-    "orders_skipped": 1,
-    "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
-    ],
+    "signals_generated": 3,
+    "orders_executed": 3,
+    "orders_skipped": 0,
+    "skip_reasons": [],
     "candidates_screened": 30
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 5,
+    "stops_updated": 2,
     "detail": []
   },
   "closed_today": [
     {
-      "trade_id": "TRD-20260604070118-AMD",
-      "symbol": "AMD",
+      "trade_id": "TRD-20260604070112-NET",
+      "symbol": "NET",
       "status": "CLOSED",
       "entry_date": "2026-06-04",
-      "entry_ts": "2026-06-04T07:01:18.668744",
-      "entry_price": 490.0,
-      "shares": 4,
-      "stop_loss": 463.91,
-      "trend_score": 64,
-      "confidence": 0.7,
-      "exit_date": "2026-06-09",
-      "exit_price": 444.52,
+      "entry_ts": "2026-06-04T07:01:12.902074",
+      "entry_price": 247.76,
+      "shares": 12,
+      "stop_loss": 242.19,
+      "trend_score": 77,
+      "confidence": 0.85,
+      "exit_date": "2026-06-10",
+      "exit_price": 223.24,
       "exit_reason": "HARD_LOSS_STOP",
-      "pnl_usd": -181.92,
-      "pnl_pct": -9.28,
-      "hold_days": 5,
-      "exit_ts": "2026-06-09T16:30:57.864375"
+      "pnl_usd": -294.3,
+      "pnl_pct": -9.9,
+      "hold_days": 6,
+      "exit_ts": "2026-06-10T16:45:40.312046"
     },
     {
-      "trade_id": "TRD-20260605070025-ARM",
-      "symbol": "ARM",
+      "trade_id": "TRD-20260610165741-APA",
+      "symbol": "APA",
       "status": "CLOSED",
-      "entry_date": "2026-06-05",
-      "entry_ts": "2026-06-05T07:00:25.650987",
-      "entry_price": 310.28,
-      "shares": 7,
-      "stop_loss": 285.46,
-      "trend_score": 73,
+      "entry_date": "2026-06-10",
+      "entry_ts": "2026-06-10T16:57:41.506232",
+      "entry_price": 38.51,
+      "shares": 63,
+      "stop_loss": 35.43,
+      "trend_score": 72,
       "confidence": 0.85,
-      "exit_date": "2026-06-09",
-      "exit_price": 305.0,
-      "exit_reason": "HARD_LOSS_STOP",
-      "pnl_usd": -36.99,
-      "pnl_pct": -1.7,
-      "hold_days": 4,
-      "exit_ts": "2026-06-09T16:30:58.176237"
+      "rs_rank": 91,
+      "thesis_score": 56.0,
+      "thesis_grade": "B",
+      "sector": "energy",
+      "weight_version": 1,
+      "exit_date": "2026-06-10",
+      "exit_price": 38.15,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -22.68,
+      "pnl_pct": -0.93,
+      "hold_days": 0,
+      "exit_ts": "2026-06-10T19:44:45.254159"
     }
   ],
   "positions_at_risk": [
     {
-      "symbol": "MRVL",
-      "pnl_pct": -11.56,
-      "value": 5904.8,
-      "has_stop": false,
-      "risk": "deep_loss"
-    },
-    {
-      "symbol": "NET",
-      "pnl_pct": -10.91,
-      "value": 8994.6,
-      "has_stop": false,
-      "risk": "deep_loss"
-    },
-    {
-      "symbol": "ON",
-      "pnl_pct": -10.73,
-      "value": 3047.26,
-      "has_stop": false,
-      "risk": "deep_loss"
-    },
-    {
       "symbol": "CRWD",
-      "pnl_pct": -9.25,
-      "value": 12882.4,
+      "pnl_pct": -9.2,
+      "value": 12890.0,
       "has_stop": false,
       "risk": "deep_loss"
     },
     {
       "symbol": "DDOG",
-      "pnl_pct": -7.56,
-      "value": 5470.56,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "GNRC",
-      "pnl_pct": -6.87,
-      "value": 3131.88,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "PANW",
-      "pnl_pct": -4.99,
-      "value": 2338.65,
-      "has_stop": false,
-      "risk": "no_stop"
+      "pnl_pct": -8.46,
+      "value": 5417.04,
+      "has_stop": true,
+      "risk": "deep_loss"
     },
     {
       "symbol": "TSM",
-      "pnl_pct": -1.55,
-      "value": 5116.8,
-      "has_stop": false,
-      "risk": "no_stop"
+      "pnl_pct": -6.23,
+      "value": 4873.44,
+      "has_stop": true,
+      "risk": "approaching"
     },
     {
-      "symbol": "CHRW",
-      "pnl_pct": 2.33,
-      "value": 3641.35,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "JBHT",
-      "pnl_pct": 2.54,
-      "value": 3733.47,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "LRCX",
-      "pnl_pct": 3.13,
-      "value": 10513.6,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "KLAC",
-      "pnl_pct": 4.75,
-      "value": 10665.85,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "AMAT",
-      "pnl_pct": 5.08,
-      "value": 20046.4,
-      "has_stop": false,
-      "risk": "no_stop"
+      "symbol": "PANW",
+      "pnl_pct": -5.23,
+      "value": 2332.83,
+      "has_stop": true,
+      "risk": "approaching"
     },
     {
       "symbol": "CTLP",

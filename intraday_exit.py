@@ -44,8 +44,15 @@ def _cancel_open_stops(broker, symbol: str):
         logger.warning(f"Could not cancel stops for {symbol}: {e}")
 
 
-def _log_exit(symbol: str, price: float, qty: int, trigger: str):
-    """Mark the matching open trade in trades.json as CLOSED."""
+def _log_exit(symbol: str, price: float, qty: int, trigger: str,
+              realized_pnl_pct: float = None):
+    """Mark the matching open trade in trades.json as CLOSED.
+
+    realized_pnl_pct is the Alpaca-basis P&L the exit trigger fired on; when
+    provided it is recorded directly instead of recomputing from the logged
+    entry_price (which diverges from Alpaca's blended avg cost and would
+    corrupt the pnl_pct the learning agent regresses on).
+    """
     try:
         trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
         today  = datetime.now().strftime("%Y-%m-%d")
@@ -53,8 +60,12 @@ def _log_exit(symbol: str, price: float, qty: int, trigger: str):
         for t in reversed(trades):
             if t.get("symbol") == symbol and t.get("status") == "OPEN":
                 entry = float(t.get("entry_price", price))
-                pnl_pct = ((price - entry) / entry) * 100 if entry else 0
-                pnl_usd = (price - entry) * t.get("shares", qty)
+                if realized_pnl_pct is not None:
+                    pnl_pct = realized_pnl_pct
+                    pnl_usd = (realized_pnl_pct / 100.0) * entry * t.get("shares", qty) if entry else 0
+                else:
+                    pnl_pct = ((price - entry) / entry) * 100 if entry else 0
+                    pnl_usd = (price - entry) * t.get("shares", qty)
                 entry_date = t.get("entry_date", today)
                 try:
                     hold_days = (date.fromisoformat(today) - date.fromisoformat(entry_date)).days
@@ -203,7 +214,8 @@ def main():
             action["executed"] = "error" not in result
             action["order_id"] = result.get("id")
             if action["executed"]:
-                _log_exit(sym, action["price"], action["qty"], action["trigger"])
+                _log_exit(sym, action["price"], action["qty"], action["trigger"],
+                          realized_pnl_pct=action["pnl_pct"])
             exits_triggered.append(action)
             continue  # Skip stop update for exited position
 

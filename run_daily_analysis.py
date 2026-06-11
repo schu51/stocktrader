@@ -996,7 +996,8 @@ class DailyRunner:
                    confidence: float = None, exit_reason: str = None,
                    trade_id: str = None, rs_rank: int = None,
                    thesis_score: float = None, thesis_grade: str = None,
-                   sector: str = None, weight_version: int = None):
+                   sector: str = None, weight_version: int = None,
+                   realized_pnl_pct: float = None):
         """
         Append-only trade log. Records every entry and exit with outcome data.
         Stored in docs/data/trades.json — the feedback loop foundation.
@@ -1053,8 +1054,17 @@ class DailyRunner:
                 for t in trades:
                     if t["symbol"] == symbol and t["status"] == "OPEN":
                         entry = t["entry_price"]
-                        pnl_pct = ((price - entry) / entry) * 100 if entry else 0
-                        pnl_usd = (price - entry) * t["shares"]
+                        # Prefer the realized P&L from Alpaca's actual cost basis
+                        # (the figure the exit trigger fired on). Recomputing from
+                        # the logged entry_price diverges from reality when Alpaca's
+                        # blended avg cost differs from the per-lot limit price —
+                        # which corrupts the pnl_pct the learning agent regresses on.
+                        if realized_pnl_pct is not None:
+                            pnl_pct = realized_pnl_pct
+                            pnl_usd = (realized_pnl_pct / 100.0) * entry * t["shares"] if entry else 0
+                        else:
+                            pnl_pct = ((price - entry) / entry) * 100 if entry else 0
+                            pnl_usd = (price - entry) * t["shares"]
                         entry_dt = date.fromisoformat(t["entry_date"]) if t.get("entry_date") else date.today()
                         hold_days = (date.today() - entry_dt).days
 
@@ -1164,6 +1174,7 @@ class DailyRunner:
                                 shares=qty,
                                 price=current,
                                 exit_reason="PRICE_BELOW_50MA",
+                                realized_pnl_pct=pnl_pct,
                             )
                     except Exception as e:
                         action["error"] = str(e)
@@ -1227,7 +1238,8 @@ class DailyRunner:
                             )
                             if action["executed"]:
                                 self._log_trade("EXIT", sym, qty, current,
-                                                exit_reason="HARD_LOSS_STOP")
+                                                exit_reason="HARD_LOSS_STOP",
+                                                realized_pnl_pct=pnl_pct)
                         except Exception as e:
                             action["error"] = str(e)
                     else:
@@ -1268,7 +1280,8 @@ class DailyRunner:
                                 )
                                 if action["executed"]:
                                     self._log_trade("EXIT", sym, qty, current,
-                                                    exit_reason="THESIS_FAILED")
+                                                    exit_reason="THESIS_FAILED",
+                                                    realized_pnl_pct=pnl_pct)
                             except Exception as e:
                                 action["error"] = str(e)
                         else:
@@ -1422,6 +1435,7 @@ class DailyRunner:
                                 shares=dec.shares,
                                 price=current_prices.get(dec.symbol, 0),
                                 exit_reason=dec.decision_type.value,
+                                realized_pnl_pct=pnl_pct,
                             )
                             logger.info(
                                 f"ENGINE EXIT: {dec.symbol} — {dec.primary_reason} "

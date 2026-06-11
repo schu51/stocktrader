@@ -1,24 +1,13 @@
 {
-  "generated_at": "2026-06-10T19:44:45.308610",
-  "positions_checked": 13,
-  "exits_triggered": [
-    {
-      "symbol": "APA",
-      "trigger": "PRICE_BELOW_50MA",
-      "reason": "$38.15 is 0.8% below 50MA $38.47",
-      "qty": 63,
-      "price": 38.15,
-      "pnl_pct": -0.94,
-      "executed": true,
-      "order_id": "b87bdbab-49b1-4d0a-8060-d91a7abea90d"
-    }
-  ],
+  "generated_at": "2026-06-11T17:02:12.698318",
+  "positions_checked": 11,
+  "exits_triggered": [],
   "stops_updated": [
     {
       "symbol": "ALNT",
-      "new_stop": 77.34,
+      "new_stop": 79.97,
       "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 60.53
+      "pnl_pct": 66.0
     }
   ],
   "mode": "EXECUTE"

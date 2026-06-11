@@ -182,6 +182,24 @@ class DailyRunner:
         raw     = self.broker.get_positions() or []
         total_value = float(account.get("portfolio_value", self.portfolio.total_value))
 
+        # Build stop-price map from active Alpaca stop/stop_limit/trailing_stop orders
+        # so risk assessment knows which positions already have stop protection.
+        stop_map: dict = {}
+        try:
+            for o in (self.broker.get_orders(status="open") or []):
+                if o.get("side") == "sell" and o.get("type") in (
+                    "stop", "stop_limit", "trailing_stop"
+                ):
+                    sym = o.get("symbol", "")
+                    sp  = o.get("stop_price")
+                    if sym and sp:
+                        try:
+                            stop_map[sym] = round(float(sp), 2)
+                        except (TypeError, ValueError):
+                            pass
+        except Exception:
+            pass
+
         positions = {}
         total_unrealized = 0.0
         for p in raw:
@@ -198,6 +216,7 @@ class DailyRunner:
                 unrealized_pnl=pnl,
                 unrealized_pnl_pct=float(p["unrealized_plpc"]) * 100,
                 current_allocation=mv / total_value if total_value > 0 else 0.0,
+                stop_loss_price=stop_map.get(p["symbol"]),
             )
             positions[p["symbol"]] = pos
 

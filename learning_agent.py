@@ -153,10 +153,10 @@ def judge_provisional(weights: Dict, trades: List[Dict]):
         return weights, "reverted"
 
 
-def _write_report(report: Dict):
+def _write_report(report: Dict, report_path: Path = REPORT_FILE):
     try:
-        DOCS_DATA.mkdir(parents=True, exist_ok=True)
-        REPORT_FILE.write_text(json.dumps(report, indent=2))
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2))
     except Exception as e:
         logger.warning(f"Could not write report: {e}")
 
@@ -169,6 +169,7 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
     import numpy as np
     from learning_stats import ols_fit, zscore, derive_weights
 
+    report_path = weights_path.parent / REPORT_FILE.name
     weights = load_weights(weights_path)
     instrumented = closed_instrumented_trades(trades)
 
@@ -183,20 +184,20 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
         if action == "probation":
             report["status"] = "probation"
             save_weights(weights_path, weights)
-            _write_report(report)
+            _write_report(report, report_path)
             return report
         if action in ("promoted", "reverted"):
             report["status"] = action
             report["active_version"] = weights["active"]["version"]
             save_weights(weights_path, weights)
-            _write_report(report)
+            _write_report(report, report_path)
             return report
 
     # --- Sample-size gate ---
     if len(instrumented) < MIN_SAMPLE:
         report["status"] = "accumulating"
         save_weights(weights_path, weights)
-        _write_report(report)
+        _write_report(report, report_path)
         return report
 
     # --- Regression ---
@@ -216,7 +217,7 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
         report["t_rs"] = float(fit["t"][0])
         report["t_thesis"] = float(fit["t"][1])
         save_weights(weights_path, weights)
-        _write_report(report)
+        _write_report(report, report_path)
         return report
 
     w_rs, w_thesis = derived
@@ -226,7 +227,7 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
         report["status"] = "locked_skip"
         report["derived"] = {"w_rs": w_rs, "w_thesis": w_thesis}
         save_weights(weights_path, weights)
-        _write_report(report)
+        _write_report(report, report_path)
         return report
 
     # --- Apply new provisional weights ---
@@ -252,7 +253,7 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
     report["new_weights"] = {"w_rs": round(w_rs, 4), "w_thesis": round(w_thesis, 4)}
     report["t_rs"] = float(fit["t"][0])
     report["t_thesis"] = float(fit["t"][1])
-    _write_report(report)
+    _write_report(report, report_path)
     return report
 
 

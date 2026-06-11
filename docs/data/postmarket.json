@@ -1,15 +1,15 @@
 {
-  "date": "2026-06-10",
-  "generated_at": "2026-06-10T22:19:57.459156",
+  "date": "2026-06-11",
+  "generated_at": "2026-06-11T22:13:39.066631",
   "portfolio": {
-    "value": 107410.11,
-    "cash": 29782.55,
-    "total_unrealized": -462.3599999999999,
-    "positions": 12,
-    "winners": 7,
-    "losers": 5,
+    "value": 114322.14,
+    "cash": 35212.99,
+    "total_unrealized": 6937.06,
+    "positions": 11,
+    "winners": 9,
+    "losers": 2,
     "risk_level": "MODERATE",
-    "risk_score": 32.6
+    "risk_score": 32.8
   },
   "execution": {
     "signals_generated": 3,
@@ -23,84 +23,26 @@
     "stops_updated": 2,
     "detail": []
   },
-  "closed_today": [
-    {
-      "trade_id": "TRD-20260604070112-NET",
-      "symbol": "NET",
-      "status": "CLOSED",
-      "entry_date": "2026-06-04",
-      "entry_ts": "2026-06-04T07:01:12.902074",
-      "entry_price": 247.76,
-      "shares": 12,
-      "stop_loss": 242.19,
-      "trend_score": 77,
-      "confidence": 0.85,
-      "exit_date": "2026-06-10",
-      "exit_price": 223.24,
-      "exit_reason": "HARD_LOSS_STOP",
-      "pnl_usd": -294.3,
-      "pnl_pct": -9.9,
-      "hold_days": 6,
-      "exit_ts": "2026-06-10T16:45:40.312046"
-    },
-    {
-      "trade_id": "TRD-20260610165741-APA",
-      "symbol": "APA",
-      "status": "CLOSED",
-      "entry_date": "2026-06-10",
-      "entry_ts": "2026-06-10T16:57:41.506232",
-      "entry_price": 38.51,
-      "shares": 63,
-      "stop_loss": 35.43,
-      "trend_score": 72,
-      "confidence": 0.85,
-      "rs_rank": 91,
-      "thesis_score": 56.0,
-      "thesis_grade": "B",
-      "sector": "energy",
-      "weight_version": 1,
-      "exit_date": "2026-06-10",
-      "exit_price": 38.15,
-      "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -22.68,
-      "pnl_pct": -0.93,
-      "hold_days": 0,
-      "exit_ts": "2026-06-10T19:44:45.254159"
-    }
-  ],
+  "closed_today": [],
   "positions_at_risk": [
-    {
-      "symbol": "CRWD",
-      "pnl_pct": -9.2,
-      "value": 12890.0,
-      "has_stop": false,
-      "risk": "deep_loss"
-    },
-    {
-      "symbol": "DDOG",
-      "pnl_pct": -8.46,
-      "value": 5417.04,
-      "has_stop": true,
-      "risk": "deep_loss"
-    },
-    {
-      "symbol": "TSM",
-      "pnl_pct": -6.23,
-      "value": 4873.44,
-      "has_stop": true,
-      "risk": "approaching"
-    },
-    {
-      "symbol": "PANW",
-      "pnl_pct": -5.23,
-      "value": 2332.83,
-      "has_stop": true,
-      "risk": "approaching"
-    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,
       "value": 3147.2,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "ALNT",
+      "pnl_pct": 70.43,
+      "value": 456.15,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "BHE",
+      "pnl_pct": 100.71,
+      "value": 814.5,
       "has_stop": false,
       "risk": "no_stop"
     }

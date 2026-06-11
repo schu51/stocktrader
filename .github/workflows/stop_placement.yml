@@ -36,5 +36,11 @@ jobs:
           git config user.name "schu51"
           git add docs/data/stop_placement.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Stop placement [skip ci]"
-          git pull --rebase origin main
-          git push
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }

@@ -88,6 +88,28 @@ def check_exit_triggers(
     return False, "", ""
 
 
+def reconcile_phantom_trades(trades: list, held_symbols: set) -> int:
+    """
+    Mark OPEN trades for symbols no longer held as CANCELLED, in place.
+
+    A BUY is logged as OPEN as soon as the order is *submitted* (Alpaca
+    accepts a DAY limit order), not when it actually fills. If the limit
+    price is never reached, Alpaca cancels the order at end of day, but
+    trades.json is never told — leaving a phantom OPEN entry that is
+    never closed. If a symbol is logged OPEN but the account holds zero
+    shares of it, that order never filled.
+
+    Returns the number of trades reconciled.
+    """
+    reconciled = 0
+    for t in trades:
+        if t.get("status") == "OPEN" and t.get("symbol") not in held_symbols:
+            t["status"] = "CANCELLED"
+            t["exit_reason"] = "ORDER_NOT_FILLED"
+            reconciled += 1
+    return reconciled
+
+
 def fetch_sma50(symbol: str) -> Optional[float]:
     """
     Fetch 50-day SMA for a single symbol via yfinance.

@@ -44,6 +44,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
+from exit_logic import reconcile_phantom_trades
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
 
@@ -369,6 +370,20 @@ class DailyRunner:
             # Build rich portfolio state with real Position objects (unlocks engine methods)
             live_portfolio = self._build_portfolio_state()
             self.portfolio = live_portfolio  # keep instance state current for sizing calcs
+
+            # Reconcile phantom OPEN trades — DAY limit orders that never filled
+            # are cancelled by Alpaca at EOD without notifying trades.json, so
+            # they otherwise sit OPEN forever and corrupt hold-day/exposure stats.
+            try:
+                trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
+                if trades_file.exists():
+                    trades = json.loads(trades_file.read_text())
+                    n = reconcile_phantom_trades(trades, set(live_portfolio.positions.keys()))
+                    if n:
+                        trades_file.write_text(json.dumps(trades, indent=2))
+                        logger.info(f"Reconciled {n} phantom OPEN trade(s) — order(s) never filled")
+            except Exception as e:
+                logger.warning(f"Trade log reconciliation failed: {e}")
 
             # Portfolio risk assessment
             try:

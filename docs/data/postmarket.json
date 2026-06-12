@@ -1,15 +1,15 @@
 {
-  "date": "2026-06-11",
-  "generated_at": "2026-06-11T22:13:39.066631",
+  "date": "2026-06-12",
+  "generated_at": "2026-06-12T22:00:01.649042",
   "portfolio": {
-    "value": 114322.14,
-    "cash": 35212.99,
-    "total_unrealized": 6937.06,
-    "positions": 11,
+    "value": 104157.91,
+    "cash": 24983.58,
+    "total_unrealized": 5764.01,
+    "positions": 14,
     "winners": 9,
-    "losers": 2,
-    "risk_level": "MODERATE",
-    "risk_score": 32.8
+    "losers": 5,
+    "risk_level": "LOW",
+    "risk_score": 13.6
   },
   "execution": {
     "signals_generated": 3,
@@ -26,23 +26,16 @@
   "closed_today": [],
   "positions_at_risk": [
     {
+      "symbol": "VLO",
+      "pnl_pct": -0.87,
+      "value": 3362.71,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
       "symbol": "CTLP",
       "pnl_pct": 5.26,
       "value": 3147.2,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "ALNT",
-      "pnl_pct": 70.43,
-      "value": 456.15,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "BHE",
-      "pnl_pct": 100.71,
-      "value": 814.5,
       "has_stop": false,
       "risk": "no_stop"
     }

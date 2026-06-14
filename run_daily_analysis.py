@@ -139,6 +139,25 @@ def fetch_market_data(symbol: str):
         return None, None
 
 
+def classify_order_for_reconcile(status: str) -> str:
+    """
+    Decide whether an OPEN trade's BUY order indicates a phantom (never filled).
+
+    Returns "cancel" or "keep".
+      filled / partially_filled  → keep   (real position exists)
+      canceled/expired/rejected/
+        done_for_day/replaced     → cancel (DAY limit order never filled)
+      anything else (new, accepted,
+        pending, unknown, error)  → keep   (still working or can't tell — don't guess)
+    """
+    s = (status or "").lower()
+    if s in ("filled", "partially_filled"):
+        return "keep"
+    if s in ("canceled", "cancelled", "expired", "rejected", "done_for_day", "replaced"):
+        return "cancel"
+    return "keep"
+
+
 class DailyRunner:
     """Orchestrates the daily analysis and optional trade execution workflow."""
 
@@ -363,7 +382,12 @@ class DailyRunner:
         }
 
         try:
-            # 0. Evaluate exits on ALL open positions before looking for new entries
+            # 0a. Reconcile phantom trades (unfilled DAY limit orders logged as OPEN)
+            # before anything reads the trade log, so a later exit can't stamp a
+            # phantom lot with a fabricated P&L.
+            self._reconcile_phantom_trades()
+
+            # 0b. Evaluate exits on ALL open positions before looking for new entries
             exit_results = self._evaluate_exits(execute=execute)
             results["exits"] = exit_results
 
@@ -1025,13 +1049,67 @@ class DailyRunner:
             pass
         return 1
 
+    def _reconcile_phantom_trades(self):
+        """
+        Cancel phantom OPEN trades whose BUY (DAY limit) order never filled.
+
+        Without this, an unfilled limit order leaves a trade logged as OPEN
+        forever. When the symbol later genuinely exits, _log_trade closes ALL
+        its OPEN lots — stamping the phantom with a fabricated P&L that then
+        corrupts the learning agent's regression.
+
+        Deterministic path: any OPEN trade carrying an order_id is reconciled by
+        querying Alpaca for that order's real status (see classify_order_for_reconcile).
+        Trades without an order_id (logged before order_id tracking) are left
+        untouched here — they are handled by a one-time data correction.
+        """
+        if not self.broker:
+            return
+        try:
+            trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
+            if not trades_file.exists():
+                return
+            trades = json.loads(trades_file.read_text())
+        except Exception as e:
+            logger.warning(f"Phantom reconcile: could not read trades.json: {e}")
+            return
+
+        cancelled = 0
+        for t in trades:
+            if t.get("status") != "OPEN" or not t.get("order_id"):
+                continue
+            try:
+                order = self.broker.get_order(t["order_id"])
+                status = order.get("status") if isinstance(order, dict) else None
+                if classify_order_for_reconcile(status) == "cancel":
+                    t["status"] = "CANCELLED"
+                    t["exit_reason"] = "ORDER_NOT_FILLED"
+                    cancelled += 1
+                    logger.info(
+                        f"Phantom reconcile: {t['symbol']} {t.get('entry_date')} "
+                        f"order {t['order_id']} status={status} → CANCELLED"
+                    )
+            except Exception as e:
+                logger.debug(f"Phantom reconcile: could not check {t.get('symbol')}: {e}")
+                continue
+
+        if cancelled:
+            try:
+                import os
+                tmp = trades_file.with_suffix(".json.tmp")
+                tmp.write_text(json.dumps(trades, indent=2))
+                os.replace(tmp, trades_file)
+                logger.info(f"Phantom reconcile: cancelled {cancelled} unfilled trade(s)")
+            except Exception as e:
+                logger.warning(f"Phantom reconcile: could not write trades.json: {e}")
+
     def _log_trade(self, action: str, symbol: str, shares: int, price: float,
                    stop_loss: float = None, trend_score: int = None,
                    confidence: float = None, exit_reason: str = None,
                    trade_id: str = None, rs_rank: int = None,
                    thesis_score: float = None, thesis_grade: str = None,
                    sector: str = None, weight_version: int = None,
-                   realized_pnl_pct: float = None):
+                   realized_pnl_pct: float = None, order_id: str = None):
         """
         Append-only trade log. Records every entry and exit with outcome data.
         Stored in docs/data/trades.json — the feedback loop foundation.
@@ -1073,6 +1151,7 @@ class DailyRunner:
                     "thesis_grade":   thesis_grade,
                     "sector":         sector,
                     "weight_version": weight_version,
+                    "order_id":       order_id,
                     "exit_date":   None,
                     "exit_price":  None,
                     "exit_reason": None,
@@ -1694,6 +1773,7 @@ class DailyRunner:
                         thesis_grade=opp.get("thesis_grade"),
                         sector=opp.get("sector"),
                         weight_version=self._active_weight_version(),
+                        order_id=result.get("order_id"),
                     )
                 else:
                     logger.warning(f"Order not submitted for {symbol}: {result.get('reason')}")

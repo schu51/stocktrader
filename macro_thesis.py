@@ -76,3 +76,59 @@ def validate_thesis(t: Dict) -> Tuple[bool, str]:
         return False, f"conviction below floor {CONVICTION_FLOOR}"
 
     return True, "ok"
+
+
+def is_thesis_live(t: Dict, today: Optional[date] = None) -> bool:
+    """
+    A thesis tilts the screener only when live:
+      status == "active", horizon in the future, last_validated within STALE_DAYS.
+    """
+    today = today or date.today()
+    if t.get("status") != "active":
+        return False
+    try:
+        if date.fromisoformat(str(t.get("horizon"))) <= today:
+            return False
+    except Exception:
+        return False
+    lv = t.get("last_validated")
+    if lv:
+        try:
+            if (today - date.fromisoformat(str(lv))).days > STALE_DAYS:
+                return False
+        except Exception:
+            return False
+    return True
+
+
+def retire_expired(theses: List[Dict], today: Optional[date] = None) -> List[Dict]:
+    """Mark theses past their horizon as status='retired' (in place) and return the list."""
+    today = today or date.today()
+    for t in theses:
+        try:
+            if date.fromisoformat(str(t.get("horizon"))) <= today:
+                t["status"] = "retired"
+        except Exception:
+            t["status"] = "retired"
+    return theses
+
+
+def macro_multiplier(symbol: str, sector: str, live_theses: List[Dict]) -> float:
+    """
+    Bounded ranking tilt for one candidate. See spec.
+      1. symbol in any live thesis's consensus_names_excluded -> MULTIPLIER_FLOOR (0.90)
+      2. sector matches a live thesis -> 1 + strongest_conviction * MULTIPLIER_SPAN
+      3. otherwise -> 1.0
+    Result is hard-capped to [MULTIPLIER_FLOOR, 1 + MULTIPLIER_SPAN].
+    """
+    for t in live_theses:
+        if symbol in (t.get("consensus_names_excluded") or []):
+            return MULTIPLIER_FLOOR
+
+    matches = [t for t in live_theses if sector in (t.get("beneficiary_sectors") or [])]
+    if not matches:
+        return 1.0
+
+    best = max(matches, key=lambda t: float(t.get("conviction", 0.0)))
+    mult = 1.0 + float(best.get("conviction", 0.0)) * MULTIPLIER_SPAN
+    return max(MULTIPLIER_FLOOR, min(mult, 1.0 + MULTIPLIER_SPAN))

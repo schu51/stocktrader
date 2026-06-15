@@ -82,3 +82,73 @@ def test_rejected_conviction_below_floor():
     ok, reason = validate_thesis(_good_thesis(conviction_breakdown=low))
     assert ok is False
     assert "conviction" in reason.lower()
+
+
+def test_is_thesis_live_true():
+    from macro_thesis import is_thesis_live
+    assert is_thesis_live(_good_thesis(last_validated="2099-01-01"),
+                          today=date_(2099, 1, 5)) is True
+
+
+def test_is_thesis_live_expired_horizon():
+    from macro_thesis import is_thesis_live
+    t = _good_thesis(horizon="2000-01-01", last_validated="2099-01-01")
+    assert is_thesis_live(t, today=date_(2099, 1, 5)) is False
+
+
+def test_is_thesis_live_stale_validation():
+    from macro_thesis import is_thesis_live
+    t = _good_thesis(last_validated="2099-01-01")
+    assert is_thesis_live(t, today=date_(2099, 1, 31)) is False
+
+
+def test_is_thesis_live_retired_status():
+    from macro_thesis import is_thesis_live
+    t = _good_thesis(status="retired", last_validated="2099-01-01")
+    assert is_thesis_live(t, today=date_(2099, 1, 5)) is False
+
+
+def test_retire_expired_marks_status():
+    from macro_thesis import retire_expired
+    theses = [_good_thesis(id="A", horizon="2000-01-01", last_validated="2099-01-01"),
+              _good_thesis(id="B", horizon="2099-12-31", last_validated="2099-01-01")]
+    out = retire_expired(theses, today=date_(2099, 1, 5))
+    by_id = {t["id"]: t for t in out}
+    assert by_id["A"]["status"] == "retired"
+    assert by_id["B"]["status"] == "active"
+
+
+def test_multiplier_no_match():
+    from macro_thesis import macro_multiplier
+    live = [_good_thesis(beneficiary_sectors=["energy"], conviction=0.8)]
+    assert macro_multiplier("AAPL", "technology", live) == 1.0
+
+
+def test_multiplier_beneficiary():
+    from macro_thesis import macro_multiplier
+    live = [_good_thesis(beneficiary_sectors=["energy"], conviction=0.8,
+                         consensus_names_excluded=["XOM"])]
+    assert abs(macro_multiplier("VST", "energy", live) - 1.20) < 1e-9
+
+
+def test_multiplier_excluded_name():
+    from macro_thesis import macro_multiplier
+    live = [_good_thesis(beneficiary_sectors=["technology"], conviction=0.9,
+                         consensus_names_excluded=["NVDA"])]
+    assert macro_multiplier("NVDA", "technology", live) == 0.90
+
+
+def test_multiplier_strongest_match_no_stacking():
+    from macro_thesis import macro_multiplier
+    live = [_good_thesis(id="A", beneficiary_sectors=["energy"], conviction=0.4,
+                         consensus_names_excluded=["X"]),
+            _good_thesis(id="B", beneficiary_sectors=["energy"], conviction=0.8,
+                         consensus_names_excluded=["Y"])]
+    assert abs(macro_multiplier("VST", "energy", live) - 1.20) < 1e-9
+
+
+def test_multiplier_bounds_cap():
+    from macro_thesis import macro_multiplier
+    live = [_good_thesis(beneficiary_sectors=["energy"], conviction=1.0,
+                         consensus_names_excluded=["X"])]
+    assert macro_multiplier("VST", "energy", live) == 1.25

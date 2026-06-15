@@ -1,19 +1,19 @@
 {
-  "date": "2026-06-12",
-  "generated_at": "2026-06-12T22:00:01.649042",
+  "date": "2026-06-15",
+  "generated_at": "2026-06-15T22:27:45.530639",
   "portfolio": {
-    "value": 104157.91,
-    "cash": 24983.58,
-    "total_unrealized": 5764.01,
-    "positions": 14,
-    "winners": 9,
+    "value": 105149.79,
+    "cash": 14607.17,
+    "total_unrealized": 7116.16,
+    "positions": 15,
+    "winners": 10,
     "losers": 5,
     "risk_level": "LOW",
-    "risk_score": 13.6
+    "risk_score": 13.9
   },
   "execution": {
-    "signals_generated": 3,
-    "orders_executed": 3,
+    "signals_generated": 4,
+    "orders_executed": 4,
     "orders_skipped": 0,
     "skip_reasons": [],
     "candidates_screened": 30
@@ -23,12 +23,75 @@
     "stops_updated": 2,
     "detail": []
   },
-  "closed_today": [],
+  "closed_today": [
+    {
+      "trade_id": "TRD-20260612140145-SLB",
+      "symbol": "SLB",
+      "status": "CLOSED",
+      "entry_date": "2026-06-12",
+      "entry_ts": "2026-06-12T14:01:45.105535",
+      "entry_price": 56.43,
+      "shares": 40,
+      "stop_loss": 51.91,
+      "trend_score": 71,
+      "confidence": 0.85,
+      "rs_rank": 85,
+      "thesis_score": 46.0,
+      "thesis_grade": "C",
+      "sector": "energy",
+      "weight_version": 1,
+      "exit_date": "2026-06-15",
+      "exit_price": 53.81,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -104.73,
+      "pnl_pct": -4.64,
+      "hold_days": 3,
+      "exit_ts": "2026-06-15T18:03:22.979883"
+    },
+    {
+      "trade_id": "TRD-20260612164311-VLO",
+      "symbol": "VLO",
+      "status": "CLOSED",
+      "entry_date": "2026-06-12",
+      "entry_ts": "2026-06-12T16:43:11.412596",
+      "entry_price": 260.96,
+      "shares": 13,
+      "stop_loss": 240.08,
+      "trend_score": 80,
+      "confidence": 0.85,
+      "rs_rank": 88,
+      "thesis_score": 44.0,
+      "thesis_grade": "C",
+      "sector": "energy",
+      "weight_version": 1,
+      "exit_date": "2026-06-15",
+      "exit_price": 241.66,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -250.74,
+      "pnl_pct": -7.39,
+      "hold_days": 3,
+      "exit_ts": "2026-06-15T14:01:39.103287"
+    }
+  ],
   "positions_at_risk": [
     {
-      "symbol": "VLO",
-      "pnl_pct": -0.87,
-      "value": 3362.71,
+      "symbol": "WBD",
+      "pnl_pct": -1.04,
+      "value": 7458.02,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "FDX",
+      "pnl_pct": -0.65,
+      "value": 3729.0,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "STLD",
+      "pnl_pct": -0.17,
+      "value": 4368.0,
       "has_stop": false,
       "risk": "no_stop"
     },

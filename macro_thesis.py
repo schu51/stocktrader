@@ -132,3 +132,21 @@ def macro_multiplier(symbol: str, sector: str, live_theses: List[Dict]) -> float
     best = max(matches, key=lambda t: float(t.get("conviction", 0.0)))
     mult = 1.0 + float(best.get("conviction", 0.0)) * MULTIPLIER_SPAN
     return max(MULTIPLIER_FLOOR, min(mult, 1.0 + MULTIPLIER_SPAN))
+
+
+def load_live_theses(path) -> List[Dict]:
+    """
+    Read theses.json and return only the live theses. Any error (absent,
+    malformed) returns [] so the screener degrades to neutral (all 1.0).
+    """
+    import json
+    from pathlib import Path
+    try:
+        p = Path(path)
+        if not p.exists():
+            return []
+        data = json.loads(p.read_text())
+        theses = data.get("theses", []) if isinstance(data, dict) else []
+        return [t for t in theses if is_thesis_live(t)]
+    except Exception:
+        return []

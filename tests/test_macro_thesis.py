@@ -152,3 +152,26 @@ def test_multiplier_bounds_cap():
     live = [_good_thesis(beneficiary_sectors=["energy"], conviction=1.0,
                          consensus_names_excluded=["X"])]
     assert macro_multiplier("VST", "energy", live) == 1.25
+
+
+def test_load_live_theses_absent_file(tmp_path):
+    from macro_thesis import load_live_theses
+    assert load_live_theses(tmp_path / "nope.json") == []
+
+
+def test_load_live_theses_filters_dead(tmp_path):
+    import json
+    from macro_thesis import load_live_theses
+    p = tmp_path / "theses.json"
+    p.write_text(json.dumps({"theses": [
+        _good_thesis(id="LIVE", horizon="2099-12-31", last_validated=str(date_.today())),
+        _good_thesis(id="DEAD", horizon="2000-01-01", last_validated=str(date_.today())),
+    ]}))
+    live = load_live_theses(p)
+    assert [t["id"] for t in live] == ["LIVE"]
+
+
+def test_screener_macro_multiplier_default_when_absent(tmp_path, monkeypatch):
+    import screener
+    monkeypatch.setattr(screener, "_THESES_PATH", tmp_path / "nope.json")
+    assert screener._live_theses() == []

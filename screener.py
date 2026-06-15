@@ -55,6 +55,18 @@ def _load_ranking_weights():
         pass
     return 0.60, 0.40
 
+
+_THESES_PATH = Path(__file__).parent / "docs" / "data" / "theses.json"
+
+
+def _live_theses():
+    """Live macro theses, or [] if the register is absent/stale/malformed."""
+    try:
+        from macro_thesis import load_live_theses
+        return load_live_theses(_THESES_PATH)
+    except Exception:
+        return []
+
 # Finviz sector name → internal key used throughout the screener
 _FINVIZ_SECTOR_NORM: Dict[str, str] = {
     "Technology":             "technology",
@@ -491,6 +503,9 @@ def run_screener(
     w_rs, w_thesis = _load_ranking_weights()
     logger.info(f"Ranking weights: RS={w_rs:.2f}, thesis={w_thesis:.2f}")
 
+    live_theses = _live_theses()
+    logger.info(f"Macro theses live: {len(live_theses)}")
+
     for sym in universe:
         # Get price series
         try:
@@ -567,7 +582,9 @@ def run_screener(
         # Combined ranking: 60% RS rank (proven momentum) + 40% forward thesis
         # RS rank tells us the trend is real. Thesis tells us why it continues.
         sector_boost    = 1.05 if is_leader else 1.0
-        effective_score = (w_rs * rs_rank + w_thesis * thesis_score) * sector_boost
+        from macro_thesis import macro_multiplier
+        macro_mult = macro_multiplier(sym, sector, live_theses)
+        effective_score = (w_rs * rs_rank + w_thesis * thesis_score) * sector_boost * macro_mult
 
         ret_1m = float((price_arr[-1] / price_arr[-21] - 1) * 100) if len(price_arr) >= 21 else None
         ret_3m = float((price_arr[-1] / price_arr[-63] - 1) * 100) if len(price_arr) >= 63 else None
@@ -581,6 +598,7 @@ def run_screener(
             "thesis_grade":    thesis_grade,
             "setup_reason":    setup_reason,
             "effective_score": round(effective_score, 1),
+            "macro_mult":      round(macro_mult, 3),
             "sector":          sector,
             "sector_leader":   is_leader,
             "trend":           "strong_up",

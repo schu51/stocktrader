@@ -592,7 +592,7 @@
   {
     "trade_id": "TRD-20260612140145-SLB",
     "symbol": "SLB",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-12",
     "entry_ts": "2026-06-12T14:01:45.105535",
     "entry_price": 56.43,
@@ -605,12 +605,13 @@
     "thesis_grade": "C",
     "sector": "energy",
     "weight_version": 1,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-06-15",
+    "exit_price": 53.81,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -104.73,
+    "pnl_pct": -4.64,
+    "hold_days": 3,
+    "exit_ts": "2026-06-15T18:03:22.979883"
   },
   {
     "trade_id": "TRD-20260612140145-DD",

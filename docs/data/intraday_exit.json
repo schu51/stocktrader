@@ -1,30 +1,13 @@
 {
-  "generated_at": "2026-06-15T18:03:22.980742",
-  "positions_checked": 13,
-  "exits_triggered": [
-    {
-      "symbol": "SLB",
-      "trigger": "PRICE_BELOW_50MA",
-      "reason": "$53.81 is 1.5% below 50MA $54.61",
-      "qty": 40,
-      "price": 53.81,
-      "pnl_pct": -4.64,
-      "executed": true,
-      "order_id": "1018af74-29e9-43b6-ad8e-59b6fc7ad6d0"
-    }
-  ],
+  "generated_at": "2026-06-16T18:10:00.325337",
+  "positions_checked": 15,
+  "exits_triggered": [],
   "stops_updated": [
     {
       "symbol": "ALNT",
-      "new_stop": 86.24,
+      "new_stop": 86.95,
       "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 79.01
-    },
-    {
-      "symbol": "BHE",
-      "new_stop": 84.4,
-      "tier": "100%+ gain \u2192 8% trail",
-      "pnl_pct": 103.46
+      "pnl_pct": 80.48
     }
   ],
   "mode": "EXECUTE"

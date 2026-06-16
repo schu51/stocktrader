@@ -1,14 +1,32 @@
 {
-  "generated_at": "2026-06-15T18:10:54.843880",
-  "positions_checked": 12,
+  "generated_at": "2026-06-16T18:18:30.016456",
+  "positions_checked": 15,
   "already_protected": 11,
-  "stops_placed": 0,
+  "stops_placed": 3,
   "stops_failed": 1,
   "results": [
+    {
+      "symbol": "CSX",
+      "stop": 43.65,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "FDX",
+      "stop": 313.92,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "STLD",
+      "stop": 251.59,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

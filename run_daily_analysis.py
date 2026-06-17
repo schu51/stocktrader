@@ -1696,21 +1696,26 @@ class DailyRunner:
                 })
                 continue
 
-            # Gate 4: live bid price override (use Alpaca bid instead of stale yfinance close)
+            # Gate 4: live ask price override (use Alpaca ask instead of stale yfinance close)
             if self.broker:
                 try:
                     quote = self.broker.get_latest_quote(symbol)
-                    bid = float(quote.get("bp", 0) or quote.get("bid_price", 0) or 0)
-                    if bid > 0:
+                    # BUY limit orders must be priced at (or above) the ask to be
+                    # marketable. Pricing at the bid — the previous behavior — meant
+                    # the order only filled if the market dropped to meet it, which
+                    # rarely happens on a momentum entry and left most signals
+                    # unfilled (see trades.json: ORDER_NOT_FILLED cancellations).
+                    ask = float(quote.get("ap", 0) or quote.get("ask_price", 0) or 0)
+                    if ask > 0:
                         # Recalculate stop_loss to maintain the same % distance from the
-                        # actual fill price. Without this, a stale yfinance close > bid
+                        # actual fill price. Without this, a stale yfinance close > ask
                         # causes the stop to land above the entry price.
                         orig_limit = limit_price
                         stop_loss_orig = opp.get("stop_loss")
                         if stop_loss_orig and orig_limit > 0 and orig_limit > stop_loss_orig:
                             stop_pct = (orig_limit - stop_loss_orig) / orig_limit
-                            opp["stop_loss"] = round(bid * (1 - stop_pct), 2)
-                        limit_price = round(bid, 2)
+                            opp["stop_loss"] = round(ask * (1 - stop_pct), 2)
+                        limit_price = round(ask, 2)
                         opp["limit_price"] = limit_price
                 except Exception:
                     pass  # keep yfinance close as fallback

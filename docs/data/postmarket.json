@@ -1,63 +1,30 @@
 {
-  "date": "2026-06-16",
-  "generated_at": "2026-06-16T22:22:11.571253",
+  "date": "2026-06-17",
+  "generated_at": "2026-06-17T22:11:33.902024",
   "portfolio": {
-    "value": 103379.53,
-    "cash": 17941.34,
-    "total_unrealized": 5429.3099999999995,
+    "value": 104303.36,
+    "cash": 17941.28,
+    "total_unrealized": 6353.21,
     "positions": 16,
-    "winners": 9,
-    "losers": 7,
+    "winners": 7,
+    "losers": 9,
     "risk_level": "LOW",
-    "risk_score": 14.2
+    "risk_score": 14.5
   },
   "execution": {
-    "signals_generated": 2,
-    "orders_executed": 2,
+    "signals_generated": 1,
+    "orders_executed": 1,
     "orders_skipped": 0,
     "skip_reasons": [],
     "candidates_screened": 30
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 2,
+    "stops_updated": 3,
     "detail": []
   },
-  "closed_today": [
-    {
-      "trade_id": "TRD-20260615182741-WBD",
-      "symbol": "WBD",
-      "status": "CLOSED",
-      "entry_date": "2026-06-15",
-      "entry_ts": "2026-06-15T18:27:41.965407",
-      "entry_price": 27.14,
-      "shares": 139,
-      "stop_loss": 24.97,
-      "trend_score": 76,
-      "confidence": 0.85,
-      "rs_rank": 93,
-      "thesis_score": 61.0,
-      "thesis_grade": "B",
-      "sector": "communication_services",
-      "weight_version": 1,
-      "order_id": "9cbe12dc-0920-41e6-8abd-bb82e19ccfab",
-      "exit_date": "2026-06-16",
-      "exit_price": 26.82,
-      "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -41.04,
-      "pnl_pct": -1.09,
-      "hold_days": 1,
-      "exit_ts": "2026-06-16T14:01:51.741680"
-    }
-  ],
+  "closed_today": [],
   "positions_at_risk": [
-    {
-      "symbol": "CASY",
-      "pnl_pct": -1.15,
-      "value": 1726.48,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-06-18T16:46:23.828844",
-  "positions_checked": 15,
-  "already_protected": 13,
+  "generated_at": "2026-06-22T18:06:00.548221",
+  "positions_checked": 16,
+  "already_protected": 14,
   "stops_placed": 1,
   "stops_failed": 1,
   "results": [
     {
+      "symbol": "CFG",
+      "stop": 61.48,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
-    },
-    {
-      "symbol": "VRT",
-      "stop": 306.01,
-      "tier": "default \u2192 8% below entry",
-      "status": "placed"
     }
   ]
 }

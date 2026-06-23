@@ -616,7 +616,7 @@
   {
     "trade_id": "TRD-20260612140145-DD",
     "symbol": "DD",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-12",
     "entry_ts": "2026-06-12T14:01:45.439725",
     "entry_price": 47.96,
@@ -629,12 +629,13 @@
     "thesis_grade": "B",
     "sector": "basic_materials",
     "weight_version": 1,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-06-23",
+    "exit_price": 47.16,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -37.98,
+    "pnl_pct": -1.65,
+    "hold_days": 11,
+    "exit_ts": "2026-06-23T16:06:44.647911"
   },
   {
     "trade_id": "TRD-20260612164311-CASY",

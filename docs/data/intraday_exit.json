@@ -1,31 +1,18 @@
 {
-  "generated_at": "2026-06-23T16:06:44.649071",
-  "positions_checked": 18,
+  "generated_at": "2026-06-23T18:14:46.312136",
+  "positions_checked": 17,
   "exits_triggered": [
     {
-      "symbol": "DD",
+      "symbol": "VRT",
       "trigger": "PRICE_BELOW_50MA",
-      "reason": "$47.16 is 0.7% below 50MA $47.52",
-      "qty": 48,
-      "price": 47.16,
-      "pnl_pct": -1.65,
+      "reason": "$320.70 is 0.8% below 50MA $323.41",
+      "qty": 16,
+      "price": 320.7,
+      "pnl_pct": -3.58,
       "executed": true,
-      "order_id": "2ce6a3e6-7e53-434e-9a23-c0d43996ee15"
+      "order_id": "ca88641b-e429-4990-8489-7e45c1c8476b"
     }
   ],
-  "stops_updated": [
-    {
-      "symbol": "ALNT",
-      "new_stop": 86.87,
-      "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 80.31
-    },
-    {
-      "symbol": "BHE",
-      "new_stop": 83.32,
-      "tier": "100%+ gain \u2192 8% trail",
-      "pnl_pct": 100.85
-    }
-  ],
+  "stops_updated": [],
   "mode": "EXECUTE"
 }

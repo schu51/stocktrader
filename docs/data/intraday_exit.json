@@ -1,7 +1,20 @@
 {
-  "generated_at": "2026-06-24T19:18:03.576981",
-  "positions_checked": 14,
+  "generated_at": "2026-06-25T15:46:02.287540",
+  "positions_checked": 16,
   "exits_triggered": [],
-  "stops_updated": [],
+  "stops_updated": [
+    {
+      "symbol": "ALNT",
+      "new_stop": 92.95,
+      "tier": "50%+ gain \u2192 10% trail",
+      "pnl_pct": 92.94
+    },
+    {
+      "symbol": "BHE",
+      "new_stop": 89.22,
+      "tier": "100%+ gain \u2192 8% trail",
+      "pnl_pct": 115.07
+    }
+  ],
   "mode": "EXECUTE"
 }

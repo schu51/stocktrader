@@ -1,50 +1,37 @@
 {
-  "date": "2026-06-24",
-  "generated_at": "2026-06-24T21:42:53.264336",
+  "date": "2026-06-25",
+  "generated_at": "2026-06-25T21:52:37.540209",
   "portfolio": {
-    "value": 104442.49,
-    "cash": 23526.73,
-    "total_unrealized": 8068.75,
-    "positions": 14,
-    "winners": 11,
-    "losers": 3,
+    "value": 107683.75,
+    "cash": 11046.5,
+    "total_unrealized": 11310.029999999999,
+    "positions": 17,
+    "winners": 12,
+    "losers": 5,
     "risk_level": "LOW",
-    "risk_score": 14.4
+    "risk_score": 15.2
   },
   "execution": {
-    "signals_generated": 0,
-    "orders_executed": 0,
+    "signals_generated": 1,
+    "orders_executed": 1,
     "orders_skipped": 0,
     "skip_reasons": [],
     "candidates_screened": 30
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 2,
+    "stops_updated": 3,
     "detail": []
   },
-  "closed_today": [
-    {
-      "trade_id": "TRD-20260609163118-CHRW",
-      "symbol": "CHRW",
-      "status": "CLOSED",
-      "entry_date": "2026-06-09",
-      "entry_ts": "2026-06-09T16:31:18.106704",
-      "entry_price": 187.53,
-      "shares": 19,
-      "stop_loss": 172.53,
-      "trend_score": 80,
-      "confidence": 0.85,
-      "exit_date": "2026-06-24",
-      "exit_price": 177.54,
-      "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -185.28,
-      "pnl_pct": -5.2,
-      "hold_days": 15,
-      "exit_ts": "2026-06-24T17:32:05.342053"
-    }
-  ],
+  "closed_today": [],
   "positions_at_risk": [
+    {
+      "symbol": "GNRC",
+      "pnl_pct": 1.69,
+      "value": 4722.56,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

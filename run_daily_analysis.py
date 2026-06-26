@@ -800,6 +800,14 @@ class DailyRunner:
 
             idx = next((i for i, h in enumerate(history) if h["date"] == today), None)
             if idx is not None:
+                # Multiple runs can hit the same day (manual workflow_dispatch
+                # reruns). Accumulate signal/order counts instead of
+                # overwriting, or a same-day rerun silently erases the
+                # earlier run's activity from the dashboard history.
+                prev = history[idx]
+                entry["candidates_screened"] = max(prev.get("candidates_screened", 0), entry["candidates_screened"])
+                entry["buy_signals"] += prev.get("buy_signals", 0)
+                entry["orders_submitted"] += prev.get("orders_submitted", 0)
                 history[idx] = entry
             else:
                 history.append(entry)

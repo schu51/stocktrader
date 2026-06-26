@@ -1193,7 +1193,7 @@
   {
     "trade_id": "TRD-20260624140204-WBD",
     "symbol": "WBD",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-24",
     "entry_ts": "2026-06-24T14:02:04.705843",
     "entry_price": 27.07,
@@ -1207,12 +1207,13 @@
     "sector": "communication_services",
     "weight_version": 1,
     "order_id": "2dc00a50-e2d8-46ed-9521-2a0e6907b3f0",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-06-26",
+    "exit_price": 26.93,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -18.41,
+    "pnl_pct": -0.5,
+    "hold_days": 2,
+    "exit_ts": "2026-06-26T15:31:03.473682"
   },
   {
     "trade_id": "TRD-20260625140154-AFRM",
@@ -1241,7 +1242,7 @@
   {
     "trade_id": "TRD-20260625140155-VRT",
     "symbol": "VRT",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-25",
     "entry_ts": "2026-06-25T14:01:55.762876",
     "entry_price": 337.0,
@@ -1255,12 +1256,13 @@
     "sector": "industrials",
     "weight_version": 1,
     "order_id": "34ce35ec-9285-40e6-aa08-8f8c511e5fc8",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-06-26",
+    "exit_price": 302.99,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -167.25,
+    "pnl_pct": -7.09,
+    "hold_days": 1,
+    "exit_ts": "2026-06-26T15:31:02.852325"
   },
   {
     "trade_id": "TRD-20260625162228-GNRC",

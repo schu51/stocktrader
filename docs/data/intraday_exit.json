@@ -1,7 +1,28 @@
 {
-  "generated_at": "2026-06-25T18:25:43.786540",
-  "positions_checked": 17,
-  "exits_triggered": [],
+  "generated_at": "2026-06-26T15:31:03.474709",
+  "positions_checked": 19,
+  "exits_triggered": [
+    {
+      "symbol": "VRT",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$302.99 is 6.5% below 50MA $323.99",
+      "qty": 7,
+      "price": 302.99,
+      "pnl_pct": -7.09,
+      "executed": true,
+      "order_id": "662371d0-a79c-4cad-a779-5ce397af3b7d"
+    },
+    {
+      "symbol": "WBD",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$26.93 is 0.2% below 50MA $26.99",
+      "qty": 136,
+      "price": 26.935,
+      "pnl_pct": -0.5,
+      "executed": true,
+      "order_id": "39d5c588-4d6f-404a-9834-678fecd5d846"
+    }
+  ],
   "stops_updated": [],
   "mode": "EXECUTE"
 }

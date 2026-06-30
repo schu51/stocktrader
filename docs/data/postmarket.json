@@ -1,82 +1,50 @@
 {
-  "date": "2026-06-29",
-  "generated_at": "2026-06-29T21:42:59.504200",
+  "date": "2026-06-30",
+  "generated_at": "2026-06-30T21:44:58.034705",
   "portfolio": {
-    "value": 123383.37,
-    "cash": 14171.9,
-    "total_unrealized": 14529.68,
+    "value": 126983.42,
+    "cash": 33295.15,
+    "total_unrealized": 11963.81,
     "positions": 20,
-    "winners": 16,
-    "losers": 4,
-    "risk_level": "MODERATE",
-    "risk_score": 35.1
+    "winners": 18,
+    "losers": 2,
+    "risk_level": "LOW",
+    "risk_score": 9.4
   },
   "execution": {
-    "signals_generated": 3,
+    "signals_generated": 1,
     "orders_executed": 0,
-    "orders_skipped": 3,
+    "orders_skipped": 1,
     "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
       "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
     ],
     "candidates_screened": 30
   },
   "exits": {
-    "triggered": 1,
+    "triggered": 2,
     "stops_updated": 5,
     "detail": [
       {
         "symbol": "AMAT",
         "trigger": "REDUCE",
-        "reason": "Partial profit taking at 45.9% gain",
-        "pnl_pct": 45.86,
-        "qty": 16,
+        "reason": "Partial profit taking at 56.8% gain",
+        "pnl_pct": 56.81,
+        "qty": 6,
         "executed": true,
-        "order_id": "684e16d1-352a-4220-9d9b-5278c15512c6"
+        "order_id": "f337db6b-6467-4991-a94d-b40a33c9c1e4"
+      },
+      {
+        "symbol": "KLAC",
+        "trigger": "REDUCE",
+        "reason": "Partial profit taking at 45.6% gain",
+        "pnl_pct": 45.6,
+        "qty": 10,
+        "executed": true,
+        "order_id": "e7c3291a-bcc5-44c6-b76a-2e4573b37a1a"
       }
     ]
   },
-  "closed_today": [
-    {
-      "trade_id": "TRD-20260604070111-AMAT",
-      "symbol": "AMAT",
-      "status": "CLOSED",
-      "entry_date": "2026-06-04",
-      "entry_ts": "2026-06-04T07:01:11.672032",
-      "entry_price": 486.74,
-      "shares": 6,
-      "stop_loss": 448.4,
-      "trend_score": 79,
-      "confidence": 0.85,
-      "exit_date": "2026-06-29",
-      "exit_price": 695.67,
-      "exit_reason": "REDUCE",
-      "pnl_usd": 1339.25,
-      "pnl_pct": 45.86,
-      "hold_days": 25,
-      "exit_ts": "2026-06-29T16:53:05.910208"
-    },
-    {
-      "trade_id": "TRD-20260605070021-AMAT",
-      "symbol": "AMAT",
-      "status": "CLOSED",
-      "entry_date": "2026-06-05",
-      "entry_ts": "2026-06-05T07:00:21.897394",
-      "entry_price": 461.11,
-      "shares": 7,
-      "stop_loss": 435.08,
-      "trend_score": 76,
-      "confidence": 0.85,
-      "exit_date": "2026-06-29",
-      "exit_price": 695.67,
-      "exit_reason": "REDUCE",
-      "pnl_usd": 1480.18,
-      "pnl_pct": 45.86,
-      "hold_days": 24,
-      "exit_ts": "2026-06-29T16:53:05.910208"
-    }
-  ],
+  "closed_today": [],
   "positions_at_risk": [
     {
       "symbol": "CTLP",

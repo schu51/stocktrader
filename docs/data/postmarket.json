@@ -1,51 +1,82 @@
 {
-  "date": "2026-06-30",
-  "generated_at": "2026-06-30T21:44:58.034705",
+  "date": "2026-07-01",
+  "generated_at": "2026-07-01T21:45:13.604156",
   "portfolio": {
-    "value": 126983.42,
-    "cash": 33295.15,
-    "total_unrealized": 11963.81,
-    "positions": 20,
-    "winners": 18,
-    "losers": 2,
+    "value": 123652.24,
+    "cash": 38539.63,
+    "total_unrealized": 7668.76,
+    "positions": 19,
+    "winners": 16,
+    "losers": 3,
     "risk_level": "LOW",
-    "risk_score": 9.4
+    "risk_score": 9.2
   },
   "execution": {
-    "signals_generated": 1,
+    "signals_generated": 8,
     "orders_executed": 0,
-    "orders_skipped": 1,
+    "orders_skipped": 8,
     "skip_reasons": [
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
       "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
     ],
     "candidates_screened": 30
   },
   "exits": {
-    "triggered": 2,
+    "triggered": 1,
     "stops_updated": 5,
     "detail": [
       {
         "symbol": "AMAT",
         "trigger": "REDUCE",
-        "reason": "Partial profit taking at 56.8% gain",
-        "pnl_pct": 56.81,
-        "qty": 6,
+        "reason": "Partial profit taking at 43.7% gain",
+        "pnl_pct": 43.67,
+        "qty": 2,
         "executed": true,
-        "order_id": "f337db6b-6467-4991-a94d-b40a33c9c1e4"
-      },
-      {
-        "symbol": "KLAC",
-        "trigger": "REDUCE",
-        "reason": "Partial profit taking at 45.6% gain",
-        "pnl_pct": 45.6,
-        "qty": 10,
-        "executed": true,
-        "order_id": "e7c3291a-bcc5-44c6-b76a-2e4573b37a1a"
+        "order_id": "73908855-1998-4448-8f23-89de88e43006"
       }
     ]
   },
-  "closed_today": [],
+  "closed_today": [
+    {
+      "trade_id": "TRD-20260626161418-FIX",
+      "symbol": "FIX",
+      "status": "CLOSED",
+      "entry_date": "2026-06-26",
+      "entry_ts": "2026-06-26T16:14:18.768827",
+      "entry_price": 1933.19,
+      "shares": 1,
+      "stop_loss": 1778.53,
+      "trend_score": 70,
+      "confidence": 0.85,
+      "rs_rank": 96,
+      "thesis_score": 42.0,
+      "thesis_grade": "C",
+      "sector": "industrials",
+      "weight_version": 1,
+      "order_id": "42b2d6b4-3728-47ff-9ead-ab35608e08f4",
+      "exit_date": "2026-07-01",
+      "exit_price": 1863.2,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -69.79,
+      "pnl_pct": -3.61,
+      "hold_days": 5,
+      "exit_ts": "2026-07-01T18:16:24.071379"
+    }
+  ],
   "positions_at_risk": [
+    {
+      "symbol": "GNRC",
+      "pnl_pct": -7.54,
+      "value": 4293.76,
+      "has_stop": true,
+      "risk": "approaching"
+    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

@@ -1317,7 +1317,7 @@
   {
     "trade_id": "TRD-20260626161418-FIX",
     "symbol": "FIX",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-26",
     "entry_ts": "2026-06-26T16:14:18.768827",
     "entry_price": 1933.19,
@@ -1331,12 +1331,13 @@
     "sector": "industrials",
     "weight_version": 1,
     "order_id": "42b2d6b4-3728-47ff-9ead-ab35608e08f4",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-01",
+    "exit_price": 1863.2,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -69.79,
+    "pnl_pct": -3.61,
+    "hold_days": 5,
+    "exit_ts": "2026-07-01T18:16:24.071379"
   },
   {
     "trade_id": "TRD-20260629140149-UNH",

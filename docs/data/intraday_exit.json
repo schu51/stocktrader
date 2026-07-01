@@ -1,20 +1,18 @@
 {
-  "generated_at": "2026-07-01T15:49:37.248774",
+  "generated_at": "2026-07-01T18:16:24.538350",
   "positions_checked": 20,
-  "exits_triggered": [],
-  "stops_updated": [
+  "exits_triggered": [
     {
-      "symbol": "ALNT",
-      "new_stop": 91.79,
-      "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 90.52
-    },
-    {
-      "symbol": "PANW",
-      "new_stop": 277.6,
-      "tier": "25%+ gain \u2192 break-even+1.5%",
-      "pnl_pct": 30.83
+      "symbol": "FIX",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$1863.20 is 1.0% below 50MA $1882.30",
+      "qty": 1,
+      "price": 1863.205,
+      "pnl_pct": -3.61,
+      "executed": true,
+      "order_id": "e9de4329-57f7-4a85-a70c-cdf68b9b52f9"
     }
   ],
+  "stops_updated": [],
   "mode": "EXECUTE"
 }

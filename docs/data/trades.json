@@ -1171,7 +1171,7 @@
   {
     "trade_id": "TRD-20260623140208-CMI",
     "symbol": "CMI",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-23",
     "entry_ts": "2026-06-23T14:02:08.534449",
     "entry_price": 727.41,
@@ -1185,12 +1185,13 @@
     "sector": "industrials",
     "weight_version": 1,
     "order_id": "d66bedd9-96d1-4350-b86a-0bb1826fbb41",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-02",
+    "exit_price": 670.61,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -92.74,
+    "pnl_pct": -4.25,
+    "hold_days": 9,
+    "exit_ts": "2026-07-02T15:30:18.773065"
   },
   {
     "trade_id": "TRD-20260624140204-WBD",
@@ -1462,7 +1463,7 @@
   {
     "trade_id": "TRD-20260702140208-TXN",
     "symbol": "TXN",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-02",
     "entry_ts": "2026-07-02T14:02:08.243709",
     "entry_price": 315.24,
@@ -1476,11 +1477,12 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "7a1e2c36-1f47-4904-ad4c-24e4ea1c6a32",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-02",
+    "exit_price": 294.95,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -81.21,
+    "pnl_pct": -3.22,
+    "hold_days": 0,
+    "exit_ts": "2026-07-02T15:30:19.031528"
   }
 ]

@@ -1,18 +1,29 @@
 {
-  "generated_at": "2026-07-01T16:08:05.698340",
-  "positions_checked": 20,
-  "already_protected": 18,
-  "stops_placed": 1,
-  "stops_failed": 1,
+  "generated_at": "2026-07-02T15:54:12.225969",
+  "positions_checked": 19,
+  "already_protected": 15,
+  "stops_placed": 2,
+  "stops_failed": 2,
   "results": [
+    {
+      "symbol": "ALAB",
+      "status": "failed",
+      "error": "stop price must be less than current price"
+    },
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
     },
     {
-      "symbol": "LRCX",
-      "stop": 293.1,
+      "symbol": "DAL",
+      "stop": 87.23,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "GLW",
+      "stop": 202.78,
       "tier": "default \u2192 8% below entry",
       "status": "placed"
     }

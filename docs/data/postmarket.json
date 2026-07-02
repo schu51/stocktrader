@@ -1,81 +1,101 @@
 {
-  "date": "2026-07-01",
-  "generated_at": "2026-07-01T21:45:13.604156",
+  "date": "2026-07-02",
+  "generated_at": "2026-07-02T21:22:20.051772",
   "portfolio": {
-    "value": 123652.24,
-    "cash": 38539.63,
-    "total_unrealized": 7668.76,
-    "positions": 19,
-    "winners": 16,
-    "losers": 3,
+    "value": 108490.89,
+    "cash": 33836.52,
+    "total_unrealized": 3618.8500000000004,
+    "positions": 20,
+    "winners": 15,
+    "losers": 5,
     "risk_level": "LOW",
-    "risk_score": 9.2
+    "risk_score": 13.1
   },
   "execution": {
-    "signals_generated": 8,
-    "orders_executed": 0,
-    "orders_skipped": 8,
-    "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
-    ],
+    "signals_generated": 2,
+    "orders_executed": 2,
+    "orders_skipped": 0,
+    "skip_reasons": [],
     "candidates_screened": 30
   },
   "exits": {
-    "triggered": 1,
-    "stops_updated": 5,
-    "detail": [
-      {
-        "symbol": "AMAT",
-        "trigger": "REDUCE",
-        "reason": "Partial profit taking at 43.7% gain",
-        "pnl_pct": 43.67,
-        "qty": 2,
-        "executed": true,
-        "order_id": "73908855-1998-4448-8f23-89de88e43006"
-      }
-    ]
+    "triggered": 0,
+    "stops_updated": 4,
+    "detail": []
   },
   "closed_today": [
     {
-      "trade_id": "TRD-20260626161418-FIX",
-      "symbol": "FIX",
+      "trade_id": "TRD-20260623140208-CMI",
+      "symbol": "CMI",
       "status": "CLOSED",
-      "entry_date": "2026-06-26",
-      "entry_ts": "2026-06-26T16:14:18.768827",
-      "entry_price": 1933.19,
-      "shares": 1,
-      "stop_loss": 1778.53,
-      "trend_score": 70,
+      "entry_date": "2026-06-23",
+      "entry_ts": "2026-06-23T14:02:08.534449",
+      "entry_price": 727.41,
+      "shares": 3,
+      "stop_loss": 669.21,
+      "trend_score": 74,
       "confidence": 0.85,
-      "rs_rank": 96,
-      "thesis_score": 42.0,
+      "rs_rank": 92,
+      "thesis_score": 48.0,
       "thesis_grade": "C",
       "sector": "industrials",
       "weight_version": 1,
-      "order_id": "42b2d6b4-3728-47ff-9ead-ab35608e08f4",
-      "exit_date": "2026-07-01",
-      "exit_price": 1863.2,
+      "order_id": "d66bedd9-96d1-4350-b86a-0bb1826fbb41",
+      "exit_date": "2026-07-02",
+      "exit_price": 670.61,
       "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -69.79,
-      "pnl_pct": -3.61,
-      "hold_days": 5,
-      "exit_ts": "2026-07-01T18:16:24.071379"
+      "pnl_usd": -92.74,
+      "pnl_pct": -4.25,
+      "hold_days": 9,
+      "exit_ts": "2026-07-02T15:30:18.773065"
+    },
+    {
+      "trade_id": "TRD-20260702140208-TXN",
+      "symbol": "TXN",
+      "status": "CLOSED",
+      "entry_date": "2026-07-02",
+      "entry_ts": "2026-07-02T14:02:08.243709",
+      "entry_price": 315.24,
+      "shares": 8,
+      "stop_loss": 290.03,
+      "trend_score": 71,
+      "confidence": 0.85,
+      "rs_rank": 91,
+      "thesis_score": 39.0,
+      "thesis_grade": "D",
+      "sector": "technology",
+      "weight_version": 1,
+      "order_id": "7a1e2c36-1f47-4904-ad4c-24e4ea1c6a32",
+      "exit_date": "2026-07-02",
+      "exit_price": 294.95,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -81.21,
+      "pnl_pct": -3.22,
+      "hold_days": 0,
+      "exit_ts": "2026-07-02T15:30:19.031528"
     }
   ],
   "positions_at_risk": [
     {
-      "symbol": "GNRC",
-      "pnl_pct": -7.54,
-      "value": 4293.76,
-      "has_stop": true,
-      "risk": "approaching"
+      "symbol": "ALAB",
+      "pnl_pct": -11.09,
+      "value": 5305.43,
+      "has_stop": false,
+      "risk": "deep_loss"
+    },
+    {
+      "symbol": "UAL",
+      "pnl_pct": -0.91,
+      "value": 2399.76,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "AAPL",
+      "pnl_pct": 0.66,
+      "value": 3703.56,
+      "has_stop": false,
+      "risk": "no_stop"
     },
     {
       "symbol": "CTLP",

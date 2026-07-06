@@ -1,14 +1,21 @@
 {
-  "generated_at": "2026-07-02T15:54:12.225969",
-  "positions_checked": 19,
-  "already_protected": 15,
-  "stops_placed": 2,
-  "stops_failed": 2,
+  "generated_at": "2026-07-06T16:40:18.973495",
+  "positions_checked": 20,
+  "already_protected": 16,
+  "stops_placed": 3,
+  "stops_failed": 1,
   "results": [
     {
+      "symbol": "AAPL",
+      "stop": 282.07,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
       "symbol": "ALAB",
-      "status": "failed",
-      "error": "stop price must be less than current price"
+      "stop": 422.28,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     },
     {
       "symbol": "CTLP",
@@ -16,14 +23,8 @@
       "error": "asset CTLP is not active"
     },
     {
-      "symbol": "DAL",
-      "stop": 87.23,
-      "tier": "default \u2192 8% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "GLW",
-      "stop": 202.78,
+      "symbol": "UAL",
+      "stop": 123.78,
       "tier": "default \u2192 8% below entry",
       "status": "placed"
     }

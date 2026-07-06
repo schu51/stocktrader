@@ -1,21 +1,27 @@
 {
-  "date": "2026-07-03",
-  "generated_at": "2026-07-03T21:21:22.875027",
+  "date": "2026-07-06",
+  "generated_at": "2026-07-06T21:45:39.182121",
   "portfolio": {
-    "value": 108495.06,
+    "value": 109074.84,
     "cash": 33836.5,
-    "total_unrealized": 3623.04,
+    "total_unrealized": 4202.82,
     "positions": 20,
-    "winners": 15,
-    "losers": 5,
+    "winners": 13,
+    "losers": 7,
     "risk_level": "LOW",
-    "risk_score": 23.2
+    "risk_score": 8.2
   },
   "execution": {
-    "signals_generated": 2,
+    "signals_generated": 5,
     "orders_executed": 0,
-    "orders_skipped": 0,
-    "skip_reasons": [],
+    "orders_skipped": 5,
+    "skip_reasons": [
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
+    ],
     "candidates_screened": 30
   },
   "exits": {
@@ -27,24 +33,10 @@
   "positions_at_risk": [
     {
       "symbol": "ALAB",
-      "pnl_pct": -11.46,
-      "value": 5283.46,
-      "has_stop": false,
-      "risk": "deep_loss"
-    },
-    {
-      "symbol": "UAL",
-      "pnl_pct": -0.91,
-      "value": 2399.76,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
-    {
-      "symbol": "AAPL",
-      "pnl_pct": 0.66,
-      "value": 3703.56,
-      "has_stop": false,
-      "risk": "no_stop"
+      "pnl_pct": -5.25,
+      "value": 5653.44,
+      "has_stop": true,
+      "risk": "approaching"
     },
     {
       "symbol": "CTLP",

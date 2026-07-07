@@ -1,30 +1,60 @@
 {
-  "generated_at": "2026-07-06T16:40:18.973495",
-  "positions_checked": 20,
-  "already_protected": 16,
-  "stops_placed": 3,
+  "generated_at": "2026-07-07T16:04:31.019863",
+  "positions_checked": 9,
+  "already_protected": 17,
+  "stops_placed": 8,
   "stops_failed": 1,
   "results": [
     {
-      "symbol": "AAPL",
-      "stop": 282.07,
-      "tier": "default \u2192 8% below entry",
-      "status": "placed"
-    },
-    {
       "symbol": "ALAB",
-      "stop": 422.28,
+      "status": "failed",
+      "error": "qty must be > 0"
+    },
+    {
+      "symbol": "CHRW",
+      "stop": 173.99,
       "tier": "default \u2192 8% below entry",
       "status": "placed"
     },
     {
-      "symbol": "CTLP",
-      "status": "failed",
-      "error": "asset CTLP is not active"
+      "symbol": "CNC",
+      "stop": 61.51,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     },
     {
-      "symbol": "UAL",
-      "stop": 123.78,
+      "symbol": "CRWD",
+      "stop": 177.9,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "DDOG",
+      "stop": 236.16,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "IBKR",
+      "stop": 86.6,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "MRNA",
+      "stop": 72.36,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "VLO",
+      "stop": 245.9,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "WST",
+      "stop": 326.03,
       "tier": "default \u2192 8% below entry",
       "status": "placed"
     }

@@ -1,61 +1,144 @@
 {
-  "generated_at": "2026-07-07T14:02:02.559578",
-  "run_id": "20260707_140142",
+  "generated_at": "2026-07-07T16:28:00.077884",
+  "run_id": "20260707_162742",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 34317.05,
-    "cash": 16993.43,
-    "buying_power": 16143.7585,
-    "long_market_value": 22958.75,
-    "unrealized_pnl": 480.55
+    "portfolio_value": 106762.04,
+    "cash": 16768.37,
+    "buying_power": 15929.951499999997,
+    "long_market_value": 89993.67,
+    "unrealized_pnl": 2278.75
   },
   "positions": [
     {
-      "symbol": "ALAB",
-      "qty": -13,
-      "avg_cost": 404.71,
-      "current_price": 379.11,
-      "market_value": -4928.36,
-      "unrealized_pnl": 332.83,
-      "unrealized_pnl_pct": 6.33,
-      "stop_loss": null,
+      "symbol": "AAPL",
+      "qty": 12,
+      "avg_cost": 306.59,
+      "current_price": 313.06,
+      "market_value": 3756.72,
+      "unrealized_pnl": 77.6,
+      "unrealized_pnl_pct": 2.11,
+      "stop_loss": 282.07,
       "company": {
-        "name": "Astera Labs, Inc.",
+        "name": "Apple Inc.",
         "sector": "Technology",
-        "industry": "Semiconductors",
-        "summary": "Astera Labs, Inc. designs, manufactures, and sells semiconductor-based connectivity solutions for cloud and AI infrastructure in Taiwan and the United States. It offers an intelligent connectivity platform, comprised of\u2026",
-        "market_cap": "$78.9B"
+        "industry": "Consumer Electronics",
+        "summary": "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. The company offers iPhone, a line of smartphones; Mac, a line of personal computers; iPad, a line of\u2026",
+        "market_cap": "$4.5T",
+        "week_52_high": 317.4,
+        "week_52_low": 201.5,
+        "pct_from_high": 1.4
       }
     },
     {
-      "symbol": "BHE",
-      "qty": -9,
-      "avg_cost": 79.2,
-      "current_price": 78.53,
-      "market_value": -706.77,
-      "unrealized_pnl": 6.03,
-      "unrealized_pnl_pct": 0.85,
-      "stop_loss": null,
+      "symbol": "AFRM",
+      "qty": 72,
+      "avg_cost": 77.13,
+      "current_price": 84.91,
+      "market_value": 6113.53,
+      "unrealized_pnl": 560.17,
+      "unrealized_pnl_pct": 10.09,
+      "stop_loss": 70.96,
       "company": {
-        "name": "Benchmark Electronics, Inc.",
+        "name": "Affirm Holdings, Inc.",
+        "sector": "Financial Services",
+        "industry": "Credit Services",
+        "summary": "Affirm Holdings, Inc. operates payment network in the United States, Canada, and internationally. Its platform includes point-of-sale payment solution for consumers, merchant commerce solutions, and a consumer-focused app. The company's\u2026",
+        "market_cap": "$25.8B",
+        "week_52_high": 100.0,
+        "week_52_low": 42.1,
+        "pct_from_high": 15.1
+      }
+    },
+    {
+      "symbol": "ALNT",
+      "qty": 5,
+      "avg_cost": 53.53,
+      "current_price": 81.27,
+      "market_value": 406.35,
+      "unrealized_pnl": 138.7,
+      "unrealized_pnl_pct": 51.82,
+      "stop_loss": 73.14,
+      "company": {
+        "name": "Allient Inc.",
         "sector": "Technology",
         "industry": "Electronic Components",
-        "summary": "Benchmark Electronics, Inc., together with its subsidiaries, offers product design, engineering services, technology solutions, and manufacturing services in the Americas, Asia, and Europe. It provides design and engineering services and\u2026",
-        "market_cap": "$3.2B",
-        "week_52_high": 100.41,
-        "week_52_low": 34.44,
-        "pct_from_high": 20.2
+        "summary": "Allient Inc., together with its subsidiaries, designs, manufactures, and sells precision and specialty-controlled motion components and systems for various industries in the United States, Canada, South America, Europe, and the\u2026",
+        "market_cap": "$1.5B",
+        "week_52_high": 104.65,
+        "week_52_low": 36.85,
+        "pct_from_high": 22.3
+      }
+    },
+    {
+      "symbol": "AMAT",
+      "qty": 4,
+      "avg_cost": 460.95,
+      "current_price": 551.9,
+      "market_value": 2207.6,
+      "unrealized_pnl": 363.79,
+      "unrealized_pnl_pct": 19.73,
+      "stop_loss": 467.87,
+      "company": {
+        "name": "Applied Materials, Inc.",
+        "sector": "Technology",
+        "industry": "Semiconductor Equipment & Materials",
+        "summary": "Applied Materials, Inc. provides materials engineering solutions, equipment, services, and software to the semiconductor and related industries in the United States, China, Korea, Taiwan, Japan, Southeast Asia, Europe, and internationally.\u2026",
+        "market_cap": "$399.5B",
+        "week_52_high": 739.67,
+        "week_52_low": 154.47,
+        "pct_from_high": 25.4
+      }
+    },
+    {
+      "symbol": "CAT",
+      "qty": 4,
+      "avg_cost": 980.24,
+      "current_price": 921.52,
+      "market_value": 3686.08,
+      "unrealized_pnl": -234.88,
+      "unrealized_pnl_pct": -5.99,
+      "stop_loss": 901.82,
+      "company": {
+        "name": "Caterpillar Inc.",
+        "sector": "Industrials",
+        "industry": "Farm & Heavy Construction Machinery",
+        "summary": "Caterpillar Inc. provides construction and mining equipment, off-highway diesel and natural gas engines, industrial gas turbines, and diesel-electric locomotives in the United States and internationally. The Construction Industries segment\u2026",
+        "market_cap": "$451.1B",
+        "week_52_high": 1073.46,
+        "week_52_low": 391.52,
+        "pct_from_high": 14.2
+      }
+    },
+    {
+      "symbol": "CFG",
+      "qty": 35,
+      "avg_cost": 66.83,
+      "current_price": 71.98,
+      "market_value": 2519.3,
+      "unrealized_pnl": 180.25,
+      "unrealized_pnl_pct": 7.71,
+      "stop_loss": 61.48,
+      "company": {
+        "name": "Citizens Financial Group, Inc.",
+        "sector": "Financial Services",
+        "industry": "Banks - Regional",
+        "summary": "Citizens Financial Group, Inc. operates as the bank holding company that provides retail and commercial banking products and services to individuals, small businesses, middle-market companies, large corporations, and institutions in the\u2026",
+        "market_cap": "$28.4B",
+        "week_52_high": 72.46,
+        "week_52_low": 45.9,
+        "pct_from_high": 0.7
       }
     },
     {
       "symbol": "CHRW",
       "qty": 12,
       "avg_cost": 189.12,
-      "current_price": 190.72,
-      "market_value": 2288.64,
-      "unrealized_pnl": 19.2,
-      "unrealized_pnl_pct": 0.85,
-      "stop_loss": null,
+      "current_price": 190.64,
+      "market_value": 2287.68,
+      "unrealized_pnl": 18.24,
+      "unrealized_pnl_pct": 0.8,
+      "stop_loss": 173.99,
       "company": {
         "name": "C.H. Robinson Worldwide, Inc.",
         "sector": "Industrials",
@@ -64,28 +147,38 @@
         "market_cap": "$22.3B",
         "week_52_high": 203.34,
         "week_52_low": 96.27,
-        "pct_from_high": 7.0
+        "pct_from_high": 6.2
       }
     },
     {
       "symbol": "CNC",
       "qty": 35,
       "avg_cost": 66.86,
-      "current_price": 66.7,
-      "market_value": 2334.59,
-      "unrealized_pnl": -5.51,
-      "unrealized_pnl_pct": -0.24,
-      "stop_loss": null
+      "current_price": 66.31,
+      "market_value": 2321.03,
+      "unrealized_pnl": -19.07,
+      "unrealized_pnl_pct": -0.81,
+      "stop_loss": 61.51,
+      "company": {
+        "name": "Centene Corporation",
+        "sector": "Healthcare",
+        "industry": "Healthcare Plans",
+        "summary": "Centene Corporation operates as a managed care company that provides programs and services to under-insured families, and commercial organizations in the United States. It operates through four segments: Medicaid, Medicare, Commercial, and\u2026",
+        "market_cap": "$32.7B",
+        "week_52_high": 69.29,
+        "week_52_low": 25.08,
+        "pct_from_high": 4.3
+      }
     },
     {
       "symbol": "CRWD",
       "qty": 12,
       "avg_cost": 193.37,
-      "current_price": 197.79,
-      "market_value": 2373.48,
-      "unrealized_pnl": 53.04,
-      "unrealized_pnl_pct": 2.29,
-      "stop_loss": null,
+      "current_price": 199.72,
+      "market_value": 2396.64,
+      "unrealized_pnl": 76.2,
+      "unrealized_pnl_pct": 3.28,
+      "stop_loss": 177.9,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
         "sector": "Technology",
@@ -94,18 +187,78 @@
         "market_cap": "$191.8B",
         "week_52_high": 209.5,
         "week_52_low": 85.68,
-        "pct_from_high": 7.8
+        "pct_from_high": 4.7
+      }
+    },
+    {
+      "symbol": "CSX",
+      "qty": 50,
+      "avg_cost": 47.45,
+      "current_price": 48.41,
+      "market_value": 2420.25,
+      "unrealized_pnl": 47.75,
+      "unrealized_pnl_pct": 2.01,
+      "stop_loss": 43.65,
+      "company": {
+        "name": "CSX Corporation",
+        "sector": "Industrials",
+        "industry": "Railroads",
+        "summary": "CSX Corporation, together with its subsidiaries, provides rail-based freight transportation services in the United States and Canada. It operates through two segments: rail and trucking. The company offers rail services; and transportation\u2026",
+        "market_cap": "$87.5B",
+        "week_52_high": 49.29,
+        "week_52_low": 31.8,
+        "pct_from_high": 1.8
+      }
+    },
+    {
+      "symbol": "CTLP",
+      "qty": 281,
+      "avg_cost": 10.64,
+      "current_price": 11.2,
+      "market_value": 3147.2,
+      "unrealized_pnl": 157.36,
+      "unrealized_pnl_pct": 5.26,
+      "stop_loss": null,
+      "company": {
+        "name": "Cantaloupe Inc",
+        "sector": "Technology",
+        "industry": "Software - Infrastructure",
+        "summary": "Cantaloupe, Inc., a digital payments and software services company, provides technology solutions for the self-service commerce market. The company offers a suite of solutions, including micro-payment processing, self-checkout kiosks,\u2026",
+        "market_cap": "$826M",
+        "week_52_high": 11.2,
+        "week_52_low": 11.2,
+        "pct_from_high": 0.0
+      }
+    },
+    {
+      "symbol": "DAL",
+      "qty": 26,
+      "avg_cost": 94.81,
+      "current_price": 89.33,
+      "market_value": 2322.45,
+      "unrealized_pnl": -142.61,
+      "unrealized_pnl_pct": -5.79,
+      "stop_loss": 87.23,
+      "company": {
+        "name": "Delta Air Lines, Inc.",
+        "sector": "Industrials",
+        "industry": "Airlines",
+        "summary": "Delta Air Lines, Inc. provides scheduled air transportation for passengers and cargo in the United States and internationally. The company operates through two segments, Airline and Refinery. Its domestic network centered on core hubs in\u2026",
+        "market_cap": "$62.3B",
+        "week_52_high": 95.68,
+        "week_52_low": 49.83,
+        "pct_from_high": 6.6
       }
     },
     {
       "symbol": "DDOG",
       "qty": 9,
       "avg_cost": 256.7,
-      "current_price": 264.91,
-      "market_value": 2384.19,
-      "unrealized_pnl": 73.92,
-      "unrealized_pnl_pct": 3.2,
-      "stop_loss": null,
+      "current_price": 265.96,
+      "market_value": 2393.64,
+      "unrealized_pnl": 83.37,
+      "unrealized_pnl_pct": 3.61,
+      "stop_loss": 236.16,
       "company": {
         "name": "Datadog, Inc.",
         "sector": "Technology",
@@ -114,18 +267,38 @@
         "market_cap": "$87.7B",
         "week_52_high": 278.7,
         "week_52_low": 98.01,
-        "pct_from_high": 8.1
+        "pct_from_high": 4.6
+      }
+    },
+    {
+      "symbol": "GEV",
+      "qty": 3,
+      "avg_cost": 1081.19,
+      "current_price": 1052.08,
+      "market_value": 3156.25,
+      "unrealized_pnl": -87.32,
+      "unrealized_pnl_pct": -2.69,
+      "stop_loss": 994.69,
+      "company": {
+        "name": "GE Vernova Inc.",
+        "sector": "Industrials",
+        "industry": "Specialty Industrial Machinery",
+        "summary": "GE Vernova Inc., an energy company, engages in the provision of various products and services that generate, transfer, orchestrate, convert, and store electricity in the United States, Europe, Asia, the Middle East, and Africa. The company\u2026",
+        "market_cap": "$285.4B",
+        "week_52_high": 1195.94,
+        "week_52_low": 511.5,
+        "pct_from_high": 12.0
       }
     },
     {
       "symbol": "IBKR",
       "qty": 40,
       "avg_cost": 94.13,
-      "current_price": 93.45,
-      "market_value": 3738.0,
-      "unrealized_pnl": -27.2,
-      "unrealized_pnl_pct": -0.72,
-      "stop_loss": null,
+      "current_price": 94.3,
+      "market_value": 3772.0,
+      "unrealized_pnl": 6.8,
+      "unrealized_pnl_pct": 0.18,
+      "stop_loss": 86.6,
       "company": {
         "name": "Interactive Brokers Group, Inc.",
         "sector": "Financial Services",
@@ -134,18 +307,98 @@
         "market_cap": "$159.5B",
         "week_52_high": 97.84,
         "week_52_low": 56.33,
-        "pct_from_high": 3.9
+        "pct_from_high": 3.6
+      }
+    },
+    {
+      "symbol": "JBHT",
+      "qty": 13,
+      "avg_cost": 280.09,
+      "current_price": 275.58,
+      "market_value": 3582.54,
+      "unrealized_pnl": -58.63,
+      "unrealized_pnl_pct": -1.61,
+      "stop_loss": 257.68,
+      "company": {
+        "name": "J.B. Hunt Transport Services, Inc.",
+        "sector": "Industrials",
+        "industry": "Integrated Freight & Logistics",
+        "summary": "J.B. Hunt Transport Services, Inc. provides surface transportation, delivery, and logistic services in the United States. It operates through five segments: Intermodal, Dedicated Contract Services, Integrated Capacity Solutions, Final Mile\u2026",
+        "market_cap": "$26.3B",
+        "week_52_high": 294.98,
+        "week_52_low": 130.12,
+        "pct_from_high": 6.6
+      }
+    },
+    {
+      "symbol": "KLAC",
+      "qty": 17,
+      "avg_cost": 203.64,
+      "current_price": 219.91,
+      "market_value": 3738.47,
+      "unrealized_pnl": 276.59,
+      "unrealized_pnl_pct": 7.99,
+      "stop_loss": 206.69,
+      "company": {
+        "name": "KLA Corporation",
+        "sector": "Technology",
+        "industry": "Semiconductor Equipment & Materials",
+        "summary": "KLA Corporation, together with its subsidiaries, designs, manufactures, and markets process control, process-enabling, and yield management solutions for the semiconductor and related electronics industries worldwide. The company operates\u2026",
+        "market_cap": "$272.4B",
+        "week_52_high": 307.37,
+        "week_52_low": 83.22,
+        "pct_from_high": 28.5
+      }
+    },
+    {
+      "symbol": "LRCX",
+      "qty": 32,
+      "avg_cost": 318.58,
+      "current_price": 327.33,
+      "market_value": 10474.72,
+      "unrealized_pnl": 280.05,
+      "unrealized_pnl_pct": 2.75,
+      "stop_loss": 293.1,
+      "company": {
+        "name": "Lam Research Corporation",
+        "sector": "Technology",
+        "industry": "Semiconductor Equipment & Materials",
+        "summary": "Lam Research Corporation designs, manufactures, markets, refurbishes, and services semiconductor processing equipment used in the fabrication of integrated circuits in the United States, China, Korea, Taiwan, Japan, Southeast Asia, and\u2026",
+        "market_cap": "$420.7B",
+        "week_52_high": 438.5,
+        "week_52_low": 90.94,
+        "pct_from_high": 25.4
+      }
+    },
+    {
+      "symbol": "LUV",
+      "qty": 69,
+      "avg_cost": 51.71,
+      "current_price": 49.41,
+      "market_value": 3409.29,
+      "unrealized_pnl": -158.7,
+      "unrealized_pnl_pct": -4.45,
+      "stop_loss": 47.57,
+      "company": {
+        "name": "Southwest Airlines Co.",
+        "sector": "Industrials",
+        "industry": "Airlines",
+        "summary": "Southwest Airlines Co. operates as a passenger airline company that provides scheduled air transportation services in the United States and internationally. It also provides Rapid Rewards loyalty program; SWABIZ, an online booking tool;\u2026",
+        "market_cap": "$25.1B",
+        "week_52_high": 55.11,
+        "week_52_low": 28.98,
+        "pct_from_high": 10.3
       }
     },
     {
       "symbol": "MRNA",
       "qty": 48,
       "avg_cost": 78.65,
-      "current_price": 79.77,
-      "market_value": 3828.96,
-      "unrealized_pnl": 53.76,
-      "unrealized_pnl_pct": 1.42,
-      "stop_loss": null,
+      "current_price": 79.63,
+      "market_value": 3822.24,
+      "unrealized_pnl": 47.04,
+      "unrealized_pnl_pct": 1.25,
+      "stop_loss": 72.36,
       "company": {
         "name": "Moderna, Inc.",
         "sector": "Healthcare",
@@ -154,28 +407,118 @@
         "market_cap": "$31.2B",
         "week_52_high": 85.6,
         "week_52_low": 22.28,
-        "pct_from_high": 8.2
+        "pct_from_high": 7.0
+      }
+    },
+    {
+      "symbol": "PANW",
+      "qty": 9,
+      "avg_cost": 273.5,
+      "current_price": 348.66,
+      "market_value": 3137.94,
+      "unrealized_pnl": 676.44,
+      "unrealized_pnl_pct": 27.48,
+      "stop_loss": 277.6,
+      "company": {
+        "name": "Palo Alto Networks, Inc.",
+        "sector": "Technology",
+        "industry": "Software - Infrastructure",
+        "summary": "Palo Alto Networks, Inc. provides cybersecurity solutions in the Americas, Europe, the Middle East, Africa, the Asia Pacific, and Japan. It offers Prisma Access, a secure access service edge solution; Strata Cloud Manager, a network\u2026",
+        "market_cap": "$219.7B",
+        "week_52_high": 368.17,
+        "week_52_low": 139.57,
+        "pct_from_high": 5.3
+      }
+    },
+    {
+      "symbol": "TSM",
+      "qty": 12,
+      "avg_cost": 433.1,
+      "current_price": 437.61,
+      "market_value": 5251.32,
+      "unrealized_pnl": 54.07,
+      "unrealized_pnl_pct": 1.04,
+      "stop_loss": 398.46,
+      "company": {
+        "name": "Taiwan Semiconductor Manufacturing Company Limited",
+        "sector": "Technology",
+        "industry": "Semiconductors",
+        "summary": "Taiwan Semiconductor Manufacturing Company Limited, together with its subsidiaries, manufactures, packages, tests, and sells integrated circuits and other semiconductor devices in Taiwan, China, Europe, the Middle East, Africa, Japan, the\u2026",
+        "market_cap": "$2.3T",
+        "week_52_high": 479.0,
+        "week_52_low": 223.7,
+        "pct_from_high": 8.6
+      }
+    },
+    {
+      "symbol": "UAL",
+      "qty": 18,
+      "avg_cost": 134.54,
+      "current_price": 129.25,
+      "market_value": 2326.59,
+      "unrealized_pnl": -95.13,
+      "unrealized_pnl_pct": -3.93,
+      "stop_loss": 123.78,
+      "company": {
+        "name": "United Airlines Holdings, Inc.",
+        "sector": "Industrials",
+        "industry": "Airlines",
+        "summary": "United Airlines Holdings, Inc., through its subsidiaries, provides air transportation services in the United States, Canada, Atlantic, the Pacific, and Latin America. It transports people and cargo through its mainline and regional fleets.\u2026",
+        "market_cap": "$43.3B",
+        "week_52_high": 138.77,
+        "week_52_low": 79.86,
+        "pct_from_high": 6.9
+      }
+    },
+    {
+      "symbol": "UNH",
+      "qty": 12,
+      "avg_cost": 420.14,
+      "current_price": 426.17,
+      "market_value": 5114.04,
+      "unrealized_pnl": 72.4,
+      "unrealized_pnl_pct": 1.44,
+      "stop_loss": 386.53,
+      "company": {
+        "name": "UnitedHealth Group Incorporated",
+        "sector": "Healthcare",
+        "industry": "Healthcare Plans",
+        "summary": "UnitedHealth Group Incorporated operates as a health care company in the United States and internationally. It operates through four segments: Optum Health, Optum Insight, Optum Rx; and UnitedHealthcare. The Optum Health segment provides\u2026",
+        "market_cap": "$381.5B",
+        "week_52_high": 430.2,
+        "week_52_low": 234.6,
+        "pct_from_high": 0.9
       }
     },
     {
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 265.39,
-      "market_value": 2123.16,
-      "unrealized_pnl": -15.08,
-      "unrealized_pnl_pct": -0.7,
-      "stop_loss": null
+      "current_price": 262.36,
+      "market_value": 2098.88,
+      "unrealized_pnl": -39.36,
+      "unrealized_pnl_pct": -1.84,
+      "stop_loss": 245.9,
+      "company": {
+        "name": "Valero Energy Corporation",
+        "sector": "Energy",
+        "industry": "Oil & Gas Refining & Marketing",
+        "summary": "Valero Energy Corporation manufactures, markets, and sells petroleum-based and low-carbon liquid transportation fuels and petrochemical products in the United States, Canada, the United Kingdom, Ireland, Latin America, Mexico, Peru, and\u2026",
+        "market_cap": "$77.9B",
+        "week_52_high": 274.92,
+        "week_52_low": 130.78,
+        "pct_from_high": 4.6
+      }
     },
     {
       "symbol": "WST",
       "qty": 11,
       "avg_cost": 354.38,
-      "current_price": 353.43,
-      "market_value": 3887.73,
-      "unrealized_pnl": -10.45,
-      "unrealized_pnl_pct": -0.27,
-      "stop_loss": null,
+      "current_price": 354.17,
+      "market_value": 3895.82,
+      "unrealized_pnl": -2.37,
+      "unrealized_pnl_pct": -0.06,
+      "stop_loss": 326.03,
       "company": {
         "name": "West Pharmaceutical Services, Inc.",
         "sector": "Healthcare",
@@ -184,242 +527,64 @@
         "market_cap": "$24.9B",
         "week_52_high": 367.66,
         "week_52_low": 206.8,
-        "pct_from_high": 4.1
+        "pct_from_high": 3.7
       }
     }
   ],
   "todays_run": {
     "mode": "EXECUTE",
     "candidates_screened": 30,
-    "buy_signals": 8,
-    "orders_submitted": 8,
-    "total_invested": 22778.6,
+    "buy_signals": 2,
+    "orders_submitted": 0,
+    "total_invested": 0.0,
     "signals": [
       {
-        "symbol": "MRNA",
+        "symbol": "IVZ",
         "action": "BUY",
-        "shares": 48,
-        "limit_price": 82.92,
-        "stop_loss": 76.28,
-        "confidence": 0.85,
-        "signal_strength": 0.5,
-        "trend_score": 75,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 75/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 75/100)",
-          "Price above 50 & 200 MA with bullish alignment",
-          "Strong uptrend confirmed (score: 75)",
-          "\u2713 Bullish signal"
-        ],
-        "executed": true
-      },
-      {
-        "symbol": "WST",
-        "action": "BUY",
-        "shares": 11,
-        "limit_price": 355.73,
-        "stop_loss": 327.27,
-        "confidence": 0.85,
-        "signal_strength": 0.5,
-        "trend_score": 75,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 75/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 75/100)",
-          "RSI in healthy uptrend range (63)",
-          "Golden Cross (50>200 MA) 42 days ago",
-          "Price above 50 & 200 MA with bullish alignment"
-        ],
-        "executed": true
-      },
-      {
-        "symbol": "IBKR",
-        "action": "BUY",
-        "shares": 40,
-        "limit_price": 94.17,
-        "stop_loss": 86.63,
-        "confidence": 0.85,
-        "signal_strength": 0.5,
-        "trend_score": 75,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 75/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 75/100)",
-          "RSI in healthy uptrend range (57)",
-          "Price above 50 & 200 MA with bullish alignment",
-          "Strong uptrend confirmed (score: 75)"
-        ],
-        "executed": true
-      },
-      {
-        "symbol": "CHRW",
-        "action": "BUY",
-        "shares": 12,
-        "limit_price": 200.55,
-        "stop_loss": 184.5,
+        "shares": 0,
+        "limit_price": 27.645000457763672,
+        "stop_loss": 25.43,
         "confidence": 0.85,
         "signal_strength": 0.5,
         "trend_score": 74,
         "reasons": [
           "\ud83d\udcca Trend Score: 74/100 (STRONG_UP)",
           "Uptrend confirmed (momentum score: 74/100)",
-          "MACD histogram expanding bullish",
-          "RSI in healthy uptrend range (57)",
-          "Price above 50 & 200 MA with bullish alignment"
-        ],
-        "executed": true
-      },
-      {
-        "symbol": "CRWD",
-        "action": "BUY",
-        "shares": 12,
-        "limit_price": 193.91,
-        "stop_loss": 178.4,
-        "confidence": 0.85,
-        "signal_strength": 0.5,
-        "trend_score": 73,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 73/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 73/100)",
-          "RSI in healthy uptrend range (66)",
-          "Golden Cross (50>200 MA) 28 days ago",
-          "Price above 50 & 200 MA with bullish alignment"
-        ],
-        "executed": true
-      },
-      {
-        "symbol": "DDOG",
-        "action": "BUY",
-        "shares": 9,
-        "limit_price": 268.14,
-        "stop_loss": 246.69,
-        "confidence": 0.85,
-        "signal_strength": 0.5,
-        "trend_score": 73,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 73/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 73/100)",
-          "RSI in healthy uptrend range (65)",
-          "Golden Cross (50>200 MA) 31 days ago",
-          "Price above 50 & 200 MA with bullish alignment"
-        ],
-        "executed": true
-      },
-      {
-        "symbol": "VLO",
-        "action": "BUY",
-        "shares": 8,
-        "limit_price": 283.85,
-        "stop_loss": 261.14,
-        "confidence": 0.85,
-        "signal_strength": 0.5,
-        "trend_score": 73,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 73/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 73/100)",
-          "RSI in healthy uptrend range (60)",
+          "RSI in healthy uptrend range (53)",
           "Price above 50 & 200 MA with bullish alignment",
-          "Strong uptrend confirmed (score: 73)"
+          "Price above all VWAP levels (daily, weekly, monthly)"
         ],
-        "executed": true
+        "executed": false
       },
       {
-        "symbol": "CNC",
+        "symbol": "DELL",
         "action": "BUY",
-        "shares": 35,
-        "limit_price": 71.11,
-        "stop_loss": 65.42,
-        "confidence": 0.85,
+        "shares": 0,
+        "limit_price": 419.1000061035156,
+        "stop_loss": 385.57,
+        "confidence": 0.7,
         "signal_strength": 0.5,
         "trend_score": 70,
         "reasons": [
-          "\ud83d\udcca Trend Score: 70/100 (STRONG_UP)",
+          "\ud83d\udcca Trend Score: 70/100 (UP)",
           "Uptrend confirmed (momentum score: 70/100)",
-          "RSI in healthy uptrend range (61)",
+          "RSI in healthy uptrend range (58)",
           "Price above 50 & 200 MA with bullish alignment",
-          "Strong uptrend confirmed (score: 70)"
+          "Price above all VWAP levels (daily, weekly, monthly)"
         ],
-        "executed": true
+        "executed": false
       }
     ],
     "execution_details": [
       {
-        "symbol": "MRNA",
-        "shares": 48,
-        "limit_price": 82.92,
-        "stop_loss": 76.28,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "af48a908-ea1f-4123-aeb8-e7f4822c3b45",
-        "reason": null
+        "symbol": "IVZ",
+        "status": "skipped",
+        "reason": "position size calculated as 0 \u2014 portfolio at max capacity (27/20 positions)"
       },
       {
-        "symbol": "WST",
-        "shares": 11,
-        "limit_price": 355.73,
-        "stop_loss": 327.27,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "50ce2bac-3510-4740-9c45-e02c0ccc6dd6",
-        "reason": null
-      },
-      {
-        "symbol": "IBKR",
-        "shares": 40,
-        "limit_price": 94.17,
-        "stop_loss": 86.63,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "fd9babd7-83d5-4faf-8ad5-83d805295e79",
-        "reason": null
-      },
-      {
-        "symbol": "CHRW",
-        "shares": 12,
-        "limit_price": 200.55,
-        "stop_loss": 184.5,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "5e2169c6-f0e7-4518-8027-5f115816e4e8",
-        "reason": null
-      },
-      {
-        "symbol": "CRWD",
-        "shares": 12,
-        "limit_price": 193.91,
-        "stop_loss": 178.4,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "e0958090-1bea-4709-8225-c70d6a7b1d10",
-        "reason": null
-      },
-      {
-        "symbol": "DDOG",
-        "shares": 9,
-        "limit_price": 268.14,
-        "stop_loss": 246.69,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "21b397aa-d827-4c34-9a8e-e73380909705",
-        "reason": null
-      },
-      {
-        "symbol": "VLO",
-        "shares": 8,
-        "limit_price": 283.85,
-        "stop_loss": 261.14,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "e16d6349-5c08-4b66-b13b-c57c360154ca",
-        "reason": null
-      },
-      {
-        "symbol": "CNC",
-        "shares": 35,
-        "limit_price": 71.11,
-        "stop_loss": 65.42,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "afd04898-f49e-4e72-85a7-a82d26b8f8b6",
-        "reason": null
+        "symbol": "DELL",
+        "status": "skipped",
+        "reason": "position size calculated as 0 \u2014 portfolio at max capacity (27/20 positions)"
       }
     ]
   },
@@ -429,74 +594,62 @@
       {
         "symbol": "BHE",
         "trigger": "PRICE_BELOW_50MA",
-        "current": 80.17,
-        "sma50": 85.77,
-        "pct_below": 6.53,
-        "pnl_pct": 77.8,
+        "current": 80.39,
+        "sma50": 85.78,
+        "pct_below": 6.28,
+        "pnl_pct": 2.49,
         "qty": 9,
-        "executed": false,
-        "reason": "Price $80.17 is 6.5% below 50MA $85.77",
-        "order_id": null
-      },
-      {
-        "symbol": "LRCX",
-        "trigger": "PRICE_BELOW_50MA",
-        "current": 323.75,
-        "sma50": 323.92,
-        "pct_below": 0.05,
-        "pnl_pct": 1.62,
-        "qty": 32,
-        "executed": false,
-        "reason": "Price $323.75 is 0.1% below 50MA $323.92",
-        "order_id": null
+        "executed": true,
+        "reason": "Price $80.39 is 6.3% below 50MA $85.78",
+        "order_id": "3c1212c5-f741-4cf7-a449-47b4ebf0bb69"
       }
     ],
     "stops_updated": [
       {
         "symbol": "ALNT",
         "trigger": "TRAILING_STOP_UPDATE",
-        "new_stop": 75.29,
-        "pnl_pct": 56.27,
-        "current": 83.65,
+        "new_stop": 73.14,
+        "pnl_pct": 51.82,
+        "current": 81.27,
         "tier": "50%+ gain \u2192 10% trail",
         "executed": true,
-        "order_id": "a95b9fd5-75aa-4d13-ad6a-e71447ae3aa8"
+        "order_id": "39f25251-72ea-4017-a038-ab663aa91f5a"
       },
       {
         "symbol": "PANW",
         "trigger": "TRAILING_STOP_UPDATE",
         "new_stop": 277.6,
-        "pnl_pct": 25.87,
-        "current": 344.25,
+        "pnl_pct": 27.5,
+        "current": 348.72,
         "tier": "25%+ gain \u2192 break-even stop",
         "executed": true,
-        "order_id": "abebe38d-39f6-48c8-bbe7-b76ee05e07d3"
+        "order_id": "3fe30da2-59a6-4e5c-b174-675761800776"
       }
     ],
-    "positions_checked": 19,
+    "positions_checked": 27,
     "mode": "EXECUTE",
     "bb_warnings": [
       {
         "symbol": "ALNT",
         "trigger": "MIDDLE_BAND_CROSS",
-        "reason": "Price $83.65 crossed below BB middle $93.78 \u2014 consider reducing",
-        "pnl_pct": 56.27,
-        "current": 83.65,
-        "bb_middle": 93.78
+        "reason": "Price $81.27 crossed below BB middle $93.66 \u2014 consider reducing",
+        "pnl_pct": 51.82,
+        "current": 81.27,
+        "bb_middle": 93.66
       },
       {
         "symbol": "AMAT",
         "trigger": "MIDDLE_BAND_CROSS",
-        "reason": "Price $538.00 crossed below BB middle $594.24 \u2014 consider reducing",
-        "pnl_pct": 16.71,
-        "current": 538.0,
-        "bb_middle": 594.24
+        "reason": "Price $551.63 crossed below BB middle $594.92 \u2014 consider reducing",
+        "pnl_pct": 19.67,
+        "current": 551.63,
+        "bb_middle": 594.92
       }
     ]
   },
   "risk_assessment": {
-    "timestamp": "2026-07-07T14:01:47.844046",
-    "portfolio_value": 106393.61,
+    "timestamp": "2026-07-07T16:27:48.780555",
+    "portfolio_value": 106762.04,
     "risk_metrics": {
       "drawdown": {
         "current_drawdown": 0,
@@ -507,7 +660,7 @@
         "status": "NO_DATA"
       },
       "cash_allocation": {
-        "current_pct": 36.75,
+        "current_pct": 15.71,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
         "status": "OK"
@@ -515,80 +668,106 @@
     },
     "concentration_risk": {
       "largest_position": "LRCX",
-      "largest_allocation_pct": 9.74,
-      "top_5_allocation_pct": 28.7,
+      "largest_allocation_pct": 9.81,
+      "top_5_allocation_pct": 28.89,
       "max_allowed_top_5_pct": 40.0,
-      "num_positions": 19,
-      "herfindahl_index": 0.028455019276765237
+      "num_positions": 27,
+      "herfindahl_index": 0.034671805075131304
     },
     "position_risks": [
       {
         "symbol": "AAPL",
-        "allocation_pct": 3.51,
-        "unrealized_pnl_pct": 1.58,
+        "allocation_pct": 3.52,
+        "unrealized_pnl_pct": 2.16,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "AFRM",
-        "allocation_pct": 5.77,
-        "unrealized_pnl_pct": 10.47,
+        "allocation_pct": 5.73,
+        "unrealized_pnl_pct": 10.15,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "ALNT",
-        "allocation_pct": 0.39,
-        "unrealized_pnl_pct": 56.27,
+        "allocation_pct": 0.38,
+        "unrealized_pnl_pct": 51.82,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "AMAT",
-        "allocation_pct": 2.02,
-        "unrealized_pnl_pct": 16.75,
+        "allocation_pct": 2.07,
+        "unrealized_pnl_pct": 19.71,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "BHE",
-        "allocation_pct": 0.68,
-        "unrealized_pnl_pct": 77.8,
-        "has_stop_loss": true,
+        "allocation_pct": 0.23,
+        "unrealized_pnl_pct": 2.49,
+        "has_stop_loss": false,
         "has_trailing_stop": false,
-        "risk_flags": []
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
       },
       {
         "symbol": "CAT",
-        "allocation_pct": 3.48,
-        "unrealized_pnl_pct": -5.65,
+        "allocation_pct": 3.45,
+        "unrealized_pnl_pct": -5.99,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CFG",
-        "allocation_pct": 2.38,
-        "unrealized_pnl_pct": 8.12,
+        "allocation_pct": 2.36,
+        "unrealized_pnl_pct": 7.68,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "CHRW",
+        "allocation_pct": 2.14,
+        "unrealized_pnl_pct": 0.8,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "CNC",
+        "allocation_pct": 2.17,
+        "unrealized_pnl_pct": -0.81,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "CRWD",
+        "allocation_pct": 2.24,
+        "unrealized_pnl_pct": 3.26,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CSX",
-        "allocation_pct": 2.29,
-        "unrealized_pnl_pct": 2.49,
+        "allocation_pct": 2.27,
+        "unrealized_pnl_pct": 2.0,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CTLP",
-        "allocation_pct": 2.96,
+        "allocation_pct": 2.95,
         "unrealized_pnl_pct": 5.26,
         "has_stop_loss": false,
         "has_trailing_stop": false,
@@ -598,40 +777,56 @@
       },
       {
         "symbol": "DAL",
-        "allocation_pct": 2.2,
-        "unrealized_pnl_pct": -4.88,
+        "allocation_pct": 2.17,
+        "unrealized_pnl_pct": -5.8,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "DDOG",
+        "allocation_pct": 2.24,
+        "unrealized_pnl_pct": 3.61,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "GEV",
-        "allocation_pct": 2.95,
-        "unrealized_pnl_pct": -3.26,
+        "allocation_pct": 2.96,
+        "unrealized_pnl_pct": -2.73,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "IBKR",
+        "allocation_pct": 3.53,
+        "unrealized_pnl_pct": 0.18,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "JBHT",
-        "allocation_pct": 3.37,
-        "unrealized_pnl_pct": -1.5,
+        "allocation_pct": 3.36,
+        "unrealized_pnl_pct": -1.61,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "KLAC",
-        "allocation_pct": 3.45,
-        "unrealized_pnl_pct": 6.06,
+        "allocation_pct": 3.5,
+        "unrealized_pnl_pct": 7.99,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "LRCX",
-        "allocation_pct": 9.74,
-        "unrealized_pnl_pct": 1.62,
+        "allocation_pct": 9.81,
+        "unrealized_pnl_pct": 2.69,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": [
@@ -640,62 +835,75 @@
       },
       {
         "symbol": "LUV",
-        "allocation_pct": 3.26,
-        "unrealized_pnl_pct": -2.91,
+        "allocation_pct": 3.19,
+        "unrealized_pnl_pct": -4.45,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "MRNA",
+        "allocation_pct": 3.58,
+        "unrealized_pnl_pct": 1.2,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "PANW",
-        "allocation_pct": 2.92,
-        "unrealized_pnl_pct": 26.09,
+        "allocation_pct": 2.94,
+        "unrealized_pnl_pct": 27.46,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "TSM",
-        "allocation_pct": 4.91,
-        "unrealized_pnl_pct": 0.52,
+        "allocation_pct": 4.92,
+        "unrealized_pnl_pct": 1.04,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "UAL",
-        "allocation_pct": 2.21,
-        "unrealized_pnl_pct": -2.83,
+        "allocation_pct": 2.18,
+        "unrealized_pnl_pct": -3.93,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "UNH",
-        "allocation_pct": 4.77,
-        "unrealized_pnl_pct": 0.72,
+        "allocation_pct": 4.79,
+        "unrealized_pnl_pct": 1.43,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "VLO",
+        "allocation_pct": 1.97,
+        "unrealized_pnl_pct": -1.84,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "WST",
+        "allocation_pct": 3.65,
+        "unrealized_pnl_pct": -0.06,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       }
     ],
-    "overall_risk_score": 7.8,
+    "overall_risk_score": 13.5,
     "recommendations": [
+      "BHE: Add stop-loss protection",
       "CTLP: Add stop-loss protection",
-      "LRCX: Overweight at 9.7%"
+      "LRCX: Overweight at 9.8%"
     ],
     "risk_level": "LOW"
-  },
-  "sync_at": "2026-07-07T15:47:12.619427+00:00",
-  "sync_error": null,
-  "market_open": true,
-  "intraday_today": {
-    "date": "2026-07-07",
-    "points": [
-      {
-        "time": "15:47",
-        "value": 34317.05
-      }
-    ]
   }
 }

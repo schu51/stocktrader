@@ -1,7 +1,18 @@
 {
-  "generated_at": "2026-07-06T18:30:49.527941",
-  "positions_checked": 20,
-  "exits_triggered": [],
+  "generated_at": "2026-07-07T15:50:32.964607",
+  "positions_checked": 10,
+  "exits_triggered": [
+    {
+      "symbol": "BHE",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$78.30 is 8.7% below 50MA $85.74",
+      "qty": -9,
+      "price": 78.3,
+      "pnl_pct": 1.14,
+      "executed": true,
+      "order_id": "fe4fe0fd-c3cf-41cf-aa53-eff3228b5a77"
+    }
+  ],
   "stops_updated": [],
   "mode": "EXECUTE"
 }

@@ -1,57 +1,54 @@
 {
-  "date": "2026-07-07",
-  "generated_at": "2026-07-07T21:38:53.498504",
+  "date": "2026-07-08",
+  "generated_at": "2026-07-08T21:21:22.567988",
   "portfolio": {
-    "value": 34166.34,
-    "cash": 17008.82,
-    "total_unrealized": 322.99999999999994,
-    "positions": 10,
-    "winners": 5,
-    "losers": 5,
+    "value": 117375.59,
+    "cash": 21480.23,
+    "total_unrealized": 2655.34,
+    "positions": 24,
+    "winners": 17,
+    "losers": 7,
     "risk_level": "LOW",
-    "risk_score": 13.5
+    "risk_score": 9.1
   },
   "execution": {
-    "signals_generated": 2,
+    "signals_generated": 5,
     "orders_executed": 0,
-    "orders_skipped": 2,
+    "orders_skipped": 5,
     "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (27/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (27/20 positions)"
+      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)"
     ],
     "candidates_screened": 30
   },
   "exits": {
-    "triggered": 1,
-    "stops_updated": 2,
-    "detail": [
-      {
-        "symbol": "BHE",
-        "trigger": "PRICE_BELOW_50MA",
-        "current": 80.39,
-        "sma50": 85.78,
-        "pct_below": 6.28,
-        "pnl_pct": 2.49,
-        "qty": 9,
-        "executed": true,
-        "reason": "Price $80.39 is 6.3% below 50MA $85.78",
-        "order_id": "3c1212c5-f741-4cf7-a449-47b4ebf0bb69"
-      }
-    ]
+    "triggered": 0,
+    "stops_updated": 1,
+    "detail": []
   },
   "closed_today": [],
   "positions_at_risk": [
     {
-      "symbol": "BHE",
-      "pnl_pct": -1.07,
-      "value": -729.09,
-      "has_stop": false,
-      "risk": "no_stop"
+      "symbol": "MRNA",
+      "pnl_pct": -6.39,
+      "value": 3534.12,
+      "has_stop": true,
+      "risk": "approaching"
     },
     {
-      "symbol": "ALAB",
-      "pnl_pct": 5.28,
-      "value": -4983.42,
+      "symbol": "LUV",
+      "pnl_pct": -6.29,
+      "value": 3343.74,
+      "has_stop": true,
+      "risk": "approaching"
+    },
+    {
+      "symbol": "CTLP",
+      "pnl_pct": 5.26,
+      "value": 3147.2,
       "has_stop": false,
       "risk": "no_stop"
     }

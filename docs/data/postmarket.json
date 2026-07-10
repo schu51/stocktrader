@@ -1,29 +1,29 @@
 {
-  "date": "2026-07-09",
-  "generated_at": "2026-07-09T21:40:50.708586",
+  "date": "2026-07-10",
+  "generated_at": "2026-07-10T21:18:28.898499",
   "portfolio": {
-    "value": 119970.41,
-    "cash": 21480.21,
-    "total_unrealized": 5250.17,
-    "positions": 24,
-    "winners": 20,
+    "value": 118570.82,
+    "cash": 24949.14,
+    "total_unrealized": 4156.85,
+    "positions": 23,
+    "winners": 19,
     "losers": 4,
     "risk_level": "LOW",
-    "risk_score": 9.2
+    "risk_score": 9.0
   },
   "execution": {
     "signals_generated": 8,
     "orders_executed": 0,
     "orders_skipped": 8,
     "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (24/20 positions)"
+      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)"
     ],
     "candidates_screened": 30
   },
@@ -34,6 +34,13 @@
   },
   "closed_today": [],
   "positions_at_risk": [
+    {
+      "symbol": "LUV",
+      "pnl_pct": -6.59,
+      "value": 3332.7,
+      "has_stop": true,
+      "risk": "approaching"
+    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

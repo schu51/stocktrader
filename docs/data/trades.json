@@ -187,7 +187,7 @@
   {
     "trade_id": "TRD-20260605070024-LRCX",
     "symbol": "LRCX",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-05",
     "entry_ts": "2026-06-05T07:00:24.220892",
     "entry_price": 302.8,
@@ -195,12 +195,13 @@
     "stop_loss": 290.82,
     "trend_score": 75,
     "confidence": 0.85,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-13",
+    "exit_price": 329.42,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": 123.54,
+    "pnl_pct": 3.4,
+    "hold_days": 38,
+    "exit_ts": "2026-07-13T18:06:02.923999"
   },
   {
     "trade_id": "TRD-20260605070025-ARM",

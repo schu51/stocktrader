@@ -1,20 +1,18 @@
 {
-  "generated_at": "2026-07-13T15:51:49.181747",
+  "generated_at": "2026-07-13T18:06:02.925541",
   "positions_checked": 23,
-  "exits_triggered": [],
-  "stops_updated": [
+  "exits_triggered": [
     {
-      "symbol": "ALNT",
-      "new_stop": 81.15,
-      "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 68.44
-    },
-    {
-      "symbol": "AMAT",
-      "new_stop": 467.87,
-      "tier": "25%+ gain \u2192 break-even+1.5%",
-      "pnl_pct": 25.7
+      "symbol": "LRCX",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$329.42 is 0.4% below 50MA $330.81",
+      "qty": 32,
+      "price": 329.42,
+      "pnl_pct": 3.4,
+      "executed": true,
+      "order_id": "fbc0d40a-a443-4d0b-ab08-8c856a44f5b8"
     }
   ],
+  "stops_updated": [],
   "mode": "EXECUTE"
 }

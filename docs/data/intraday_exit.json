@@ -1,24 +1,13 @@
 {
-  "generated_at": "2026-07-14T17:47:28.635637",
-  "positions_checked": 20,
-  "exits_triggered": [
-    {
-      "symbol": "CAT",
-      "trigger": "PRICE_BELOW_50MA",
-      "reason": "$927.07 is 0.2% below 50MA $928.99",
-      "qty": 4,
-      "price": 927.065,
-      "pnl_pct": -5.42,
-      "executed": true,
-      "order_id": "a10741db-3647-4869-9fcd-82e290a9a00f"
-    }
-  ],
+  "generated_at": "2026-07-14T19:42:13.447234",
+  "positions_checked": 19,
+  "exits_triggered": [],
   "stops_updated": [
     {
       "symbol": "ALNT",
-      "new_stop": 78.8,
+      "new_stop": 79.97,
       "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 63.57
+      "pnl_pct": 65.98
     }
   ],
   "mode": "EXECUTE"

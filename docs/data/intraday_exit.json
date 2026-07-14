@@ -1,18 +1,14 @@
 {
-  "generated_at": "2026-07-13T19:48:31.932905",
-  "positions_checked": 22,
-  "exits_triggered": [
+  "generated_at": "2026-07-14T15:03:10.719675",
+  "positions_checked": 20,
+  "exits_triggered": [],
+  "stops_updated": [
     {
-      "symbol": "TSM",
-      "trigger": "PRICE_BELOW_50MA",
-      "reason": "$422.63 is 0.3% below 50MA $424.08",
-      "qty": 12,
-      "price": 422.6313,
-      "pnl_pct": -2.42,
-      "executed": true,
-      "order_id": "a204cfd2-9701-4d39-9f52-70737ca8158b"
+      "symbol": "ALNT",
+      "new_stop": 79.07,
+      "tier": "50%+ gain \u2192 10% trail",
+      "pnl_pct": 64.13
     }
   ],
-  "stops_updated": [],
   "mode": "EXECUTE"
 }

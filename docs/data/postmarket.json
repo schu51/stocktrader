@@ -1,98 +1,64 @@
 {
-  "date": "2026-07-13",
-  "generated_at": "2026-07-13T21:11:21.658670",
+  "date": "2026-07-14",
+  "generated_at": "2026-07-14T21:12:35.189212",
   "portfolio": {
-    "value": 117560.54,
-    "cash": 40561.48,
-    "total_unrealized": 2926.15,
-    "positions": 21,
-    "winners": 17,
-    "losers": 4,
+    "value": 120043.97,
+    "cash": 47547.02,
+    "total_unrealized": 5912.99,
+    "positions": 19,
+    "winners": 18,
+    "losers": 1,
     "risk_level": "LOW",
-    "risk_score": 9.0
+    "risk_score": 8.1
   },
   "execution": {
-    "signals_generated": 8,
+    "signals_generated": 7,
     "orders_executed": 0,
-    "orders_skipped": 8,
+    "orders_skipped": 7,
     "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (23/20 positions)"
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
     ],
     "candidates_screened": 30
   },
   "exits": {
-    "triggered": 1,
-    "stops_updated": 1,
-    "detail": [
-      {
-        "symbol": "LRCX",
-        "trigger": "PRICE_BELOW_50MA",
-        "current": 329.2,
-        "sma50": 330.75,
-        "pct_below": 0.47,
-        "pnl_pct": 3.33,
-        "qty": 32,
-        "executed": false,
-        "reason": "Price $329.20 is 0.5% below 50MA $330.75",
-        "order_id": null
-      }
-    ]
+    "triggered": 0,
+    "stops_updated": 3,
+    "detail": []
   },
   "closed_today": [
     {
-      "trade_id": "TRD-20260605070024-LRCX",
-      "symbol": "LRCX",
+      "trade_id": "TRD-20260623140208-CAT",
+      "symbol": "CAT",
       "status": "CLOSED",
-      "entry_date": "2026-06-05",
-      "entry_ts": "2026-06-05T07:00:24.220892",
-      "entry_price": 302.8,
-      "shares": 12,
-      "stop_loss": 290.82,
-      "trend_score": 75,
+      "entry_date": "2026-06-23",
+      "entry_ts": "2026-06-23T14:02:08.241141",
+      "entry_price": 1022.01,
+      "shares": 4,
+      "stop_loss": 940.25,
+      "trend_score": 76,
       "confidence": 0.85,
-      "exit_date": "2026-07-13",
-      "exit_price": 329.42,
+      "rs_rank": 95,
+      "thesis_score": 49.0,
+      "thesis_grade": "C",
+      "sector": "industrials",
+      "weight_version": 1,
+      "order_id": "328025a8-7d86-4adc-aac5-1390eda6a498",
+      "exit_date": "2026-07-14",
+      "exit_price": 927.07,
       "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": 123.54,
-      "pnl_pct": 3.4,
-      "hold_days": 38,
-      "exit_ts": "2026-07-13T18:06:02.923999"
-    },
-    {
-      "trade_id": "TRD-20260605070028-TSM",
-      "symbol": "TSM",
-      "status": "CLOSED",
-      "entry_date": "2026-06-05",
-      "entry_ts": "2026-06-05T07:00:28.857476",
-      "entry_price": 426.78,
-      "shares": 5,
-      "stop_loss": 392.0,
-      "trend_score": 71,
-      "confidence": 0.85,
-      "exit_date": "2026-07-13",
-      "exit_price": 422.63,
-      "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -51.64,
-      "pnl_pct": -2.42,
-      "hold_days": 38,
-      "exit_ts": "2026-07-13T19:48:31.931465"
+      "pnl_usd": -221.57,
+      "pnl_pct": -5.42,
+      "hold_days": 21,
+      "exit_ts": "2026-07-14T17:47:28.436912"
     }
   ],
   "positions_at_risk": [
-    {
-      "symbol": "LUV",
-      "pnl_pct": -7.33,
-      "value": 3306.48,
-      "has_stop": true,
-      "risk": "approaching"
-    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

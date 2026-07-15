@@ -1,61 +1,55 @@
 {
-  "date": "2026-07-14",
-  "generated_at": "2026-07-14T21:12:35.189212",
+  "date": "2026-07-15",
+  "generated_at": "2026-07-15T21:12:53.769495",
   "portfolio": {
-    "value": 120043.97,
-    "cash": 47547.02,
-    "total_unrealized": 5912.99,
-    "positions": 19,
-    "winners": 18,
-    "losers": 1,
+    "value": 119146.15,
+    "cash": 37128.47,
+    "total_unrealized": 5177.89,
+    "positions": 22,
+    "winners": 16,
+    "losers": 6,
     "risk_level": "LOW",
-    "risk_score": 8.1
+    "risk_score": 8.3
   },
   "execution": {
-    "signals_generated": 7,
+    "signals_generated": 1,
     "orders_executed": 0,
-    "orders_skipped": 7,
+    "orders_skipped": 1,
     "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)",
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
+      "position size calculated as 0 \u2014 portfolio at max capacity (22/20 positions)"
     ],
-    "candidates_screened": 30
+    "candidates_screened": 10
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 3,
+    "stops_updated": 2,
     "detail": []
   },
   "closed_today": [
     {
-      "trade_id": "TRD-20260623140208-CAT",
-      "symbol": "CAT",
+      "trade_id": "TRD-20260626140145-GEV",
+      "symbol": "GEV",
       "status": "CLOSED",
-      "entry_date": "2026-06-23",
-      "entry_ts": "2026-06-23T14:02:08.241141",
-      "entry_price": 1022.01,
-      "shares": 4,
-      "stop_loss": 940.25,
+      "entry_date": "2026-06-26",
+      "entry_ts": "2026-06-26T14:01:45.044052",
+      "entry_price": 1127.42,
+      "shares": 3,
+      "stop_loss": 1037.23,
       "trend_score": 76,
       "confidence": 0.85,
-      "rs_rank": 95,
+      "rs_rank": 91,
       "thesis_score": 49.0,
       "thesis_grade": "C",
       "sector": "industrials",
       "weight_version": 1,
-      "order_id": "328025a8-7d86-4adc-aac5-1390eda6a498",
-      "exit_date": "2026-07-14",
-      "exit_price": 927.07,
+      "order_id": "5401c44a-df3d-409a-ab93-5899aea47b21",
+      "exit_date": "2026-07-15",
+      "exit_price": 1028.18,
       "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -221.57,
-      "pnl_pct": -5.42,
-      "hold_days": 21,
-      "exit_ts": "2026-07-14T17:47:28.436912"
+      "pnl_usd": -165.73,
+      "pnl_pct": -4.9,
+      "hold_days": 19,
+      "exit_ts": "2026-07-15T15:01:25.350608"
     }
   ],
   "positions_at_risk": [

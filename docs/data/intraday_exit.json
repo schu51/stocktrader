@@ -1,14 +1,18 @@
 {
-  "generated_at": "2026-07-14T19:42:13.447234",
-  "positions_checked": 19,
-  "exits_triggered": [],
-  "stops_updated": [
+  "generated_at": "2026-07-15T15:01:25.555376",
+  "positions_checked": 23,
+  "exits_triggered": [
     {
-      "symbol": "ALNT",
-      "new_stop": 79.97,
-      "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 65.98
+      "symbol": "GEV",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$1028.18 is 0.8% below 50MA $1036.96",
+      "qty": 3,
+      "price": 1028.18,
+      "pnl_pct": -4.9,
+      "executed": true,
+      "order_id": "1ff13bc7-be8d-4143-948c-84aa293aa295"
     }
   ],
+  "stops_updated": [],
   "mode": "EXECUTE"
 }

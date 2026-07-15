@@ -1297,7 +1297,7 @@
   {
     "trade_id": "TRD-20260626140145-GEV",
     "symbol": "GEV",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-26",
     "entry_ts": "2026-06-26T14:01:45.044052",
     "entry_price": 1127.42,
@@ -1311,12 +1311,13 @@
     "sector": "industrials",
     "weight_version": 1,
     "order_id": "5401c44a-df3d-409a-ab93-5899aea47b21",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-15",
+    "exit_price": 1028.18,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -165.73,
+    "pnl_pct": -4.9,
+    "hold_days": 19,
+    "exit_ts": "2026-07-15T15:01:25.350608"
   },
   {
     "trade_id": "TRD-20260626161418-FIX",

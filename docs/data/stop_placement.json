@@ -1,14 +1,38 @@
 {
-  "generated_at": "2026-07-14T15:09:22.951789",
-  "positions_checked": 20,
-  "already_protected": 19,
-  "stops_placed": 0,
+  "generated_at": "2026-07-15T15:09:17.944640",
+  "positions_checked": 22,
+  "already_protected": 17,
+  "stops_placed": 4,
   "stops_failed": 1,
   "results": [
+    {
+      "symbol": "AMD",
+      "stop": 502.48,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "ANET",
+      "stop": 163.61,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "SNOW",
+      "stop": 252.25,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "SSO",
+      "stop": 63.21,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

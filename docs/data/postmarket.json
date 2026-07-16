@@ -1,13 +1,13 @@
 {
-  "date": "2026-07-15",
-  "generated_at": "2026-07-15T21:12:53.769495",
+  "date": "2026-07-16",
+  "generated_at": "2026-07-16T21:13:53.059955",
   "portfolio": {
-    "value": 119146.15,
-    "cash": 37128.47,
-    "total_unrealized": 5177.89,
-    "positions": 22,
+    "value": 118636.66,
+    "cash": 39137.53,
+    "total_unrealized": 4844.0199999999995,
+    "positions": 21,
     "winners": 16,
-    "losers": 6,
+    "losers": 5,
     "risk_level": "LOW",
     "risk_score": 8.3
   },
@@ -25,34 +25,15 @@
     "stops_updated": 2,
     "detail": []
   },
-  "closed_today": [
-    {
-      "trade_id": "TRD-20260626140145-GEV",
-      "symbol": "GEV",
-      "status": "CLOSED",
-      "entry_date": "2026-06-26",
-      "entry_ts": "2026-06-26T14:01:45.044052",
-      "entry_price": 1127.42,
-      "shares": 3,
-      "stop_loss": 1037.23,
-      "trend_score": 76,
-      "confidence": 0.85,
-      "rs_rank": 91,
-      "thesis_score": 49.0,
-      "thesis_grade": "C",
-      "sector": "industrials",
-      "weight_version": 1,
-      "order_id": "5401c44a-df3d-409a-ab93-5899aea47b21",
-      "exit_date": "2026-07-15",
-      "exit_price": 1028.18,
-      "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -165.73,
-      "pnl_pct": -4.9,
-      "hold_days": 19,
-      "exit_ts": "2026-07-15T15:01:25.350608"
-    }
-  ],
+  "closed_today": [],
   "positions_at_risk": [
+    {
+      "symbol": "ANET",
+      "pnl_pct": -5.45,
+      "value": 2522.22,
+      "has_stop": true,
+      "risk": "approaching"
+    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

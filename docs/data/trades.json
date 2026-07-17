@@ -1732,7 +1732,7 @@
   {
     "trade_id": "TRD-20260715140225-SSO",
     "symbol": "SSO",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-15",
     "entry_ts": "2026-07-15T14:02:25.803091",
     "entry_price": 68.72,
@@ -1746,12 +1746,13 @@
     "sector": "utilities",
     "weight_version": 1,
     "order_id": "dd51afcb-d581-4f70-8a9b-bb6e3a50492c",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-17",
+    "exit_price": 66.94,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -109.5,
+    "pnl_pct": -2.57,
+    "hold_days": 2,
+    "exit_ts": "2026-07-17T14:53:19.072345"
   },
   {
     "trade_id": "TRD-20260715140226-SNOW",

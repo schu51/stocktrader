@@ -82,6 +82,21 @@ _FINVIZ_SECTOR_NORM: Dict[str, str] = {
     "Utilities":              "utilities",
 }
 
+# ── Tickers to always exclude from the scan universe ─────────────────────────
+# Leveraged ETFs and other non-single-stock instruments that may appear in
+# Finviz index results (e.g. SSO is listed on NYSE and can slip through the
+# S&P 500 filter). Add any future leakers here.
+EXCLUDED_TICKERS: set = {
+    # ProShares leveraged ETFs
+    "SSO", "UPRO", "SPXL", "QLD", "TQQQ", "SQQQ", "SDS", "SH",
+    "SPXS", "SPXU", "UVXY", "SVXY", "VIXY",
+    # Direxion leveraged ETFs
+    "TECL", "TECS", "SOXL", "SOXS", "LABU", "LABD", "NUGT", "DUST",
+    "FAS", "FAZ", "TNA", "TZA", "NAIL", "DRN", "DRV",
+    # VIX-related
+    "VXX", "UVIX",
+}
+
 # ── Fallback universe (used when Finviz is unreachable) ──────────────────────
 # Covers the growth/momentum names the strategy focuses on; sector tags are
 # assigned from config.SECTOR_MAP when Finviz data is unavailable.
@@ -236,10 +251,11 @@ def get_universe() -> Dict[str, str]:
         if sym not in universe:
             universe[sym] = sector
 
-    # Drop anything that looks like a bad ticker
+    # Drop anything that looks like a bad ticker or is an excluded instrument
     universe = {
         t: s for t, s in universe.items()
         if 2 <= len(t) <= 5 and t.replace("-", "").isalpha()
+        and t not in EXCLUDED_TICKERS
     }
 
     logger.info(f"Total universe: {len(universe)} tickers")

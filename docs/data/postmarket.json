@@ -1,39 +1,56 @@
 {
-  "date": "2026-07-16",
-  "generated_at": "2026-07-16T21:13:53.059955",
+  "date": "2026-07-17",
+  "generated_at": "2026-07-17T21:06:31.165995",
   "portfolio": {
-    "value": 118636.66,
-    "cash": 39137.53,
-    "total_unrealized": 4844.0199999999995,
-    "positions": 21,
-    "winners": 16,
-    "losers": 5,
+    "value": 117791.01,
+    "cash": 45381.68,
+    "total_unrealized": 4288.18,
+    "positions": 19,
+    "winners": 15,
+    "losers": 4,
     "risk_level": "LOW",
-    "risk_score": 8.3
+    "risk_score": 8.1
   },
   "execution": {
-    "signals_generated": 1,
+    "signals_generated": 0,
     "orders_executed": 0,
-    "orders_skipped": 1,
-    "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (22/20 positions)"
-    ],
-    "candidates_screened": 10
+    "orders_skipped": 0,
+    "skip_reasons": [],
+    "candidates_screened": 8
   },
   "exits": {
     "triggered": 0,
     "stops_updated": 2,
     "detail": []
   },
-  "closed_today": [],
-  "positions_at_risk": [
+  "closed_today": [
     {
-      "symbol": "ANET",
-      "pnl_pct": -5.45,
-      "value": 2522.22,
-      "has_stop": true,
-      "risk": "approaching"
-    },
+      "trade_id": "TRD-20260715140225-SSO",
+      "symbol": "SSO",
+      "status": "CLOSED",
+      "entry_date": "2026-07-15",
+      "entry_ts": "2026-07-15T14:02:25.803091",
+      "entry_price": 68.72,
+      "shares": 62,
+      "stop_loss": 63.22,
+      "trend_score": 78,
+      "confidence": 0.85,
+      "rs_rank": 74,
+      "thesis_score": 56.0,
+      "thesis_grade": "B",
+      "sector": "utilities",
+      "weight_version": 1,
+      "order_id": "dd51afcb-d581-4f70-8a9b-bb6e3a50492c",
+      "exit_date": "2026-07-17",
+      "exit_price": 66.94,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -109.5,
+      "pnl_pct": -2.57,
+      "hold_days": 2,
+      "exit_ts": "2026-07-17T14:53:19.072345"
+    }
+  ],
+  "positions_at_risk": [
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

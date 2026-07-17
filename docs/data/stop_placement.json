@@ -1,14 +1,20 @@
 {
-  "generated_at": "2026-07-16T15:18:38.615900",
-  "positions_checked": 22,
-  "already_protected": 21,
-  "stops_placed": 0,
+  "generated_at": "2026-07-17T14:59:29.449048",
+  "positions_checked": 19,
+  "already_protected": 17,
+  "stops_placed": 1,
   "stops_failed": 1,
   "results": [
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "NET",
+      "stop": 253.37,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

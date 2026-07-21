@@ -1,25 +1,182 @@
 {
-  "generated_at": "2026-07-20T08:01:12.524360-07:00",
+  "generated_at": "2026-07-21T07:54:59.823453-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 19,
-    "mixed": 26,
-    "weak": 30
+    "strong": 20,
+    "mixed": 27,
+    "weak": 28
   },
-  "gap_alerts": [],
-  "avoids": [],
-  "gap_up_priority": [],
+  "gap_alerts": [
+    {
+      "ticker": "OKTA",
+      "prev_close": 148.41,
+      "current": 140.94,
+      "pct_chg": -5.03,
+      "ma50": 118.66,
+      "reasons": [
+        "gap down -5.0%"
+      ]
+    },
+    {
+      "ticker": "TEAM",
+      "prev_close": 96.43,
+      "current": 92.37,
+      "pct_chg": -4.21,
+      "ma50": 89.31,
+      "reasons": [
+        "gap down -4.2%"
+      ]
+    },
+    {
+      "ticker": "PANW",
+      "prev_close": 348.66,
+      "current": 336.26,
+      "pct_chg": -3.56,
+      "ma50": 289.97,
+      "reasons": [
+        "gap down -3.6%"
+      ]
+    },
+    {
+      "ticker": "DUOL",
+      "prev_close": 133.89,
+      "current": 129.15,
+      "pct_chg": -3.54,
+      "ma50": 119.21,
+      "reasons": [
+        "gap down -3.5%"
+      ]
+    },
+    {
+      "ticker": "S",
+      "prev_close": 19.46,
+      "current": 18.86,
+      "pct_chg": -3.06,
+      "ma50": 16.99,
+      "reasons": [
+        "gap down -3.1%"
+      ]
+    },
+    {
+      "ticker": "PCOR",
+      "prev_close": 46.27,
+      "current": 45.06,
+      "pct_chg": -2.63,
+      "ma50": 45.18,
+      "reasons": [
+        "crossed BELOW 50MA (45.18)"
+      ]
+    },
+    {
+      "ticker": "NOW",
+      "prev_close": 104.7,
+      "current": 103.25,
+      "pct_chg": -1.38,
+      "ma50": 103.85,
+      "reasons": [
+        "crossed BELOW 50MA (103.85)"
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "prev_close": 402.29,
+      "current": 400.29,
+      "pct_chg": -0.5,
+      "ma50": 400.71,
+      "reasons": [
+        "crossed BELOW 50MA (400.71)"
+      ]
+    },
+    {
+      "ticker": "ANET",
+      "prev_close": 169.35,
+      "current": 176.25,
+      "pct_chg": 4.07,
+      "ma50": 161.8,
+      "reasons": [
+        "gap UP 4.1% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "AMD",
+      "prev_close": 503.57,
+      "current": 529.26,
+      "pct_chg": 5.1,
+      "ma50": 503.14,
+      "reasons": [
+        "gap UP 5.1% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "AMAT",
+      "prev_close": 525.7,
+      "current": 564.0,
+      "pct_chg": 7.29,
+      "ma50": 530.52,
+      "reasons": [
+        "gap UP 7.3% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "HOOD",
+      "prev_close": 99.28,
+      "current": 107.36,
+      "pct_chg": 8.14,
+      "ma50": 94.05,
+      "reasons": [
+        "gap UP 8.1% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "COIN",
+      "prev_close": 160.43,
+      "current": 178.13,
+      "pct_chg": 11.04,
+      "ma50": 170.93,
+      "reasons": [
+        "gap UP 11.0% above 50MA \u2014 momentum alert"
+      ]
+    }
+  ],
+  "avoids": [
+    "OKTA",
+    "TEAM",
+    "PANW",
+    "DUOL",
+    "S",
+    "PCOR",
+    "NOW",
+    "MSFT"
+  ],
+  "gap_up_priority": [
+    "ANET",
+    "AMD",
+    "AMAT",
+    "HOOD",
+    "COIN"
+  ],
   "top_candidates": [
     {
       "ticker": "SNOW",
-      "price": 270.54,
-      "ma50": 225.76,
-      "ret_5d": 0.7,
-      "ret_20d": 16.5,
-      "score": 0.1308,
+      "price": 275.06,
+      "ma50": 228.26,
+      "ret_5d": -0.3,
+      "ret_20d": 21.4,
+      "score": 0.1452,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 57.0
+    },
+    {
+      "ticker": "V",
+      "price": 357.34,
+      "ma50": 334.63,
+      "ret_5d": 0.4,
+      "ret_20d": 9.4,
+      "score": 0.0565,
+      "gap_up": false,
+      "thesis_grade": "B",
+      "thesis_score": 55.0
     }
   ]
 }

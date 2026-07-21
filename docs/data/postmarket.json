@@ -1,30 +1,37 @@
 {
-  "date": "2026-07-20",
-  "generated_at": "2026-07-20T21:21:25.529315",
+  "date": "2026-07-21",
+  "generated_at": "2026-07-21T21:31:11.872658",
   "portfolio": {
-    "value": 116998.84,
-    "cash": 44865.85,
-    "total_unrealized": 3232.29,
-    "positions": 19,
-    "winners": 12,
-    "losers": 7,
+    "value": 116999.62,
+    "cash": 42727.03,
+    "total_unrealized": 3233.09,
+    "positions": 20,
+    "winners": 15,
+    "losers": 5,
     "risk_level": "LOW",
-    "risk_score": 8.1
+    "risk_score": 8.0
   },
   "execution": {
-    "signals_generated": 0,
-    "orders_executed": 0,
+    "signals_generated": 1,
+    "orders_executed": 1,
     "orders_skipped": 0,
     "skip_reasons": [],
-    "candidates_screened": 9
+    "candidates_screened": 8
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 2,
+    "stops_updated": 1,
     "detail": []
   },
   "closed_today": [],
   "positions_at_risk": [
+    {
+      "symbol": "AMD",
+      "pnl_pct": 2.01,
+      "value": 2181.87,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

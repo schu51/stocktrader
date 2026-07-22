@@ -1,22 +1,24 @@
 {
-  "date": "2026-07-21",
-  "generated_at": "2026-07-21T21:31:11.872658",
+  "date": "2026-07-22",
+  "generated_at": "2026-07-22T21:20:30.529688",
   "portfolio": {
-    "value": 116999.62,
-    "cash": 42727.03,
-    "total_unrealized": 3233.09,
+    "value": 115959.28,
+    "cash": 42727.02,
+    "total_unrealized": 2192.75,
     "positions": 20,
-    "winners": 15,
-    "losers": 5,
+    "winners": 13,
+    "losers": 7,
     "risk_level": "LOW",
-    "risk_score": 8.0
+    "risk_score": 7.9
   },
   "execution": {
     "signals_generated": 1,
-    "orders_executed": 1,
-    "orders_skipped": 0,
-    "skip_reasons": [],
-    "candidates_screened": 8
+    "orders_executed": 0,
+    "orders_skipped": 1,
+    "skip_reasons": [
+      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
+    ],
+    "candidates_screened": 9
   },
   "exits": {
     "triggered": 0,
@@ -26,11 +28,11 @@
   "closed_today": [],
   "positions_at_risk": [
     {
-      "symbol": "AMD",
-      "pnl_pct": 2.01,
-      "value": 2181.87,
-      "has_stop": false,
-      "risk": "no_stop"
+      "symbol": "FTNT",
+      "pnl_pct": -5.53,
+      "value": 2478.24,
+      "has_stop": true,
+      "risk": "approaching"
     },
     {
       "symbol": "CTLP",

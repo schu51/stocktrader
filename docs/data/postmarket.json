@@ -1,24 +1,22 @@
 {
-  "date": "2026-07-22",
-  "generated_at": "2026-07-22T21:20:30.529688",
+  "date": "2026-07-23",
+  "generated_at": "2026-07-23T21:19:29.432143",
   "portfolio": {
-    "value": 115959.28,
-    "cash": 42727.02,
-    "total_unrealized": 2192.75,
+    "value": 114714.64,
+    "cash": 45333.84,
+    "total_unrealized": 1397.76,
     "positions": 20,
     "winners": 13,
     "losers": 7,
     "risk_level": "LOW",
-    "risk_score": 7.9
+    "risk_score": 7.7
   },
   "execution": {
-    "signals_generated": 1,
+    "signals_generated": 0,
     "orders_executed": 0,
-    "orders_skipped": 1,
-    "skip_reasons": [
-      "position size calculated as 0 \u2014 portfolio at max capacity (20/20 positions)"
-    ],
-    "candidates_screened": 9
+    "orders_skipped": 0,
+    "skip_reasons": [],
+    "candidates_screened": 8
   },
   "exits": {
     "triggered": 0,
@@ -29,8 +27,8 @@
   "positions_at_risk": [
     {
       "symbol": "FTNT",
-      "pnl_pct": -5.53,
-      "value": 2478.24,
+      "pnl_pct": -7.99,
+      "value": 2413.76,
       "has_stop": true,
       "risk": "approaching"
     },

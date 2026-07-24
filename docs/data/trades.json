@@ -1708,7 +1708,7 @@
   {
     "trade_id": "TRD-20260707140158-CNC",
     "symbol": "CNC",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-07",
     "entry_ts": "2026-07-07T14:01:58.590535",
     "entry_price": 71.11,
@@ -1722,12 +1722,13 @@
     "sector": "healthcare",
     "weight_version": 1,
     "order_id": "afd04898-f49e-4e72-85a7-a82d26b8f8b6",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-24",
+    "exit_price": 63.23,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -135.14,
+    "pnl_pct": -5.43,
+    "hold_days": 17,
+    "exit_ts": "2026-07-24T18:45:40.795832"
   },
   {
     "trade_id": "TRD-20260715140225-SSO",

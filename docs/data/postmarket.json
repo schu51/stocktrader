@@ -1,13 +1,13 @@
 {
-  "date": "2026-07-23",
-  "generated_at": "2026-07-23T21:19:29.432143",
+  "date": "2026-07-24",
+  "generated_at": "2026-07-24T21:18:46.637431",
   "portfolio": {
-    "value": 114714.64,
-    "cash": 45333.84,
-    "total_unrealized": 1397.76,
-    "positions": 20,
-    "winners": 13,
-    "losers": 7,
+    "value": 114357.12,
+    "cash": 47546.51,
+    "total_unrealized": 1167.67,
+    "positions": 19,
+    "winners": 10,
+    "losers": 9,
     "risk_level": "LOW",
     "risk_score": 7.7
   },
@@ -23,12 +23,45 @@
     "stops_updated": 1,
     "detail": []
   },
-  "closed_today": [],
+  "closed_today": [
+    {
+      "trade_id": "TRD-20260707140158-CNC",
+      "symbol": "CNC",
+      "status": "CLOSED",
+      "entry_date": "2026-07-07",
+      "entry_ts": "2026-07-07T14:01:58.590535",
+      "entry_price": 71.11,
+      "shares": 35,
+      "stop_loss": 65.42,
+      "trend_score": 70,
+      "confidence": 0.85,
+      "rs_rank": 96,
+      "thesis_score": 42.0,
+      "thesis_grade": "C",
+      "sector": "healthcare",
+      "weight_version": 1,
+      "order_id": "afd04898-f49e-4e72-85a7-a82d26b8f8b6",
+      "exit_date": "2026-07-24",
+      "exit_price": 63.23,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -135.14,
+      "pnl_pct": -5.43,
+      "hold_days": 17,
+      "exit_ts": "2026-07-24T18:45:40.795832"
+    }
+  ],
   "positions_at_risk": [
     {
+      "symbol": "WST",
+      "pnl_pct": -7.39,
+      "value": 3610.2,
+      "has_stop": true,
+      "risk": "approaching"
+    },
+    {
       "symbol": "FTNT",
-      "pnl_pct": -7.99,
-      "value": 2413.76,
+      "pnl_pct": -7.18,
+      "value": 2435.04,
       "has_stop": true,
       "risk": "approaching"
     },

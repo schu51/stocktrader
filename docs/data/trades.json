@@ -299,7 +299,7 @@
   {
     "trade_id": "TRD-20260609163118-JBHT",
     "symbol": "JBHT",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-09",
     "entry_ts": "2026-06-09T16:31:18.931784",
     "entry_price": 280.25,
@@ -307,12 +307,13 @@
     "stop_loss": 257.83,
     "trend_score": 75,
     "confidence": 0.85,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-27",
+    "exit_price": 276.84,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -42.26,
+    "pnl_pct": -1.16,
+    "hold_days": 48,
+    "exit_ts": "2026-07-27T15:50:12.231096"
   },
   {
     "trade_id": "TRD-20260609163119-STLD",
@@ -1564,7 +1565,7 @@
   {
     "trade_id": "TRD-20260707140157-WST",
     "symbol": "WST",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-07",
     "entry_ts": "2026-07-07T14:01:57.059035",
     "entry_price": 355.73,
@@ -1578,12 +1579,13 @@
     "sector": "healthcare",
     "weight_version": 1,
     "order_id": "50ce2bac-3510-4740-9c45-e02c0ccc6dd6",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-27",
+    "exit_price": 327.56,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -296.22,
+    "pnl_pct": -7.57,
+    "hold_days": 20,
+    "exit_ts": "2026-07-27T15:50:12.891912"
   },
   {
     "trade_id": "TRD-20260707140157-IBKR",
@@ -1612,7 +1614,7 @@
   {
     "trade_id": "TRD-20260707140157-CHRW",
     "symbol": "CHRW",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-07",
     "entry_ts": "2026-07-07T14:01:57.645189",
     "entry_price": 200.55,
@@ -1626,12 +1628,13 @@
     "sector": "industrials",
     "weight_version": 1,
     "order_id": "5e2169c6-f0e7-4518-8027-5f115816e4e8",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-27",
+    "exit_price": 176.66,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -158.59,
+    "pnl_pct": -6.59,
+    "hold_days": 20,
+    "exit_ts": "2026-07-27T15:50:11.599092"
   },
   {
     "trade_id": "TRD-20260707140157-CRWD",

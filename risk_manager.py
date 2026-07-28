@@ -6,7 +6,9 @@ Manages portfolio and position-level risk controls.
 
 from datetime import datetime, date, timedelta
 from typing import Dict, List, Optional, Tuple
+import json
 import logging
+from pathlib import Path
 
 from config import (
     ConvictionTier, RiskConfig, ExitRules, PortfolioConstraints,
@@ -34,8 +36,8 @@ class RiskManager:
         self.exit_rules = self.config.exit_rules
         self.constraints = self.config.portfolio_constraints
         
-        # Track portfolio high watermark for drawdown
-        self.high_watermark: float = 0
+        # Track portfolio high watermark for drawdown — seeded from history
+        self.high_watermark: float = self._load_historical_peak()
         self.peak_date: Optional[date] = None
         
         # Daily/weekly tracking
@@ -43,6 +45,19 @@ class RiskManager:
         self.weekly_start_value: float = 0
         self.last_reset_date: Optional[date] = None
     
+    def _load_historical_peak(self) -> float:
+        """Seed high watermark from history.json so drawdown survives restarts."""
+        try:
+            history_path = Path(__file__).parent / 'docs' / 'data' / 'history.json'
+            if not history_path.exists():
+                return 0.0
+            data = json.loads(history_path.read_text())
+            trades = data if isinstance(data, list) else data.get('trades', [])
+            pvs = [t.get('portfolio_value', 0) for t in trades if t.get('portfolio_value', 0) > 0]
+            return max(pvs) if pvs else 0.0
+        except Exception:
+            return 0.0
+
     # =========================================================================
     # STOP-LOSS MANAGEMENT
     # =========================================================================

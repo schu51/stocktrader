@@ -1639,7 +1639,7 @@
   {
     "trade_id": "TRD-20260707140157-CRWD",
     "symbol": "CRWD",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-07",
     "entry_ts": "2026-07-07T14:01:57.897611",
     "entry_price": 193.91,
@@ -1653,12 +1653,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "e0958090-1bea-4709-8225-c70d6a7b1d10",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-28",
+    "exit_price": 175.96,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -53.59,
+    "pnl_pct": -2.3,
+    "hold_days": 21,
+    "exit_ts": "2026-07-28T14:01:48.084959"
   },
   {
     "trade_id": "TRD-20260707140158-DDOG",
@@ -1833,7 +1834,7 @@
   {
     "trade_id": "TRD-20260717140329-NET",
     "symbol": "NET",
-    "status": "OPEN",
+    "status": "CANCELLED",
     "entry_date": "2026-07-17",
     "entry_ts": "2026-07-17T14:03:29.158524",
     "entry_price": 280.0,
@@ -1849,7 +1850,7 @@
     "order_id": "eefe5728-d1ea-43a8-b5d0-e409530e9a0d",
     "exit_date": null,
     "exit_price": null,
-    "exit_reason": null,
+    "exit_reason": "ORDER_NOT_FILLED",
     "pnl_usd": null,
     "pnl_pct": null,
     "hold_days": null
@@ -1857,7 +1858,7 @@
   {
     "trade_id": "TRD-20260720140300-FTNT",
     "symbol": "FTNT",
-    "status": "OPEN",
+    "status": "CANCELLED",
     "entry_date": "2026-07-20",
     "entry_ts": "2026-07-20T14:03:00.574025",
     "entry_price": 169.68,
@@ -1873,7 +1874,7 @@
     "order_id": "fd096acd-99c4-429e-8d04-1c47d8e8085b",
     "exit_date": null,
     "exit_price": null,
-    "exit_reason": null,
+    "exit_reason": "ORDER_NOT_FILLED",
     "pnl_usd": null,
     "pnl_pct": null,
     "hold_days": null
@@ -1905,7 +1906,7 @@
   {
     "trade_id": "TRD-20260723140212-ANET",
     "symbol": "ANET",
-    "status": "OPEN",
+    "status": "CANCELLED",
     "entry_date": "2026-07-23",
     "entry_ts": "2026-07-23T14:02:12.417749",
     "entry_price": 180.0,
@@ -1921,7 +1922,7 @@
     "order_id": "d544b65a-6523-4a6f-9e86-a1bad981d1d0",
     "exit_date": null,
     "exit_price": null,
-    "exit_reason": null,
+    "exit_reason": "ORDER_NOT_FILLED",
     "pnl_usd": null,
     "pnl_pct": null,
     "hold_days": null

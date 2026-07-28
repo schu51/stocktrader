@@ -3,21 +3,21 @@
   "run_id": "20260728_160505",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113019.79,
+    "portfolio_value": 112966.72,
     "cash": 77721.92,
     "buying_power": 73835.824,
-    "long_market_value": 35297.87,
-    "unrealized_pnl": 1406.51
+    "long_market_value": 35244.8,
+    "unrealized_pnl": 1353.44
   },
   "positions": [
     {
       "symbol": "AAPL",
       "qty": 12,
       "avg_cost": 306.59,
-      "current_price": 340.28,
-      "market_value": 4083.36,
-      "unrealized_pnl": 404.24,
-      "unrealized_pnl_pct": 10.99,
+      "current_price": 339.9,
+      "market_value": 4078.8,
+      "unrealized_pnl": 399.68,
+      "unrealized_pnl_pct": 10.86,
       "stop_loss": 282.07,
       "company": {
         "name": "Apple Inc.",
@@ -34,10 +34,10 @@
       "symbol": "CFG",
       "qty": 35,
       "avg_cost": 66.83,
-      "current_price": 72.94,
-      "market_value": 2552.9,
-      "unrealized_pnl": 213.85,
-      "unrealized_pnl_pct": 9.14,
+      "current_price": 72.92,
+      "market_value": 2552.2,
+      "unrealized_pnl": 213.15,
+      "unrealized_pnl_pct": 9.11,
       "stop_loss": 61.48,
       "company": {
         "name": "Citizens Financial Group, Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CSX",
       "qty": 50,
       "avg_cost": 47.45,
-      "current_price": 50.95,
-      "market_value": 2547.5,
-      "unrealized_pnl": 175.0,
-      "unrealized_pnl_pct": 7.38,
+      "current_price": 50.89,
+      "market_value": 2544.5,
+      "unrealized_pnl": 172.0,
+      "unrealized_pnl_pct": 7.25,
       "stop_loss": 43.65,
       "company": {
         "name": "CSX Corporation",
@@ -94,10 +94,10 @@
       "symbol": "DDOG",
       "qty": 9,
       "avg_cost": 256.7,
-      "current_price": 250.0,
-      "market_value": 2250.0,
-      "unrealized_pnl": -60.27,
-      "unrealized_pnl_pct": -2.61,
+      "current_price": 250.99,
+      "market_value": 2258.95,
+      "unrealized_pnl": -51.32,
+      "unrealized_pnl_pct": -2.22,
       "stop_loss": 236.16,
       "company": {
         "name": "Datadog, Inc.",
@@ -114,10 +114,10 @@
       "symbol": "IBKR",
       "qty": 40,
       "avg_cost": 94.13,
-      "current_price": 90.91,
-      "market_value": 3636.4,
-      "unrealized_pnl": -128.8,
-      "unrealized_pnl_pct": -3.42,
+      "current_price": 90.01,
+      "market_value": 3600.4,
+      "unrealized_pnl": -164.8,
+      "unrealized_pnl_pct": -4.38,
       "stop_loss": 86.6,
       "company": {
         "name": "Interactive Brokers Group, Inc.",
@@ -151,10 +151,10 @@
       "symbol": "PANW",
       "qty": 9,
       "avg_cost": 273.5,
-      "current_price": 320.34,
-      "market_value": 2883.06,
-      "unrealized_pnl": 421.56,
-      "unrealized_pnl_pct": 17.13,
+      "current_price": 319.04,
+      "market_value": 2871.37,
+      "unrealized_pnl": 409.87,
+      "unrealized_pnl_pct": 16.65,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -171,10 +171,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 270.36,
-      "market_value": 4325.76,
-      "unrealized_pnl": -61.28,
-      "unrealized_pnl_pct": -1.4,
+      "current_price": 269.99,
+      "market_value": 4319.84,
+      "unrealized_pnl": -67.2,
+      "unrealized_pnl_pct": -1.53,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -191,9 +191,9 @@
       "symbol": "UNH",
       "qty": 12,
       "avg_cost": 420.14,
-      "current_price": 425.31,
-      "market_value": 5103.75,
-      "unrealized_pnl": 62.11,
+      "current_price": 425.3,
+      "market_value": 5103.6,
+      "unrealized_pnl": 61.96,
       "unrealized_pnl_pct": 1.23,
       "stop_loss": 386.53,
       "company": {
@@ -401,7 +401,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-07-28T20:20:57.088619+00:00",
+  "sync_at": "2026-07-28T21:42:27.519367+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -418,6 +418,10 @@
       {
         "time": "20:20",
         "value": 113019.79
+      },
+      {
+        "time": "21:42",
+        "value": 112966.72
       }
     ]
   }

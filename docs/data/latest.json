@@ -1,23 +1,23 @@
 {
-  "generated_at": "2026-07-28T16:05:16.028059",
-  "run_id": "20260728_160505",
+  "generated_at": "2026-07-29T14:02:19.738200",
+  "run_id": "20260729_140209",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113028.39,
-    "cash": 77721.92,
-    "buying_power": 73835.824,
-    "long_market_value": 35306.47,
-    "unrealized_pnl": 1415.11
+    "portfolio_value": 113240.88,
+    "cash": 77721.89,
+    "buying_power": 73835.7955,
+    "long_market_value": 35518.99,
+    "unrealized_pnl": 1627.41
   },
   "positions": [
     {
       "symbol": "AAPL",
       "qty": 12,
       "avg_cost": 306.59,
-      "current_price": 340.46,
-      "market_value": 4085.58,
-      "unrealized_pnl": 406.46,
-      "unrealized_pnl_pct": 11.05,
+      "current_price": 342.89,
+      "market_value": 4114.68,
+      "unrealized_pnl": 435.56,
+      "unrealized_pnl_pct": 11.84,
       "stop_loss": 282.07,
       "company": {
         "name": "Apple Inc.",
@@ -27,17 +27,17 @@
         "market_cap": "$4.5T",
         "week_52_high": 339.57,
         "week_52_low": 201.5,
-        "pct_from_high": 0.0
+        "pct_from_high": -1.0
       }
     },
     {
       "symbol": "CFG",
       "qty": 35,
       "avg_cost": 66.83,
-      "current_price": 72.94,
-      "market_value": 2552.9,
-      "unrealized_pnl": 213.85,
-      "unrealized_pnl_pct": 9.14,
+      "current_price": 72.13,
+      "market_value": 2524.46,
+      "unrealized_pnl": 185.41,
+      "unrealized_pnl_pct": 7.93,
       "stop_loss": 61.48,
       "company": {
         "name": "Citizens Financial Group, Inc.",
@@ -47,17 +47,17 @@
         "market_cap": "$28.4B",
         "week_52_high": 74.7,
         "week_52_low": 45.9,
-        "pct_from_high": 3.5
+        "pct_from_high": 3.4
       }
     },
     {
       "symbol": "CSX",
       "qty": 50,
       "avg_cost": 47.45,
-      "current_price": 51.1,
-      "market_value": 2555.0,
-      "unrealized_pnl": 182.5,
-      "unrealized_pnl_pct": 7.69,
+      "current_price": 50.58,
+      "market_value": 2529.0,
+      "unrealized_pnl": 156.5,
+      "unrealized_pnl_pct": 6.6,
       "stop_loss": 43.65,
       "company": {
         "name": "CSX Corporation",
@@ -67,7 +67,7 @@
         "market_cap": "$87.5B",
         "week_52_high": 53.6,
         "week_52_low": 31.8,
-        "pct_from_high": 3.6
+        "pct_from_high": 5.6
       }
     },
     {
@@ -94,10 +94,10 @@
       "symbol": "DDOG",
       "qty": 9,
       "avg_cost": 256.7,
-      "current_price": 250.5,
-      "market_value": 2254.5,
-      "unrealized_pnl": -55.77,
-      "unrealized_pnl_pct": -2.41,
+      "current_price": 257.44,
+      "market_value": 2316.91,
+      "unrealized_pnl": 6.64,
+      "unrealized_pnl_pct": 0.29,
       "stop_loss": 236.16,
       "company": {
         "name": "Datadog, Inc.",
@@ -107,17 +107,17 @@
         "market_cap": "$87.7B",
         "week_52_high": 278.7,
         "week_52_low": 98.01,
-        "pct_from_high": 9.5
+        "pct_from_high": 7.6
       }
     },
     {
       "symbol": "IBKR",
       "qty": 40,
       "avg_cost": 94.13,
-      "current_price": 90.6,
-      "market_value": 3624.0,
-      "unrealized_pnl": -141.2,
-      "unrealized_pnl_pct": -3.75,
+      "current_price": 88.39,
+      "market_value": 3535.6,
+      "unrealized_pnl": -229.6,
+      "unrealized_pnl_pct": -6.1,
       "stop_loss": 86.6,
       "company": {
         "name": "Interactive Brokers Group, Inc.",
@@ -127,34 +127,37 @@
         "market_cap": "$159.5B",
         "week_52_high": 97.84,
         "week_52_low": 58.95,
-        "pct_from_high": 7.0
+        "pct_from_high": 9.7
       }
     },
     {
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 264.1,
-      "market_value": 2376.9,
-      "unrealized_pnl": -30.06,
-      "unrealized_pnl_pct": -1.25,
+      "current_price": 269.74,
+      "market_value": 2427.66,
+      "unrealized_pnl": 20.7,
+      "unrealized_pnl_pct": 0.86,
       "stop_loss": null,
       "company": {
         "name": "Cloudflare, Inc.",
         "sector": "Technology",
         "industry": "Software - Infrastructure",
         "summary": "Cloudflare, Inc. operates as a cloud services provider that delivers a range of services to businesses worldwide. The company provides a cloud-based security solution to secure a range of combination of platforms, including public and\u2026",
-        "market_cap": "$93.3B"
+        "market_cap": "$93.3B",
+        "week_52_high": 291.0,
+        "week_52_low": 158.83,
+        "pct_from_high": 7.3
       }
     },
     {
       "symbol": "PANW",
       "qty": 9,
       "avg_cost": 273.5,
-      "current_price": 320.71,
-      "market_value": 2886.39,
-      "unrealized_pnl": 424.89,
-      "unrealized_pnl_pct": 17.26,
+      "current_price": 313.7,
+      "market_value": 2823.3,
+      "unrealized_pnl": 361.8,
+      "unrealized_pnl_pct": 14.7,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -164,17 +167,17 @@
         "market_cap": "$219.7B",
         "week_52_high": 368.8,
         "week_52_low": 139.57,
-        "pct_from_high": 13.1
+        "pct_from_high": 14.9
       }
     },
     {
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 270.36,
-      "market_value": 4325.76,
-      "unrealized_pnl": -61.28,
-      "unrealized_pnl_pct": -1.4,
+      "current_price": 283.84,
+      "market_value": 4541.44,
+      "unrealized_pnl": 154.4,
+      "unrealized_pnl_pct": 3.52,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -184,17 +187,17 @@
         "market_cap": "$93.5B",
         "week_52_high": 284.99,
         "week_52_low": 118.3,
-        "pct_from_high": 3.7
+        "pct_from_high": 0.4
       }
     },
     {
       "symbol": "UNH",
       "qty": 12,
       "avg_cost": 420.14,
-      "current_price": 425.6,
-      "market_value": 5107.2,
-      "unrealized_pnl": 65.56,
-      "unrealized_pnl_pct": 1.3,
+      "current_price": 425.73,
+      "market_value": 5108.76,
+      "unrealized_pnl": 67.12,
+      "unrealized_pnl_pct": 1.33,
       "stop_loss": 386.53,
       "company": {
         "name": "UnitedHealth Group Incorporated",
@@ -204,17 +207,17 @@
         "market_cap": "$381.5B",
         "week_52_high": 461.62,
         "week_52_low": 234.6,
-        "pct_from_high": 7.6
+        "pct_from_high": 7.8
       }
     },
     {
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 298.88,
-      "market_value": 2391.04,
-      "unrealized_pnl": 252.8,
-      "unrealized_pnl_pct": 11.82,
+      "current_price": 306.22,
+      "market_value": 2449.76,
+      "unrealized_pnl": 311.52,
+      "unrealized_pnl_pct": 14.57,
       "stop_loss": 245.9,
       "company": {
         "name": "Valero Energy Corporation",
@@ -224,80 +227,65 @@
         "market_cap": "$77.9B",
         "week_52_high": 320.24,
         "week_52_low": 130.78,
-        "pct_from_high": 6.7
+        "pct_from_high": 4.4
       }
     }
   ],
   "todays_run": {
     "mode": "EXECUTE",
-    "candidates_screened": 7,
-    "buy_signals": 1,
-    "orders_submitted": 1,
-    "total_invested": 2406.87,
-    "signals": [
-      {
-        "symbol": "NET",
-        "action": "BUY",
-        "shares": 9,
-        "limit_price": 267.52,
-        "stop_loss": 246.12,
-        "confidence": 0.85,
-        "signal_strength": 0.5,
-        "trend_score": 71,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 71/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 71/100)",
-          "RSI in healthy uptrend range (57)",
-          "Price above 50 & 200 MA with bullish alignment",
-          "Price above all VWAP levels (daily, weekly, monthly)"
-        ],
-        "executed": true
-      }
-    ],
-    "execution_details": [
-      {
-        "symbol": "NET",
-        "shares": 9,
-        "limit_price": 267.52,
-        "stop_loss": 246.12,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "bd585e57-f6de-4e8e-ba46-c115c63c7243",
-        "reason": null
-      }
-    ]
+    "candidates_screened": 5,
+    "buy_signals": 0,
+    "orders_submitted": 0,
+    "total_invested": 0,
+    "signals": [],
+    "execution_details": []
   },
   "persistent_performers": [],
   "exits": {
-    "exits_triggered": [],
+    "exits_triggered": [
+      {
+        "symbol": "IBKR",
+        "trigger": "PRICE_BELOW_50MA",
+        "current": 88.41,
+        "sma50": 90.06,
+        "pct_below": 1.83,
+        "pnl_pct": -6.08,
+        "qty": 40,
+        "executed": false,
+        "reason": "Price $88.41 is 1.8% below 50MA $90.06",
+        "order_id": null
+      }
+    ],
     "stops_updated": [],
-    "positions_checked": 10,
+    "positions_checked": 11,
     "mode": "EXECUTE",
     "bb_warnings": [
       {
         "symbol": "PANW",
         "trigger": "MIDDLE_BAND_CROSS",
-        "reason": "Price $320.59 crossed below BB middle $339.19 \u2014 consider reducing",
-        "pnl_pct": 17.22,
-        "current": 320.59,
-        "bb_middle": 339.19
+        "reason": "Price $313.70 crossed below BB middle $338.85 \u2014 consider reducing",
+        "pnl_pct": 14.7,
+        "current": 313.7,
+        "bb_middle": 338.85
       }
     ]
   },
   "risk_assessment": {
-    "timestamp": "2026-07-28T16:05:11.230857",
-    "portfolio_value": 113151.17,
+    "timestamp": "2026-07-29T14:02:16.764339",
+    "portfolio_value": 113240.88,
     "risk_metrics": {
       "drawdown": {
-        "current_drawdown": 0,
-        "drawdown_pct": 0,
-        "from_peak": 0,
-        "peak_value": 0,
+        "current_value": 113240.88,
+        "peak_value": 126520.62,
         "peak_date": null,
-        "status": "NO_DATA"
+        "drawdown_amount": 13279.74,
+        "drawdown_pct": 10.5,
+        "max_allowed_pct": 15.0,
+        "status": "WARNING",
+        "action_required": true
       },
       "cash_allocation": {
-        "current_pct": 70.82,
+        "current_pct": 68.63,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
         "status": "OK"
@@ -305,17 +293,17 @@
     },
     "concentration_risk": {
       "largest_position": "UNH",
-      "largest_allocation_pct": 4.52,
-      "top_5_allocation_pct": 18.0,
+      "largest_allocation_pct": 4.51,
+      "top_5_allocation_pct": 18.06,
       "max_allowed_top_5_pct": 40.0,
-      "num_positions": 10,
-      "herfindahl_index": 0.009173164355430434
+      "num_positions": 11,
+      "herfindahl_index": 0.009674663752226587
     },
     "position_risks": [
       {
         "symbol": "AAPL",
-        "allocation_pct": 3.6,
-        "unrealized_pnl_pct": 10.75,
+        "allocation_pct": 3.63,
+        "unrealized_pnl_pct": 11.82,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -323,15 +311,15 @@
       {
         "symbol": "CFG",
         "allocation_pct": 2.23,
-        "unrealized_pnl_pct": 7.92,
+        "unrealized_pnl_pct": 7.93,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CSX",
-        "allocation_pct": 2.28,
-        "unrealized_pnl_pct": 8.91,
+        "allocation_pct": 2.23,
+        "unrealized_pnl_pct": 6.6,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -348,85 +336,69 @@
       },
       {
         "symbol": "DDOG",
-        "allocation_pct": 2.01,
-        "unrealized_pnl_pct": -1.74,
+        "allocation_pct": 2.05,
+        "unrealized_pnl_pct": 0.29,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "IBKR",
-        "allocation_pct": 3.22,
-        "unrealized_pnl_pct": -3.29,
+        "allocation_pct": 3.12,
+        "unrealized_pnl_pct": -6.1,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
+        "symbol": "NET",
+        "allocation_pct": 2.14,
+        "unrealized_pnl_pct": 0.86,
+        "has_stop_loss": false,
+        "has_trailing_stop": false,
+        "risk_flags": [
+          "NO_STOP_LOSS"
+        ]
+      },
+      {
         "symbol": "PANW",
-        "allocation_pct": 2.55,
-        "unrealized_pnl_pct": 17.22,
+        "allocation_pct": 2.49,
+        "unrealized_pnl_pct": 14.7,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "SNOW",
-        "allocation_pct": 3.88,
-        "unrealized_pnl_pct": 0.05,
+        "allocation_pct": 4.01,
+        "unrealized_pnl_pct": 3.52,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "UNH",
-        "allocation_pct": 4.52,
-        "unrealized_pnl_pct": 1.47,
+        "allocation_pct": 4.51,
+        "unrealized_pnl_pct": 1.33,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "VLO",
-        "allocation_pct": 2.11,
-        "unrealized_pnl_pct": 11.79,
+        "allocation_pct": 2.16,
+        "unrealized_pnl_pct": 14.61,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       }
     ],
-    "overall_risk_score": 5.9,
+    "overall_risk_score": 32.0,
     "recommendations": [
-      "CTLP: Add stop-loss protection"
+      "Portfolio drawdown at 10.5% - consider risk reduction",
+      "CTLP: Add stop-loss protection",
+      "NET: Add stop-loss protection"
     ],
-    "risk_level": "LOW"
-  },
-  "sync_at": "2026-07-28T23:08:35.003960+00:00",
-  "sync_error": null,
-  "market_open": false,
-  "intraday_today": {
-    "date": "2026-07-28",
-    "points": [
-      {
-        "time": "17:03",
-        "value": 113137.92
-      },
-      {
-        "time": "18:54",
-        "value": 113129.1
-      },
-      {
-        "time": "20:20",
-        "value": 113019.79
-      },
-      {
-        "time": "21:42",
-        "value": 112966.72
-      },
-      {
-        "time": "23:08",
-        "value": 113028.39
-      }
-    ]
+    "risk_level": "MODERATE"
   }
 }

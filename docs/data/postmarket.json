@@ -1,22 +1,22 @@
 {
-  "date": "2026-07-28",
-  "generated_at": "2026-07-28T21:19:37.756252",
+  "date": "2026-07-29",
+  "generated_at": "2026-07-29T21:10:43.259081",
   "portfolio": {
-    "value": 113019.79,
-    "cash": 77721.92,
-    "total_unrealized": 1406.51,
-    "positions": 11,
-    "winners": 7,
-    "losers": 4,
+    "value": 113330.17,
+    "cash": 81212.69,
+    "total_unrealized": 1991.32,
+    "positions": 10,
+    "winners": 10,
+    "losers": 0,
     "risk_level": "LOW",
-    "risk_score": 5.9
+    "risk_score": 27.0
   },
   "execution": {
-    "signals_generated": 1,
-    "orders_executed": 1,
+    "signals_generated": 0,
+    "orders_executed": 0,
     "orders_skipped": 0,
     "skip_reasons": [],
-    "candidates_screened": 7
+    "candidates_screened": 5
   },
   "exits": {
     "triggered": 0,
@@ -25,39 +25,32 @@
   },
   "closed_today": [
     {
-      "trade_id": "TRD-20260707140157-CRWD",
-      "symbol": "CRWD",
+      "trade_id": "TRD-20260707140157-IBKR",
+      "symbol": "IBKR",
       "status": "CLOSED",
       "entry_date": "2026-07-07",
-      "entry_ts": "2026-07-07T14:01:57.897611",
-      "entry_price": 193.91,
-      "shares": 12,
-      "stop_loss": 178.4,
-      "trend_score": 73,
+      "entry_ts": "2026-07-07T14:01:57.312614",
+      "entry_price": 94.17,
+      "shares": 40,
+      "stop_loss": 86.63,
+      "trend_score": 75,
       "confidence": 0.85,
-      "rs_rank": 95,
-      "thesis_score": 43.0,
+      "rs_rank": 90,
+      "thesis_score": 42.0,
       "thesis_grade": "C",
-      "sector": "technology",
+      "sector": "financials",
       "weight_version": 1,
-      "order_id": "e0958090-1bea-4709-8225-c70d6a7b1d10",
-      "exit_date": "2026-07-28",
-      "exit_price": 175.96,
+      "order_id": "fd9babd7-83d5-4faf-8ad5-83d805295e79",
+      "exit_date": "2026-07-29",
+      "exit_price": 87.32,
       "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -53.59,
-      "pnl_pct": -2.3,
-      "hold_days": 21,
-      "exit_ts": "2026-07-28T14:01:48.084959"
+      "pnl_usd": -272.34,
+      "pnl_pct": -7.23,
+      "hold_days": 22,
+      "exit_ts": "2026-07-29T15:18:28.716892"
     }
   ],
   "positions_at_risk": [
-    {
-      "symbol": "NET",
-      "pnl_pct": -1.25,
-      "value": 2376.9,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

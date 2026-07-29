@@ -1590,7 +1590,7 @@
   {
     "trade_id": "TRD-20260707140157-IBKR",
     "symbol": "IBKR",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-07",
     "entry_ts": "2026-07-07T14:01:57.312614",
     "entry_price": 94.17,
@@ -1604,12 +1604,13 @@
     "sector": "financials",
     "weight_version": 1,
     "order_id": "fd9babd7-83d5-4faf-8ad5-83d805295e79",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-29",
+    "exit_price": 87.32,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -272.34,
+    "pnl_pct": -7.23,
+    "hold_days": 22,
+    "exit_ts": "2026-07-29T15:18:28.716892"
   },
   {
     "trade_id": "TRD-20260707140157-CHRW",

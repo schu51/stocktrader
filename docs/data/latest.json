@@ -3,21 +3,21 @@
   "run_id": "20260729_154859",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113330.17,
+    "portfolio_value": 113235.34,
     "cash": 81212.69,
     "buying_power": 77152.0555,
-    "long_market_value": 32117.48,
-    "unrealized_pnl": 1991.32
+    "long_market_value": 32022.65,
+    "unrealized_pnl": 1896.49
   },
   "positions": [
     {
       "symbol": "AAPL",
       "qty": 12,
       "avg_cost": 306.59,
-      "current_price": 339.0,
-      "market_value": 4068.0,
-      "unrealized_pnl": 388.88,
-      "unrealized_pnl_pct": 10.57,
+      "current_price": 338.9,
+      "market_value": 4066.8,
+      "unrealized_pnl": 387.68,
+      "unrealized_pnl_pct": 10.54,
       "stop_loss": 282.07,
       "company": {
         "name": "Apple Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CSX",
       "qty": 50,
       "avg_cost": 47.45,
-      "current_price": 50.74,
-      "market_value": 2537.0,
-      "unrealized_pnl": 164.5,
-      "unrealized_pnl_pct": 6.93,
+      "current_price": 50.52,
+      "market_value": 2525.76,
+      "unrealized_pnl": 153.25,
+      "unrealized_pnl_pct": 6.46,
       "stop_loss": 43.65,
       "company": {
         "name": "CSX Corporation",
@@ -94,10 +94,10 @@
       "symbol": "DDOG",
       "qty": 9,
       "avg_cost": 256.7,
-      "current_price": 268.8,
-      "market_value": 2419.2,
-      "unrealized_pnl": 108.93,
-      "unrealized_pnl_pct": 4.71,
+      "current_price": 272.02,
+      "market_value": 2448.18,
+      "unrealized_pnl": 137.91,
+      "unrealized_pnl_pct": 5.97,
       "stop_loss": 236.16,
       "company": {
         "name": "Datadog, Inc.",
@@ -114,10 +114,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 270.5,
-      "market_value": 2434.5,
-      "unrealized_pnl": 27.54,
-      "unrealized_pnl_pct": 1.14,
+      "current_price": 270.38,
+      "market_value": 2433.42,
+      "unrealized_pnl": 26.46,
+      "unrealized_pnl_pct": 1.1,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "PANW",
       "qty": 9,
       "avg_cost": 273.5,
-      "current_price": 325.0,
-      "market_value": 2925.0,
-      "unrealized_pnl": 463.5,
-      "unrealized_pnl_pct": 18.83,
+      "current_price": 324.63,
+      "market_value": 2921.64,
+      "unrealized_pnl": 460.14,
+      "unrealized_pnl_pct": 18.69,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 288.29,
-      "market_value": 4612.57,
-      "unrealized_pnl": 225.53,
-      "unrealized_pnl_pct": 5.14,
+      "current_price": 282.9,
+      "market_value": 4526.4,
+      "unrealized_pnl": 139.36,
+      "unrealized_pnl_pct": 3.18,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -174,10 +174,10 @@
       "symbol": "UNH",
       "qty": 12,
       "avg_cost": 420.14,
-      "current_price": 420.52,
-      "market_value": 5046.24,
-      "unrealized_pnl": 4.6,
-      "unrealized_pnl_pct": 0.09,
+      "current_price": 420.57,
+      "market_value": 5046.84,
+      "unrealized_pnl": 5.2,
+      "unrealized_pnl_pct": 0.1,
       "stop_loss": 386.53,
       "company": {
         "name": "UnitedHealth Group Incorporated",
@@ -194,10 +194,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 303.99,
-      "market_value": 2431.92,
-      "unrealized_pnl": 293.68,
-      "unrealized_pnl_pct": 13.73,
+      "current_price": 301.32,
+      "market_value": 2410.56,
+      "unrealized_pnl": 272.32,
+      "unrealized_pnl_pct": 12.74,
       "stop_loss": 245.9,
       "company": {
         "name": "Valero Energy Corporation",
@@ -357,7 +357,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-07-29T21:05:08.159981+00:00",
+  "sync_at": "2026-07-29T22:31:10.425048+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -378,6 +378,10 @@
       {
         "time": "21:05",
         "value": 113330.17
+      },
+      {
+        "time": "22:31",
+        "value": 113235.34
       }
     ]
   }

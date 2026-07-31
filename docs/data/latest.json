@@ -3,21 +3,21 @@
   "run_id": "20260731_160131",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113170.01,
+    "portfolio_value": 113169.66,
     "cash": 82282.25,
     "buying_power": 78168.1375,
-    "long_market_value": 30887.76,
-    "unrealized_pnl": 1891.3500000000001
+    "long_market_value": 30887.41,
+    "unrealized_pnl": 1887.63
   },
   "positions": [
     {
       "symbol": "CFG",
       "qty": 35,
       "avg_cost": 66.83,
-      "current_price": 71.77,
-      "market_value": 2511.95,
-      "unrealized_pnl": 172.9,
-      "unrealized_pnl_pct": 7.39,
+      "current_price": 71.86,
+      "market_value": 2515.28,
+      "unrealized_pnl": 176.22,
+      "unrealized_pnl_pct": 7.53,
       "stop_loss": 61.48,
       "company": {
         "name": "Citizens Financial Group, Inc.",
@@ -34,10 +34,10 @@
       "symbol": "CSX",
       "qty": 50,
       "avg_cost": 47.45,
-      "current_price": 50.3,
-      "market_value": 2515.25,
-      "unrealized_pnl": 142.75,
-      "unrealized_pnl_pct": 6.02,
+      "current_price": 50.34,
+      "market_value": 2517.0,
+      "unrealized_pnl": 144.5,
+      "unrealized_pnl_pct": 6.09,
       "stop_loss": 43.65,
       "company": {
         "name": "CSX Corporation",
@@ -74,10 +74,10 @@
       "symbol": "DDOG",
       "qty": 9,
       "avg_cost": 256.7,
-      "current_price": 271.31,
-      "market_value": 2441.74,
-      "unrealized_pnl": 131.47,
-      "unrealized_pnl_pct": 5.69,
+      "current_price": 270.98,
+      "market_value": 2438.82,
+      "unrealized_pnl": 128.55,
+      "unrealized_pnl_pct": 5.56,
       "stop_loss": 236.16,
       "company": {
         "name": "Datadog, Inc.",
@@ -94,10 +94,10 @@
       "symbol": "FTNT",
       "qty": 16,
       "avg_cost": 159.55,
-      "current_price": 159.47,
-      "market_value": 2551.52,
-      "unrealized_pnl": -1.22,
-      "unrealized_pnl_pct": -0.05,
+      "current_price": 158.93,
+      "market_value": 2542.88,
+      "unrealized_pnl": -9.86,
+      "unrealized_pnl_pct": -0.39,
       "stop_loss": 146.78,
       "company": {
         "name": "Fortinet, Inc.",
@@ -114,10 +114,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 276.79,
-      "market_value": 2491.11,
-      "unrealized_pnl": 84.15,
-      "unrealized_pnl_pct": 3.5,
+      "current_price": 278.8,
+      "market_value": 2509.2,
+      "unrealized_pnl": 102.24,
+      "unrealized_pnl_pct": 4.25,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "PANW",
       "qty": 9,
       "avg_cost": 273.5,
-      "current_price": 327.4,
-      "market_value": 2946.6,
-      "unrealized_pnl": 485.1,
-      "unrealized_pnl_pct": 19.71,
+      "current_price": 330.15,
+      "market_value": 2971.39,
+      "unrealized_pnl": 509.89,
+      "unrealized_pnl_pct": 20.71,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 298.63,
-      "market_value": 4778.16,
-      "unrealized_pnl": 391.12,
-      "unrealized_pnl_pct": 8.91,
+      "current_price": 297.36,
+      "market_value": 4757.76,
+      "unrealized_pnl": 370.72,
+      "unrealized_pnl_pct": 8.45,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -174,10 +174,10 @@
       "symbol": "UNH",
       "qty": 12,
       "avg_cost": 420.14,
-      "current_price": 420.95,
-      "market_value": 5051.4,
-      "unrealized_pnl": 9.76,
-      "unrealized_pnl_pct": 0.19,
+      "current_price": 419.45,
+      "market_value": 5033.4,
+      "unrealized_pnl": -8.24,
+      "unrealized_pnl_pct": -0.16,
       "stop_loss": 386.53,
       "company": {
         "name": "UnitedHealth Group Incorporated",
@@ -194,10 +194,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 307.02,
-      "market_value": 2456.2,
-      "unrealized_pnl": 317.96,
-      "unrealized_pnl_pct": 14.87,
+      "current_price": 306.81,
+      "market_value": 2454.48,
+      "unrealized_pnl": 316.24,
+      "unrealized_pnl_pct": 14.79,
       "stop_loss": 245.9,
       "company": {
         "name": "Valero Energy Corporation",
@@ -356,5 +356,17 @@
       "CTLP: Add stop-loss protection"
     ],
     "risk_level": "LOW"
+  },
+  "sync_at": "2026-07-31T17:07:16.164308+00:00",
+  "sync_error": null,
+  "market_open": true,
+  "intraday_today": {
+    "date": "2026-07-31",
+    "points": [
+      {
+        "time": "17:07",
+        "value": 113169.66
+      }
+    ]
   }
 }

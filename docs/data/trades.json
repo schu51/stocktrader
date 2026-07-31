@@ -1493,7 +1493,7 @@
   {
     "trade_id": "TRD-20260702160428-AAPL",
     "symbol": "AAPL",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-02",
     "entry_ts": "2026-07-02T16:04:28.189807",
     "entry_price": 306.63,
@@ -1507,12 +1507,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "57add9d2-9fa3-4cf1-b5fc-bd96d487f949",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-07-31",
+    "exit_price": 301.86,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -56.67,
+    "pnl_pct": -1.54,
+    "hold_days": 29,
+    "exit_ts": "2026-07-31T15:29:03.372649"
   },
   {
     "trade_id": "TRD-20260702160428-UAL",

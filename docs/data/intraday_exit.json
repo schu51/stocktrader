@@ -1,7 +1,18 @@
 {
-  "generated_at": "2026-07-30T18:44:49.062937",
+  "generated_at": "2026-07-31T15:29:03.373827",
   "positions_checked": 11,
-  "exits_triggered": [],
+  "exits_triggered": [
+    {
+      "symbol": "AAPL",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$301.86 is 2.4% below 50MA $309.37",
+      "qty": 12,
+      "price": 301.8592,
+      "pnl_pct": -1.54,
+      "executed": true,
+      "order_id": "13bff6a9-9543-41ae-9584-1ac8837e7c59"
+    }
+  ],
   "stops_updated": [],
   "mode": "EXECUTE"
 }

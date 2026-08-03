@@ -1,14 +1,26 @@
 {
-  "generated_at": "2026-07-31T15:38:52.380048",
-  "positions_checked": 10,
+  "generated_at": "2026-08-03T16:04:23.658811",
+  "positions_checked": 12,
   "already_protected": 9,
-  "stops_placed": 0,
+  "stops_placed": 2,
   "stops_failed": 1,
   "results": [
+    {
+      "symbol": "CRWD",
+      "stop": 180.48,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "MDB",
+      "stop": 323.46,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

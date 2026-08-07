@@ -1,23 +1,43 @@
 {
-  "generated_at": "2026-08-06T16:09:44.934190",
-  "run_id": "20260806_160937",
+  "generated_at": "2026-08-07T14:02:33.823768",
+  "run_id": "20260807_140219",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 114284.73,
-    "cash": 82854.98,
-    "buying_power": 78712.23099999999,
-    "long_market_value": 31429.75,
-    "unrealized_pnl": 3364.18
+    "portfolio_value": 114630.48,
+    "cash": 82854.91,
+    "buying_power": 78712.1645,
+    "long_market_value": 31775.57,
+    "unrealized_pnl": 3704.34
   },
   "positions": [
+    {
+      "symbol": "ANET",
+      "qty": 5,
+      "avg_cost": 192.26,
+      "current_price": 192.07,
+      "market_value": 960.38,
+      "unrealized_pnl": -0.93,
+      "unrealized_pnl_pct": -0.1,
+      "stop_loss": null,
+      "company": {
+        "name": "Arista Networks, Inc.",
+        "sector": "Technology",
+        "industry": "Computer Hardware",
+        "summary": "Arista Networks, Inc. engages in the development, marketing, and sale of data-driven, client to cloud networking solutions for AI, data center, campus, and routing environments in the Americas, Europe, the Middle East, Africa, and the\u2026",
+        "market_cap": "$214.7B",
+        "week_52_high": 214.89,
+        "week_52_low": 114.52,
+        "pct_from_high": 10.6
+      }
+    },
     {
       "symbol": "CFG",
       "qty": 35,
       "avg_cost": 66.83,
-      "current_price": 72.43,
-      "market_value": 2535.05,
-      "unrealized_pnl": 196.0,
-      "unrealized_pnl_pct": 8.38,
+      "current_price": 72.37,
+      "market_value": 2532.95,
+      "unrealized_pnl": 193.9,
+      "unrealized_pnl_pct": 8.29,
       "stop_loss": 61.48,
       "company": {
         "name": "Citizens Financial Group, Inc.",
@@ -26,18 +46,18 @@
         "summary": "Citizens Financial Group, Inc. operates as the bank holding company that provides retail and commercial banking products and services to individuals, small businesses, middle-market companies, large corporations, and institutions in the\u2026",
         "market_cap": "$28.4B",
         "week_52_high": 74.7,
-        "week_52_low": 46.53,
-        "pct_from_high": 2.3
+        "week_52_low": 46.62,
+        "pct_from_high": 3.1
       }
     },
     {
       "symbol": "CRWD",
       "qty": 13,
       "avg_cost": 196.17,
-      "current_price": 211.02,
-      "market_value": 2743.26,
-      "unrealized_pnl": 193.05,
-      "unrealized_pnl_pct": 7.57,
+      "current_price": 215.81,
+      "market_value": 2805.53,
+      "unrealized_pnl": 255.32,
+      "unrealized_pnl_pct": 10.01,
       "stop_loss": 180.48,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -47,17 +67,17 @@
         "market_cap": "$191.8B",
         "week_52_high": 219.35,
         "week_52_low": 85.68,
-        "pct_from_high": 5.8
+        "pct_from_high": 1.6
       }
     },
     {
       "symbol": "CSX",
       "qty": 50,
       "avg_cost": 47.45,
-      "current_price": 50.7,
-      "market_value": 2535.0,
-      "unrealized_pnl": 162.5,
-      "unrealized_pnl_pct": 6.85,
+      "current_price": 50.45,
+      "market_value": 2522.5,
+      "unrealized_pnl": 150.0,
+      "unrealized_pnl_pct": 6.32,
       "stop_loss": 43.65,
       "company": {
         "name": "CSX Corporation",
@@ -67,7 +87,7 @@
         "market_cap": "$87.5B",
         "week_52_high": 53.6,
         "week_52_low": 31.8,
-        "pct_from_high": 4.9
+        "pct_from_high": 5.9
       }
     },
     {
@@ -91,13 +111,33 @@
       }
     },
     {
+      "symbol": "DD",
+      "qty": 17,
+      "avg_cost": 144.46,
+      "current_price": 144.19,
+      "market_value": 2451.14,
+      "unrealized_pnl": -4.67,
+      "unrealized_pnl_pct": -0.19,
+      "stop_loss": null,
+      "company": {
+        "name": "DuPont de Nemours, Inc.",
+        "sector": "Basic Materials",
+        "industry": "Specialty Chemicals",
+        "summary": "DuPont de Nemours, Inc. provides technology-based materials and solutions in the United States, Canada, the Asia Pacific, Latin America, Europe, the Middle East, and Africa. It operates through two segments, Healthcare & Water Technologies\u2026",
+        "market_cap": "$19.3B",
+        "week_52_high": 157.98,
+        "week_52_low": 87.26,
+        "pct_from_high": 8.7
+      }
+    },
+    {
       "symbol": "FTNT",
       "qty": 16,
       "avg_cost": 159.55,
-      "current_price": 161.74,
-      "market_value": 2587.84,
-      "unrealized_pnl": 35.1,
-      "unrealized_pnl_pct": 1.38,
+      "current_price": 163.37,
+      "market_value": 2613.92,
+      "unrealized_pnl": 61.18,
+      "unrealized_pnl_pct": 2.4,
       "stop_loss": 146.78,
       "company": {
         "name": "Fortinet, Inc.",
@@ -106,18 +146,18 @@
         "summary": "Fortinet, Inc. provides cybersecurity and convergence of networking and security solutions worldwide. The company offers FortiOS, a unified operating system designed to address cybersecurity threats; FortiASIC application-specific\u2026",
         "market_cap": "$118.9B",
         "week_52_high": 172.09,
-        "week_52_low": 70.12,
-        "pct_from_high": 7.1
+        "week_52_low": 72.83,
+        "pct_from_high": 5.1
       }
     },
     {
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 372.5,
-      "market_value": 4097.5,
-      "unrealized_pnl": 230.01,
-      "unrealized_pnl_pct": 5.95,
+      "current_price": 390.82,
+      "market_value": 4299.02,
+      "unrealized_pnl": 431.53,
+      "unrealized_pnl_pct": 11.16,
       "stop_loss": 323.46,
       "company": {
         "name": "MongoDB, Inc.",
@@ -127,17 +167,17 @@
         "market_cap": "$28.8B",
         "week_52_high": 444.72,
         "week_52_low": 198.47,
-        "pct_from_high": 15.7
+        "pct_from_high": 12.1
       }
     },
     {
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 330.0,
-      "market_value": 2970.0,
-      "unrealized_pnl": 563.04,
-      "unrealized_pnl_pct": 23.39,
+      "current_price": 323.19,
+      "market_value": 2908.66,
+      "unrealized_pnl": 501.7,
+      "unrealized_pnl_pct": 20.84,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -147,17 +187,17 @@
         "market_cap": "$93.3B",
         "week_52_high": 305.0,
         "week_52_low": 158.83,
-        "pct_from_high": 6.3
+        "pct_from_high": -6.0
       }
     },
     {
       "symbol": "PANW",
       "qty": 9,
       "avg_cost": 273.5,
-      "current_price": 364.3,
-      "market_value": 3278.7,
-      "unrealized_pnl": 817.2,
-      "unrealized_pnl_pct": 33.2,
+      "current_price": 369.52,
+      "market_value": 3325.72,
+      "unrealized_pnl": 864.23,
+      "unrealized_pnl_pct": 35.11,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -167,17 +207,17 @@
         "market_cap": "$219.7B",
         "week_52_high": 376.98,
         "week_52_low": 139.57,
-        "pct_from_high": 5.6
+        "pct_from_high": 2.0
       }
     },
     {
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 318.95,
-      "market_value": 5103.2,
-      "unrealized_pnl": 716.16,
-      "unrealized_pnl_pct": 16.32,
+      "current_price": 328.75,
+      "market_value": 5260.0,
+      "unrealized_pnl": 872.96,
+      "unrealized_pnl_pct": 19.9,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -187,17 +227,17 @@
         "market_cap": "$93.5B",
         "week_52_high": 323.1,
         "week_52_low": 118.3,
-        "pct_from_high": 1.0
+        "pct_from_high": -1.7
       }
     },
     {
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 304.0,
-      "market_value": 2432.0,
-      "unrealized_pnl": 293.76,
-      "unrealized_pnl_pct": 13.74,
+      "current_price": 295.0,
+      "market_value": 2360.0,
+      "unrealized_pnl": 221.76,
+      "unrealized_pnl_pct": 10.37,
       "stop_loss": 245.9,
       "company": {
         "name": "Valero Energy Corporation",
@@ -207,18 +247,76 @@
         "market_cap": "$77.9B",
         "week_52_high": 320.24,
         "week_52_low": 130.78,
-        "pct_from_high": 6.0
+        "pct_from_high": 7.9
       }
     }
   ],
   "todays_run": {
     "mode": "EXECUTE",
     "candidates_screened": 9,
-    "buy_signals": 0,
-    "orders_submitted": 0,
-    "total_invested": 0,
-    "signals": [],
-    "execution_details": []
+    "buy_signals": 2,
+    "orders_submitted": 2,
+    "total_invested": 4948.31,
+    "signals": [
+      {
+        "symbol": "DD",
+        "action": "BUY",
+        "shares": 17,
+        "limit_price": 147.0,
+        "stop_loss": 135.24,
+        "confidence": 0.85,
+        "signal_strength": 0.5,
+        "trend_score": 74,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 74/100 (STRONG_UP)",
+          "Uptrend confirmed (momentum score: 74/100)",
+          "RSI in healthy uptrend range (58)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Strong uptrend confirmed (score: 74)"
+        ],
+        "executed": true
+      },
+      {
+        "symbol": "ANET",
+        "action": "BUY",
+        "shares": 13,
+        "limit_price": 192.28,
+        "stop_loss": 176.89,
+        "confidence": 0.85,
+        "signal_strength": 0.5,
+        "trend_score": 73,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 73/100 (STRONG_UP)",
+          "Uptrend confirmed (momentum score: 73/100)",
+          "RSI in healthy uptrend range (61)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Strong uptrend confirmed (score: 73)"
+        ],
+        "executed": true
+      }
+    ],
+    "execution_details": [
+      {
+        "symbol": "DD",
+        "shares": 17,
+        "limit_price": 147.0,
+        "stop_loss": 135.24,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "262b8be1-16b7-4a1c-9077-2240dd3f730b",
+        "reason": null
+      },
+      {
+        "symbol": "ANET",
+        "shares": 13,
+        "limit_price": 192.28,
+        "stop_loss": 176.89,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "c862bfec-3cd7-4f71-a336-af3da0369121",
+        "reason": null
+      }
+    ]
   },
   "persistent_performers": [],
   "exits": {
@@ -228,11 +326,11 @@
         "symbol": "PANW",
         "trigger": "TRAILING_STOP_UPDATE",
         "new_stop": 277.6,
-        "pnl_pct": 30.12,
-        "current": 355.88,
+        "pnl_pct": 35.08,
+        "current": 369.44,
         "tier": "25%+ gain \u2192 break-even stop",
         "executed": true,
-        "order_id": "dd6d7a93-a332-4282-8b44-6b8c11c99322"
+        "order_id": "7d32e0c4-5db0-4702-b2dc-e1c4a720d72f"
       }
     ],
     "positions_checked": 10,
@@ -241,29 +339,29 @@
       {
         "symbol": "VLO",
         "trigger": "MIDDLE_BAND_CROSS",
-        "reason": "Price $301.15 crossed below BB middle $302.97 \u2014 consider reducing",
-        "pnl_pct": 12.67,
-        "current": 301.15,
-        "bb_middle": 302.97
+        "reason": "Price $294.90 crossed below BB middle $303.82 \u2014 consider reducing",
+        "pnl_pct": 10.33,
+        "current": 294.9,
+        "bb_middle": 303.82
       }
     ]
   },
   "risk_assessment": {
-    "timestamp": "2026-08-06T16:09:40.979760",
-    "portfolio_value": 113774.85,
+    "timestamp": "2026-08-07T14:02:26.500250",
+    "portfolio_value": 114630.48,
     "risk_metrics": {
       "drawdown": {
-        "current_value": 113774.85,
+        "current_value": 114630.48,
         "peak_value": 126520.62,
         "peak_date": null,
-        "drawdown_amount": 12745.77,
-        "drawdown_pct": 10.07,
+        "drawdown_amount": 11890.14,
+        "drawdown_pct": 9.4,
         "max_allowed_pct": 15.0,
-        "status": "WARNING",
-        "action_required": true
+        "status": "CAUTION",
+        "action_required": false
       },
       "cash_allocation": {
-        "current_pct": 72.82,
+        "current_pct": 72.28,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
         "status": "OK"
@@ -271,40 +369,40 @@
     },
     "concentration_risk": {
       "largest_position": "SNOW",
-      "largest_allocation_pct": 4.5,
-      "top_5_allocation_pct": 16.06,
+      "largest_allocation_pct": 4.59,
+      "top_5_allocation_pct": 16.52,
       "max_allowed_top_5_pct": 40.0,
       "num_positions": 10,
-      "herfindahl_index": 0.007921699137254917
+      "herfindahl_index": 0.008267407309787408
     },
     "position_risks": [
       {
         "symbol": "CFG",
-        "allocation_pct": 2.24,
-        "unrealized_pnl_pct": 9.19,
+        "allocation_pct": 2.21,
+        "unrealized_pnl_pct": 8.29,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CRWD",
-        "allocation_pct": 2.36,
-        "unrealized_pnl_pct": 5.36,
+        "allocation_pct": 2.45,
+        "unrealized_pnl_pct": 10.01,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CSX",
-        "allocation_pct": 2.24,
-        "unrealized_pnl_pct": 7.45,
+        "allocation_pct": 2.2,
+        "unrealized_pnl_pct": 6.33,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CTLP",
-        "allocation_pct": 2.77,
+        "allocation_pct": 2.75,
         "unrealized_pnl_pct": 5.26,
         "has_stop_loss": false,
         "has_trailing_stop": false,
@@ -314,70 +412,57 @@
       },
       {
         "symbol": "FTNT",
-        "allocation_pct": 2.25,
-        "unrealized_pnl_pct": 0.27,
+        "allocation_pct": 2.28,
+        "unrealized_pnl_pct": 2.42,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "MDB",
-        "allocation_pct": 3.62,
-        "unrealized_pnl_pct": 6.6,
+        "allocation_pct": 3.75,
+        "unrealized_pnl_pct": 11.21,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "NET",
-        "allocation_pct": 2.26,
-        "unrealized_pnl_pct": 6.88,
+        "allocation_pct": 2.54,
+        "unrealized_pnl_pct": 20.73,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "PANW",
-        "allocation_pct": 2.82,
-        "unrealized_pnl_pct": 30.12,
+        "allocation_pct": 2.9,
+        "unrealized_pnl_pct": 35.16,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "SNOW",
-        "allocation_pct": 4.5,
-        "unrealized_pnl_pct": 16.61,
+        "allocation_pct": 4.59,
+        "unrealized_pnl_pct": 19.9,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "VLO",
-        "allocation_pct": 2.12,
-        "unrealized_pnl_pct": 12.67,
+        "allocation_pct": 2.06,
+        "unrealized_pnl_pct": 10.31,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       }
     ],
-    "overall_risk_score": 25.9,
+    "overall_risk_score": 24.6,
     "recommendations": [
-      "Portfolio drawdown at 10.1% - consider risk reduction",
       "CTLP: Add stop-loss protection"
     ],
     "risk_level": "LOW"
-  },
-  "sync_at": "2026-08-07T00:43:47.774934+00:00",
-  "sync_error": null,
-  "market_open": false,
-  "intraday_today": {
-    "date": "2026-08-07",
-    "points": [
-      {
-        "time": "00:43",
-        "value": 114284.73
-      }
-    ]
   }
 }

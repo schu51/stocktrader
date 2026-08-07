@@ -1,14 +1,26 @@
 {
-  "generated_at": "2026-08-05T15:40:53.207574",
-  "positions_checked": 11,
-  "already_protected": 10,
-  "stops_placed": 0,
+  "generated_at": "2026-08-07T14:33:47.639368",
+  "positions_checked": 12,
+  "already_protected": 9,
+  "stops_placed": 2,
   "stops_failed": 1,
   "results": [
+    {
+      "symbol": "ANET",
+      "stop": 176.88,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "DD",
+      "stop": 132.9,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

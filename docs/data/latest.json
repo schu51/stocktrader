@@ -3,21 +3,21 @@
   "run_id": "20260807_145112",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 114389.92,
+    "portfolio_value": 114390.87,
     "cash": 77899.71,
     "buying_power": 74004.7245,
-    "long_market_value": 36490.21,
-    "unrealized_pnl": 3469.44
+    "long_market_value": 36491.16,
+    "unrealized_pnl": 3470.39
   },
   "positions": [
     {
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 189.23,
-      "market_value": 2460.01,
-      "unrealized_pnl": -39.37,
-      "unrealized_pnl_pct": -1.57,
+      "current_price": 189.2,
+      "market_value": 2459.6,
+      "unrealized_pnl": -39.78,
+      "unrealized_pnl_pct": -1.59,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CRWD",
       "qty": 13,
       "avg_cost": 196.17,
-      "current_price": 214.22,
-      "market_value": 2784.86,
-      "unrealized_pnl": 234.65,
-      "unrealized_pnl_pct": 9.2,
+      "current_price": 214.2,
+      "market_value": 2784.61,
+      "unrealized_pnl": 234.4,
+      "unrealized_pnl_pct": 9.19,
       "stop_loss": 180.48,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -174,10 +174,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 301.42,
-      "market_value": 2712.8,
-      "unrealized_pnl": 305.84,
-      "unrealized_pnl_pct": 12.71,
+      "current_price": 301.14,
+      "market_value": 2710.23,
+      "unrealized_pnl": 303.27,
+      "unrealized_pnl_pct": 12.6,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -194,10 +194,10 @@
       "symbol": "PANW",
       "qty": 9,
       "avg_cost": 273.5,
-      "current_price": 364.2,
-      "market_value": 3277.8,
-      "unrealized_pnl": 816.3,
-      "unrealized_pnl_pct": 33.16,
+      "current_price": 364.22,
+      "market_value": 3277.98,
+      "unrealized_pnl": 816.48,
+      "unrealized_pnl_pct": 33.17,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -214,10 +214,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 329.9,
-      "market_value": 5278.4,
-      "unrealized_pnl": 891.36,
-      "unrealized_pnl_pct": 20.32,
+      "current_price": 330.15,
+      "market_value": 5282.4,
+      "unrealized_pnl": 895.36,
+      "unrealized_pnl_pct": 20.41,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -423,7 +423,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-07T20:50:48.550071+00:00",
+  "sync_at": "2026-08-07T21:48:29.427752+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -452,6 +452,10 @@
       {
         "time": "20:50",
         "value": 114389.92
+      },
+      {
+        "time": "21:48",
+        "value": 114390.87
       }
     ]
   }

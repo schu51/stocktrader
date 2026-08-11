@@ -3,21 +3,21 @@
   "run_id": "20260811_145517",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 115552.77,
+    "portfolio_value": 115598.31,
     "cash": 79049.54,
     "buying_power": 75097.063,
-    "long_market_value": 36503.23,
-    "unrealized_pnl": 4302.96
+    "long_market_value": 36548.77,
+    "unrealized_pnl": 4348.5
   },
   "positions": [
     {
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 197.85,
-      "market_value": 2572.05,
-      "unrealized_pnl": 72.67,
-      "unrealized_pnl_pct": 2.91,
+      "current_price": 198.16,
+      "market_value": 2576.08,
+      "unrealized_pnl": 76.7,
+      "unrealized_pnl_pct": 3.07,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CRWD",
       "qty": 13,
       "avg_cost": 196.17,
-      "current_price": 221.72,
-      "market_value": 2882.36,
-      "unrealized_pnl": 332.15,
-      "unrealized_pnl_pct": 13.02,
+      "current_price": 221.77,
+      "market_value": 2883.01,
+      "unrealized_pnl": 332.8,
+      "unrealized_pnl_pct": 13.05,
       "stop_loss": 180.48,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -114,10 +114,10 @@
       "symbol": "DD",
       "qty": 17,
       "avg_cost": 144.46,
-      "current_price": 143.02,
-      "market_value": 2431.41,
-      "unrealized_pnl": -24.41,
-      "unrealized_pnl_pct": -0.99,
+      "current_price": 144.49,
+      "market_value": 2456.33,
+      "unrealized_pnl": 0.51,
+      "unrealized_pnl_pct": 0.02,
       "stop_loss": 132.9,
       "company": {
         "name": "DuPont de Nemours, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 438.2,
-      "market_value": 4820.21,
-      "unrealized_pnl": 952.72,
-      "unrealized_pnl_pct": 24.63,
+      "current_price": 439.0,
+      "market_value": 4829.0,
+      "unrealized_pnl": 961.51,
+      "unrealized_pnl_pct": 24.86,
       "stop_loss": 323.46,
       "company": {
         "name": "MongoDB, Inc.",
@@ -174,10 +174,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 307.96,
-      "market_value": 2771.67,
-      "unrealized_pnl": 364.71,
-      "unrealized_pnl_pct": 15.15,
+      "current_price": 306.97,
+      "market_value": 2762.73,
+      "unrealized_pnl": 355.77,
+      "unrealized_pnl_pct": 14.78,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -194,10 +194,10 @@
       "symbol": "PANW",
       "qty": 6,
       "avg_cost": 273.5,
-      "current_price": 384.0,
-      "market_value": 2304.0,
-      "unrealized_pnl": 663.0,
-      "unrealized_pnl_pct": 40.4,
+      "current_price": 384.22,
+      "market_value": 2305.34,
+      "unrealized_pnl": 664.34,
+      "unrealized_pnl_pct": 40.48,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -214,10 +214,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 333.0,
-      "market_value": 5328.0,
-      "unrealized_pnl": 940.96,
-      "unrealized_pnl_pct": 21.45,
+      "current_price": 334.23,
+      "market_value": 5347.68,
+      "unrealized_pnl": 960.64,
+      "unrealized_pnl_pct": 21.9,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -234,10 +234,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 324.53,
-      "market_value": 2596.28,
-      "unrealized_pnl": 458.04,
-      "unrealized_pnl_pct": 21.42,
+      "current_price": 323.92,
+      "market_value": 2591.36,
+      "unrealized_pnl": 453.12,
+      "unrealized_pnl_pct": 21.19,
       "stop_loss": 245.9,
       "company": {
         "name": "Valero Energy Corporation",
@@ -413,7 +413,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-11T22:20:18.562983+00:00",
+  "sync_at": "2026-08-11T23:20:04.102493+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -446,6 +446,10 @@
       {
         "time": "22:20",
         "value": 115552.77
+      },
+      {
+        "time": "23:20",
+        "value": 115598.31
       }
     ]
   }

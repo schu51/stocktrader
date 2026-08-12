@@ -3,21 +3,21 @@
   "run_id": "20260812_145417",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 115834.6,
+    "portfolio_value": 115770.75,
     "cash": 79049.49,
     "buying_power": 75097.01550000001,
-    "long_market_value": 36785.11,
-    "unrealized_pnl": 4584.84
+    "long_market_value": 36721.26,
+    "unrealized_pnl": 4520.99
   },
   "positions": [
     {
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 210.5,
-      "market_value": 2736.5,
-      "unrealized_pnl": 237.12,
-      "unrealized_pnl_pct": 9.49,
+      "current_price": 209.2,
+      "market_value": 2719.6,
+      "unrealized_pnl": 220.22,
+      "unrealized_pnl_pct": 8.81,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CRWD",
       "qty": 13,
       "avg_cost": 196.17,
-      "current_price": 221.55,
-      "market_value": 2880.15,
-      "unrealized_pnl": 329.94,
-      "unrealized_pnl_pct": 12.94,
+      "current_price": 221.04,
+      "market_value": 2873.49,
+      "unrealized_pnl": 323.28,
+      "unrealized_pnl_pct": 12.68,
       "stop_loss": 180.48,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 437.83,
-      "market_value": 4816.13,
-      "unrealized_pnl": 948.64,
-      "unrealized_pnl_pct": 24.53,
+      "current_price": 436.8,
+      "market_value": 4804.8,
+      "unrealized_pnl": 937.31,
+      "unrealized_pnl_pct": 24.24,
       "stop_loss": 356.86,
       "company": {
         "name": "MongoDB, Inc.",
@@ -174,10 +174,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 311.45,
-      "market_value": 2803.05,
-      "unrealized_pnl": 396.09,
-      "unrealized_pnl_pct": 16.46,
+      "current_price": 310.74,
+      "market_value": 2796.63,
+      "unrealized_pnl": 389.67,
+      "unrealized_pnl_pct": 16.19,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -194,10 +194,10 @@
       "symbol": "PANW",
       "qty": 6,
       "avg_cost": 273.5,
-      "current_price": 387.61,
-      "market_value": 2325.66,
-      "unrealized_pnl": 684.66,
-      "unrealized_pnl_pct": 41.72,
+      "current_price": 387.03,
+      "market_value": 2322.18,
+      "unrealized_pnl": 681.18,
+      "unrealized_pnl_pct": 41.51,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -214,10 +214,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 332.26,
-      "market_value": 5316.16,
-      "unrealized_pnl": 929.12,
-      "unrealized_pnl_pct": 21.18,
+      "current_price": 331.0,
+      "market_value": 5296.0,
+      "unrealized_pnl": 908.96,
+      "unrealized_pnl_pct": 20.72,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -234,10 +234,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 330.21,
-      "market_value": 2641.68,
-      "unrealized_pnl": 503.44,
-      "unrealized_pnl_pct": 23.54,
+      "current_price": 330.35,
+      "market_value": 2642.78,
+      "unrealized_pnl": 504.54,
+      "unrealized_pnl_pct": 23.6,
       "stop_loss": 245.9,
       "company": {
         "name": "Valero Energy Corporation",
@@ -423,7 +423,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-12T20:10:30.224998+00:00",
+  "sync_at": "2026-08-12T21:23:11.806981+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -448,6 +448,10 @@
       {
         "time": "20:10",
         "value": 115834.6
+      },
+      {
+        "time": "21:23",
+        "value": 115770.75
       }
     ]
   }

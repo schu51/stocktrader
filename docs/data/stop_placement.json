@@ -1,14 +1,20 @@
 {
-  "generated_at": "2026-08-13T14:38:33.995341",
-  "positions_checked": 12,
+  "generated_at": "2026-08-14T14:32:50.217551",
+  "positions_checked": 13,
   "already_protected": 11,
-  "stops_placed": 0,
+  "stops_placed": 1,
   "stops_failed": 1,
   "results": [
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "FF",
+      "stop": 5.3,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

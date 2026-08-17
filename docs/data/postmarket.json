@@ -1,15 +1,15 @@
 {
-  "date": "2026-08-14",
-  "generated_at": "2026-08-14T20:42:24.367168",
+  "date": "2026-08-17",
+  "generated_at": "2026-08-17T20:39:57.586107",
   "portfolio": {
-    "value": 115950.19,
-    "cash": 74844.68,
-    "total_unrealized": 4700.4400000000005,
-    "positions": 13,
-    "winners": 12,
-    "losers": 1,
+    "value": 115454.92,
+    "cash": 72219.75,
+    "total_unrealized": 4278.04,
+    "positions": 14,
+    "winners": 10,
+    "losers": 4,
     "risk_level": "LOW",
-    "risk_score": 22.5
+    "risk_score": 23.7
   },
   "execution": {
     "signals_generated": 0,
@@ -19,11 +19,75 @@
     "candidates_screened": 11
   },
   "exits": {
-    "triggered": 0,
+    "triggered": 1,
     "stops_updated": 3,
-    "detail": []
+    "detail": [
+      {
+        "symbol": "VRT",
+        "trigger": "PRICE_BELOW_50MA",
+        "current": 295.67,
+        "sma50": 296.19,
+        "pct_below": 0.17,
+        "pnl_pct": -1.17,
+        "qty": 13,
+        "executed": false,
+        "reason": "Price $295.67 is 0.2% below 50MA $296.19",
+        "order_id": null
+      }
+    ]
   },
-  "closed_today": [],
+  "closed_today": [
+    {
+      "trade_id": "TRD-20260817140243-AMD",
+      "symbol": "AMD",
+      "status": "CLOSED",
+      "entry_date": "2026-08-17",
+      "entry_ts": "2026-08-17T14:02:43.764014",
+      "entry_price": 512.2,
+      "shares": 11,
+      "stop_loss": 471.22,
+      "trend_score": 81,
+      "confidence": 0.85,
+      "rs_rank": 96,
+      "thesis_score": 48.0,
+      "thesis_grade": "C",
+      "sector": "technology",
+      "weight_version": 1,
+      "order_id": "959d4f62-dbe6-4c99-b56b-1ab12d2015d4",
+      "exit_date": "2026-08-17",
+      "exit_price": 508.41,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -30.42,
+      "pnl_pct": -0.54,
+      "hold_days": 0,
+      "exit_ts": "2026-08-17T18:14:39.402248"
+    },
+    {
+      "trade_id": "TRD-20260817140243-VRT",
+      "symbol": "VRT",
+      "status": "CLOSED",
+      "entry_date": "2026-08-17",
+      "entry_ts": "2026-08-17T14:02:43.923959",
+      "entry_price": 299.5,
+      "shares": 13,
+      "stop_loss": 275.54,
+      "trend_score": 77,
+      "confidence": 0.85,
+      "rs_rank": 79,
+      "thesis_score": 30.0,
+      "thesis_grade": "D",
+      "sector": "technology",
+      "weight_version": 1,
+      "order_id": "422c077c-d0f9-48ba-9e67-b04f054ec704",
+      "exit_date": "2026-08-17",
+      "exit_price": 296.15,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -39.32,
+      "pnl_pct": -1.01,
+      "hold_days": 0,
+      "exit_ts": "2026-08-17T15:03:46.395121"
+    }
+  ],
   "positions_at_risk": [
     {
       "symbol": "CTLP",

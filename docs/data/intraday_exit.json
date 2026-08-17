@@ -1,7 +1,18 @@
 {
-  "generated_at": "2026-08-17T17:45:06.606831",
+  "generated_at": "2026-08-17T18:14:39.674225",
   "positions_checked": 15,
-  "exits_triggered": [],
+  "exits_triggered": [
+    {
+      "symbol": "AMD",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$508.41 is 0.3% below 50MA $510.12",
+      "qty": 11,
+      "price": 508.41,
+      "pnl_pct": -0.54,
+      "executed": true,
+      "order_id": "964bd0f7-3966-4cd3-9845-70036214c3d4"
+    }
+  ],
   "stops_updated": [],
   "mode": "EXECUTE"
 }

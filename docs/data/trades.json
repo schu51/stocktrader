@@ -2102,7 +2102,7 @@
   {
     "trade_id": "TRD-20260817140243-AMD",
     "symbol": "AMD",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-08-17",
     "entry_ts": "2026-08-17T14:02:43.764014",
     "entry_price": 512.2,
@@ -2116,12 +2116,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "959d4f62-dbe6-4c99-b56b-1ab12d2015d4",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-08-17",
+    "exit_price": 508.41,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -30.42,
+    "pnl_pct": -0.54,
+    "hold_days": 0,
+    "exit_ts": "2026-08-17T18:14:39.402248"
   },
   {
     "trade_id": "TRD-20260817140243-VRT",

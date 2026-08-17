@@ -1,18 +1,30 @@
 {
-  "generated_at": "2026-08-14T14:32:50.217551",
-  "positions_checked": 13,
-  "already_protected": 11,
-  "stops_placed": 1,
+  "generated_at": "2026-08-17T14:03:03.764824",
+  "positions_checked": 16,
+  "already_protected": 12,
+  "stops_placed": 3,
   "stops_failed": 1,
   "results": [
+    {
+      "symbol": "ABNB",
+      "stop": 167.71,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "AMD",
+      "stop": 470.29,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
     },
     {
-      "symbol": "FF",
-      "stop": 5.3,
+      "symbol": "VRT",
+      "stop": 275.23,
       "tier": "default \u2192 8% below entry",
       "status": "placed"
     }

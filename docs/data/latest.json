@@ -3,11 +3,11 @@
   "run_id": "20260818_142915",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 114996.17,
+    "portfolio_value": 115032.94,
     "cash": 74579.94,
     "buying_power": 70850.943,
-    "long_market_value": 40416.23,
-    "unrealized_pnl": 3914.92
+    "long_market_value": 40453.0,
+    "unrealized_pnl": 3951.69
   },
   "positions": [
     {
@@ -34,10 +34,10 @@
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 193.0,
-      "market_value": 2509.0,
-      "unrealized_pnl": 9.62,
-      "unrealized_pnl_pct": 0.39,
+      "current_price": 193.18,
+      "market_value": 2511.34,
+      "unrealized_pnl": 11.96,
+      "unrealized_pnl_pct": 0.48,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -74,10 +74,10 @@
       "symbol": "CRWD",
       "qty": 13,
       "avg_cost": 196.17,
-      "current_price": 212.82,
-      "market_value": 2766.66,
-      "unrealized_pnl": 216.45,
-      "unrealized_pnl_pct": 8.49,
+      "current_price": 212.38,
+      "market_value": 2760.94,
+      "unrealized_pnl": 210.73,
+      "unrealized_pnl_pct": 8.26,
       "stop_loss": 180.48,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -214,10 +214,10 @@
       "symbol": "PANW",
       "qty": 6,
       "avg_cost": 273.5,
-      "current_price": 373.34,
-      "market_value": 2240.04,
-      "unrealized_pnl": 599.04,
-      "unrealized_pnl_pct": 36.5,
+      "current_price": 373.0,
+      "market_value": 2238.0,
+      "unrealized_pnl": 597.0,
+      "unrealized_pnl_pct": 36.38,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -234,10 +234,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 323.17,
-      "market_value": 5170.69,
-      "unrealized_pnl": 783.65,
-      "unrealized_pnl_pct": 17.86,
+      "current_price": 325.33,
+      "market_value": 5205.28,
+      "unrealized_pnl": 818.24,
+      "unrealized_pnl_pct": 18.65,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -254,10 +254,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 349.1,
-      "market_value": 2792.8,
-      "unrealized_pnl": 654.56,
-      "unrealized_pnl_pct": 30.61,
+      "current_price": 350.05,
+      "market_value": 2800.4,
+      "unrealized_pnl": 662.16,
+      "unrealized_pnl_pct": 30.97,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -459,7 +459,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-18T21:30:54.154845+00:00",
+  "sync_at": "2026-08-18T22:31:49.403464+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -496,6 +496,10 @@
       {
         "time": "21:30",
         "value": 114996.17
+      },
+      {
+        "time": "22:31",
+        "value": 115032.94
       }
     ]
   }

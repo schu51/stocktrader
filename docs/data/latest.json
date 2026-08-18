@@ -3,11 +3,11 @@
   "run_id": "20260818_142915",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 115018.3,
+    "portfolio_value": 114996.17,
     "cash": 74579.94,
     "buying_power": 70850.943,
-    "long_market_value": 40438.36,
-    "unrealized_pnl": 3937.05
+    "long_market_value": 40416.23,
+    "unrealized_pnl": 3914.92
   },
   "positions": [
     {
@@ -34,10 +34,10 @@
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 193.18,
-      "market_value": 2511.34,
-      "unrealized_pnl": 11.96,
-      "unrealized_pnl_pct": 0.48,
+      "current_price": 193.0,
+      "market_value": 2509.0,
+      "unrealized_pnl": 9.62,
+      "unrealized_pnl_pct": 0.39,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -74,10 +74,10 @@
       "symbol": "CRWD",
       "qty": 13,
       "avg_cost": 196.17,
-      "current_price": 212.6,
-      "market_value": 2763.8,
-      "unrealized_pnl": 213.59,
-      "unrealized_pnl_pct": 8.38,
+      "current_price": 212.82,
+      "market_value": 2766.66,
+      "unrealized_pnl": 216.45,
+      "unrealized_pnl_pct": 8.49,
       "stop_loss": 180.48,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "FTNT",
       "qty": 16,
       "avg_cost": 159.55,
-      "current_price": 157.01,
-      "market_value": 2512.16,
-      "unrealized_pnl": -40.58,
-      "unrealized_pnl_pct": -1.59,
+      "current_price": 157.7,
+      "market_value": 2523.2,
+      "unrealized_pnl": -29.54,
+      "unrealized_pnl_pct": -1.16,
       "stop_loss": 146.78,
       "company": {
         "name": "Fortinet, Inc.",
@@ -174,10 +174,10 @@
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 434.62,
-      "market_value": 4780.82,
-      "unrealized_pnl": 913.33,
-      "unrealized_pnl_pct": 23.62,
+      "current_price": 434.0,
+      "market_value": 4774.0,
+      "unrealized_pnl": 906.51,
+      "unrealized_pnl_pct": 23.44,
       "stop_loss": 356.86,
       "company": {
         "name": "MongoDB, Inc.",
@@ -214,10 +214,10 @@
       "symbol": "PANW",
       "qty": 6,
       "avg_cost": 273.5,
-      "current_price": 373.0,
-      "market_value": 2238.0,
-      "unrealized_pnl": 597.0,
-      "unrealized_pnl_pct": 36.38,
+      "current_price": 373.34,
+      "market_value": 2240.04,
+      "unrealized_pnl": 599.04,
+      "unrealized_pnl_pct": 36.5,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -234,10 +234,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 324.5,
-      "market_value": 5192.0,
-      "unrealized_pnl": 804.96,
-      "unrealized_pnl_pct": 18.35,
+      "current_price": 323.17,
+      "market_value": 5170.69,
+      "unrealized_pnl": 783.65,
+      "unrealized_pnl_pct": 17.86,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -254,10 +254,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 350.05,
-      "market_value": 2800.4,
-      "unrealized_pnl": 662.16,
-      "unrealized_pnl_pct": 30.97,
+      "current_price": 349.1,
+      "market_value": 2792.8,
+      "unrealized_pnl": 654.56,
+      "unrealized_pnl_pct": 30.61,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -459,7 +459,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-18T20:32:28.954639+00:00",
+  "sync_at": "2026-08-18T21:30:54.154845+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -492,6 +492,10 @@
       {
         "time": "20:32",
         "value": 115018.3
+      },
+      {
+        "time": "21:30",
+        "value": 114996.17
       }
     ]
   }

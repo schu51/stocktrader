@@ -1,22 +1,22 @@
 {
-  "date": "2026-08-18",
-  "generated_at": "2026-08-18T20:37:02.519050",
+  "date": "2026-08-19",
+  "generated_at": "2026-08-19T20:42:36.335178",
   "portfolio": {
-    "value": 115018.3,
-    "cash": 74579.94,
-    "total_unrealized": 3937.05,
-    "positions": 13,
-    "winners": 11,
+    "value": 114650.34,
+    "cash": 77057.35,
+    "total_unrealized": 3644.42,
+    "positions": 12,
+    "winners": 10,
     "losers": 2,
-    "risk_level": "LOW",
-    "risk_score": 24.2
+    "risk_level": "MODERATE",
+    "risk_score": 30.2
   },
   "execution": {
     "signals_generated": 0,
     "orders_executed": 0,
     "orders_skipped": 0,
     "skip_reasons": [],
-    "candidates_screened": 11
+    "candidates_screened": 8
   },
   "exits": {
     "triggered": 0,
@@ -25,29 +25,29 @@
   },
   "closed_today": [
     {
-      "trade_id": "TRD-20260807140230-DD",
-      "symbol": "DD",
+      "trade_id": "TRD-20260730140214-FTNT",
+      "symbol": "FTNT",
       "status": "CLOSED",
-      "entry_date": "2026-08-07",
-      "entry_ts": "2026-08-07T14:02:30.802362",
-      "entry_price": 147.0,
-      "shares": 17,
-      "stop_loss": 135.24,
-      "trend_score": 74,
-      "confidence": 0.85,
-      "rs_rank": 76,
-      "thesis_score": 55.0,
-      "thesis_grade": "B",
-      "sector": "utilities",
+      "entry_date": "2026-07-30",
+      "entry_ts": "2026-07-30T14:02:14.882052",
+      "entry_price": 166.68,
+      "shares": 16,
+      "stop_loss": 153.34,
+      "trend_score": 70,
+      "confidence": 0.7,
+      "rs_rank": 96,
+      "thesis_score": 50.0,
+      "thesis_grade": "C",
+      "sector": "technology",
       "weight_version": 1,
-      "order_id": "262b8be1-16b7-4a1c-9077-2240dd3f730b",
-      "exit_date": "2026-08-18",
-      "exit_price": 138.95,
+      "order_id": "cebaecb7-b62d-4f5f-932b-e2d21971dd4b",
+      "exit_date": "2026-08-19",
+      "exit_price": 154.94,
       "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -95.21,
-      "pnl_pct": -3.81,
-      "hold_days": 11,
-      "exit_ts": "2026-08-18T15:45:28.878498"
+      "pnl_usd": -77.07,
+      "pnl_pct": -2.89,
+      "hold_days": 20,
+      "exit_ts": "2026-08-19T13:57:02.491438"
     }
   ],
   "positions_at_risk": [

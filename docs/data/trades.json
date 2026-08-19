@@ -1958,7 +1958,7 @@
   {
     "trade_id": "TRD-20260730140214-FTNT",
     "symbol": "FTNT",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-30",
     "entry_ts": "2026-07-30T14:02:14.882052",
     "entry_price": 166.68,
@@ -1972,12 +1972,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "cebaecb7-b62d-4f5f-932b-e2d21971dd4b",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-08-19",
+    "exit_price": 154.94,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -77.07,
+    "pnl_pct": -2.89,
+    "hold_days": 20,
+    "exit_ts": "2026-08-19T13:57:02.491438"
   },
   {
     "trade_id": "TRD-20260803140214-MDB",

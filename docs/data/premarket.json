@@ -1,102 +1,180 @@
 {
-  "generated_at": "2026-08-19T06:36:13.525265-07:00",
+  "generated_at": "2026-08-20T06:37:58.277317-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 23,
-    "mixed": 25,
-    "weak": 27
+    "strong": 20,
+    "mixed": 26,
+    "weak": 29
   },
   "gap_alerts": [
     {
-      "ticker": "AVGO",
-      "prev_close": 380.0,
-      "current": 366.6,
-      "pct_chg": -3.53,
-      "ma50": 389.12,
+      "ticker": "UPST",
+      "prev_close": 30.6,
+      "current": 29.1,
+      "pct_chg": -4.9,
+      "ma50": 30.82,
       "reasons": [
-        "gap down -3.5%"
+        "gap down -4.9%"
       ]
     },
     {
-      "ticker": "TEAM",
-      "prev_close": 163.0,
-      "current": 168.17,
-      "pct_chg": 3.17,
-      "ma50": 102.75,
+      "ticker": "MDB",
+      "prev_close": 440.53,
+      "current": 422.6,
+      "pct_chg": -4.07,
+      "ma50": 355.58,
       "reasons": [
-        "gap UP 3.2% above 50MA \u2014 momentum alert"
+        "gap down -4.1%"
       ]
     },
     {
-      "ticker": "DUOL",
-      "prev_close": 139.64,
-      "current": 145.61,
-      "pct_chg": 4.28,
-      "ma50": 129.3,
+      "ticker": "OKTA",
+      "prev_close": 141.21,
+      "current": 136.01,
+      "pct_chg": -3.68,
+      "ma50": 136.81,
       "reasons": [
-        "gap UP 4.3% above 50MA \u2014 momentum alert"
+        "gap down -3.7%",
+        "crossed BELOW 50MA (136.81)"
+      ]
+    },
+    {
+      "ticker": "CRWD",
+      "prev_close": 201.63,
+      "current": 194.84,
+      "pct_chg": -3.37,
+      "ma50": 192.63,
+      "reasons": [
+        "gap down -3.4%"
       ]
     },
     {
       "ticker": "RXRX",
-      "prev_close": 3.09,
-      "current": 3.32,
-      "pct_chg": 7.44,
+      "prev_close": 3.5,
+      "current": 3.39,
+      "pct_chg": -3.12,
       "ma50": 3.27,
       "reasons": [
-        "gap UP 7.4% above 50MA \u2014 momentum alert"
+        "gap down -3.1%"
       ]
     },
     {
-      "ticker": "MRVL",
-      "prev_close": 216.0,
-      "current": 238.56,
-      "pct_chg": 10.44,
-      "ma50": 234.47,
+      "ticker": "AFRM",
+      "prev_close": 77.33,
+      "current": 76.0,
+      "pct_chg": -1.72,
+      "ma50": 76.24,
       "reasons": [
-        "gap UP 10.4% above 50MA \u2014 momentum alert"
+        "crossed BELOW 50MA (76.24)"
+      ]
+    },
+    {
+      "ticker": "PWR",
+      "prev_close": 677.41,
+      "current": 669.94,
+      "pct_chg": -1.1,
+      "ma50": 672.11,
+      "reasons": [
+        "crossed BELOW 50MA (672.11)"
+      ]
+    },
+    {
+      "ticker": "SMCI",
+      "prev_close": 36.58,
+      "current": 37.94,
+      "pct_chg": 3.7,
+      "ma50": 30.35,
+      "reasons": [
+        "gap UP 3.7% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "COIN",
+      "prev_close": 160.2,
+      "current": 167.22,
+      "pct_chg": 4.38,
+      "ma50": 157.75,
+      "reasons": [
+        "gap UP 4.4% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "MSTR",
+      "prev_close": 104.25,
+      "current": 109.89,
+      "pct_chg": 5.41,
+      "ma50": 99.65,
+      "reasons": [
+        "gap UP 5.4% above 50MA \u2014 momentum alert"
       ]
     }
   ],
   "avoids": [
-    "AVGO"
+    "UPST",
+    "MDB",
+    "OKTA",
+    "CRWD",
+    "RXRX",
+    "AFRM",
+    "PWR"
   ],
   "gap_up_priority": [
-    "TEAM",
-    "DUOL",
-    "RXRX",
-    "MRVL"
+    "SMCI",
+    "COIN",
+    "MSTR"
   ],
   "top_candidates": [
     {
       "ticker": "DXCM",
-      "price": 90.67,
-      "ma50": 77.05,
-      "ret_5d": -0.1,
-      "ret_20d": 26.9,
-      "score": 0.1511,
+      "price": 89.69,
+      "ma50": 77.27,
+      "ret_5d": -2.0,
+      "ret_20d": 27.3,
+      "score": 0.1402,
       "gap_up": false,
       "thesis_grade": "B",
-      "thesis_score": 57.0
+      "thesis_score": 64.0
     },
     {
       "ticker": "SNOW",
-      "price": 324.25,
-      "ma50": 275.14,
-      "ret_5d": -2.4,
-      "ret_20d": 21.1,
-      "score": 0.1274,
+      "price": 318.7,
+      "ma50": 276.73,
+      "ret_5d": -5.5,
+      "ret_20d": 20.2,
+      "score": 0.1047,
       "gap_up": false,
       "thesis_grade": "B",
-      "thesis_score": 57.0
+      "thesis_score": 59.0
+    },
+    {
+      "ticker": "AMZN",
+      "price": 263.05,
+      "ma50": 249.37,
+      "ret_5d": -0.8,
+      "ret_20d": 12.6,
+      "score": 0.0573,
+      "gap_up": false,
+      "thesis_grade": "B",
+      "thesis_score": 61.0
     },
     {
       "ticker": "MA",
-      "price": 574.64,
-      "ma50": 533.96,
-      "ret_5d": 2.7,
-      "ret_20d": 8.0,
-      "score": 0.0625,
+      "price": 573.4,
+      "ma50": 535.52,
+      "ret_5d": 1.1,
+      "ret_20d": 8.1,
+      "score": 0.056,
+      "gap_up": false,
+      "thesis_grade": "B",
+      "thesis_score": 65.0
+    },
+    {
+      "ticker": "NVDA",
+      "price": 219.26,
+      "ma50": 207.34,
+      "ret_5d": -2.7,
+      "ret_20d": 5.0,
+      "score": 0.03,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 60.0

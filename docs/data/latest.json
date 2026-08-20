@@ -3,21 +3,21 @@
   "run_id": "20260820_143230",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 114162.06,
+    "portfolio_value": 114152.41,
     "cash": 76092.15,
     "buying_power": 72287.5425,
-    "long_market_value": 38069.91,
-    "unrealized_pnl": 3093.85
+    "long_market_value": 38060.26,
+    "unrealized_pnl": 3084.2
   },
   "positions": [
     {
       "symbol": "ABNB",
       "qty": 14,
       "avg_cost": 182.29,
-      "current_price": 184.8,
-      "market_value": 2587.2,
-      "unrealized_pnl": 35.14,
-      "unrealized_pnl_pct": 1.38,
+      "current_price": 184.63,
+      "market_value": 2584.85,
+      "unrealized_pnl": 32.79,
+      "unrealized_pnl_pct": 1.29,
       "stop_loss": 167.71,
       "company": {
         "name": "Airbnb, Inc.",
@@ -34,10 +34,10 @@
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 183.7,
-      "market_value": 2388.1,
-      "unrealized_pnl": -111.28,
-      "unrealized_pnl_pct": -4.45,
+      "current_price": 183.5,
+      "market_value": 2385.5,
+      "unrealized_pnl": -113.88,
+      "unrealized_pnl_pct": -4.56,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -114,10 +114,10 @@
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 419.25,
-      "market_value": 4611.75,
-      "unrealized_pnl": 744.26,
-      "unrealized_pnl_pct": 19.24,
+      "current_price": 420.0,
+      "market_value": 4620.0,
+      "unrealized_pnl": 752.51,
+      "unrealized_pnl_pct": 19.46,
       "stop_loss": 356.86,
       "company": {
         "name": "MongoDB, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "MRVL",
       "qty": 25,
       "avg_cost": 236.67,
-      "current_price": 249.13,
-      "market_value": 6228.16,
-      "unrealized_pnl": 311.41,
-      "unrealized_pnl_pct": 5.26,
+      "current_price": 248.95,
+      "market_value": 6223.75,
+      "unrealized_pnl": 307.0,
+      "unrealized_pnl_pct": 5.19,
       "stop_loss": 217.74,
       "company": {
         "name": "Marvell Technology, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 279.26,
-      "market_value": 2513.34,
-      "unrealized_pnl": 106.38,
-      "unrealized_pnl_pct": 4.42,
+      "current_price": 278.91,
+      "market_value": 2510.19,
+      "unrealized_pnl": 103.23,
+      "unrealized_pnl_pct": 4.29,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -174,10 +174,10 @@
       "symbol": "PANW",
       "qty": 6,
       "avg_cost": 273.5,
-      "current_price": 349.27,
-      "market_value": 2095.62,
-      "unrealized_pnl": 454.62,
-      "unrealized_pnl_pct": 27.7,
+      "current_price": 349.02,
+      "market_value": 2094.15,
+      "unrealized_pnl": 453.15,
+      "unrealized_pnl_pct": 27.61,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -194,10 +194,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 320.51,
-      "market_value": 5128.14,
-      "unrealized_pnl": 741.1,
-      "unrealized_pnl_pct": 16.89,
+      "current_price": 321.29,
+      "market_value": 5140.64,
+      "unrealized_pnl": 753.6,
+      "unrealized_pnl_pct": 17.18,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -214,10 +214,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 343.56,
-      "market_value": 2748.5,
-      "unrealized_pnl": 610.26,
-      "unrealized_pnl_pct": 28.54,
+      "current_price": 341.51,
+      "market_value": 2732.08,
+      "unrealized_pnl": 593.84,
+      "unrealized_pnl_pct": 27.77,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -403,7 +403,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-20T21:34:48.287739+00:00",
+  "sync_at": "2026-08-20T22:35:25.646963+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -440,6 +440,10 @@
       {
         "time": "21:34",
         "value": 114162.06
+      },
+      {
+        "time": "22:35",
+        "value": 114152.41
       }
     ]
   }

@@ -2008,7 +2008,7 @@
   {
     "trade_id": "TRD-20260803140214-CRWD",
     "symbol": "CRWD",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-08-03",
     "entry_ts": "2026-08-03T14:02:14.552838",
     "entry_price": 196.25,
@@ -2022,12 +2022,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "d1fd3ed3-90e9-4801-869d-710910f25d6e",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-08-20",
+    "exit_price": 191.7,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -58.17,
+    "pnl_pct": -2.28,
+    "hold_days": 17,
+    "exit_ts": "2026-08-20T18:14:24.267499"
   },
   {
     "trade_id": "TRD-20260807140230-DD",

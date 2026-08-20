@@ -1127,7 +1127,7 @@
   {
     "trade_id": "TRD-20260618165613-CFG",
     "symbol": "CFG",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-06-18",
     "entry_ts": "2026-06-18T16:56:13.227780",
     "entry_price": 66.83,
@@ -1141,12 +1141,13 @@
     "sector": "financials",
     "weight_version": 1,
     "order_id": "26294890-b570-4193-b81d-ce77952ae3a9",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-08-20",
+    "exit_price": 70.3,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": 121.4,
+    "pnl_pct": 5.19,
+    "hold_days": 63,
+    "exit_ts": "2026-08-20T13:58:51.671326"
   },
   {
     "trade_id": "TRD-20260623140208-CAT",

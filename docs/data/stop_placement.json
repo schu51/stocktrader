@@ -1,14 +1,20 @@
 {
-  "generated_at": "2026-08-19T14:08:11.653488",
+  "generated_at": "2026-08-20T14:09:52.143770",
   "positions_checked": 12,
-  "already_protected": 11,
-  "stops_placed": 0,
+  "already_protected": 10,
+  "stops_placed": 1,
   "stops_failed": 1,
   "results": [
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "MRVL",
+      "stop": 217.74,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

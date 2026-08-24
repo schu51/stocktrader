@@ -2180,7 +2180,7 @@
   {
     "trade_id": "TRD-20260820140241-MRVL",
     "symbol": "MRVL",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-08-20",
     "entry_ts": "2026-08-20T14:02:41.290968",
     "entry_price": 239.0,
@@ -2194,11 +2194,12 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "e8cdec00-4be5-4739-884a-d530f08562de",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-08-24",
+    "exit_price": 224.93,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -296.36,
+    "pnl_pct": -4.96,
+    "hold_days": 4,
+    "exit_ts": "2026-08-24T14:01:48.463376"
   }
 ]

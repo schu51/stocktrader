@@ -3,21 +3,21 @@
   "run_id": "20260824_143838",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113570.11,
+    "portfolio_value": 113542.78,
     "cash": 81713.27,
     "buying_power": 77627.6065,
-    "long_market_value": 31856.84,
-    "unrealized_pnl": 2797.53
+    "long_market_value": 31829.51,
+    "unrealized_pnl": 2770.2
   },
   "positions": [
     {
       "symbol": "ABNB",
       "qty": 14,
       "avg_cost": 182.29,
-      "current_price": 190.1,
-      "market_value": 2661.4,
-      "unrealized_pnl": 109.34,
-      "unrealized_pnl_pct": 4.29,
+      "current_price": 190.25,
+      "market_value": 2663.5,
+      "unrealized_pnl": 111.44,
+      "unrealized_pnl_pct": 4.37,
       "stop_loss": 167.71,
       "company": {
         "name": "Airbnb, Inc.",
@@ -34,10 +34,10 @@
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 187.81,
-      "market_value": 2441.53,
-      "unrealized_pnl": -57.85,
-      "unrealized_pnl_pct": -2.31,
+      "current_price": 187.84,
+      "market_value": 2441.86,
+      "unrealized_pnl": -57.52,
+      "unrealized_pnl_pct": -2.3,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 282.86,
-      "market_value": 2545.71,
-      "unrealized_pnl": 138.75,
-      "unrealized_pnl_pct": 5.76,
+      "current_price": 280.41,
+      "market_value": 2523.72,
+      "unrealized_pnl": 116.76,
+      "unrealized_pnl_pct": 4.85,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "PANW",
       "qty": 6,
       "avg_cost": 273.5,
-      "current_price": 351.2,
-      "market_value": 2107.2,
-      "unrealized_pnl": 466.2,
-      "unrealized_pnl_pct": 28.41,
+      "current_price": 351.91,
+      "market_value": 2111.48,
+      "unrealized_pnl": 470.48,
+      "unrealized_pnl_pct": 28.67,
       "stop_loss": 277.6,
       "company": {
         "name": "Palo Alto Networks, Inc.",
@@ -194,10 +194,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 347.54,
-      "market_value": 2780.32,
-      "unrealized_pnl": 642.08,
-      "unrealized_pnl_pct": 30.03,
+      "current_price": 346.03,
+      "market_value": 2768.26,
+      "unrealized_pnl": 630.02,
+      "unrealized_pnl_pct": 29.47,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -378,7 +378,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-24T20:38:58.218135+00:00",
+  "sync_at": "2026-08-24T21:36:29.714664+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -411,6 +411,10 @@
       {
         "time": "20:38",
         "value": 113570.11
+      },
+      {
+        "time": "21:36",
+        "value": 113542.78
       }
     ]
   }

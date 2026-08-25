@@ -3,21 +3,21 @@
   "run_id": "20260825_144115",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113193.08,
+    "portfolio_value": 113184.22,
     "cash": 81208.23,
     "buying_power": 77147.8185,
-    "long_market_value": 31984.85,
-    "unrealized_pnl": 2030.64
+    "long_market_value": 31975.99,
+    "unrealized_pnl": 2021.78
   },
   "positions": [
     {
       "symbol": "ABNB",
       "qty": 14,
       "avg_cost": 182.29,
-      "current_price": 190.5,
-      "market_value": 2667.0,
-      "unrealized_pnl": 114.94,
-      "unrealized_pnl_pct": 4.5,
+      "current_price": 190.59,
+      "market_value": 2668.26,
+      "unrealized_pnl": 116.2,
+      "unrealized_pnl_pct": 4.55,
       "stop_loss": 167.71,
       "company": {
         "name": "Airbnb, Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CSX",
       "qty": 50,
       "avg_cost": 47.45,
-      "current_price": 51.51,
-      "market_value": 2575.5,
-      "unrealized_pnl": 203.0,
-      "unrealized_pnl_pct": 8.56,
+      "current_price": 51.62,
+      "market_value": 2581.0,
+      "unrealized_pnl": 208.5,
+      "unrealized_pnl_pct": 8.79,
       "stop_loss": 43.65,
       "company": {
         "name": "CSX Corporation",
@@ -114,10 +114,10 @@
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 403.02,
-      "market_value": 4433.22,
-      "unrealized_pnl": 565.73,
-      "unrealized_pnl_pct": 14.63,
+      "current_price": 402.01,
+      "market_value": 4422.11,
+      "unrealized_pnl": 554.62,
+      "unrealized_pnl_pct": 14.34,
       "stop_loss": 356.86,
       "company": {
         "name": "MongoDB, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 277.61,
-      "market_value": 2498.49,
-      "unrealized_pnl": 91.53,
-      "unrealized_pnl_pct": 3.8,
+      "current_price": 276.71,
+      "market_value": 2490.43,
+      "unrealized_pnl": 83.47,
+      "unrealized_pnl_pct": 3.47,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 317.02,
-      "market_value": 5072.32,
-      "unrealized_pnl": 685.28,
-      "unrealized_pnl_pct": 15.62,
+      "current_price": 316.01,
+      "market_value": 5056.16,
+      "unrealized_pnl": 669.12,
+      "unrealized_pnl_pct": 15.25,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -194,10 +194,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 340.09,
-      "market_value": 2720.72,
-      "unrealized_pnl": 582.48,
-      "unrealized_pnl_pct": 27.24,
+      "current_price": 342.55,
+      "market_value": 2740.44,
+      "unrealized_pnl": 602.2,
+      "unrealized_pnl_pct": 28.16,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -394,7 +394,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-25T20:37:29.099227+00:00",
+  "sync_at": "2026-08-25T21:35:56.579150+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -427,6 +427,10 @@
       {
         "time": "20:37",
         "value": 113193.08
+      },
+      {
+        "time": "21:35",
+        "value": 113184.22
       }
     ]
   }

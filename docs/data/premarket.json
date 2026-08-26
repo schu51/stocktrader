@@ -1,82 +1,60 @@
 {
-  "generated_at": "2026-08-25T06:40:15.876838-07:00",
+  "generated_at": "2026-08-26T06:44:40.324657-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
     "strong": 21,
-    "mixed": 21,
-    "weak": 33
+    "mixed": 22,
+    "weak": 32
   },
   "gap_alerts": [
     {
-      "ticker": "HOOD",
-      "prev_close": 103.62,
-      "current": 106.91,
-      "pct_chg": 3.18,
-      "ma50": 100.81,
+      "ticker": "AFRM",
+      "prev_close": 77.94,
+      "current": 76.47,
+      "pct_chg": -1.89,
+      "ma50": 77.04,
       "reasons": [
-        "gap UP 3.2% above 50MA \u2014 momentum alert"
+        "crossed BELOW 50MA (77.04)"
       ]
     },
     {
-      "ticker": "RXRX",
-      "prev_close": 3.25,
-      "current": 3.38,
-      "pct_chg": 3.97,
-      "ma50": 3.29,
+      "ticker": "PANW",
+      "prev_close": 339.9,
+      "current": 338.53,
+      "pct_chg": -0.4,
+      "ma50": 339.55,
       "reasons": [
-        "gap UP 4.0% above 50MA \u2014 momentum alert"
-      ]
-    },
-    {
-      "ticker": "MRVL",
-      "prev_close": 229.29,
-      "current": 243.78,
-      "pct_chg": 6.32,
-      "ma50": 232.08,
-      "reasons": [
-        "gap UP 6.3% above 50MA \u2014 momentum alert"
-      ]
-    },
-    {
-      "ticker": "SMCI",
-      "prev_close": 35.17,
-      "current": 37.46,
-      "pct_chg": 6.51,
-      "ma50": 30.69,
-      "reasons": [
-        "gap UP 6.5% above 50MA \u2014 momentum alert"
+        "crossed BELOW 50MA (339.55)"
       ]
     }
   ],
-  "avoids": [],
-  "gap_up_priority": [
-    "HOOD",
-    "RXRX",
-    "MRVL",
-    "SMCI"
+  "avoids": [
+    "AFRM",
+    "PANW"
   ],
+  "gap_up_priority": [],
   "top_candidates": [
     {
-      "ticker": "VEEV",
-      "price": 245.83,
-      "ma50": 201.13,
-      "ret_5d": 1.3,
-      "ret_20d": 22.2,
-      "score": 0.1593,
+      "ticker": "HOOD",
+      "price": 109.22,
+      "ma50": 101.14,
+      "ret_5d": 14.0,
+      "ret_20d": 21.6,
+      "score": 0.1388,
       "gap_up": false,
       "thesis_grade": "B",
-      "thesis_score": 58.0
+      "thesis_score": 62.0
     },
     {
       "ticker": "DXCM",
-      "price": 90.77,
-      "ma50": 78.25,
-      "ret_5d": 1.3,
-      "ret_20d": 21.3,
-      "score": 0.1318,
+      "price": 88.11,
+      "ma50": 78.5,
+      "ret_5d": -2.0,
+      "ret_20d": 17.3,
+      "score": 0.0948,
       "gap_up": false,
       "thesis_grade": "B",
-      "thesis_score": 64.0
+      "thesis_score": 66.0
     }
   ]
 }

@@ -3,21 +3,21 @@
   "run_id": "20260826_144104",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113447.83,
+    "portfolio_value": 113661.74,
     "cash": 85062.56,
     "buying_power": 80809.432,
-    "long_market_value": 28385.27,
-    "unrealized_pnl": 2635.85
+    "long_market_value": 28599.18,
+    "unrealized_pnl": 2849.77
   },
   "positions": [
     {
       "symbol": "ABNB",
       "qty": 14,
       "avg_cost": 182.29,
-      "current_price": 189.01,
-      "market_value": 2646.14,
-      "unrealized_pnl": 94.08,
-      "unrealized_pnl_pct": 3.69,
+      "current_price": 188.32,
+      "market_value": 2636.48,
+      "unrealized_pnl": 84.42,
+      "unrealized_pnl_pct": 3.31,
       "stop_loss": 167.71,
       "company": {
         "name": "Airbnb, Inc.",
@@ -34,10 +34,10 @@
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 201.41,
-      "market_value": 2618.39,
-      "unrealized_pnl": 119.02,
-      "unrealized_pnl_pct": 4.76,
+      "current_price": 202.72,
+      "market_value": 2635.36,
+      "unrealized_pnl": 135.98,
+      "unrealized_pnl_pct": 5.44,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CSX",
       "qty": 50,
       "avg_cost": 47.45,
-      "current_price": 51.99,
-      "market_value": 2599.75,
-      "unrealized_pnl": 227.25,
-      "unrealized_pnl_pct": 9.58,
+      "current_price": 51.76,
+      "market_value": 2588.0,
+      "unrealized_pnl": 215.5,
+      "unrealized_pnl_pct": 9.08,
       "stop_loss": 43.65,
       "company": {
         "name": "CSX Corporation",
@@ -94,10 +94,10 @@
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 403.07,
-      "market_value": 4433.82,
-      "unrealized_pnl": 566.34,
-      "unrealized_pnl_pct": 14.64,
+      "current_price": 411.49,
+      "market_value": 4526.39,
+      "unrealized_pnl": 658.9,
+      "unrealized_pnl_pct": 17.04,
       "stop_loss": 356.86,
       "company": {
         "name": "MongoDB, Inc.",
@@ -114,10 +114,10 @@
       "symbol": "NET",
       "qty": 9,
       "avg_cost": 267.44,
-      "current_price": 286.15,
-      "market_value": 2575.35,
-      "unrealized_pnl": 168.39,
-      "unrealized_pnl_pct": 7.0,
+      "current_price": 287.5,
+      "market_value": 2587.5,
+      "unrealized_pnl": 180.54,
+      "unrealized_pnl_pct": 7.5,
       "stop_loss": 246.04,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 315.99,
-      "market_value": 5055.84,
-      "unrealized_pnl": 668.8,
-      "unrealized_pnl_pct": 15.25,
+      "current_price": 321.45,
+      "market_value": 5143.2,
+      "unrealized_pnl": 756.16,
+      "unrealized_pnl_pct": 17.24,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -154,10 +154,10 @@
       "symbol": "TEAM",
       "qty": 15,
       "avg_cost": 169.06,
-      "current_price": 168.75,
-      "market_value": 2531.32,
-      "unrealized_pnl": -4.58,
-      "unrealized_pnl_pct": -0.18,
+      "current_price": 170.07,
+      "market_value": 2551.05,
+      "unrealized_pnl": 15.15,
+      "unrealized_pnl_pct": 0.6,
       "stop_loss": 155.54,
       "company": {
         "name": "Atlassian Corporation",
@@ -174,10 +174,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 347.18,
-      "market_value": 2777.44,
-      "unrealized_pnl": 639.2,
-      "unrealized_pnl_pct": 29.89,
+      "current_price": 348.0,
+      "market_value": 2784.0,
+      "unrealized_pnl": 645.76,
+      "unrealized_pnl_pct": 30.2,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -356,9 +356,9 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-08-26T18:18:16.555622+00:00",
+  "sync_at": "2026-08-26T20:59:52.149736+00:00",
   "sync_error": null,
-  "market_open": true,
+  "market_open": false,
   "intraday_today": {
     "date": "2026-08-26",
     "points": [
@@ -373,6 +373,10 @@
       {
         "time": "18:18",
         "value": 113447.83
+      },
+      {
+        "time": "20:59",
+        "value": 113661.74
       }
     ]
   }

@@ -1,14 +1,38 @@
 {
-  "generated_at": "2026-08-26T14:20:15.498873",
-  "positions_checked": 10,
-  "already_protected": 9,
-  "stops_placed": 0,
+  "generated_at": "2026-08-31T19:35:24.883830",
+  "positions_checked": 13,
+  "already_protected": 8,
+  "stops_placed": 4,
   "stops_failed": 1,
   "results": [
+    {
+      "symbol": "CRWD",
+      "stop": 202.92,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "FF",
+      "stop": 4.96,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "FTNT",
+      "stop": 152.77,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "MMSI",
+      "stop": 83.7,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

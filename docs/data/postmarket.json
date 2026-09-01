@@ -1,37 +1,56 @@
 {
-  "date": "2026-08-31",
-  "generated_at": "2026-08-31T23:48:26.298313",
+  "date": "2026-09-01",
+  "generated_at": "2026-09-01T22:34:32.694090",
   "portfolio": {
-    "value": 114873.66,
-    "cash": 71018.15,
-    "total_unrealized": 4061.94,
-    "positions": 14,
-    "winners": 11,
-    "losers": 3,
+    "value": 113067.95,
+    "cash": 73416.17,
+    "total_unrealized": 2230.71,
+    "positions": 13,
+    "winners": 8,
+    "losers": 5,
     "risk_level": "LOW",
-    "risk_score": 24.5
+    "risk_score": 26.3
   },
   "execution": {
-    "signals_generated": 1,
-    "orders_executed": 1,
+    "signals_generated": 0,
+    "orders_executed": 0,
     "orders_skipped": 0,
     "skip_reasons": [],
     "candidates_screened": 12
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 2,
+    "stops_updated": 1,
     "detail": []
   },
-  "closed_today": [],
-  "positions_at_risk": [
+  "closed_today": [
     {
-      "symbol": "HOOD",
-      "pnl_pct": -0.37,
-      "value": 2515.44,
-      "has_stop": false,
-      "risk": "no_stop"
-    },
+      "trade_id": "TRD-20260616140205-CSX",
+      "symbol": "CSX",
+      "status": "CLOSED",
+      "entry_date": "2026-06-16",
+      "entry_ts": "2026-06-16T14:02:05.383180",
+      "entry_price": 47.46,
+      "shares": 50,
+      "stop_loss": 43.66,
+      "trend_score": 70,
+      "confidence": 0.7,
+      "rs_rank": 79,
+      "thesis_score": 57.0,
+      "thesis_grade": "B",
+      "sector": "industrials",
+      "weight_version": 1,
+      "order_id": "30185895-370a-4673-bc85-8a347386dee5",
+      "exit_date": "2026-09-01",
+      "exit_price": 47.95,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": 25.15,
+      "pnl_pct": 1.06,
+      "hold_days": 77,
+      "exit_ts": "2026-09-01T17:19:21.501285"
+    }
+  ],
+  "positions_at_risk": [
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

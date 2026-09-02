@@ -3,21 +3,21 @@
   "run_id": "20260902_173527",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 112260.01,
+    "portfolio_value": 113462.6,
     "cash": 79299.07,
     "buying_power": 75334.1165,
-    "long_market_value": 32960.94,
-    "unrealized_pnl": 1917.82
+    "long_market_value": 34163.53,
+    "unrealized_pnl": 3120.41
   },
   "positions": [
     {
       "symbol": "ABNB",
       "qty": 14,
       "avg_cost": 182.29,
-      "current_price": 184.23,
-      "market_value": 2579.22,
-      "unrealized_pnl": 27.16,
-      "unrealized_pnl_pct": 1.06,
+      "current_price": 183.6,
+      "market_value": 2570.4,
+      "unrealized_pnl": 18.34,
+      "unrealized_pnl_pct": 0.72,
       "stop_loss": 167.71,
       "company": {
         "name": "Airbnb, Inc.",
@@ -34,10 +34,10 @@
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 186.1,
-      "market_value": 2419.3,
-      "unrealized_pnl": -80.08,
-      "unrealized_pnl_pct": -3.2,
+      "current_price": 185.86,
+      "market_value": 2416.18,
+      "unrealized_pnl": -83.2,
+      "unrealized_pnl_pct": -3.33,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -94,10 +94,10 @@
       "symbol": "HOOD",
       "qty": 24,
       "avg_cost": 105.2,
-      "current_price": 107.23,
-      "market_value": 2573.52,
-      "unrealized_pnl": 48.72,
-      "unrealized_pnl_pct": 1.93,
+      "current_price": 109.58,
+      "market_value": 2629.92,
+      "unrealized_pnl": 105.12,
+      "unrealized_pnl_pct": 4.16,
       "stop_loss": 96.78,
       "company": {
         "name": "Robinhood Markets, Inc.",
@@ -114,10 +114,10 @@
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 374.53,
-      "market_value": 4119.84,
-      "unrealized_pnl": 252.35,
-      "unrealized_pnl_pct": 6.53,
+      "current_price": 379.5,
+      "market_value": 4174.5,
+      "unrealized_pnl": 307.01,
+      "unrealized_pnl_pct": 7.94,
       "stop_loss": 356.86,
       "company": {
         "name": "MongoDB, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "MMSI",
       "qty": 28,
       "avg_cost": 90.98,
-      "current_price": 90.13,
-      "market_value": 2523.64,
-      "unrealized_pnl": -23.8,
-      "unrealized_pnl_pct": -0.93,
+      "current_price": 90.15,
+      "market_value": 2524.2,
+      "unrealized_pnl": -23.24,
+      "unrealized_pnl_pct": -0.91,
       "stop_loss": 83.7,
       "company": {
         "name": "Merit Medical Systems, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 307.0,
-      "market_value": 4912.0,
-      "unrealized_pnl": 524.96,
-      "unrealized_pnl_pct": 11.97,
+      "current_price": 373.98,
+      "market_value": 5983.68,
+      "unrealized_pnl": 1596.64,
+      "unrealized_pnl_pct": 36.39,
       "stop_loss": 252.25,
       "company": {
         "name": "Snowflake Inc.",
@@ -174,10 +174,10 @@
       "symbol": "TEAM",
       "qty": 15,
       "avg_cost": 169.06,
-      "current_price": 186.44,
-      "market_value": 2796.6,
-      "unrealized_pnl": 260.7,
-      "unrealized_pnl_pct": 10.28,
+      "current_price": 187.53,
+      "market_value": 2812.95,
+      "unrealized_pnl": 277.05,
+      "unrealized_pnl_pct": 10.93,
       "stop_loss": 155.54,
       "company": {
         "name": "Atlassian Corporation",
@@ -214,10 +214,10 @@
       "symbol": "WDAY",
       "qty": 12,
       "avg_cost": 203.39,
-      "current_price": 200.45,
-      "market_value": 2405.4,
-      "unrealized_pnl": -35.28,
-      "unrealized_pnl_pct": -1.44,
+      "current_price": 201.69,
+      "market_value": 2420.28,
+      "unrealized_pnl": -20.4,
+      "unrealized_pnl_pct": -0.84,
       "stop_loss": 187.12,
       "company": {
         "name": "Workday, Inc.",
@@ -396,7 +396,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-09-02T20:03:19.971353+00:00",
+  "sync_at": "2026-09-02T22:47:54.678813+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -405,6 +405,10 @@
       {
         "time": "20:03",
         "value": 112260.01
+      },
+      {
+        "time": "22:47",
+        "value": 113462.6
       }
     ]
   }

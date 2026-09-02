@@ -1936,7 +1936,7 @@
   {
     "trade_id": "TRD-20260728160514-NET",
     "symbol": "NET",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-07-28",
     "entry_ts": "2026-07-28T16:05:14.556205",
     "entry_price": 267.52,
@@ -1950,12 +1950,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "bd585e57-f6de-4e8e-ba46-c115c63c7243",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-09-02",
+    "exit_price": 270.0,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": 23.11,
+    "pnl_pct": 0.96,
+    "hold_days": 36,
+    "exit_ts": "2026-09-02T17:09:52.528405"
   },
   {
     "trade_id": "TRD-20260730140214-FTNT",

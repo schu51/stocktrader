@@ -1,230 +1,227 @@
 {
-  "generated_at": "2026-09-02T09:54:34.624589-07:00",
+  "generated_at": "2026-09-03T09:44:38.726201-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 22,
-    "mixed": 14,
-    "weak": 38
+    "strong": 25,
+    "mixed": 15,
+    "weak": 35
   },
   "gap_alerts": [
     {
-      "ticker": "MDB",
-      "prev_close": 434.21,
-      "current": 382.0,
-      "pct_chg": -12.02,
-      "ma50": 370.44,
+      "ticker": "AVGO",
+      "prev_close": 367.24,
+      "current": 355.94,
+      "pct_chg": -3.08,
+      "ma50": 384.06,
       "reasons": [
-        "gap down -12.0%",
-        "volume spike 3.3x avg"
+        "gap down -3.1%"
       ]
     },
     {
-      "ticker": "PANW",
-      "prev_close": 362.09,
-      "current": 323.26,
-      "pct_chg": -10.73,
-      "ma50": 345.85,
+      "ticker": "MSFT",
+      "prev_close": 496.82,
+      "current": 512.0,
+      "pct_chg": 3.06,
+      "ma50": 440.65,
       "reasons": [
-        "gap down -10.7%",
-        "crossed BELOW 50MA (345.85)"
+        "gap UP 3.1% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "PLTR",
-      "prev_close": 179.92,
-      "current": 168.74,
-      "pct_chg": -6.21,
-      "ma50": 147.15,
+      "ticker": "ANET",
+      "prev_close": 186.1,
+      "current": 191.88,
+      "pct_chg": 3.1,
+      "ma50": 182.37,
       "reasons": [
-        "gap down -6.2%"
+        "gap UP 3.1% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "FTNT",
-      "prev_close": 161.85,
-      "current": 152.06,
-      "pct_chg": -6.05,
-      "ma50": 158.38,
+      "ticker": "WDAY",
+      "prev_close": 200.87,
+      "current": 207.6,
+      "pct_chg": 3.35,
+      "ma50": 164.16,
       "reasons": [
-        "gap down -6.0%",
-        "crossed BELOW 50MA (158.38)"
+        "gap UP 3.4% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "DDOG",
-      "prev_close": 223.84,
-      "current": 210.72,
-      "pct_chg": -5.86,
-      "ma50": 249.25,
+      "ticker": "CRM",
+      "prev_close": 256.93,
+      "current": 265.7,
+      "pct_chg": 3.41,
+      "ma50": 189.5,
       "reasons": [
-        "gap down -5.9%"
+        "gap UP 3.4% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "CRWD",
-      "prev_close": 215.07,
-      "current": 202.52,
-      "pct_chg": -5.84,
-      "ma50": 198.99,
+      "ticker": "META",
+      "prev_close": 592.85,
+      "current": 613.54,
+      "pct_chg": 3.49,
+      "ma50": 594.07,
       "reasons": [
-        "gap down -5.8%"
-      ]
-    },
-    {
-      "ticker": "NET",
-      "prev_close": 285.51,
-      "current": 269.65,
-      "pct_chg": -5.55,
-      "ma50": 277.9,
-      "reasons": [
-        "gap down -5.6%",
-        "crossed BELOW 50MA (277.90)"
+        "gap UP 3.5% above 50MA \u2014 momentum alert"
       ]
     },
     {
       "ticker": "OKTA",
-      "prev_close": 166.43,
-      "current": 158.29,
-      "pct_chg": -4.89,
-      "ma50": 142.82,
+      "prev_close": 163.15,
+      "current": 168.9,
+      "pct_chg": 3.52,
+      "ma50": 144.89,
       "reasons": [
-        "gap down -4.9%"
+        "gap UP 3.5% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "S",
-      "prev_close": 20.63,
-      "current": 19.67,
-      "pct_chg": -4.68,
-      "ma50": 19.63,
+      "ticker": "NET",
+      "prev_close": 272.74,
+      "current": 283.67,
+      "pct_chg": 4.01,
+      "ma50": 279.17,
       "reasons": [
-        "gap down -4.7%"
+        "gap UP 4.0% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "SNOW",
-      "prev_close": 319.8,
-      "current": 305.73,
-      "pct_chg": -4.4,
-      "ma50": 290.55,
+      "ticker": "TEAM",
+      "prev_close": 186.44,
+      "current": 194.67,
+      "pct_chg": 4.41,
+      "ma50": 123.61,
       "reasons": [
-        "gap down -4.4%"
+        "gap UP 4.4% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "ZS",
-      "prev_close": 178.37,
-      "current": 171.47,
-      "pct_chg": -3.87,
-      "ma50": 157.84,
+      "ticker": "CRWD",
+      "prev_close": 203.42,
+      "current": 214.03,
+      "pct_chg": 5.22,
+      "ma50": 199.93,
       "reasons": [
-        "gap down -3.9%"
-      ]
-    },
-    {
-      "ticker": "KTOS",
-      "prev_close": 49.34,
-      "current": 47.53,
-      "pct_chg": -3.67,
-      "ma50": 52.27,
-      "reasons": [
-        "gap down -3.7%"
+        "gap UP 5.2% above 50MA \u2014 momentum alert"
       ]
     },
     {
       "ticker": "NOW",
-      "prev_close": 142.9,
-      "current": 137.77,
-      "pct_chg": -3.59,
-      "ma50": 114.97,
+      "prev_close": 136.72,
+      "current": 144.7,
+      "pct_chg": 5.84,
+      "ma50": 115.97,
       "reasons": [
-        "gap down -3.6%"
+        "gap UP 5.8% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "NVDA",
-      "prev_close": 217.44,
-      "current": 225.89,
-      "pct_chg": 3.89,
-      "ma50": 209.31,
+      "ticker": "TSLA",
+      "prev_close": 357.01,
+      "current": 381.93,
+      "pct_chg": 6.98,
+      "ma50": 358.48,
       "reasons": [
-        "gap UP 3.9% above 50MA \u2014 momentum alert"
+        "gap UP 7.0% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "NU",
-      "prev_close": 14.46,
-      "current": 15.35,
-      "pct_chg": 6.12,
-      "ma50": 14.06,
+      "ticker": "PLTR",
+      "prev_close": 169.46,
+      "current": 182.96,
+      "pct_chg": 7.97,
+      "ma50": 148.56,
       "reasons": [
-        "gap UP 6.1% above 50MA \u2014 momentum alert"
+        "gap UP 8.0% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "COIN",
+      "prev_close": 174.96,
+      "current": 192.8,
+      "pct_chg": 10.2,
+      "ma50": 162.31,
+      "reasons": [
+        "gap UP 10.2% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "MSTR",
+      "prev_close": 123.19,
+      "current": 140.11,
+      "pct_chg": 13.73,
+      "ma50": 102.26,
+      "reasons": [
+        "gap UP 13.7% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "HOOD",
+      "prev_close": 106.99,
+      "current": 122.74,
+      "pct_chg": 14.72,
+      "ma50": 101.84,
+      "reasons": [
+        "gap UP 14.7% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "SNOW",
+      "prev_close": 305.84,
+      "current": 372.26,
+      "pct_chg": 21.72,
+      "ma50": 295.43,
+      "reasons": [
+        "volume spike 3.3x avg",
+        "gap UP 21.7% above 50MA \u2014 momentum alert"
       ]
     }
   ],
   "avoids": [
-    "MDB",
-    "PANW",
-    "PLTR",
-    "FTNT",
-    "DDOG",
-    "CRWD",
-    "NET",
-    "OKTA",
-    "S",
-    "SNOW",
-    "ZS",
-    "KTOS",
-    "NOW"
+    "AVGO"
   ],
   "gap_up_priority": [
-    "NVDA",
-    "NU"
+    "MSFT",
+    "ANET",
+    "WDAY",
+    "CRM",
+    "META",
+    "OKTA",
+    "NET",
+    "TEAM",
+    "CRWD",
+    "NOW",
+    "TSLA",
+    "PLTR",
+    "COIN",
+    "MSTR",
+    "HOOD",
+    "SNOW"
   ],
   "top_candidates": [
     {
       "ticker": "VEEV",
-      "price": 278.5,
-      "ma50": 215.16,
-      "ret_5d": 13.7,
-      "ret_20d": 30.4,
-      "score": 0.2502,
-      "gap_up": false,
-      "thesis_grade": "B",
-      "thesis_score": 64.0
-    },
-    {
-      "ticker": "NVDA",
-      "price": 225.89,
-      "ma50": 209.31,
-      "ret_5d": 7.7,
-      "ret_20d": 3.0,
-      "score": 0.064,
-      "gap_up": true,
-      "thesis_grade": "B",
-      "thesis_score": 65.0
-    },
-    {
-      "ticker": "MSFT",
-      "price": 495.95,
-      "ma50": 437.69,
-      "ret_5d": -0.1,
-      "ret_20d": 1.9,
-      "score": 0.0588,
-      "gap_up": false,
-      "thesis_grade": "B",
-      "thesis_score": 59.0
-    },
-    {
-      "ticker": "HOOD",
-      "price": 105.64,
-      "ma50": 101.3,
-      "ret_5d": -2.7,
-      "ret_20d": 13.8,
-      "score": 0.0506,
+      "price": 281.57,
+      "ma50": 217.61,
+      "ret_5d": -0.2,
+      "ret_20d": 29.3,
+      "score": 0.2048,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 57.0
+    },
+    {
+      "ticker": "SNOW",
+      "price": 372.26,
+      "ma50": 295.43,
+      "ret_5d": 13.1,
+      "ret_20d": 17.1,
+      "score": 0.1945,
+      "gap_up": true,
+      "thesis_grade": "B",
+      "thesis_score": 59.0
     }
   ]
 }

@@ -1,23 +1,23 @@
 {
-  "generated_at": "2026-09-03T17:30:12.424262",
-  "run_id": "20260903_173005",
+  "generated_at": "2026-09-04T17:22:16.230333",
+  "run_id": "20260904_172208",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113403.3,
+    "portfolio_value": 113360.08,
     "cash": 72644.85,
     "buying_power": 69012.6075,
-    "long_market_value": 40758.45,
-    "unrealized_pnl": 3061.32
+    "long_market_value": 40715.23,
+    "unrealized_pnl": 3018.73
   },
   "positions": [
     {
       "symbol": "ABNB",
       "qty": 14,
       "avg_cost": 182.29,
-      "current_price": 182.08,
-      "market_value": 2549.16,
-      "unrealized_pnl": -2.9,
-      "unrealized_pnl_pct": -0.11,
+      "current_price": 182.39,
+      "market_value": 2553.46,
+      "unrealized_pnl": 1.4,
+      "unrealized_pnl_pct": 0.06,
       "stop_loss": 167.71,
       "company": {
         "name": "Airbnb, Inc.",
@@ -27,17 +27,17 @@
         "market_cap": "$108.6B",
         "week_52_high": 193.45,
         "week_52_low": 110.81,
-        "pct_from_high": 3.7
+        "pct_from_high": 5.7
       }
     },
     {
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 193.05,
-      "market_value": 2509.65,
-      "unrealized_pnl": 10.27,
-      "unrealized_pnl_pct": 0.41,
+      "current_price": 192.22,
+      "market_value": 2498.86,
+      "unrealized_pnl": -0.52,
+      "unrealized_pnl_pct": -0.02,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -47,24 +47,27 @@
         "market_cap": "$214.7B",
         "week_52_high": 214.89,
         "week_52_low": 114.52,
-        "pct_from_high": 10.9
+        "pct_from_high": 10.5
       }
     },
     {
       "symbol": "CRWD",
       "qty": 12,
       "avg_cost": 213.27,
-      "current_price": 213.97,
-      "market_value": 2567.7,
-      "unrealized_pnl": 8.51,
-      "unrealized_pnl_pct": 0.33,
-      "stop_loss": null,
+      "current_price": 213.55,
+      "market_value": 2562.6,
+      "unrealized_pnl": 3.41,
+      "unrealized_pnl_pct": 0.13,
+      "stop_loss": 196.2,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
         "sector": "Technology",
         "industry": "Software - Infrastructure",
         "summary": "CrowdStrike Holdings, Inc. provides cybersecurity solutions in the United States and internationally. Its unified platform provides cloud-delivered protection of endpoints, cloud workloads, identity, and data through a software as a\u2026",
-        "market_cap": "$191.8B"
+        "market_cap": "$191.8B",
+        "week_52_high": 233.88,
+        "week_52_low": 85.68,
+        "pct_from_high": 8.7
       }
     },
     {
@@ -104,17 +107,17 @@
         "market_cap": "$250M",
         "week_52_high": 6.99,
         "week_52_low": 3.09,
-        "pct_from_high": 24.9
+        "pct_from_high": 24.6
       }
     },
     {
       "symbol": "HOOD",
       "qty": 24,
       "avg_cost": 105.2,
-      "current_price": 124.24,
-      "market_value": 2981.76,
-      "unrealized_pnl": 456.96,
-      "unrealized_pnl_pct": 18.1,
+      "current_price": 123.39,
+      "market_value": 2961.36,
+      "unrealized_pnl": 436.56,
+      "unrealized_pnl_pct": 17.29,
       "stop_loss": 96.78,
       "company": {
         "name": "Robinhood Markets, Inc.",
@@ -124,17 +127,17 @@
         "market_cap": "$95.6B",
         "week_52_high": 153.86,
         "week_52_low": 63.51,
-        "pct_from_high": 20.0
+        "pct_from_high": 19.8
       }
     },
     {
       "symbol": "MDB",
       "qty": 11,
       "avg_cost": 351.59,
-      "current_price": 376.13,
-      "market_value": 4137.43,
-      "unrealized_pnl": 269.94,
-      "unrealized_pnl_pct": 6.98,
+      "current_price": 376.98,
+      "market_value": 4146.78,
+      "unrealized_pnl": 279.29,
+      "unrealized_pnl_pct": 7.22,
       "stop_loss": 356.86,
       "company": {
         "name": "MongoDB, Inc.",
@@ -144,17 +147,17 @@
         "market_cap": "$28.8B",
         "week_52_high": 473.1,
         "week_52_low": 215.68,
-        "pct_from_high": 19.1
+        "pct_from_high": 20.3
       }
     },
     {
       "symbol": "MMSI",
       "qty": 28,
       "avg_cost": 90.98,
-      "current_price": 89.22,
-      "market_value": 2498.3,
-      "unrealized_pnl": -49.14,
-      "unrealized_pnl_pct": -1.93,
+      "current_price": 89.24,
+      "market_value": 2498.72,
+      "unrealized_pnl": -48.72,
+      "unrealized_pnl_pct": -1.91,
       "stop_loss": 83.7,
       "company": {
         "name": "Merit Medical Systems, Inc.",
@@ -164,27 +167,37 @@
         "market_cap": "$5.4B",
         "week_52_high": 94.75,
         "week_52_low": 59.74,
-        "pct_from_high": 5.9
+        "pct_from_high": 5.8
       }
     },
     {
       "symbol": "NVDA",
       "qty": 18,
       "avg_cost": 227.49,
-      "current_price": 231.93,
-      "market_value": 4174.74,
-      "unrealized_pnl": 79.92,
-      "unrealized_pnl_pct": 1.95,
-      "stop_loss": null
+      "current_price": 230.81,
+      "market_value": 4154.58,
+      "unrealized_pnl": 59.76,
+      "unrealized_pnl_pct": 1.46,
+      "stop_loss": 209.29,
+      "company": {
+        "name": "NVIDIA Corporation",
+        "sector": "Technology",
+        "industry": "Semiconductors",
+        "summary": "NVIDIA Corporation operates as a data center scale AI infrastructure company in the United States, Taiwan, China, Hong Kong, Europe, and internationally. It operates through Compute & Networking, and Graphics segments. The Compute &\u2026",
+        "market_cap": "$5.6T",
+        "week_52_high": 236.54,
+        "week_52_low": 164.07,
+        "pct_from_high": 2.4
+      }
     },
     {
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 343.07,
-      "market_value": 5489.2,
-      "unrealized_pnl": 1102.16,
-      "unrealized_pnl_pct": 25.12,
+      "current_price": 342.7,
+      "market_value": 5483.28,
+      "unrealized_pnl": 1096.24,
+      "unrealized_pnl_pct": 24.99,
       "stop_loss": 278.3,
       "company": {
         "name": "Snowflake Inc.",
@@ -192,19 +205,19 @@
         "industry": "Software - Application",
         "summary": "Snowflake Inc. provides a cloud-based data platform for various organizations in the United States and internationally. The company's platform includes artificial intelligence (AI) Data Cloud, which enables customers to consolidate data\u2026",
         "market_cap": "$93.5B",
-        "week_52_high": 341.95,
+        "week_52_high": 384.56,
         "week_52_low": 118.3,
-        "pct_from_high": -7.9
+        "pct_from_high": 10.9
       }
     },
     {
       "symbol": "TEAM",
       "qty": 15,
       "avg_cost": 169.06,
-      "current_price": 189.98,
-      "market_value": 2849.7,
-      "unrealized_pnl": 313.8,
-      "unrealized_pnl_pct": 12.37,
+      "current_price": 189.93,
+      "market_value": 2848.95,
+      "unrealized_pnl": 313.05,
+      "unrealized_pnl_pct": 12.35,
       "stop_loss": 155.54,
       "company": {
         "name": "Atlassian Corporation",
@@ -212,19 +225,19 @@
         "industry": "Software - Application",
         "summary": "Atlassian Corporation provides a collaboration software that enables organizations to connect all teams through a system of work that unlocks productivity at scale worldwide. The company's product portfolio includes Jira, Confluence, Loom,\u2026",
         "market_cap": "$42.7B",
-        "week_52_high": 197.3,
+        "week_52_high": 198.6,
         "week_52_low": 56.01,
-        "pct_from_high": 1.4
+        "pct_from_high": 4.4
       }
     },
     {
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 371.27,
-      "market_value": 2970.16,
-      "unrealized_pnl": 831.92,
-      "unrealized_pnl_pct": 38.91,
+      "current_price": 371.83,
+      "market_value": 2974.64,
+      "unrealized_pnl": 836.4,
+      "unrealized_pnl_pct": 39.12,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -232,19 +245,19 @@
         "industry": "Oil & Gas Refining & Marketing",
         "summary": "Valero Energy Corporation manufactures, markets, and sells petroleum-based and low-carbon liquid transportation fuels and petrochemical products in the United States, Canada, the United Kingdom, Ireland, Latin America, Mexico, Peru, and\u2026",
         "market_cap": "$77.9B",
-        "week_52_high": 370.11,
+        "week_52_high": 375.11,
         "week_52_low": 153.2,
-        "pct_from_high": -0.3
+        "pct_from_high": 0.9
       }
     },
     {
       "symbol": "WDAY",
       "qty": 12,
       "avg_cost": 203.39,
-      "current_price": 198.35,
-      "market_value": 2380.2,
-      "unrealized_pnl": -60.48,
-      "unrealized_pnl_pct": -2.48,
+      "current_price": 198.51,
+      "market_value": 2382.18,
+      "unrealized_pnl": -58.5,
+      "unrealized_pnl_pct": -2.4,
       "stop_loss": 187.12,
       "company": {
         "name": "Workday, Inc.",
@@ -254,76 +267,18 @@
         "market_cap": "$48.0B",
         "week_52_high": 249.85,
         "week_52_low": 110.36,
-        "pct_from_high": 16.9
+        "pct_from_high": 20.5
       }
     }
   ],
   "todays_run": {
     "mode": "EXECUTE",
     "candidates_screened": 11,
-    "buy_signals": 2,
-    "orders_submitted": 2,
-    "total_invested": 6653.16,
-    "signals": [
-      {
-        "symbol": "NVDA",
-        "action": "BUY",
-        "shares": 18,
-        "limit_price": 227.49,
-        "stop_loss": 209.29,
-        "confidence": 0.85,
-        "signal_strength": 1.0,
-        "trend_score": 83,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 83/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 83/100)",
-          "MACD bullish crossover",
-          "MACD histogram expanding bullish",
-          "RSI in healthy uptrend range (59)"
-        ],
-        "executed": true
-      },
-      {
-        "symbol": "CRWD",
-        "action": "BUY",
-        "shares": 12,
-        "limit_price": 213.27,
-        "stop_loss": 196.21,
-        "confidence": 0.85,
-        "signal_strength": 0.5,
-        "trend_score": 70,
-        "reasons": [
-          "\ud83d\udcca Trend Score: 70/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 70/100)",
-          "RSI in healthy uptrend range (53)",
-          "Price above 50 & 200 MA with bullish alignment",
-          "Strong uptrend confirmed (score: 71)"
-        ],
-        "executed": true
-      }
-    ],
-    "execution_details": [
-      {
-        "symbol": "NVDA",
-        "shares": 18,
-        "limit_price": 227.49,
-        "stop_loss": 209.29,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "daf4c1bf-8950-4937-b35d-65e5fffb5948",
-        "reason": null
-      },
-      {
-        "symbol": "CRWD",
-        "shares": 12,
-        "limit_price": 213.27,
-        "stop_loss": 196.21,
-        "confidence": 0.85,
-        "status": "submitted",
-        "order_id": "3e9fb2f5-f7c4-471b-b34b-3358bdedae4f",
-        "reason": null
-      }
-    ]
+    "buy_signals": 0,
+    "orders_submitted": 0,
+    "total_invested": 0,
+    "signals": [],
+    "execution_details": []
   },
   "persistent_performers": [],
   "exits": {
@@ -333,42 +288,42 @@
         "symbol": "SNOW",
         "trigger": "TRAILING_STOP_UPDATE",
         "new_stop": 278.3,
-        "pnl_pct": 34.61,
-        "current": 369.09,
+        "pnl_pct": 25.06,
+        "current": 342.89,
         "tier": "25%+ gain \u2192 break-even stop",
         "executed": true,
-        "order_id": "56e8f8c3-cbbb-497c-9ee4-f9439f931bf3"
+        "order_id": "c39025d0-d408-44f5-963e-d7bfe75f5cdf"
       },
       {
         "symbol": "VLO",
         "trigger": "TRAILING_STOP_UPDATE",
         "new_stop": 271.29,
-        "pnl_pct": 38.88,
-        "current": 371.2,
+        "pnl_pct": 39.02,
+        "current": 371.58,
         "tier": "25%+ gain \u2192 break-even stop",
         "executed": true,
-        "order_id": "d10e6411-f48c-4182-beb6-889341947bc5"
+        "order_id": "84104a03-b3f6-4a46-98b9-634a4a97cde8"
       }
     ],
-    "positions_checked": 11,
+    "positions_checked": 13,
     "mode": "EXECUTE"
   },
   "risk_assessment": {
-    "timestamp": "2026-09-03T17:30:09.021735",
-    "portfolio_value": 113984.0,
+    "timestamp": "2026-09-04T17:22:12.601097",
+    "portfolio_value": 113360.08,
     "risk_metrics": {
       "drawdown": {
-        "current_value": 113984.0,
+        "current_value": 113360.08,
         "peak_value": 126520.62,
         "peak_date": null,
-        "drawdown_amount": 12536.62,
-        "drawdown_pct": 9.91,
+        "drawdown_amount": 13160.54,
+        "drawdown_pct": 10.4,
         "max_allowed_pct": 15.0,
-        "status": "CAUTION",
-        "action_required": false
+        "status": "WARNING",
+        "action_required": true
       },
       "cash_allocation": {
-        "current_pct": 69.57,
+        "current_pct": 64.08,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
         "status": "OK"
@@ -376,32 +331,40 @@
     },
     "concentration_risk": {
       "largest_position": "SNOW",
-      "largest_allocation_pct": 5.18,
-      "top_5_allocation_pct": 16.84,
+      "largest_allocation_pct": 4.84,
+      "top_5_allocation_pct": 17.56,
       "max_allowed_top_5_pct": 40.0,
-      "num_positions": 11,
-      "herfindahl_index": 0.009255684865987
+      "num_positions": 13,
+      "herfindahl_index": 0.010713222013846136
     },
     "position_risks": [
       {
         "symbol": "ABNB",
-        "allocation_pct": 2.29,
-        "unrealized_pnl_pct": 2.13,
+        "allocation_pct": 2.25,
+        "unrealized_pnl_pct": 0.06,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "ANET",
-        "allocation_pct": 2.18,
-        "unrealized_pnl_pct": -0.36,
+        "allocation_pct": 2.2,
+        "unrealized_pnl_pct": -0.01,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "CRWD",
+        "allocation_pct": 2.26,
+        "unrealized_pnl_pct": 0.15,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CTLP",
-        "allocation_pct": 2.76,
+        "allocation_pct": 2.78,
         "unrealized_pnl_pct": 5.26,
         "has_stop_loss": false,
         "has_trailing_stop": false,
@@ -411,89 +374,82 @@
       },
       {
         "symbol": "FF",
-        "allocation_pct": 2.19,
-        "unrealized_pnl_pct": -2.6,
+        "allocation_pct": 2.21,
+        "unrealized_pnl_pct": -2.23,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "HOOD",
-        "allocation_pct": 2.59,
-        "unrealized_pnl_pct": 17.03,
+        "allocation_pct": 2.61,
+        "unrealized_pnl_pct": 17.29,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "MDB",
-        "allocation_pct": 3.69,
-        "unrealized_pnl_pct": 8.83,
+        "allocation_pct": 3.66,
+        "unrealized_pnl_pct": 7.22,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "MMSI",
-        "allocation_pct": 2.19,
-        "unrealized_pnl_pct": -2.0,
+        "allocation_pct": 2.2,
+        "unrealized_pnl_pct": -1.91,
+        "has_stop_loss": true,
+        "has_trailing_stop": false,
+        "risk_flags": []
+      },
+      {
+        "symbol": "NVDA",
+        "allocation_pct": 3.66,
+        "unrealized_pnl_pct": 1.42,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "SNOW",
-        "allocation_pct": 5.18,
-        "unrealized_pnl_pct": 34.71,
+        "allocation_pct": 4.84,
+        "unrealized_pnl_pct": 24.99,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "TEAM",
-        "allocation_pct": 2.56,
-        "unrealized_pnl_pct": 15.04,
+        "allocation_pct": 2.51,
+        "unrealized_pnl_pct": 12.35,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "VLO",
-        "allocation_pct": 2.61,
-        "unrealized_pnl_pct": 38.88,
+        "allocation_pct": 2.62,
+        "unrealized_pnl_pct": 39.12,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "WDAY",
-        "allocation_pct": 2.19,
-        "unrealized_pnl_pct": 2.04,
+        "allocation_pct": 2.1,
+        "unrealized_pnl_pct": -2.4,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       }
     ],
-    "overall_risk_score": 25.7,
+    "overall_risk_score": 26.9,
     "recommendations": [
+      "Portfolio drawdown at 10.4% - consider risk reduction",
       "CTLP: Add stop-loss protection"
     ],
     "risk_level": "LOW"
-  },
-  "sync_at": "2026-09-04T16:49:07.573056+00:00",
-  "sync_error": null,
-  "market_open": true,
-  "intraday_today": {
-    "date": "2026-09-04",
-    "points": [
-      {
-        "time": "00:19",
-        "value": 113834.21
-      },
-      {
-        "time": "16:49",
-        "value": 113403.3
-      }
-    ]
   }
 }

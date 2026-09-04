@@ -1,14 +1,26 @@
 {
-  "generated_at": "2026-09-03T17:08:03.378402",
-  "positions_checked": 11,
+  "generated_at": "2026-09-04T16:59:47.129402",
+  "positions_checked": 13,
   "already_protected": 10,
-  "stops_placed": 0,
+  "stops_placed": 2,
   "stops_failed": 1,
   "results": [
+    {
+      "symbol": "CRWD",
+      "stop": 196.2,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
+    },
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "NVDA",
+      "stop": 209.29,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

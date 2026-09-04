@@ -1986,7 +1986,7 @@
   {
     "trade_id": "TRD-20260803140214-MDB",
     "symbol": "MDB",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-08-03",
     "entry_ts": "2026-08-03T14:02:14.357490",
     "entry_price": 372.75,
@@ -2000,12 +2000,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "be64b803-4993-41c4-9dcc-8940d6687e8d",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-09-04",
+    "exit_price": 372.24,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": 240.68,
+    "pnl_pct": 5.87,
+    "hold_days": 32,
+    "exit_ts": "2026-09-04T19:35:05.722042"
   },
   {
     "trade_id": "TRD-20260803140214-CRWD",

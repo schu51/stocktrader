@@ -3,11 +3,11 @@
   "run_id": "20260904_172208",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 113153.36,
-    "cash": 76737.62,
-    "buying_power": 72900.73899999999,
-    "long_market_value": 36415.74,
-    "unrealized_pnl": 2586.1
+    "portfolio_value": 113146.45,
+    "cash": 76737.51,
+    "buying_power": 72900.63449999999,
+    "long_market_value": 36408.94,
+    "unrealized_pnl": 2579.3
   },
   "positions": [
     {
@@ -34,10 +34,10 @@
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 194.22,
-      "market_value": 2524.85,
-      "unrealized_pnl": 25.47,
-      "unrealized_pnl_pct": 1.02,
+      "current_price": 193.78,
+      "market_value": 2519.14,
+      "unrealized_pnl": 19.76,
+      "unrealized_pnl_pct": 0.79,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CRWD",
       "qty": 12,
       "avg_cost": 213.27,
-      "current_price": 213.26,
-      "market_value": 2559.11,
-      "unrealized_pnl": -0.08,
-      "unrealized_pnl_pct": -0.0,
+      "current_price": 213.1,
+      "market_value": 2557.2,
+      "unrealized_pnl": -1.99,
+      "unrealized_pnl_pct": -0.08,
       "stop_loss": 196.2,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -114,10 +114,10 @@
       "symbol": "HOOD",
       "qty": 24,
       "avg_cost": 105.2,
-      "current_price": 121.94,
-      "market_value": 2926.56,
-      "unrealized_pnl": 401.76,
-      "unrealized_pnl_pct": 15.91,
+      "current_price": 122.11,
+      "market_value": 2930.64,
+      "unrealized_pnl": 405.84,
+      "unrealized_pnl_pct": 16.07,
       "stop_loss": 96.78,
       "company": {
         "name": "Robinhood Markets, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "NVDA",
       "qty": 18,
       "avg_cost": 227.49,
-      "current_price": 229.75,
-      "market_value": 4135.5,
-      "unrealized_pnl": 40.68,
-      "unrealized_pnl_pct": 0.99,
+      "current_price": 230.36,
+      "market_value": 4146.48,
+      "unrealized_pnl": 51.66,
+      "unrealized_pnl_pct": 1.26,
       "stop_loss": 209.29,
       "company": {
         "name": "NVIDIA Corporation",
@@ -174,10 +174,10 @@
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 338.18,
-      "market_value": 5410.88,
-      "unrealized_pnl": 1023.84,
-      "unrealized_pnl_pct": 23.34,
+      "current_price": 337.18,
+      "market_value": 5394.88,
+      "unrealized_pnl": 1007.84,
+      "unrealized_pnl_pct": 22.97,
       "stop_loss": 278.3,
       "company": {
         "name": "Snowflake Inc.",
@@ -194,10 +194,10 @@
       "symbol": "TEAM",
       "qty": 15,
       "avg_cost": 169.06,
-      "current_price": 189.85,
-      "market_value": 2847.75,
-      "unrealized_pnl": 311.85,
-      "unrealized_pnl_pct": 12.3,
+      "current_price": 189.58,
+      "market_value": 2843.7,
+      "unrealized_pnl": 307.8,
+      "unrealized_pnl_pct": 12.14,
       "stop_loss": 155.54,
       "company": {
         "name": "Atlassian Corporation",
@@ -214,10 +214,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 370.6,
-      "market_value": 2964.8,
-      "unrealized_pnl": 826.56,
-      "unrealized_pnl_pct": 38.66,
+      "current_price": 370.72,
+      "market_value": 2965.76,
+      "unrealized_pnl": 827.52,
+      "unrealized_pnl_pct": 38.7,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -234,10 +234,10 @@
       "symbol": "WDAY",
       "qty": 12,
       "avg_cost": 203.39,
-      "current_price": 195.39,
-      "market_value": 2344.63,
-      "unrealized_pnl": -96.05,
-      "unrealized_pnl_pct": -3.94,
+      "current_price": 195.79,
+      "market_value": 2349.48,
+      "unrealized_pnl": -91.2,
+      "unrealized_pnl_pct": -3.74,
       "stop_loss": 187.12,
       "company": {
         "name": "Workday, Inc.",
@@ -432,23 +432,15 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-09-04T23:54:43.824623+00:00",
+  "sync_at": "2026-09-07T18:12:41.961597+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
-    "date": "2026-09-04",
+    "date": "2026-09-07",
     "points": [
       {
-        "time": "19:23",
-        "value": 113159.88
-      },
-      {
-        "time": "21:43",
-        "value": 113168.06
-      },
-      {
-        "time": "23:54",
-        "value": 113153.36
+        "time": "18:12",
+        "value": 113146.45
       }
     ]
   }

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-04T17:22:16.230333",
-  "run_id": "20260904_172208",
+  "generated_at": "2026-09-07T18:35:58.018589",
+  "run_id": "20260907_183545",
   "model_status": "healthy",
   "account": {
     "portfolio_value": 113146.45,
@@ -27,7 +27,7 @@
         "market_cap": "$108.6B",
         "week_52_high": 193.45,
         "week_52_low": 110.81,
-        "pct_from_high": 5.7
+        "pct_from_high": 5.9
       }
     },
     {
@@ -47,7 +47,7 @@
         "market_cap": "$214.7B",
         "week_52_high": 214.89,
         "week_52_low": 114.52,
-        "pct_from_high": 10.5
+        "pct_from_high": 9.8
       }
     },
     {
@@ -67,7 +67,7 @@
         "market_cap": "$191.8B",
         "week_52_high": 233.88,
         "week_52_low": 85.68,
-        "pct_from_high": 8.7
+        "pct_from_high": 8.9
       }
     },
     {
@@ -107,7 +107,7 @@
         "market_cap": "$250M",
         "week_52_high": 6.99,
         "week_52_low": 3.09,
-        "pct_from_high": 24.6
+        "pct_from_high": 24.7
       }
     },
     {
@@ -127,7 +127,7 @@
         "market_cap": "$95.6B",
         "week_52_high": 153.86,
         "week_52_low": 63.51,
-        "pct_from_high": 19.8
+        "pct_from_high": 20.6
       }
     },
     {
@@ -147,7 +147,7 @@
         "market_cap": "$5.4B",
         "week_52_high": 94.75,
         "week_52_low": 59.74,
-        "pct_from_high": 5.8
+        "pct_from_high": 5.4
       }
     },
     {
@@ -166,8 +166,8 @@
         "summary": "NVIDIA Corporation operates as a data center scale AI infrastructure company in the United States, Taiwan, China, Hong Kong, Europe, and internationally. It operates through Compute & Networking, and Graphics segments. The Compute &\u2026",
         "market_cap": "$5.6T",
         "week_52_high": 236.54,
-        "week_52_low": 164.07,
-        "pct_from_high": 2.4
+        "week_52_low": 164.27,
+        "pct_from_high": 2.6
       }
     },
     {
@@ -187,7 +187,7 @@
         "market_cap": "$93.5B",
         "week_52_high": 384.56,
         "week_52_low": 118.3,
-        "pct_from_high": 10.9
+        "pct_from_high": 12.3
       }
     },
     {
@@ -207,7 +207,7 @@
         "market_cap": "$42.7B",
         "week_52_high": 198.6,
         "week_52_low": 56.01,
-        "pct_from_high": 4.4
+        "pct_from_high": 4.5
       }
     },
     {
@@ -226,8 +226,8 @@
         "summary": "Valero Energy Corporation manufactures, markets, and sells petroleum-based and low-carbon liquid transportation fuels and petrochemical products in the United States, Canada, the United Kingdom, Ireland, Latin America, Mexico, Peru, and\u2026",
         "market_cap": "$77.9B",
         "week_52_high": 375.11,
-        "week_52_low": 153.2,
-        "pct_from_high": 0.9
+        "week_52_low": 153.6,
+        "pct_from_high": 1.2
       }
     },
     {
@@ -247,13 +247,13 @@
         "market_cap": "$48.0B",
         "week_52_high": 249.85,
         "week_52_low": 110.36,
-        "pct_from_high": 20.5
+        "pct_from_high": 21.6
       }
     }
   ],
   "todays_run": {
     "mode": "EXECUTE",
-    "candidates_screened": 11,
+    "candidates_screened": 10,
     "buy_signals": 0,
     "orders_submitted": 0,
     "total_invested": 0,
@@ -265,45 +265,35 @@
     "exits_triggered": [],
     "stops_updated": [
       {
-        "symbol": "SNOW",
-        "trigger": "TRAILING_STOP_UPDATE",
-        "new_stop": 278.3,
-        "pnl_pct": 25.06,
-        "current": 342.89,
-        "tier": "25%+ gain \u2192 break-even stop",
-        "executed": true,
-        "order_id": "c39025d0-d408-44f5-963e-d7bfe75f5cdf"
-      },
-      {
         "symbol": "VLO",
         "trigger": "TRAILING_STOP_UPDATE",
         "new_stop": 271.29,
-        "pnl_pct": 39.02,
-        "current": 371.58,
+        "pnl_pct": 38.7,
+        "current": 370.72,
         "tier": "25%+ gain \u2192 break-even stop",
-        "executed": true,
-        "order_id": "84104a03-b3f6-4a46-98b9-634a4a97cde8"
+        "executed": false,
+        "order_id": null
       }
     ],
-    "positions_checked": 13,
+    "positions_checked": 12,
     "mode": "EXECUTE"
   },
   "risk_assessment": {
-    "timestamp": "2026-09-04T17:22:12.601097",
-    "portfolio_value": 113360.08,
+    "timestamp": "2026-09-07T18:35:53.755555",
+    "portfolio_value": 113146.45,
     "risk_metrics": {
       "drawdown": {
-        "current_value": 113360.08,
+        "current_value": 113146.45,
         "peak_value": 126520.62,
         "peak_date": null,
-        "drawdown_amount": 13160.54,
-        "drawdown_pct": 10.4,
+        "drawdown_amount": 13374.17,
+        "drawdown_pct": 10.57,
         "max_allowed_pct": 15.0,
         "status": "WARNING",
         "action_required": true
       },
       "cash_allocation": {
-        "current_pct": 64.08,
+        "current_pct": 67.82,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
         "status": "OK"
@@ -311,25 +301,25 @@
     },
     "concentration_risk": {
       "largest_position": "SNOW",
-      "largest_allocation_pct": 4.84,
-      "top_5_allocation_pct": 17.56,
+      "largest_allocation_pct": 4.77,
+      "top_5_allocation_pct": 16.43,
       "max_allowed_top_5_pct": 40.0,
-      "num_positions": 13,
-      "herfindahl_index": 0.010713222013846136
+      "num_positions": 12,
+      "herfindahl_index": 0.009303452354597484
     },
     "position_risks": [
       {
         "symbol": "ABNB",
         "allocation_pct": 2.25,
-        "unrealized_pnl_pct": 0.06,
+        "unrealized_pnl_pct": -0.19,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "ANET",
-        "allocation_pct": 2.2,
-        "unrealized_pnl_pct": -0.01,
+        "allocation_pct": 2.23,
+        "unrealized_pnl_pct": 0.79,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -337,7 +327,7 @@
       {
         "symbol": "CRWD",
         "allocation_pct": 2.26,
-        "unrealized_pnl_pct": 0.15,
+        "unrealized_pnl_pct": -0.08,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -355,31 +345,23 @@
       {
         "symbol": "FF",
         "allocation_pct": 2.21,
-        "unrealized_pnl_pct": -2.23,
+        "unrealized_pnl_pct": -2.41,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "HOOD",
-        "allocation_pct": 2.61,
-        "unrealized_pnl_pct": 17.29,
-        "has_stop_loss": true,
-        "has_trailing_stop": false,
-        "risk_flags": []
-      },
-      {
-        "symbol": "MDB",
-        "allocation_pct": 3.66,
-        "unrealized_pnl_pct": 7.22,
+        "allocation_pct": 2.59,
+        "unrealized_pnl_pct": 16.07,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "MMSI",
-        "allocation_pct": 2.2,
-        "unrealized_pnl_pct": -1.91,
+        "allocation_pct": 2.22,
+        "unrealized_pnl_pct": -1.52,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -387,15 +369,15 @@
       {
         "symbol": "NVDA",
         "allocation_pct": 3.66,
-        "unrealized_pnl_pct": 1.42,
+        "unrealized_pnl_pct": 1.26,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "SNOW",
-        "allocation_pct": 4.84,
-        "unrealized_pnl_pct": 24.99,
+        "allocation_pct": 4.77,
+        "unrealized_pnl_pct": 22.97,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -403,7 +385,7 @@
       {
         "symbol": "TEAM",
         "allocation_pct": 2.51,
-        "unrealized_pnl_pct": 12.35,
+        "unrealized_pnl_pct": 12.14,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -411,37 +393,25 @@
       {
         "symbol": "VLO",
         "allocation_pct": 2.62,
-        "unrealized_pnl_pct": 39.12,
+        "unrealized_pnl_pct": 38.7,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "WDAY",
-        "allocation_pct": 2.1,
-        "unrealized_pnl_pct": -2.4,
+        "allocation_pct": 2.08,
+        "unrealized_pnl_pct": -3.74,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       }
     ],
-    "overall_risk_score": 26.9,
+    "overall_risk_score": 27.1,
     "recommendations": [
-      "Portfolio drawdown at 10.4% - consider risk reduction",
+      "Portfolio drawdown at 10.6% - consider risk reduction",
       "CTLP: Add stop-loss protection"
     ],
     "risk_level": "LOW"
-  },
-  "sync_at": "2026-09-07T18:12:41.961597+00:00",
-  "sync_error": null,
-  "market_open": false,
-  "intraday_today": {
-    "date": "2026-09-07",
-    "points": [
-      {
-        "time": "18:12",
-        "value": 113146.45
-      }
-    ]
   }
 }

@@ -1,22 +1,22 @@
 {
-  "date": "2026-09-07",
-  "generated_at": "2026-09-07T22:47:37.577024",
+  "date": "2026-09-08",
+  "generated_at": "2026-09-08T22:36:51.811335",
   "portfolio": {
-    "value": 113146.45,
-    "cash": 76737.51,
-    "total_unrealized": 2579.3,
-    "positions": 12,
-    "winners": 7,
-    "losers": 5,
+    "value": 112480.15,
+    "cash": 70832.37,
+    "total_unrealized": 2109.62,
+    "positions": 13,
+    "winners": 6,
+    "losers": 7,
     "risk_level": "LOW",
-    "risk_score": 27.1
+    "risk_score": 27.5
   },
   "execution": {
-    "signals_generated": 0,
-    "orders_executed": 0,
+    "signals_generated": 2,
+    "orders_executed": 2,
     "orders_skipped": 0,
     "skip_reasons": [],
-    "candidates_screened": 10
+    "candidates_screened": 12
   },
   "exits": {
     "triggered": 0,
@@ -25,6 +25,20 @@
   },
   "closed_today": [],
   "positions_at_risk": [
+    {
+      "symbol": "MRVL",
+      "pnl_pct": -1.84,
+      "value": 2250.0,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "VRT",
+      "pnl_pct": -0.69,
+      "value": 5816.6,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

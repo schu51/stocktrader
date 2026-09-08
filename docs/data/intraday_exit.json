@@ -1,18 +1,14 @@
 {
-  "generated_at": "2026-09-04T19:35:05.877208",
-  "positions_checked": 13,
-  "exits_triggered": [
+  "generated_at": "2026-09-08T17:15:03.132395",
+  "positions_checked": 11,
+  "exits_triggered": [],
+  "stops_updated": [
     {
-      "symbol": "MDB",
-      "trigger": "PRICE_BELOW_50MA",
-      "reason": "$372.24 is 0.4% below 50MA $373.59",
-      "qty": 11,
-      "price": 372.235,
-      "pnl_pct": 5.87,
-      "executed": true,
-      "order_id": "beea1ed5-bc36-4e40-bfa9-fcb8a8732623"
+      "symbol": "VLO",
+      "new_stop": 271.29,
+      "tier": "25%+ gain \u2192 break-even+1.5%",
+      "pnl_pct": 42.67
     }
   ],
-  "stops_updated": [],
   "mode": "EXECUTE"
 }

@@ -2424,7 +2424,7 @@
   {
     "trade_id": "TRD-20260908174459-VRT",
     "symbol": "VRT",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-09-08",
     "entry_ts": "2026-09-08T17:44:59.498862",
     "entry_price": 295.25,
@@ -2438,12 +2438,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "dd5b0086-2557-4872-9e33-3a3e5e276c2f",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-09-09",
+    "exit_price": 267.5,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -511.37,
+    "pnl_pct": -8.66,
+    "hold_days": 1,
+    "exit_ts": "2026-09-09T17:09:32.294998"
   },
   {
     "trade_id": "TRD-20260908174500-MRVL",

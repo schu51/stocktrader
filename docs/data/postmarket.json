@@ -1,15 +1,15 @@
 {
-  "date": "2026-09-09",
-  "generated_at": "2026-09-09T22:31:08.328341",
+  "date": "2026-09-10",
+  "generated_at": "2026-09-10T22:32:41.325682",
   "portfolio": {
-    "value": 111888.07,
-    "cash": 73673.46,
-    "total_unrealized": 2031.1299999999999,
+    "value": 111485.66,
+    "cash": 72449.86,
+    "total_unrealized": 1859.3,
     "positions": 13,
-    "winners": 8,
-    "losers": 5,
+    "winners": 5,
+    "losers": 8,
     "risk_level": "LOW",
-    "risk_score": 28.8
+    "risk_score": 29.3
   },
   "execution": {
     "signals_generated": 1,
@@ -23,45 +23,12 @@
     "stops_updated": 1,
     "detail": []
   },
-  "closed_today": [
-    {
-      "trade_id": "TRD-20260908174459-VRT",
-      "symbol": "VRT",
-      "status": "CLOSED",
-      "entry_date": "2026-09-08",
-      "entry_ts": "2026-09-08T17:44:59.498862",
-      "entry_price": 295.25,
-      "shares": 20,
-      "stop_loss": 271.63,
-      "trend_score": 80,
-      "confidence": 0.85,
-      "rs_rank": 92,
-      "thesis_score": 30.0,
-      "thesis_grade": "D",
-      "sector": "technology",
-      "weight_version": 1,
-      "order_id": "dd5b0086-2557-4872-9e33-3a3e5e276c2f",
-      "exit_date": "2026-09-09",
-      "exit_price": 267.5,
-      "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -511.37,
-      "pnl_pct": -8.66,
-      "hold_days": 1,
-      "exit_ts": "2026-09-09T17:09:32.294998"
-    }
-  ],
+  "closed_today": [],
   "positions_at_risk": [
     {
-      "symbol": "ABNB",
-      "pnl_pct": -7.29,
-      "value": 2366.02,
-      "has_stop": true,
-      "risk": "approaching"
-    },
-    {
-      "symbol": "NET",
-      "pnl_pct": 0.26,
-      "value": 2508.8,
+      "symbol": "AMD",
+      "pnl_pct": -0.43,
+      "value": 3529.75,
       "has_stop": false,
       "risk": "no_stop"
     },

@@ -1,22 +1,22 @@
 {
-  "date": "2026-09-11",
-  "generated_at": "2026-09-11T22:32:06.345608",
+  "date": "2026-09-14",
+  "generated_at": "2026-09-14T23:06:32.177000",
   "portfolio": {
-    "value": 111805.66,
-    "cash": 72449.79,
-    "total_unrealized": 2179.37,
+    "value": 111954.36,
+    "cash": 73963.21,
+    "total_unrealized": 2656.46,
     "positions": 13,
-    "winners": 9,
-    "losers": 4,
+    "winners": 8,
+    "losers": 5,
     "risk_level": "LOW",
-    "risk_score": 29.3
+    "risk_score": 28.9
   },
   "execution": {
-    "signals_generated": 0,
-    "orders_executed": 0,
+    "signals_generated": 1,
+    "orders_executed": 1,
     "orders_skipped": 0,
     "skip_reasons": [],
-    "candidates_screened": 11
+    "candidates_screened": 14
   },
   "exits": {
     "triggered": 0,
@@ -26,11 +26,11 @@
   "closed_today": [],
   "positions_at_risk": [
     {
-      "symbol": "MMSI",
-      "pnl_pct": -5.08,
-      "value": 2418.08,
-      "has_stop": true,
-      "risk": "approaching"
+      "symbol": "PANW",
+      "pnl_pct": -0.55,
+      "value": 2240.55,
+      "has_stop": false,
+      "risk": "no_stop"
     },
     {
       "symbol": "CTLP",

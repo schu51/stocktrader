@@ -3,21 +3,21 @@
   "run_id": "20260914_190106",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 111973.86,
-    "cash": 76216.21,
-    "buying_power": 72405.3995,
-    "long_market_value": 35757.65,
-    "unrealized_pnl": 2676.9900000000002
+    "portfolio_value": 111954.36,
+    "cash": 73963.21,
+    "buying_power": 70265.04950000001,
+    "long_market_value": 37991.15,
+    "unrealized_pnl": 2656.47
   },
   "positions": [
     {
       "symbol": "AMD",
       "qty": 7,
       "avg_cost": 506.44,
-      "current_price": 497.68,
-      "market_value": 3483.73,
-      "unrealized_pnl": -61.35,
-      "unrealized_pnl_pct": -1.73,
+      "current_price": 493.7,
+      "market_value": 3455.9,
+      "unrealized_pnl": -89.18,
+      "unrealized_pnl_pct": -2.52,
       "stop_loss": 465.92,
       "company": {
         "name": "Advanced Micro Devices, Inc.",
@@ -34,10 +34,10 @@
       "symbol": "ANET",
       "qty": 13,
       "avg_cost": 192.26,
-      "current_price": 190.5,
-      "market_value": 2476.57,
-      "unrealized_pnl": -22.82,
-      "unrealized_pnl_pct": -0.91,
+      "current_price": 189.0,
+      "market_value": 2457.0,
+      "unrealized_pnl": -42.38,
+      "unrealized_pnl_pct": -1.7,
       "stop_loss": 176.88,
       "company": {
         "name": "Arista Networks, Inc.",
@@ -54,10 +54,10 @@
       "symbol": "CRWD",
       "qty": 12,
       "avg_cost": 213.27,
-      "current_price": 236.55,
-      "market_value": 2838.6,
-      "unrealized_pnl": 279.41,
-      "unrealized_pnl_pct": 10.92,
+      "current_price": 235.05,
+      "market_value": 2820.57,
+      "unrealized_pnl": 261.38,
+      "unrealized_pnl_pct": 10.21,
       "stop_loss": 196.2,
       "company": {
         "name": "CrowdStrike Holdings, Inc.",
@@ -94,10 +94,10 @@
       "symbol": "FF",
       "qty": 475,
       "avg_cost": 5.39,
-      "current_price": 5.43,
-      "market_value": 2581.62,
-      "unrealized_pnl": 21.38,
-      "unrealized_pnl_pct": 0.83,
+      "current_price": 5.48,
+      "market_value": 2603.0,
+      "unrealized_pnl": 42.75,
+      "unrealized_pnl_pct": 1.67,
       "stop_loss": 4.96,
       "company": {
         "name": "FutureFuel Corp.",
@@ -114,10 +114,10 @@
       "symbol": "HOOD",
       "qty": 24,
       "avg_cost": 105.2,
-      "current_price": 113.92,
-      "market_value": 2734.2,
-      "unrealized_pnl": 209.4,
-      "unrealized_pnl_pct": 8.29,
+      "current_price": 114.09,
+      "market_value": 2738.19,
+      "unrealized_pnl": 213.39,
+      "unrealized_pnl_pct": 8.45,
       "stop_loss": 96.78,
       "company": {
         "name": "Robinhood Markets, Inc.",
@@ -134,10 +134,10 @@
       "symbol": "MMSI",
       "qty": 28,
       "avg_cost": 90.98,
-      "current_price": 86.81,
-      "market_value": 2430.68,
-      "unrealized_pnl": -116.76,
-      "unrealized_pnl_pct": -4.58,
+      "current_price": 87.02,
+      "market_value": 2436.56,
+      "unrealized_pnl": -110.88,
+      "unrealized_pnl_pct": -4.35,
       "stop_loss": 83.7,
       "company": {
         "name": "Merit Medical Systems, Inc.",
@@ -154,10 +154,10 @@
       "symbol": "MRVL",
       "qty": 10,
       "avg_cost": 229.23,
-      "current_price": 222.75,
-      "market_value": 2227.55,
-      "unrealized_pnl": -64.73,
-      "unrealized_pnl_pct": -2.82,
+      "current_price": 220.44,
+      "market_value": 2204.39,
+      "unrealized_pnl": -87.89,
+      "unrealized_pnl_pct": -3.83,
       "stop_loss": 210.89,
       "company": {
         "name": "Marvell Technology, Inc.",
@@ -174,10 +174,10 @@
       "symbol": "NET",
       "qty": 8,
       "avg_cost": 312.78,
-      "current_price": 332.28,
-      "market_value": 2658.24,
-      "unrealized_pnl": 156.0,
-      "unrealized_pnl_pct": 6.23,
+      "current_price": 329.99,
+      "market_value": 2639.92,
+      "unrealized_pnl": 137.68,
+      "unrealized_pnl_pct": 5.5,
       "stop_loss": 287.76,
       "company": {
         "name": "Cloudflare, Inc.",
@@ -191,13 +191,30 @@
       }
     },
     {
+      "symbol": "PANW",
+      "qty": 6,
+      "avg_cost": 375.5,
+      "current_price": 373.42,
+      "market_value": 2240.55,
+      "unrealized_pnl": -12.45,
+      "unrealized_pnl_pct": -0.55,
+      "stop_loss": null,
+      "company": {
+        "name": "Palo Alto Networks, Inc.",
+        "sector": "Technology",
+        "industry": "Software - Infrastructure",
+        "summary": "Palo Alto Networks, Inc. provides cybersecurity solutions in the Americas, Europe, the Middle East, Africa, the Asia Pacific, and Japan. It offers Prisma Access, a secure access service edge solution; Strata Cloud Manager, a network\u2026",
+        "market_cap": "$219.7B"
+      }
+    },
+    {
       "symbol": "SNOW",
       "qty": 16,
       "avg_cost": 274.19,
-      "current_price": 330.78,
-      "market_value": 5292.48,
-      "unrealized_pnl": 905.44,
-      "unrealized_pnl_pct": 20.64,
+      "current_price": 331.68,
+      "market_value": 5306.88,
+      "unrealized_pnl": 919.84,
+      "unrealized_pnl_pct": 20.97,
       "stop_loss": 278.3,
       "company": {
         "name": "Snowflake Inc.",
@@ -214,10 +231,10 @@
       "symbol": "TEAM",
       "qty": 15,
       "avg_cost": 169.06,
-      "current_price": 189.92,
-      "market_value": 2848.8,
-      "unrealized_pnl": 312.9,
-      "unrealized_pnl_pct": 12.34,
+      "current_price": 191.9,
+      "market_value": 2878.5,
+      "unrealized_pnl": 342.6,
+      "unrealized_pnl_pct": 13.51,
       "stop_loss": 155.54,
       "company": {
         "name": "Atlassian Corporation",
@@ -234,10 +251,10 @@
       "symbol": "VLO",
       "qty": 8,
       "avg_cost": 267.28,
-      "current_price": 379.88,
-      "market_value": 3039.0,
-      "unrealized_pnl": 900.76,
-      "unrealized_pnl_pct": 42.13,
+      "current_price": 382.81,
+      "market_value": 3062.48,
+      "unrealized_pnl": 924.24,
+      "unrealized_pnl_pct": 43.22,
       "stop_loss": 271.29,
       "company": {
         "name": "Valero Energy Corporation",
@@ -443,5 +460,17 @@
       "CTLP: Add stop-loss protection"
     ],
     "risk_level": "LOW"
+  },
+  "sync_at": "2026-09-14T22:24:23.814159+00:00",
+  "sync_error": null,
+  "market_open": false,
+  "intraday_today": {
+    "date": "2026-09-14",
+    "points": [
+      {
+        "time": "22:24",
+        "value": 111954.36
+      }
+    ]
   }
 }

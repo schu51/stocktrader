@@ -1,14 +1,20 @@
 {
-  "generated_at": "2026-09-16T17:42:22.051422",
-  "positions_checked": 13,
+  "generated_at": "2026-09-17T17:43:22.505941",
+  "positions_checked": 14,
   "already_protected": 12,
-  "stops_placed": 0,
+  "stops_placed": 1,
   "stops_failed": 1,
   "results": [
     {
       "symbol": "CTLP",
       "status": "failed",
       "error": "asset CTLP is not active"
+    },
+    {
+      "symbol": "FTNT",
+      "stop": 158.1,
+      "tier": "default \u2192 8% below entry",
+      "status": "placed"
     }
   ]
 }

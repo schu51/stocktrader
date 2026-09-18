@@ -1,22 +1,22 @@
 {
-  "date": "2026-09-17",
-  "generated_at": "2026-09-17T22:50:11.573088",
+  "date": "2026-09-18",
+  "generated_at": "2026-09-18T22:32:46.583417",
   "portfolio": {
-    "value": 113015.45,
+    "value": 112996.37,
     "cash": 66760.84,
-    "total_unrealized": 3304.2200000000003,
+    "total_unrealized": 3285.1400000000003,
     "positions": 15,
-    "winners": 13,
-    "losers": 2,
+    "winners": 11,
+    "losers": 4,
     "risk_level": "LOW",
-    "risk_score": 27.6
+    "risk_score": 28.2
   },
   "execution": {
-    "signals_generated": 1,
-    "orders_executed": 1,
+    "signals_generated": 0,
+    "orders_executed": 0,
     "orders_skipped": 0,
     "skip_reasons": [],
-    "candidates_screened": 14
+    "candidates_screened": 11
   },
   "exits": {
     "triggered": 0,
@@ -27,17 +27,10 @@
   "positions_at_risk": [
     {
       "symbol": "MMSI",
-      "pnl_pct": -5.95,
-      "value": 2395.96,
+      "pnl_pct": -6.02,
+      "value": 2394.0,
       "has_stop": true,
       "risk": "approaching"
-    },
-    {
-      "symbol": "WDAY",
-      "pnl_pct": 0.48,
-      "value": 2587.0,
-      "has_stop": false,
-      "risk": "no_stop"
     },
     {
       "symbol": "CTLP",

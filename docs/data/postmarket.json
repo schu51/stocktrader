@@ -1,22 +1,22 @@
 {
-  "date": "2026-09-18",
-  "generated_at": "2026-09-18T22:32:46.583417",
+  "date": "2026-09-21",
+  "generated_at": "2026-09-21T23:14:45.737530",
   "portfolio": {
-    "value": 112996.37,
-    "cash": 66760.84,
-    "total_unrealized": 3285.1400000000003,
-    "positions": 15,
-    "winners": 11,
+    "value": 114278.34,
+    "cash": 57711.48,
+    "total_unrealized": 4567.110000000001,
+    "positions": 18,
+    "winners": 14,
     "losers": 4,
     "risk_level": "LOW",
-    "risk_score": 28.2
+    "risk_score": 25.8
   },
   "execution": {
-    "signals_generated": 0,
-    "orders_executed": 0,
+    "signals_generated": 3,
+    "orders_executed": 3,
     "orders_skipped": 0,
     "skip_reasons": [],
-    "candidates_screened": 11
+    "candidates_screened": 16
   },
   "exits": {
     "triggered": 0,
@@ -27,10 +27,31 @@
   "positions_at_risk": [
     {
       "symbol": "MMSI",
-      "pnl_pct": -6.02,
-      "value": 2394.0,
+      "pnl_pct": -6.03,
+      "value": 2393.72,
       "has_stop": true,
       "risk": "approaching"
+    },
+    {
+      "symbol": "NVDA",
+      "pnl_pct": -0.22,
+      "value": 4091.22,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "PLTR",
+      "pnl_pct": 0.68,
+      "value": 2562.0,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "MDB",
+      "pnl_pct": 1.56,
+      "value": 2442.0,
+      "has_stop": false,
+      "risk": "no_stop"
     },
     {
       "symbol": "CTLP",

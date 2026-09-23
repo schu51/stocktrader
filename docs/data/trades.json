@@ -2281,7 +2281,7 @@
   {
     "trade_id": "TRD-20260831140225-FF",
     "symbol": "FF",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-08-31",
     "entry_ts": "2026-08-31T14:02:25.973001",
     "entry_price": 5.39,
@@ -2295,12 +2295,13 @@
     "sector": "consumer_cyclical",
     "weight_version": 1,
     "order_id": "eca2a7e7-44a1-4b5e-9c0a-c39924c68cab",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-09-23",
+    "exit_price": 5.17,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -104.46,
+    "pnl_pct": -4.08,
+    "hold_days": 23,
+    "exit_ts": "2026-09-23T17:51:26.679787"
   },
   {
     "trade_id": "TRD-20260831140226-MMSI",

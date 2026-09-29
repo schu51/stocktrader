@@ -1,19 +1,19 @@
 {
   "date": "2026-09-29",
-  "generated_at": "2026-09-29T00:20:52.481525",
+  "generated_at": "2026-09-29T23:40:37.748670",
   "portfolio": {
-    "value": 113058.62,
-    "cash": 64352.49,
-    "total_unrealized": 4244.72,
-    "positions": 15,
+    "value": 113125.87,
+    "cash": 59446.45,
+    "total_unrealized": 4313.04,
+    "positions": 17,
     "winners": 14,
-    "losers": 1,
+    "losers": 3,
     "risk_level": "LOW",
     "risk_score": 27.7
   },
   "execution": {
-    "signals_generated": 1,
-    "orders_executed": 0,
+    "signals_generated": 2,
+    "orders_executed": 2,
     "orders_skipped": 0,
     "skip_reasons": [],
     "candidates_screened": 16
@@ -25,6 +25,20 @@
   },
   "closed_today": [],
   "positions_at_risk": [
+    {
+      "symbol": "ARM",
+      "pnl_pct": -0.72,
+      "value": 2363.52,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
+    {
+      "symbol": "SMCI",
+      "pnl_pct": -0.63,
+      "value": 2509.51,
+      "has_stop": false,
+      "risk": "no_stop"
+    },
     {
       "symbol": "CTLP",
       "pnl_pct": 5.26,

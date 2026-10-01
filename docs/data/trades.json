@@ -2306,7 +2306,7 @@
   {
     "trade_id": "TRD-20260831140226-MMSI",
     "symbol": "MMSI",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-08-31",
     "entry_ts": "2026-08-31T14:02:26.809627",
     "entry_price": 90.98,
@@ -2320,12 +2320,13 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "28ee42ec-b808-4866-baee-32cdf342eeee",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-10-01",
+    "exit_price": 86.06,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -137.82,
+    "pnl_pct": -5.41,
+    "hold_days": 31,
+    "exit_ts": "2026-10-01T18:52:59.374635"
   },
   {
     "trade_id": "TRD-20260831195038-HOOD",

@@ -1,7 +1,25 @@
 {
-  "generated_at": "2026-09-30T18:26:32.237993",
+  "generated_at": "2026-10-01T18:52:59.507909",
   "positions_checked": 17,
-  "exits_triggered": [],
-  "stops_updated": [],
+  "exits_triggered": [
+    {
+      "symbol": "MMSI",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$86.06 is 1.1% below 50MA $87.05",
+      "qty": 28,
+      "price": 86.06,
+      "pnl_pct": -5.41,
+      "executed": true,
+      "order_id": "2bfd5b91-d595-480e-bf61-fa0b00ad3bb1"
+    }
+  ],
+  "stops_updated": [
+    {
+      "symbol": "VLO",
+      "new_stop": 364.89,
+      "tier": "50%+ gain \u2192 10% trail",
+      "pnl_pct": 51.69
+    }
+  ],
   "mode": "EXECUTE"
 }

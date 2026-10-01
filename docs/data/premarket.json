@@ -1,113 +1,113 @@
 {
-  "generated_at": "2026-09-30T11:11:54.316965-07:00",
+  "generated_at": "2026-10-01T11:37:16.365334-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
     "strong": 34,
-    "mixed": 7,
-    "weak": 34
+    "mixed": 9,
+    "weak": 32
   },
   "gap_alerts": [
     {
-      "ticker": "CEG",
-      "prev_close": 264.58,
-      "current": 254.46,
-      "pct_chg": -3.82,
-      "ma50": 272.01,
+      "ticker": "GOOGL",
+      "prev_close": 344.08,
+      "current": 338.75,
+      "pct_chg": -1.55,
+      "ma50": 343.72,
       "reasons": [
-        "gap down -3.8%"
+        "crossed BELOW 50MA (343.72)"
       ]
     },
     {
-      "ticker": "APLD",
-      "prev_close": 25.41,
-      "current": 24.57,
-      "pct_chg": -3.31,
-      "ma50": 27.43,
-      "reasons": [
-        "gap down -3.3%"
-      ]
-    },
-    {
-      "ticker": "TOST",
-      "prev_close": 30.46,
-      "current": 29.47,
-      "pct_chg": -3.25,
-      "ma50": 32.93,
-      "reasons": [
-        "gap down -3.3%"
-      ]
-    },
-    {
-      "ticker": "APP",
-      "prev_close": 305.66,
-      "current": 295.87,
-      "pct_chg": -3.2,
-      "ma50": 336.06,
-      "reasons": [
-        "gap down -3.2%"
-      ]
-    },
-    {
-      "ticker": "HOOD",
-      "prev_close": 116.22,
-      "current": 112.66,
-      "pct_chg": -3.07,
-      "ma50": 105.04,
-      "reasons": [
-        "gap down -3.1%"
-      ]
-    },
-    {
-      "ticker": "PANW",
-      "prev_close": 388.41,
-      "current": 400.33,
+      "ticker": "NOW",
+      "prev_close": 134.01,
+      "current": 138.13,
       "pct_chg": 3.07,
-      "ma50": 359.15,
+      "ma50": 128.35,
       "reasons": [
         "gap UP 3.1% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "NOW",
-      "prev_close": 129.94,
-      "current": 134.26,
-      "pct_chg": 3.32,
-      "ma50": 127.5,
+      "ticker": "KLAC",
+      "prev_close": 194.93,
+      "current": 201.04,
+      "pct_chg": 3.13,
+      "ma50": 187.39,
       "reasons": [
-        "gap UP 3.3% above 50MA \u2014 momentum alert"
+        "gap UP 3.1% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "SNOW",
-      "prev_close": 330.31,
-      "current": 341.52,
-      "pct_chg": 3.39,
-      "ma50": 320.73,
+      "ticker": "ON",
+      "prev_close": 76.87,
+      "current": 79.29,
+      "pct_chg": 3.15,
+      "ma50": 76.73,
       "reasons": [
-        "gap UP 3.4% above 50MA \u2014 momentum alert"
+        "gap UP 3.1% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "AMAT",
+      "prev_close": 511.38,
+      "current": 529.94,
+      "pct_chg": 3.63,
+      "ma50": 487.35,
+      "reasons": [
+        "gap UP 3.6% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "MSTR",
+      "prev_close": 153.09,
+      "current": 159.4,
+      "pct_chg": 4.12,
+      "ma50": 122.26,
+      "reasons": [
+        "gap UP 4.1% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "TEAM",
+      "prev_close": 179.29,
+      "current": 190.5,
+      "pct_chg": 6.25,
+      "ma50": 161.47,
+      "reasons": [
+        "gap UP 6.3% above 50MA \u2014 momentum alert"
       ]
     }
   ],
   "avoids": [
-    "CEG",
-    "APLD",
-    "TOST",
-    "APP",
-    "HOOD"
+    "GOOGL"
   ],
   "gap_up_priority": [
-    "PANW",
     "NOW",
-    "SNOW"
+    "KLAC",
+    "ON",
+    "AMAT",
+    "MSTR",
+    "TEAM"
   ],
   "top_candidates": [
     {
       "ticker": "OKTA",
-      "price": 209.43,
-      "ma50": 161.73,
-      "ret_5d": 2.0,
-      "ret_20d": 25.8,
-      "score": 0.2014,
+      "price": 212.15,
+      "ma50": 163.24,
+      "ret_5d": 2.7,
+      "ret_20d": 30.0,
+      "score": 0.218,
+      "gap_up": false,
+      "thesis_grade": "B",
+      "thesis_score": 57.0
+    },
+    {
+      "ticker": "SMCI",
+      "price": 41.78,
+      "ma50": 36.26,
+      "ret_5d": 0.7,
+      "ret_20d": 12.9,
+      "score": 0.1016,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 57.0

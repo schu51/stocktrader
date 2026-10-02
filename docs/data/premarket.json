@@ -1,113 +1,113 @@
 {
-  "generated_at": "2026-10-01T11:37:16.365334-07:00",
+  "generated_at": "2026-10-02T11:06:55.045082-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 34,
+    "strong": 32,
     "mixed": 9,
-    "weak": 32
+    "weak": 34
   },
   "gap_alerts": [
     {
-      "ticker": "GOOGL",
-      "prev_close": 344.08,
-      "current": 338.75,
-      "pct_chg": -1.55,
-      "ma50": 343.72,
+      "ticker": "COIN",
+      "prev_close": 189.29,
+      "current": 182.49,
+      "pct_chg": -3.59,
+      "ma50": 172.83,
       "reasons": [
-        "crossed BELOW 50MA (343.72)"
+        "gap down -3.6%"
       ]
     },
     {
-      "ticker": "NOW",
-      "prev_close": 134.01,
-      "current": 138.13,
-      "pct_chg": 3.07,
-      "ma50": 128.35,
+      "ticker": "SPOT",
+      "prev_close": 491.4,
+      "current": 473.95,
+      "pct_chg": -3.55,
+      "ma50": 516.52,
       "reasons": [
-        "gap UP 3.1% above 50MA \u2014 momentum alert"
+        "gap down -3.6%"
+      ]
+    },
+    {
+      "ticker": "APP",
+      "prev_close": 281.31,
+      "current": 271.55,
+      "pct_chg": -3.47,
+      "ma50": 330.78,
+      "reasons": [
+        "gap down -3.5%"
       ]
     },
     {
       "ticker": "KLAC",
-      "prev_close": 194.93,
-      "current": 201.04,
-      "pct_chg": 3.13,
-      "ma50": 187.39,
+      "prev_close": 200.33,
+      "current": 206.67,
+      "pct_chg": 3.16,
+      "ma50": 187.14,
       "reasons": [
-        "gap UP 3.1% above 50MA \u2014 momentum alert"
+        "gap UP 3.2% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "SMCI",
+      "prev_close": 41.92,
+      "current": 43.35,
+      "pct_chg": 3.41,
+      "ma50": 36.51,
+      "reasons": [
+        "gap UP 3.4% above 50MA \u2014 momentum alert"
       ]
     },
     {
       "ticker": "ON",
-      "prev_close": 76.87,
-      "current": 79.29,
-      "pct_chg": 3.15,
-      "ma50": 76.73,
+      "prev_close": 80.08,
+      "current": 83.15,
+      "pct_chg": 3.84,
+      "ma50": 76.61,
       "reasons": [
-        "gap UP 3.1% above 50MA \u2014 momentum alert"
+        "gap UP 3.8% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "AMAT",
-      "prev_close": 511.38,
-      "current": 529.94,
-      "pct_chg": 3.63,
-      "ma50": 487.35,
+      "ticker": "TSLA",
+      "prev_close": 354.11,
+      "current": 371.64,
+      "pct_chg": 4.95,
+      "ma50": 347.6,
       "reasons": [
-        "gap UP 3.6% above 50MA \u2014 momentum alert"
+        "gap UP 5.0% above 50MA \u2014 momentum alert"
       ]
     },
     {
-      "ticker": "MSTR",
-      "prev_close": 153.09,
-      "current": 159.4,
-      "pct_chg": 4.12,
-      "ma50": 122.26,
+      "ticker": "ARM",
+      "prev_close": 292.34,
+      "current": 308.62,
+      "pct_chg": 5.57,
+      "ma50": 265.81,
       "reasons": [
-        "gap UP 4.1% above 50MA \u2014 momentum alert"
-      ]
-    },
-    {
-      "ticker": "TEAM",
-      "prev_close": 179.29,
-      "current": 190.5,
-      "pct_chg": 6.25,
-      "ma50": 161.47,
-      "reasons": [
-        "gap UP 6.3% above 50MA \u2014 momentum alert"
+        "gap UP 5.6% above 50MA \u2014 momentum alert"
       ]
     }
   ],
   "avoids": [
-    "GOOGL"
+    "COIN",
+    "SPOT",
+    "APP"
   ],
   "gap_up_priority": [
-    "NOW",
     "KLAC",
+    "SMCI",
     "ON",
-    "AMAT",
-    "MSTR",
-    "TEAM"
+    "TSLA",
+    "ARM"
   ],
   "top_candidates": [
     {
       "ticker": "OKTA",
-      "price": 212.15,
-      "ma50": 163.24,
-      "ret_5d": 2.7,
-      "ret_20d": 30.0,
-      "score": 0.218,
-      "gap_up": false,
-      "thesis_grade": "B",
-      "thesis_score": 57.0
-    },
-    {
-      "ticker": "SMCI",
-      "price": 41.78,
-      "ma50": 36.26,
-      "ret_5d": 0.7,
-      "ret_20d": 12.9,
-      "score": 0.1016,
+      "price": 213.77,
+      "ma50": 164.8,
+      "ret_5d": 9.5,
+      "ret_20d": 25.4,
+      "score": 0.2237,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 57.0

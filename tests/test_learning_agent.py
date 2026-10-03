@@ -180,3 +180,66 @@ def test_screener_weights_loader_rejects_bad_sum(tmp_path, monkeypatch):
     wf.write_text(json.dumps({"active": {"w_rs": 0.7, "w_thesis": 0.7}}))
     monkeypatch.setattr(screener, "_WEIGHTS_PATH", wf)
     assert screener._load_ranking_weights() == (0.60, 0.40)
+
+
+def test_judge_reverts_when_champion_baseline_was_never_recorded():
+    # Seed champion has mean_pnl=None. Its baseline must be derived from its
+    # own trades — otherwise any provisional is promoted unconditionally.
+    from learning_agent import judge_provisional
+    weights = {
+        "active":   {"version": 2, "w_rs": 0.1, "w_thesis": 0.9, "state": "provisional"},
+        "champion": {"version": 1, "w_rs": 0.6, "w_thesis": 0.4, "state": "champion",
+                     "mean_pnl": None, "n_trades": 0},
+        "rejected": [], "history": [],
+    }
+    trades = ([_trade(f"C{i}", 8.0, 1) for i in range(30)]
+              + [_trade(f"P{i}", 3.0, 2) for i in range(10)])
+    result, action = judge_provisional(weights, trades)
+    assert action == "reverted"
+    assert result["active"]["version"] == 1
+    assert result["champion"]["mean_pnl"] == 8.0
+    assert result["rejected"][0]["w_thesis"] == 0.9
+
+
+def test_judge_promotes_when_provisional_beats_derived_baseline():
+    from learning_agent import judge_provisional
+    weights = {
+        "active":   {"version": 2, "w_rs": 0.1, "w_thesis": 0.9, "state": "provisional"},
+        "champion": {"version": 1, "w_rs": 0.6, "w_thesis": 0.4, "state": "champion",
+                     "mean_pnl": None, "n_trades": 0},
+        "rejected": [], "history": [],
+    }
+    trades = ([_trade(f"C{i}", -1.5, 1) for i in range(30)]
+              + [_trade(f"P{i}", 3.0, 2) for i in range(10)])
+    result, action = judge_provisional(weights, trades)
+    assert action == "promoted"
+    assert result["champion"]["version"] == 2
+
+
+def test_judge_promotes_when_champion_has_no_trades_at_all():
+    from learning_agent import judge_provisional
+    weights = {
+        "active":   {"version": 2, "w_rs": 0.1, "w_thesis": 0.9, "state": "provisional"},
+        "champion": {"version": 1, "w_rs": 0.6, "w_thesis": 0.4, "state": "champion",
+                     "mean_pnl": None, "n_trades": 0},
+        "rejected": [], "history": [],
+    }
+    trades = [_trade(f"P{i}", -4.0, 2) for i in range(10)]
+    result, action = judge_provisional(weights, trades)
+    assert action == "promoted"   # nothing to compare against
+
+
+def test_run_records_champion_baseline_when_applying(tmp_path):
+    import numpy as np
+    import learning_agent as la
+    wf = tmp_path / "weights.json"
+    rng = np.random.default_rng(3)
+    trades = []
+    for i in range(40):
+        rs = float(rng.uniform(50, 99))
+        pnl = 0.3 * rs + rng.normal(0, 2)
+        trades.append(_trade(f"T{i}", pnl, 1, rs_rank=rs, thesis_score=float(rng.uniform(0, 100))))
+    assert la.run(trades, wf)["status"] == "applied"
+    champion = la.load_weights(wf)["champion"]
+    assert champion["n_trades"] == 40
+    assert abs(champion["mean_pnl"] - sum(x["pnl_pct"] for x in trades) / 40) < 1e-9

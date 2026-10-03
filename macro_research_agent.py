@@ -7,7 +7,8 @@ role-limited inverse-crowding signal). Every candidate is gated by
 macro_thesis.validate_thesis before it can enter the register.
 
 Writes docs/data/theses.json (register) and docs/data/macro_brief.json (audit).
-Any failure leaves theses.json untouched — the screener degrades to neutral.
+Any failure leaves theses.json untouched — the screener degrades to neutral —
+and exits non-zero so the workflow run shows as failed.
 
 Requires ANTHROPIC_API_KEY in the environment.
 """
@@ -30,7 +31,8 @@ BRIEF_FILE  = DOCS_DATA / "macro_brief.json"
 
 sys.path.insert(0, str(ROOT))
 
-MODEL = "claude-sonnet-4-6"
+MODEL = "claude-sonnet-5-5"
+MAX_CONTINUATIONS = 5   # resumes of a paused web-search turn
 
 SYSTEM_PROMPT = """You are a macro research analyst for a momentum trading model.
 Your job: produce STRUCTURAL, FALSIFIABLE investment theses that identify
@@ -102,6 +104,25 @@ def _gather_context() -> str:
     return "\n\n".join(chunks)
 
 
+def _parse_theses(text: str) -> List[Dict]:
+    """
+    Pull the JSON array of thesis objects out of the model's reply. The reply
+    can carry prose and bracketed citations like [1], so try each '[' in turn
+    and keep the first that parses as a non-empty list of objects.
+    """
+    end = text.rfind("]")
+    start = text.find("[")
+    while start != -1 and start < end:
+        try:
+            parsed = json.loads(text[start:end + 1])
+            if isinstance(parsed, list) and parsed and all(isinstance(t, dict) for t in parsed):
+                return parsed
+        except Exception:
+            pass
+        start = text.find("[", start + 1)
+    return []
+
+
 def _generate(context: str) -> List[Dict]:
     """Call Claude to produce candidate theses. Returns parsed list (may be empty)."""
     from anthropic import Anthropic
@@ -110,23 +131,35 @@ def _generate(context: str) -> List[Dict]:
     user = (f"Today is {today}. Using current macro/economic/policy conditions and the "
             f"supplementary signal below, produce 1-4 high-quality theses per the rules.\n\n"
             f"{context}\n\nReturn ONLY the JSON array.")
-    resp = client.messages.create(
-        model=MODEL,
-        max_tokens=4000,
-        system=SYSTEM_PROMPT,
-        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 8}],
-        messages=[{"role": "user", "content": user}],
-    )
-    text = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
-    start, end = text.find("["), text.rfind("]")
-    if start == -1 or end == -1:
-        logger.warning("No JSON array in model response")
-        return []
-    try:
-        return json.loads(text[start:end + 1])
-    except Exception as e:
-        logger.warning(f"Could not parse theses JSON: {e}")
-        return []
+    messages = [{"role": "user", "content": user}]
+    text = ""
+    for _ in range(MAX_CONTINUATIONS + 1):
+        resp = client.beta.messages.create(
+            model=MODEL,
+            max_tokens=16000,
+            system=SYSTEM_PROMPT,
+            # If a safety classifier declines, retry on Anthropic's recommended fallback model
+            betas=["server-side-fallback-2026-07-01"],
+            fallbacks="default",
+            tools=[{"type": "web_search_20260209", "name": "web_search", "max_uses": 8}],
+            messages=messages,
+        )
+        text += "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
+        if resp.stop_reason != "pause_turn":
+            break
+        # Server-side search loop paused — send the turn back and it resumes
+        messages.append({"role": "assistant", "content": resp.content})
+
+    if resp.stop_reason == "refusal":
+        category = getattr(getattr(resp, "stop_details", None), "category", None)
+        raise RuntimeError(f"model declined the request (category: {category})")
+    if resp.stop_reason in ("max_tokens", "pause_turn"):
+        raise RuntimeError(f"model response incomplete (stop_reason: {resp.stop_reason})")
+
+    theses = _parse_theses(text)
+    if not theses:
+        logger.warning("No JSON array of theses in model response")
+    return theses
 
 
 def _next_id(reg: Dict) -> int:
@@ -186,15 +219,17 @@ def run() -> Dict:
     return {"status": "generated", "admitted": len(admitted), "active": len(live)}
 
 
-def main():
+def main() -> int:
+    """Returns a process exit code: non-zero when no research was produced, so the workflow run fails visibly."""
     logger.info("=== Macro Research Agent Starting ===")
     if not os.getenv("ANTHROPIC_API_KEY"):
-        logger.error("ANTHROPIC_API_KEY not set — skipping (register unchanged)")
+        logger.error("ANTHROPIC_API_KEY not set — register unchanged")
         _write_brief("error", {"error": "missing ANTHROPIC_API_KEY"})
-        return
-    run()
+        return 1
+    result = run()
     logger.info("=== Macro Research Agent Complete ===")
+    return 1 if result.get("status") == "error" else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

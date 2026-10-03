@@ -12,7 +12,8 @@ Guardrails:
   - sample-size gate: >= 30 closed instrumented trades
   - significance gate: both coefficients' |t| > 2.05
   - auto-rollback: a provisional weight underperforming the champion over its
-    first 10 trades is reverted and locked
+    first 10 trades is reverted and locked (the champion's baseline is its own
+    closed trades' mean pnl, recorded when the provisional is applied)
   - unbounded steps (per user decision) — rollback carries the safety load
 
 The agent never edits source code — only weights.json.
@@ -101,6 +102,16 @@ def mean_pnl_for_version(trades: List[Dict], version: int) -> Optional[float]:
     return sum(vals) / len(vals)
 
 
+def _record_champion_baseline(weights: Dict, trades: List[Dict]) -> Optional[float]:
+    """Store the champion's mean pnl_pct (and trade count) from its own closed trades."""
+    champion = weights["champion"]
+    mean = mean_pnl_for_version(trades, champion["version"])
+    if mean is not None:
+        champion["mean_pnl"] = mean
+        champion["n_trades"] = sum(1 for t in trades if t.get("weight_version") == champion["version"])
+    return mean
+
+
 def judge_provisional(weights: Dict, trades: List[Dict]):
     """
     Evaluate a provisional weight set against its champion.
@@ -122,6 +133,10 @@ def judge_provisional(weights: Dict, trades: List[Dict]):
 
     prov_mean = mean_pnl_for_version(trades, prov_version)
     champ_mean = weights["champion"].get("mean_pnl")
+    if champ_mean is None:
+        # Baseline never recorded (e.g. the seed champion) — derive it from the
+        # champion's own trades so the provisional is not promoted unopposed.
+        champ_mean = _record_champion_baseline(weights, trades)
     if champ_mean is None or prov_mean >= champ_mean:
         weights["champion"] = {
             "version":  active["version"],
@@ -231,6 +246,8 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
         return report
 
     # --- Apply new provisional weights ---
+    # Record what the outgoing champion earned, so probation has a real bar to clear.
+    _record_champion_baseline(weights, instrumented)
     new_version = weights["active"]["version"] + 1
     weights["active"] = {
         "version":  new_version,

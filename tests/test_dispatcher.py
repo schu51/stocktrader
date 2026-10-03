@@ -117,3 +117,18 @@ def test_dispatch_counts_start_failures():
     failed = dispatch(["premarket.yml"], datetime(2026, 10, 5, 13, 0, tzinfo=timezone.utc), "main",
                       already_started=lambda wf, since: False, start=lambda wf, ref: False)
     assert failed == 1
+
+
+def test_selftest_starts_only_the_harmless_workflow(monkeypatch):
+    import dispatcher
+    calls = []
+    monkeypatch.setattr(dispatcher, "dispatch", lambda due, since, ref: calls.append(due) or 0)
+    monkeypatch.setattr(sys, "argv", ["dispatcher.py", "--selftest", "--at", "2026-10-05T14:00:11Z"])
+    assert dispatcher.main() == 0
+    assert calls == [["learning.yml"]]   # not daily_trade, though 10:00 ET is its slot
+
+
+def test_selftest_workflow_is_not_an_order_placing_job():
+    import dispatcher
+    assert dispatcher.SELFTEST_WORKFLOW not in {
+        "daily_trade.yml", "stop_placement.yml", "intraday_exit.yml", "postmarket.yml"}

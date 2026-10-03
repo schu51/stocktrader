@@ -13,6 +13,10 @@ on:
         description: 'Only print what is due, start nothing'
         type: boolean
         default: false
+      selftest:
+        description: 'Start only the Learning Agent (places no orders) to prove dispatch works'
+        type: boolean
+        default: false
 
 # One dispatcher at a time, so the once-per-slot check in dispatcher.py cannot race.
 concurrency:
@@ -35,12 +39,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           NOW_INPUT: ${{ inputs.now }}
           DRY_RUN: ${{ inputs.dry_run }}
+          SELFTEST: ${{ inputs.selftest }}
         run: |
           # Use the time this run was triggered, not when the runner started,
           # so a slow runner still lands in the slot cron-job.org fired for.
           # A supplied timestamp is preview-only: real runs always use the true time,
           # so a caller cannot make the dispatcher trade as if it were another time.
-          if [ -n "$NOW_INPUT" ]; then
+          if [ "$SELFTEST" = "true" ]; then
+            python3 dispatcher.py --selftest
+          elif [ -n "$NOW_INPUT" ]; then
             python3 dispatcher.py --now "$NOW_INPUT"
           elif [ "$DRY_RUN" = "true" ]; then
             python3 dispatcher.py

@@ -12,6 +12,7 @@ Usage:
     python dispatcher.py                       # print workflows due now
     python dispatcher.py --now 2026-10-05T14:00:11Z   # inspect another time (never starts anything)
     python dispatcher.py --run                 # also start them via `gh workflow run`
+    python dispatcher.py --selftest            # start one harmless workflow to prove dispatch works
 """
 
 import argparse
@@ -26,6 +27,11 @@ SLOT_MINUTES = 15
 
 WEEKDAYS = range(0, 5)   # Mon–Fri
 SATURDAY = 5
+
+
+# Started by --selftest to prove the dispatcher can start workflows.
+# Must never be a workflow that places or changes orders.
+SELFTEST_WORKFLOW = "learning.yml"
 
 
 def _minutes(hhmm: str) -> int:
@@ -121,6 +127,8 @@ def main() -> int:
     parser.add_argument("--at", help="trigger time of this run (set by dispatcher.yml from the GitHub API)")
     parser.add_argument("--run", action="store_true", help="start due workflows with `gh workflow run`")
     parser.add_argument("--ref", default="main", help="branch to run workflows on")
+    parser.add_argument("--selftest", action="store_true",
+                        help=f"start {SELFTEST_WORKFLOW} (no orders) through the normal dispatch path")
     args = parser.parse_args()
 
     if args.run and args.now:
@@ -130,6 +138,10 @@ def main() -> int:
     now = parse_now(stamp) if stamp else datetime.now(timezone.utc)
     due = due_workflows(now)
     print(f"{now.astimezone(ET):%a %Y-%m-%d %H:%M:%S %Z} -> {', '.join(due) or 'nothing due'}")
+
+    if args.selftest:
+        print(f"self-test: starting {SELFTEST_WORKFLOW} only")
+        return 1 if dispatch([SELFTEST_WORKFLOW], slot_start(now), args.ref) else 0
 
     failed = dispatch(due, slot_start(now), args.ref) if args.run else 0
     return 1 if failed else 0

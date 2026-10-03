@@ -1,9 +1,7 @@
 name: Stop Placement
 
 on:
-  schedule:
-    - cron: '31 13 * * 1-5'   # 9:31 AM EDT (13:31 UTC) Mon–Fri — 1 min after open
-  workflow_dispatch:
+  workflow_dispatch:   # started by dispatcher.yml — timetable in dispatcher.py
 
 jobs:
   place-stops:

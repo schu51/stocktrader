@@ -1,9 +1,7 @@
 name: Learning Agent
 
 on:
-  schedule:
-    - cron: '0 12 * * 6'   # Saturday 12:00 UTC — after the trading week
-  workflow_dispatch:
+  workflow_dispatch:   # started by dispatcher.yml — timetable in dispatcher.py
 
 jobs:
   learn:

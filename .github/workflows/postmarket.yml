@@ -1,9 +1,7 @@
 name: Post-Market Reconciler
 
 on:
-  schedule:
-    - cron: '15 20 * * 1-5'   # 4:15 PM EDT (20:15 UTC) Mon–Fri
-  workflow_dispatch:
+  workflow_dispatch:   # started by dispatcher.yml — timetable in dispatcher.py
 
 jobs:
   reconcile:

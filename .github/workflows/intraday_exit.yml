@@ -1,11 +1,7 @@
 name: Intraday Exit Monitor
 
 on:
-  schedule:
-    # :15 and :45 past each hour, 9 AM–4 PM EDT (13–20 UTC)
-    # Offset from portfolio sync (:00 and :30) to avoid git push conflicts
-    - cron: '15,45 13-20 * * 1-5'
-  workflow_dispatch:
+  workflow_dispatch:   # started by dispatcher.yml — timetable in dispatcher.py
 
 jobs:
   exit-monitor:

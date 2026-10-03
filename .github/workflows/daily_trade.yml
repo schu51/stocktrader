@@ -1,9 +1,7 @@
 name: Daily Trade Execution
 
 on:
-  schedule:
-    - cron: '0 14 * * 1-5'   # 7:00 AM PT (14:00 UTC) Mon-Fri
-  workflow_dispatch:           # Allow manual trigger from GitHub UI
+  workflow_dispatch:   # started by dispatcher.yml — timetable in dispatcher.py
 
 jobs:
   trade:

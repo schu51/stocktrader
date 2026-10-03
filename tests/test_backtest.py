@@ -109,3 +109,67 @@ def test_cagr():
     from backtest import cagr
     idx = pd.bdate_range("2024-01-01", periods=505)       # ~2 years of sessions
     assert round(cagr(pd.Series(np.linspace(100, 121, 505), index=idx)), 2) == 0.10
+
+
+# ── technical variants ───────────────────────────────────────────────────────
+
+def test_macd_cross_up_detects_a_recent_bullish_cross():
+    from backtest import macd_cross_up
+    falling_then_rising = np.concatenate([np.linspace(120, 100, 60), np.linspace(100, 112, 8)])
+    assert macd_cross_up(falling_then_rising, within=10)
+    steady_uptrend = np.linspace(100, 200, 120)          # MACD above signal the whole time: no fresh cross
+    assert not macd_cross_up(steady_uptrend, within=3)
+    assert not macd_cross_up(np.linspace(120, 100, 80), within=3)
+
+
+def test_ema_reclaim_needs_a_pullback_then_a_close_back_above():
+    from backtest import ema_reclaim
+    trend = list(np.linspace(100, 130, 60))
+    pulled_back_and_reclaimed = np.array(trend + [124, 122, 121, 132])
+    assert ema_reclaim(pulled_back_and_reclaimed)
+    never_pulled_back = np.array(trend + [131, 132, 133, 134])
+    assert not ema_reclaim(never_pulled_back)
+    still_below = np.array(trend + [124, 122, 121, 120])
+    assert not ema_reclaim(still_below)
+
+
+def test_breakout_needs_a_new_closing_high_on_above_average_volume():
+    from backtest import breakout
+    closes = np.array([100.0] * 25 + [101.0])
+    quiet, busy = np.array([1000.0] * 26), np.array([1000.0] * 25 + [1600.0])
+    assert breakout(closes, busy)
+    assert not breakout(closes, quiet)                                  # new high, no volume
+    assert not breakout(np.array([100.0] * 24 + [103.0, 101.0]), busy)  # volume, not a new high
+
+
+def test_atr_pct_is_average_true_range_over_price():
+    from backtest import atr_pct
+    n = 30
+    high, low, close = np.full(n, 102.0), np.full(n, 98.0), np.full(n, 100.0)
+    assert round(atr_pct(high, low, close), 4) == 0.04
+    gap = close.copy(); gap[-1] = 110.0
+    assert atr_pct(np.append(high[:-1], 111.0), np.append(low[:-1], 109.0), gap) > 0.04   # gaps count
+
+
+def test_adx_separates_trend_from_chop():
+    from backtest import adx
+    n = 80
+    up = np.linspace(100, 180, n)
+    assert adx(up + 1, up - 1, up) > 40
+    chop = 100 + np.array([(-1) ** i for i in range(n)], dtype=float)
+    assert adx(chop + 1, chop - 1, chop) < 20
+
+
+def test_atr_stop_replaces_the_fixed_entry_stop_only_below_25pct_gain():
+    from backtest import next_stop
+    pos = _pos(stop=88.0, stop_dist=0.12)                 # volatile stock: 12% entry stop
+    assert next_stop(pos, close=110.0) == 88.0            # stays at the ATR stop, not 92
+    assert next_stop(pos, close=130.0) == 101.5           # 25%+ tier unchanged
+    assert next_stop(_pos(), close=110.0) == 92.0         # no variant: fixed 8%
+
+
+def test_stop_distance_is_clamped():
+    from backtest import stop_distance
+    assert stop_distance(atr_fraction=0.01, multiple=2.5) == 0.04      # floor
+    assert stop_distance(atr_fraction=0.03, multiple=2.5) == 0.075
+    assert stop_distance(atr_fraction=0.10, multiple=2.5) == 0.15      # ceiling (the hard-loss exit is at 15%)

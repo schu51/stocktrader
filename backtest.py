@@ -92,7 +92,77 @@ def next_stop(pos: Dict, close: float) -> float:
     """Stop for the next session: the live tier for this gain, never lower than the current stop."""
     pnl_pct = (close / pos["avg_cost"] - 1) * 100
     tier_stop, _ = calculate_stop_price(close, pnl_pct, pos["avg_cost"])
+    if pnl_pct < 25 and pos.get("stop_dist"):
+        # ATR-stop variant: the entry stop is volatility-sized instead of a fixed 8%
+        tier_stop = round(pos["avg_cost"] * (1 - pos["stop_dist"]), 2)
     return max(pos["stop"], tier_stop)
+
+
+# ── technical variants (experiments; none of these is in the live rules) ─────
+
+def _ema(values: np.ndarray, span: int) -> np.ndarray:
+    return pd.Series(values, dtype=float).ewm(span=span, adjust=False).mean().values
+
+
+def macd_cross_up(closes: np.ndarray, within: int = 3) -> bool:
+    """MACD (12, 26) crossed above its 9-day signal line in the last `within` sessions and is still above."""
+    if len(closes) < 35 + within:
+        return False
+    macd = _ema(closes, 12) - _ema(closes, 26)
+    diff = macd - _ema(macd, 9)
+    recent = diff[-(within + 1):]
+    return bool(recent[-1] > 0 and (recent[:-1] <= 0).any())
+
+
+def ema_reclaim(closes: np.ndarray, span: int = 21, lookback: int = 5) -> bool:
+    """Close is back above the 21-day EMA after closing below it within the last `lookback` sessions."""
+    if len(closes) < span + lookback:
+        return False
+    gap = closes - _ema(closes, span)
+    return bool(gap[-1] > 0 and (gap[-(lookback + 1):-1] < 0).any())
+
+
+def breakout(closes: np.ndarray, volumes: np.ndarray, n: int = 20) -> bool:
+    """New `n`-session closing high on volume above the prior `n`-session average."""
+    if len(closes) < n + 1 or len(volumes) < n + 1:
+        return False
+    return bool(closes[-1] > closes[-(n + 1):-1].max() and volumes[-1] > volumes[-(n + 1):-1].mean())
+
+
+def _true_range(high: np.ndarray, low: np.ndarray, close: np.ndarray) -> np.ndarray:
+    prev = close[:-1]
+    return np.maximum.reduce([high[1:] - low[1:], np.abs(high[1:] - prev), np.abs(low[1:] - prev)])
+
+
+def atr_pct(high: np.ndarray, low: np.ndarray, close: np.ndarray, n: int = 14) -> float:
+    """Average true range over the last `n` sessions as a fraction of the last close."""
+    if len(close) < n + 1:
+        return float("nan")
+    return float(_true_range(high, low, close)[-n:].mean() / close[-1])
+
+
+def adx(high: np.ndarray, low: np.ndarray, close: np.ndarray, n: int = 14) -> float:
+    """Wilder's Average Directional Index: trend strength, 0-100, direction-blind."""
+    if len(close) < 2 * n + 1:
+        return float("nan")
+    up, down = high[1:] - high[:-1], low[:-1] - low[1:]
+    plus_dm = np.where((up > down) & (up > 0), up, 0.0)
+    minus_dm = np.where((down > up) & (down > 0), down, 0.0)
+    smooth = lambda x: pd.Series(x).ewm(alpha=1 / n, adjust=False).mean().values
+    atr = smooth(_true_range(high, low, close))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        plus_di = 100 * smooth(plus_dm) / atr
+        minus_di = 100 * smooth(minus_dm) / atr
+        dx = 100 * np.abs(plus_di - minus_di) / (plus_di + minus_di)
+    return float(smooth(np.nan_to_num(dx))[-1])
+
+
+STOP_DIST_MIN, STOP_DIST_MAX = 0.04, 0.15     # the hard-loss exit already fires at -15%
+
+
+def stop_distance(atr_fraction: float, multiple: float) -> float:
+    """Entry stop distance as a fraction of price: `multiple` x ATR, clamped."""
+    return round(min(max(atr_fraction * multiple, STOP_DIST_MIN), STOP_DIST_MAX), 6)
 
 
 def max_drawdown(equity: pd.Series) -> float:
@@ -200,7 +270,8 @@ class Backtest:
     def __init__(self, universe: Dict[str, str], prices: Dict[str, pd.DataFrame],
                  start: str, end: Optional[str] = None, capital: float = 100_000.0,
                  w_rs: float = 0.60, w_thesis: float = 0.40, slippage_bps: float = 10.0,
-                 quiet: bool = True):
+                 quiet: bool = True, entry_trigger: str = "none", atr_stop: float = 0.0,
+                 min_adx: float = 0.0):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -208,6 +279,8 @@ class Backtest:
         self.capital = capital
         self.w_rs, self.w_thesis = w_rs, w_thesis
         self.slip = slippage_bps / 10_000.0
+        # Experimental variants (all off = the live rules)
+        self.entry_trigger, self.atr_stop, self.min_adx = entry_trigger, atr_stop, min_adx
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -221,7 +294,7 @@ class Backtest:
         self.equity: Dict[pd.Timestamp, float] = {}
         self.cash_share: List[float] = []
         self.counters = {"candidates": 0, "gate_rsi": 0, "gate_bb": 0, "gate_sector": 0,
-                         "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
+                         "gate_trigger": 0, "gate_adx": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
                          "unfilled_no_cash": 0, "unfilled_at_cap": 0}
 
         if quiet:
@@ -324,9 +397,12 @@ class Backtest:
                 self.counters["unfilled_no_cash"] += 1
                 continue
             self.cash -= shares * fill
+            stop_dist = order.get("stop_dist")
             self.positions[sym] = {
                 "symbol": sym, "shares": shares, "avg_cost": fill, "last_price": fill,
-                "stop": round(fill * 0.92, 2), "stop_active": False,   # stop is placed the next morning
+                "stop": round(fill * (1 - (stop_dist or 0.08)), 2),
+                "stop_active": False,   # stop is placed the next morning
+                "stop_dist": stop_dist,
                 "entry_date": self.dates[i].date(), **order["features"]}
             self.counters["fills"] += 1
         self.pending = []
@@ -390,6 +466,19 @@ class Backtest:
                 self.counters["gate_sector"] += 1
                 continue
 
+            # Experimental technical gates
+            c = np.array([b.close for b in bars]); h = np.array([b.high for b in bars])
+            l = np.array([b.low for b in bars]); v = np.array([b.volume for b in bars], dtype=float)
+            if self.entry_trigger != "none":
+                fired = {"macd": lambda: macd_cross_up(c), "ema21": lambda: ema_reclaim(c),
+                         "breakout": lambda: breakout(c, v)}[self.entry_trigger]()
+                if not fired:
+                    self.counters["gate_trigger"] += 1
+                    continue
+            if self.min_adx and not adx(h, l, c) >= self.min_adx:
+                self.counters["gate_adx"] += 1
+                continue
+
             decision = self.engine.evaluate_entry(
                 symbol=sym, portfolio=portfolio, research_score=None,
                 market_snapshot=snapshot, price_history=bars, auto_fetch=False)
@@ -400,6 +489,7 @@ class Backtest:
                 self.counters["engine_hold"] += 1
                 continue
             self.counters["engine_buy"] += 1
+            d["stop_dist"] = stop_distance(atr_pct(h, l, c), self.atr_stop) if self.atr_stop else None
             d["features"] = {"rs_rank": cand["rs_rank"], "thesis_score": cand["thesis_score"],
                              "trend_score": d.get("trend_score"), "confidence": d.get("confidence"),
                              "sector": cand["sector"]}
@@ -411,7 +501,7 @@ class Backtest:
             if (d.get("confidence") or 0) < self.min_confidence or (d.get("shares") or 0) <= 0:
                 continue
             self.pending.append({"symbol": d["symbol"], "shares": int(d["shares"]),
-                                 "features": d["features"]})
+                                 "features": d["features"], "stop_dist": d.get("stop_dist")})
             self.counters["orders"] += 1
 
     def run(self, progress_every: int = 50) -> None:
@@ -448,6 +538,7 @@ class Backtest:
             "start": equity.index[0].date().isoformat(), "end": equity.index[-1].date().isoformat(),
             "sessions": int(len(equity)), "universe": len(self.universe),
             "w_rs": self.w_rs, "w_thesis": self.w_thesis, "slippage_bps": self.slip * 10_000,
+            "variant": {"entry_trigger": self.entry_trigger, "atr_stop": self.atr_stop, "min_adx": self.min_adx},
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),
                          "cagr": cagr(equity), "max_drawdown": max_drawdown(equity)},
@@ -507,6 +598,7 @@ def learning_fit(trades: pd.DataFrame) -> Optional[Dict]:
 
 def print_report(r: Dict) -> None:
     s, b, t = r["strategy"], r["spy_buy_and_hold"], r["closed_trades"]
+    print(f"\nVariant: {r.get('variant')}")
     print(f"\nBacktest {r['start']} to {r['end']}  ({r['sessions']} sessions, {r['universe']} tickers, "
           f"weights {r['w_rs']:.2f}/{r['w_thesis']:.2f}, slippage {r['slippage_bps']:.0f} bps per side)")
     print(f"  {'':22}{'strategy':>12}{'SPY buy & hold':>18}")
@@ -535,6 +627,11 @@ def main() -> int:
     parser.add_argument("--w-rs", type=float, default=0.60)
     parser.add_argument("--w-thesis", type=float, default=0.40)
     parser.add_argument("--slippage-bps", type=float, default=10.0, help="per side")
+    parser.add_argument("--entry-trigger", choices=["none", "macd", "ema21", "breakout"], default="none",
+                        help="experimental: only buy when this signal fired")
+    parser.add_argument("--atr-stop", type=float, default=0.0,
+                        help="experimental: entry stop at this multiple of 14-day ATR instead of a fixed 8%%")
+    parser.add_argument("--min-adx", type=float, default=0.0, help="experimental: require ADX(14) at least this")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -547,7 +644,8 @@ def main() -> int:
     universe = {s: sec for s, sec in universe.items() if s in prices["Close"].columns}
 
     bt = Backtest(universe, prices, args.start, args.end, args.capital,
-                  args.w_rs, args.w_thesis, args.slippage_bps)
+                  args.w_rs, args.w_thesis, args.slippage_bps, entry_trigger=args.entry_trigger,
+                  atr_stop=args.atr_stop, min_adx=args.min_adx)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

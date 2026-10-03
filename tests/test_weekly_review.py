@@ -108,3 +108,32 @@ def test_review_neutralizes_model_written_text():
     assert "](http" not in body and "<img" not in body
     assert body.count("## Needs attention") == 0          # injected heading did not become one
     assert not title.startswith("⚠️")
+
+
+def test_review_sanitizes_every_value_read_from_data_files():
+    from weekly_review import build_review
+    evil = "x\n## Needs attention\n@schu51 see https://evil.example/login <b>"
+    title, body = build_review(_data(
+        trades=[{"symbol": evil, "status": "OPEN", "entry_date": "2026-10-01"},
+                {"symbol": "AAA", "status": "CLOSED", "entry_date": "2026-09-01", "exit_date": "2026-10-01",
+                 "pnl_usd": 1.0, "pnl_pct": 1.0, "exit_reason": evil},
+                {"symbol": evil, "status": "CANCELLED", "entry_date": "2026-10-01"}],
+        learning_report={"status": evil, "trades_so_far": 3},
+        weights={"active": {"version": evil, "w_rs": 0.1, "w_thesis": 0.9, "state": evil}, "champion": {}},
+        history=[{"date": evil, "portfolio_value": 100.0}],
+        failed_runs=[{"name": evil, "createdAt": evil}],
+    ), TODAY)
+    assert "@schu51" not in body and "https://" not in body and "evil.example/login" not in body.replace(" ", "") or "://" not in body
+    assert "://" not in body and "<b>" not in body
+    assert body.count("## Needs attention") == 1          # only the real heading
+    assert "\n## Needs attention\n@" not in body
+
+
+def test_review_tolerates_wrong_types_in_data_files():
+    from weekly_review import build_review
+    title, body = build_review(_data(
+        history=[{"date": "2026-10-02", "portfolio_value": "not a number"}],
+        trades=[{"symbol": "AAA", "status": "CLOSED", "exit_date": "2026-10-01", "pnl_usd": "x", "pnl_pct": None}],
+        candidate_outcomes={"average_candidate": [{"horizon": 10, "mean": "bad", "t": None}]},
+    ), TODAY)
+    assert "## Health" in body

@@ -52,18 +52,26 @@ def load_data(failed_runs_file: str = None) -> Dict:
 
 def _md(value, limit: int = 300) -> str:
     """
-    Text written by a model (thesis themes, rejection reasons, evidence) made
-    safe to place in a GitHub issue: one line, no mentions, links, HTML or
-    markdown structure.
+    Any value read from a data file, made safe to place in a GitHub issue:
+    one line, no mentions, links (markdown or bare URLs), HTML or headings.
+    Everything interpolated into the review goes through this or _num.
     """
     text = " ".join(str(value if value is not None else "").split())[:limit]
-    for ch in "<>`[]#|":
+    for ch in "<>`[]#|!":
         text = text.replace(ch, "")
-    return text.replace("@", "(at)")
+    return text.replace("@", "(at)").replace("://", " ").replace("www.", "www ")
+
+
+def _num(value, default: float = 0.0) -> float:
+    """A number from a data file, or `default` if it is missing or not numeric."""
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
 
 
 def _horizon(rows, horizon: int = 10) -> Dict:
-    return next((r for r in rows or [] if r.get("horizon") == horizon), {})
+    return next((r for r in rows or [] if isinstance(r, dict) and r.get("horizon") == horizon), {})
 
 
 def build_review(data: Dict, today: date) -> Tuple[str, str]:
@@ -74,18 +82,19 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
 
     # ── Account ──────────────────────────────────────────────────────────────
     out.append("## Account")
-    history = data.get("history") or []
+    history = [h for h in (data.get("history") or []) if isinstance(h, dict)]
     if history:
         last = history[-1]
-        before = [h for h in history if h["date"] <= week_ago]
-        line = f"- Portfolio value: **${last['portfolio_value']:,.0f}** (as of {last['date']})"
-        if before:
-            base = before[-1]["portfolio_value"]
-            line += f", {last['portfolio_value'] / base - 1:+.1%} since {before[-1]['date']}"
+        value = _num(last.get("portfolio_value"))
+        before = [h for h in history if str(h.get("date") or "") <= week_ago]
+        line = f"- Portfolio value: **${value:,.0f}** (as of {_md(last.get('date'), 20)})"
+        base = _num(before[-1].get("portfolio_value")) if before else 0.0
+        if base > 0:
+            line += f", {value / base - 1:+.1%} since {_md(before[-1].get('date'), 20)}"
         out.append(line)
-        week = [h for h in history if h["date"] > week_ago]
-        out.append(f"- Trade runs this week: {len(week)}, buy signals {sum(h.get('buy_signals') or 0 for h in week)}, "
-                   f"orders submitted {sum(h.get('orders_submitted') or 0 for h in week)}")
+        week = [h for h in history if str(h.get("date") or "") > week_ago]
+        out.append(f"- Trade runs this week: {len(week)}, buy signals {sum(int(_num(h.get('buy_signals'))) for h in week)}, "
+                   f"orders submitted {sum(int(_num(h.get('orders_submitted'))) for h in week)}")
         if not week:
             problems.append("No daily trade run was recorded this week.")
     else:
@@ -93,40 +102,43 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
 
     # ── Trades ───────────────────────────────────────────────────────────────
     out.append("\n## Trades this week")
-    trades = data.get("trades") or []
-    opened = [t for t in trades if (t.get("entry_date") or "") > week_ago and t.get("status") != "CANCELLED"]
-    closed = [t for t in trades if t.get("status") == "CLOSED" and (t.get("exit_date") or "") > week_ago]
-    unfilled = [t for t in trades if (t.get("entry_date") or "") > week_ago and t.get("status") == "CANCELLED"]
-    out.append(f"- Opened: {', '.join(t['symbol'] for t in opened) or 'none'}")
+    trades = [t for t in (data.get("trades") or []) if isinstance(t, dict)]
+    sym = lambda t: _md(t.get("symbol"), 12)
+    opened = [t for t in trades if str(t.get("entry_date") or "") > week_ago and t.get("status") != "CANCELLED"]
+    closed = [t for t in trades if t.get("status") == "CLOSED" and str(t.get("exit_date") or "") > week_ago]
+    unfilled = [t for t in trades if str(t.get("entry_date") or "") > week_ago and t.get("status") == "CANCELLED"]
+    out.append(f"- Opened: {', '.join(sym(t) for t in opened) or 'none'}")
     if closed:
         for t in closed:
-            out.append(f"- Closed {t['symbol']}: {t.get('pnl_pct', 0):+.1f}% (${t.get('pnl_usd', 0):+,.0f}), "
-                       f"{t.get('exit_reason') or 'no reason recorded'}")
-        out.append(f"- Realized this week: ${sum(t.get('pnl_usd') or 0 for t in closed):+,.0f}")
+            out.append(f"- Closed {sym(t)}: {_num(t.get('pnl_pct')):+.1f}% (${_num(t.get('pnl_usd')):+,.0f}), "
+                       f"{_md(t.get('exit_reason'), 40) or 'no reason recorded'}")
+        out.append(f"- Realized this week: ${sum(_num(t.get('pnl_usd')) for t in closed):+,.0f}")
     else:
         out.append("- Closed: none")
     if unfilled:
-        out.append(f"- Orders that never filled: {', '.join(t['symbol'] for t in unfilled)}")
+        out.append(f"- Orders that never filled: {', '.join(sym(t) for t in unfilled)}")
 
     # ── Learning agent ───────────────────────────────────────────────────────
     out.append("\n## Learning agent")
     weights, report = data.get("weights") or {}, data.get("learning_report") or {}
     active, champion = weights.get("active") or {}, weights.get("champion") or {}
     if active:
-        out.append(f"- Ranking weights in use: **{active.get('w_rs', 0):.0%} RS / {active.get('w_thesis', 0):.0%} thesis** "
-                   f"(version {active.get('version')}, {active.get('state')})")
+        out.append(f"- Ranking weights in use: **{_num(active.get('w_rs')):.0%} RS / {_num(active.get('w_thesis')):.0%} thesis** "
+                   f"(version {_md(active.get('version'), 10)}, {_md(active.get('state'), 20)})")
         if active.get("state") == "provisional":
             done = sum(1 for t in trades if t.get("status") == "CLOSED" and t.get("weight_version") == active.get("version"))
             baseline = champion.get("mean_pnl")
-            bar = f"{baseline:+.2f}% per trade" if baseline is not None else "not recorded yet"
+            bar = f"{_num(baseline):+.2f}% per trade" if baseline is not None else "not recorded yet"
             out.append(f"- Probation: {done} of {PROBATION} closed trades under these weights; "
-                       f"baseline to beat ({champion.get('w_rs', 0):.0%}/{champion.get('w_thesis', 0):.0%}): {bar}")
+                       f"baseline to beat ({_num(champion.get('w_rs')):.0%}/{_num(champion.get('w_thesis')):.0%}): {bar}")
     status = report.get("status")
-    out.append(f"- This week's decision: `{status or 'no report'}` on {report.get('trades_so_far', 0)} closed trades")
+    out.append(f"- This week's decision: {_md(status, 40) or 'no report'} on {int(_num(report.get('trades_so_far')))} closed trades")
     if status == "blocked_by_candidate_evidence":
         ev = report.get("candidate_evidence") or {}
-        out.append(f"  - New weights {report.get('derived')} were **not applied**: on {ev.get('days')} days of candidate data "
-                   f"they picked worse names ({(ev.get('mean_difference') or 0):+.2%} per pick).")
+        derived = report.get("derived") or {}
+        out.append(f"  - New weights ({_num(derived.get('w_rs')):.0%} RS / {_num(derived.get('w_thesis')):.0%} thesis) were "
+                   f"**not applied**: on {int(_num(ev.get('days')))} days of candidate data they picked worse names "
+                   f"({_num(ev.get('mean_difference')):+.2%} per pick).")
     if status in ("applied", "promoted", "reverted"):
         out.append(f"  - Weights changed this week ({status}).")
     if not report:
@@ -137,12 +149,12 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
     co = data.get("candidate_outcomes") or {}
     if co:
         avg, paired = _horizon(co.get("average_candidate")), _horizon(co.get("paired_10_90_vs_60_40"))
-        out.append(f"- Dataset: {co.get('candidate_days')} scored candidates over {co.get('days')} trading days")
+        out.append(f"- Dataset: {int(_num(co.get('candidate_days')))} scored candidates over {int(_num(co.get('days')))} trading days")
         if avg:
-            out.append(f"- Average candidate vs SPY over 10 days: {avg.get('mean', 0):+.2%} (t = {avg.get('t', 0):+.2f})")
+            out.append(f"- Average candidate vs SPY over 10 days: {_num(avg.get('mean')):+.2%} (t = {_num(avg.get('t')):+.2f})")
         if paired:
-            out.append(f"- 10/90 vs 60/40 top picks over 10 days: {paired.get('mean', 0):+.2%} per pick "
-                       f"(t = {paired.get('t', 0):+.2f}, {paired.get('n')} days). A t near 2 or beyond is needed to mean much.")
+            out.append(f"- 10/90 vs 60/40 top picks over 10 days: {_num(paired.get('mean')):+.2%} per pick "
+                       f"(t = {_num(paired.get('t')):+.2f}, {int(_num(paired.get('n')))} days). A t near 2 or beyond is needed to mean much.")
     else:
         out.append("- No candidate-outcome report found.")
 
@@ -152,32 +164,34 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
     if brief.get("status") in ("error", "partial"):
         problems.append(f"Macro research: {_md(brief.get('error') or brief.get('revalidation_error') or 'failed')}")
     live = brief.get("active") or []
+    live = [t for t in live if isinstance(t, dict)]
     out.append(f"- Live: {len(live)}")
     for t in live:
         out.append(f"  - {_md(t.get('id'), 40)} ({float(t.get('conviction') or 0):.2f}): {_md(t.get('theme'))} "
                    f"({', '.join(_md(x, 40) for x in t.get('beneficiary_sectors') or [])})")
     reval = brief.get("revalidation") or {}
     if reval:
-        out.append(f"- Re-validated: {len(reval.get('confirmed') or [])} of {reval.get('checked', 0)} confirmed")
+        out.append(f"- Re-validated: {len(reval.get('confirmed') or [])} of {int(_num(reval.get('checked')))} confirmed")
         for inv in reval.get("invalidated") or []:
             out.append(f"  - Retired {_md(inv.get('id'), 40)}: {_md(inv.get('evidence'))}")
-    out.append(f"- New this week: {brief.get('admitted', 0)} admitted")
+    out.append(f"- New this week: {int(_num(brief.get('admitted')))} admitted")
     for r in brief.get("rejected") or []:
         out.append(f"  - Rejected \"{_md(r.get('theme'))}\": {_md(r.get('reason'))}")
 
     # ── Health ───────────────────────────────────────────────────────────────
     screener = data.get("screener") or {}
     coverage = screener.get("data_coverage")
+    coverage = _num(coverage) if coverage is not None else None
     if coverage is not None and coverage < MIN_DATA_COVERAGE:
         problems.append(f"Screener: only {coverage:.0%} of the universe has price data — the ticker list is probably corrupt.")
     for run in data.get("failed_runs") or []:
-        problems.append(f"Failed run: {run.get('name')} at {run.get('createdAt')}")
+        problems.append(f"Failed run: {_md(run.get('name'), 60)} at {_md(run.get('createdAt'), 30)}")
 
     health = ["\n## Health"]
     if screener:
         cov = f"{coverage:.0%}" if coverage is not None else "not recorded"
-        health.append(f"- Screener: {screener.get('universe_size')} tickers, price data for {cov}, "
-                      f"{screener.get('final_count')} candidates in the latest run")
+        health.append(f"- Screener: {int(_num(screener.get('universe_size')))} tickers, price data for {cov}, "
+                      f"{int(_num(screener.get('final_count')))} candidates in the latest run")
     health.append(f"- Failed workflow runs this week: {len(data.get('failed_runs') or [])}")
     health.append("- No problems detected." if not problems else f"- {len(problems)} problem(s) listed at the top.")
 

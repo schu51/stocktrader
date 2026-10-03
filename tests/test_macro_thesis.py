@@ -252,3 +252,15 @@ def test_clean_text_makes_any_value_a_short_plain_line():
     assert is_safe_text(out, 240)
     assert len(clean_text("x" * 1000, 50)) == 50
     assert clean_text(None, 10) == "" and clean_text({"k": 1}, 100) == "{'k': 1}"
+
+
+def test_validate_fails_closed_on_missing_or_empty_text():
+    from macro_thesis import validate_thesis
+    for field in ("theme", "invalidation_condition"):
+        for bad in (None, "", "   "):
+            ok, reason = validate_thesis(_good_thesis(**{field: bad}))
+            assert not ok and field in reason, (field, bad)
+        missing = _good_thesis()
+        del missing[field]
+        ok, reason = validate_thesis(missing)
+        assert not ok and field in reason

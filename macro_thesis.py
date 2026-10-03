@@ -33,7 +33,7 @@ _TEXT_LIMITS = TEXT_LIMITS
 
 # Characters that can break a value out of "one plain line": control and format
 # characters, and line/paragraph separators (which str.splitlines also honours).
-_UNSAFE_CATEGORIES = {"Cc", "Cf", "Zl", "Zp"}
+_UNSAFE_CATEGORIES = {"Cc", "Cf", "Cs", "Co", "Zl", "Zp"}
 
 
 def _unsafe_char(ch: str) -> bool:
@@ -91,9 +91,11 @@ def validate_thesis(t: Dict) -> Tuple[bool, str]:
     """
     # Free text is stored and replayed into later model prompts: keep it short
     # and single-line so it cannot carry a block of instructions.
+    # Fail closed: a missing, empty or non-string value is rejected, not waved through.
     for field, limit in _TEXT_LIMITS.items():
-        if t.get(field) is not None and not is_safe_text(t.get(field), limit):
-            return False, f"{field} must be a plain single line of at most {limit} characters"
+        value = t.get(field)
+        if not is_safe_text(value, limit) or not value.strip():
+            return False, f"{field} must be a non-empty plain single line of at most {limit} characters"
 
     sources = t.get("sources") or []
     if not sources or not _has_primary_source(sources):

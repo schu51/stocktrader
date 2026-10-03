@@ -124,7 +124,9 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
     """
     Live hook, called for every stock the decision engine wants to buy.
     Logs its signals and returns {"signals", "stop_arm", "stop_dist", "blocked_by"}.
-    Never raises: on any failure the buy proceeds under the standing rules.
+    Never raises. If the signals cannot be computed the buy proceeds under the
+    standing rules and the result carries "error", which the daily run turns
+    into an alert so an active gate cannot be switched off silently.
     """
     try:
         from technical_signals import compute_signals, stop_distance
@@ -137,7 +139,13 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
         if dist is None:
             arm = "fixed"
         blocked_by = entry_gate(signals, registry)
+    except Exception as e:
+        logger.warning(f"Experiment hook failed for {symbol}: {e} — buying under the standing rules")
+        return {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": None, "error": str(e)}
 
+    out = {"signals": signals, "stop_arm": arm, "stop_dist": dist, "blocked_by": blocked_by}
+    # Logging is separate: a log that cannot be written must not switch the gate off.
+    try:
         try:
             log = json.loads(Path(log_path).read_text())
         except Exception:
@@ -148,10 +156,10 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
         log.append({"date": day.isoformat(), "symbol": symbol, "price": float(price_bars[-1].close),
                     "signals": signals, "blocked_by": blocked_by})
         _write_json(log_path, log)
-        return {"signals": signals, "stop_arm": arm, "stop_dist": dist, "blocked_by": blocked_by}
     except Exception as e:
-        logger.warning(f"Experiment hook failed for {symbol}: {e} — buying under the standing rules")
-        return {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": None}
+        logger.warning(f"Could not write the signal log for {symbol}: {e}")
+        out["error"] = f"signal log not written: {e}"
+    return out
 
 
 # ---------------------------------------------------------------------------

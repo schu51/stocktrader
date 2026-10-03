@@ -71,11 +71,14 @@ def test_broker_flags_a_real_positions_list_including_an_empty_one(monkeypatch):
 def test_runner_verification_reads_the_same_call(monkeypatch):
     from types import SimpleNamespace
     from run_daily_analysis import DailyRunner
-    verified = lambda broker: DailyRunner._positions_verified(SimpleNamespace(broker=broker))
+    verified = lambda broker, account_ok=True: DailyRunner._positions_verified(
+        SimpleNamespace(broker=broker, _account_ok=account_ok))
     assert verified(None) is False
     assert verified(SimpleNamespace()) is False                              # never asked
     assert verified(SimpleNamespace(last_positions_ok=False)) is False
     assert verified(SimpleNamespace(last_positions_ok=True)) is True
+    # positions fine but the account call failed: sizing would use defaults
+    assert verified(SimpleNamespace(last_positions_ok=True), account_ok=False) is False
 
 
 def test_sector_allocations_come_from_the_verified_portfolio_not_a_new_call():

@@ -97,7 +97,19 @@ def test_on_buy_signal_replaces_same_day_duplicates(tmp_path):
 def test_on_buy_signal_never_blocks_or_raises_when_it_breaks(tmp_path):
     import experiments as ex
     out = ex.on_buy_signal("AMD", None, TODAY, registry_path=tmp_path / "e.json", log_path=tmp_path / "log.json")
-    assert out == {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": None}
+    assert out["error"]                                     # reported, so the run can raise an alert
+    assert {k: out[k] for k in ("signals", "stop_arm", "stop_dist", "blocked_by")} == \
+        {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": None}
+
+
+def test_gate_still_applies_when_the_signal_log_cannot_be_written(tmp_path):
+    import experiments as ex
+    bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    unwritable = tmp_path / "log.json"
+    unwritable.mkdir()                                       # a directory where the log file should be
+    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=tmp_path / "e.json", log_path=unwritable)
+    assert out["blocked_by"] == "macd_cross"                # the gate held
+    assert "signal log" in out["error"]
 
 
 # ── weekly evaluation: entry signals ─────────────────────────────────────────

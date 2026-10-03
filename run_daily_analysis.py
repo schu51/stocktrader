@@ -200,6 +200,10 @@ class DailyRunner:
 
         account = self.broker.get_account()
         raw     = self.broker.get_positions() or []
+        # An error from either call falls back to defaults below ($100k, no
+        # positions). Record it so the run can refuse to size or trade on that.
+        self._account_ok = isinstance(account, dict) and "error" not in account \
+            and account.get("portfolio_value") is not None
         total_value = float(account.get("portfolio_value", self.portfolio.total_value))
 
         # Build stop-price map from active Alpaca stop/stop_limit/trailing_stop orders
@@ -263,11 +267,13 @@ class DailyRunner:
 
     def _positions_verified(self) -> bool:
         """
-        True only if the positions call that built the current portfolio state
-        returned a real list. Read from the same call (broker.last_positions_ok),
-        not a second request, so the answer cannot disagree with the data in use.
+        True only if the account and positions calls that built the current
+        portfolio state both succeeded. Read from those same calls, not a second
+        request, so the answer cannot disagree with the data in use.
         """
-        return bool(self.broker) and getattr(self.broker, "last_positions_ok", False) is True
+        return (bool(self.broker)
+                and getattr(self.broker, "last_positions_ok", False) is True
+                and getattr(self, "_account_ok", False) is True)
 
     def _initialize_portfolio(self, default_value: float) -> PortfolioState:
         """Load portfolio from Alpaca if available, otherwise use default value."""
@@ -403,6 +409,14 @@ class DailyRunner:
             results["exits"] = exit_results
             if exit_results.get("error"):
                 results["alerts"].append(f"Exit checks did not run: {exit_results['error']}")
+            # One position without price history is routine (a delisted holding such
+            # as CTLP) and is listed in the results. Several at once means the price
+            # source is down and most exits went unchecked — that must reach a human.
+            unchecked = exit_results.get("unchecked") or []
+            if len(unchecked) >= max(3, exit_results.get("positions_checked", 0) / 2):
+                results["alerts"].append(
+                    f"Exit checks skipped for {len(unchecked)} of {exit_results.get('positions_checked')} "
+                    f"positions (no price history): {', '.join(unchecked[:10])}")
 
             # Build rich portfolio state with real Position objects (unlocks engine methods)
             live_portfolio = self._build_portfolio_state()
@@ -456,6 +470,7 @@ class DailyRunner:
             opportunities = []
             holds = []
             errors = []
+            experiment_failures = []   # buys that went ahead without the experiment gate / stop arm
 
             # Get current sector allocations for concentration check
             sector_allocations = self._get_sector_allocations()
@@ -530,6 +545,8 @@ class DailyRunner:
                         # never raises; if it fails the buy proceeds unchanged.
                         from experiments import on_buy_signal
                         exp = on_buy_signal(symbol, price_bars, datetime.now().date())
+                        if exp.get("error"):
+                            experiment_failures.append(f"{symbol}: {exp['error']}")
                         decision_dict["signals"]   = exp["signals"]
                         decision_dict["stop_arm"]  = exp["stop_arm"]
                         decision_dict["stop_dist"] = exp["stop_dist"]
@@ -554,6 +571,11 @@ class DailyRunner:
                     logger.error(f"Error analyzing {symbol}: {e}")
                     errors.append({"symbol": symbol, "error": str(e)})
 
+            if experiment_failures:
+                results["alerts"].append(
+                    f"Experiment hook failed for {len(experiment_failures)} buy signal(s); those were "
+                    f"evaluated under the standing rules without the active gate ({experiment_failures[0]})")
+
             opportunities.sort(
                 key=lambda x: (x.get("signal_strength", 0), x.get("trend_score") or 0),
                 reverse=True
@@ -564,7 +586,7 @@ class DailyRunner:
             # Fail closed: without a confirmed position list the engine cannot see
             # what is already held (duplicate buys, no sector or position caps).
             if execute and not positions_verified:
-                msg = "New entries skipped: positions could not be verified with the broker"
+                msg = "New entries skipped: account and positions could not be verified with the broker"
                 logger.error(msg)
                 results["alerts"].append(msg)
                 results["execution"] = {"status": "skipped", "reason": msg, "submitted": 0}
@@ -1310,11 +1332,13 @@ class DailyRunner:
                 hist   = yf.Ticker(sym).history(period="1y")
                 closes = hist["Close"].values
                 if len(closes) < 50:
+                    result.setdefault("unchecked", []).append(sym)
                     continue
                 sma50  = float(closes[-50:].mean())
                 sma200 = float(closes[-200:].mean()) if len(closes) >= 200 else None
             except Exception as e:
                 logger.warning(f"Could not fetch data for {sym}: {e}")
+                result.setdefault("unchecked", []).append(sym)
                 continue
 
             # ── Hard exit: price below 50MA ─────────────────────────────────

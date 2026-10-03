@@ -13,7 +13,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 logging.basicConfig(
     level=logging.INFO,
@@ -43,13 +43,45 @@ def positions_needing_stops(
     return [p for p in positions if p["symbol"] not in protected]
 
 
-def calculate_stop_for_position(pos: Dict) -> Tuple[float, str]:
-    """Calculate stop price for a position using trailing stop tiers."""
+STOP_DIST_BOUNDS = (0.04, 0.15)   # same clamp as technical_signals.stop_distance
+
+
+def open_trade_for(symbol: str, trades: Optional[List[Dict]]) -> Optional[Dict]:
+    """The most recent OPEN trade-log entry for a symbol, if any."""
+    for t in reversed(trades or []):
+        if t.get("symbol") == symbol and t.get("status") == "OPEN":
+            return t
+    return None
+
+
+def calculate_stop_for_position(pos: Dict, trade: Optional[Dict] = None) -> Tuple[float, str]:
+    """
+    Calculate stop price for a position using trailing stop tiers.
+
+    If the position's trade-log entry is in the ATR arm of the stop experiment
+    (experiments.py), its entry stop — the under-25%-gain tier — is its own
+    volatility-sized distance instead of the fixed 8%. Higher tiers are unchanged.
+    """
     from exit_logic import calculate_stop_price
     current  = float(pos["current_price"])
     avg_cost = float(pos["avg_entry_price"])
     pnl_pct  = float(pos["unrealized_plpc"]) * 100   # Alpaca returns decimal
+    try:
+        dist = float(trade["stop_dist"]) if trade and trade.get("stop_arm") == "atr" else None
+    except (TypeError, ValueError, KeyError):
+        dist = None
+    if dist is not None and pnl_pct < 25 and STOP_DIST_BOUNDS[0] <= dist <= STOP_DIST_BOUNDS[1]:
+        return round(avg_cost * (1 - dist), 2), f"ATR stop → {dist:.1%} below entry"
     return calculate_stop_price(current, pnl_pct, avg_cost)
+
+
+def load_trades() -> List[Dict]:
+    """Trade log, or an empty list if it cannot be read (stops then use the default tiers)."""
+    try:
+        return json.loads((ROOT / "docs" / "data" / "trades.json").read_text())
+    except Exception as e:
+        logger.warning(f"Could not read trade log ({e}) — using default stop tiers")
+        return []
 
 
 def main():
@@ -81,13 +113,14 @@ def main():
     placed  = 0
     failed  = 0
     results = []
+    trades  = load_trades()
 
     for pos in to_protect:
         sym = pos["symbol"]
         qty = int(pos["qty"])
 
         try:
-            stop_price, tier = calculate_stop_for_position(pos)
+            stop_price, tier = calculate_stop_for_position(pos, open_trade_for(sym, trades))
             result = broker.place_order(
                 symbol=sym,
                 qty=qty,

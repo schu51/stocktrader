@@ -44,7 +44,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import reconcile_phantom_trades
+from exit_logic import reconcile_phantom_trades, safe_to_reconcile
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
 
@@ -261,6 +261,19 @@ class DailyRunner:
             total_unrealized_pnl=total_unrealized,
         )
 
+    def _positions_verified(self) -> bool:
+        """
+        True only if Alpaca answered a positions request with a real list.
+        get_positions() returns [] on an API error, which is indistinguishable
+        from an empty account, so ask the raw endpoint.
+        """
+        if not self.broker:
+            return False
+        try:
+            return isinstance(self.broker._request("GET", "/v2/positions"), list)
+        except Exception:
+            return False
+
     def _initialize_portfolio(self, default_value: float) -> PortfolioState:
         """Load portfolio from Alpaca if available, otherwise use default value."""
         if ALPACA_AVAILABLE:
@@ -402,10 +415,15 @@ class DailyRunner:
                 trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
                 if trades_file.exists():
                     trades = json.loads(trades_file.read_text())
-                    n = reconcile_phantom_trades(trades, set(live_portfolio.positions.keys()))
-                    if n:
-                        trades_file.write_text(json.dumps(trades, indent=2))
-                        logger.info(f"Reconciled {n} phantom OPEN trade(s) — order(s) never filled")
+                    held = set(live_portfolio.positions.keys())
+                    ok, why = safe_to_reconcile(trades, held, self._positions_verified())
+                    if not ok:
+                        logger.error(f"Trade log reconciliation skipped: {why}")
+                    else:
+                        n = reconcile_phantom_trades(trades, held)
+                        if n:
+                            trades_file.write_text(json.dumps(trades, indent=2))
+                            logger.info(f"Reconciled {n} phantom OPEN trade(s) — order(s) never filled")
             except Exception as e:
                 logger.warning(f"Trade log reconciliation failed: {e}")
 
@@ -505,6 +523,19 @@ class DailyRunner:
                     decision_dict = self._scale_size_by_momentum(decision_dict)
 
                     if decision.action == "BUY":
+                        # Technical experiments (experiments.py): log this buy signal,
+                        # pick its stop arm, apply any active entry gate. The hook
+                        # never raises; if it fails the buy proceeds unchanged.
+                        from experiments import on_buy_signal
+                        exp = on_buy_signal(symbol, price_bars, datetime.now().date())
+                        decision_dict["signals"]   = exp["signals"]
+                        decision_dict["stop_arm"]  = exp["stop_arm"]
+                        decision_dict["stop_dist"] = exp["stop_dist"]
+                        if exp["blocked_by"]:
+                            reason = f"experiment gate: {exp['blocked_by']} has not fired"
+                            holds.append({"symbol": symbol, "reason": reason})
+                            logger.info(f"Skipping {symbol}: {reason}")
+                            continue
                         opportunities.append(decision_dict)
                         self.screener.track_performer(
                             symbol=symbol,
@@ -1117,7 +1148,8 @@ class DailyRunner:
                    trade_id: str = None, rs_rank: int = None,
                    thesis_score: float = None, thesis_grade: str = None,
                    sector: str = None, weight_version: int = None,
-                   realized_pnl_pct: float = None, order_id: str = None):
+                   realized_pnl_pct: float = None, order_id: str = None,
+                   experiment: Dict = None):
         """
         Append-only trade log. Records every entry and exit with outcome data.
         Stored in docs/data/trades.json — the feedback loop foundation.
@@ -1160,6 +1192,10 @@ class DailyRunner:
                     "sector":         sector,
                     "weight_version": weight_version,
                     "order_id":       order_id,
+                    # Experiment tags (experiments.py): signals at entry and which stop arm
+                    "signals":        (experiment or {}).get("signals"),
+                    "stop_arm":       (experiment or {}).get("stop_arm"),
+                    "stop_dist":      (experiment or {}).get("stop_dist"),
                     "exit_date":   None,
                     "exit_price":  None,
                     "exit_reason": None,
@@ -1787,6 +1823,8 @@ class DailyRunner:
                         sector=opp.get("sector"),
                         weight_version=self._active_weight_version(),
                         order_id=result.get("order_id"),
+                        experiment={"signals": opp.get("signals"), "stop_arm": opp.get("stop_arm"),
+                                    "stop_dist": opp.get("stop_dist")},
                     )
                 else:
                     logger.warning(f"Order not submitted for {symbol}: {result.get('reason')}")

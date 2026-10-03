@@ -82,3 +82,42 @@ def test_calculate_stop_for_position_loser():
     stop, tier = calculate_stop_for_position(pos)
     assert stop == round(540.69 * 0.92, 2)  # default → 8% below entry
     assert "entry" in tier.lower() or "default" in tier.lower()
+
+
+def _alpaca_pos(current, avg, plpc):
+    return {"symbol": "AAA", "current_price": str(current), "avg_entry_price": str(avg), "unrealized_plpc": str(plpc)}
+
+
+def test_atr_arm_uses_its_own_entry_stop():
+    from stop_placement import calculate_stop_for_position
+    trade = {"symbol": "AAA", "status": "OPEN", "stop_arm": "atr", "stop_dist": 0.12}
+    stop, tier = calculate_stop_for_position(_alpaca_pos(102, 100, 0.02), trade)
+    assert stop == 88.0 and "ATR" in tier
+
+
+def test_fixed_arm_and_untagged_positions_keep_the_8pct_stop():
+    from stop_placement import calculate_stop_for_position
+    for trade in (None, {"stop_arm": "fixed", "stop_dist": None}, {"stop_arm": "atr", "stop_dist": None}, {}):
+        assert calculate_stop_for_position(_alpaca_pos(102, 100, 0.02), trade)[0] == 92.0
+
+
+def test_atr_arm_does_not_touch_the_profit_tiers():
+    from stop_placement import calculate_stop_for_position
+    trade = {"stop_arm": "atr", "stop_dist": 0.12}
+    assert calculate_stop_for_position(_alpaca_pos(130, 100, 0.30), trade)[0] == 101.5     # break-even + 1.5%
+    assert calculate_stop_for_position(_alpaca_pos(160, 100, 0.60), trade)[0] == 144.0     # 10% trail
+
+
+def test_out_of_range_or_garbage_stop_distance_falls_back_to_default():
+    from stop_placement import calculate_stop_for_position
+    for bad in (0.9, 0.0001, -0.1, "wide", float("nan")):
+        assert calculate_stop_for_position(_alpaca_pos(102, 100, 0.02), {"stop_arm": "atr", "stop_dist": bad})[0] == 92.0
+
+
+def test_open_trade_for_picks_the_latest_open_entry():
+    from stop_placement import open_trade_for
+    trades = [{"symbol": "AAA", "status": "CLOSED", "stop_arm": "atr"},
+              {"symbol": "AAA", "status": "OPEN", "stop_arm": "fixed"},
+              {"symbol": "BBB", "status": "OPEN", "stop_arm": "atr"}]
+    assert open_trade_for("AAA", trades)["stop_arm"] == "fixed"
+    assert open_trade_for("ZZZ", trades) is None and open_trade_for("AAA", None) is None

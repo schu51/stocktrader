@@ -50,7 +50,7 @@ def load_data(failed_runs_file: str = None) -> Dict:
         "history": _load("history.json"), "trades": _load("trades.json"),
         "weights": _load("weights.json"), "learning_report": _load("learning_report.json"),
         "candidate_outcomes": _load("candidate_outcomes.json"), "macro_brief": _load("macro_brief.json"),
-        "screener": _load("screener.json"), "failed_runs": failed,
+        "screener": _load("screener.json"), "experiments": _load("experiments.json"), "failed_runs": failed,
     }
 
 
@@ -164,6 +164,32 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
                        f"(t = {_num(paired.get('t')):+.2f}, {int(_num(paired.get('n')))} days). A t near 2 or beyond is needed to mean much.")
     else:
         out.append("- No candidate-outcome report found.")
+
+    # ── Experiments ──────────────────────────────────────────────────────────
+    out.append("\n## Experiments")
+    registry = data.get("experiments") or {}
+    exps = registry.get("experiments") if isinstance(registry.get("experiments"), dict) else {}
+    if exps:
+        for name, exp in exps.items():
+            if not isinstance(exp, dict):
+                continue
+            ev = exp.get("evidence") if isinstance(exp.get("evidence"), dict) else {}
+            if exp.get("kind") == "stop_arm":
+                detail = f"{int(_num(ev.get('n_atr')))} ATR vs {int(_num(ev.get('n_fixed')))} fixed closed trades"
+                if ev.get("difference") is not None:
+                    detail += f", difference {_num(ev.get('difference')):+.2f}% per trade (t = {_num(ev.get('t')):+.2f})"
+            else:
+                detail = f"{int(_num(ev.get('days')))} days of evidence"
+                if ev.get("mean") is not None:
+                    detail += f", fired vs not {_num(ev.get('mean')):+.2%} over 10 days (t = {_num(ev.get('t')):+.2f})"
+            out.append(f"- {_md(name, 30)}: **{_md(exp.get('state'), 20)}** — {detail}")
+        changed = [c for c in registry.get("changes") or [] if isinstance(c, dict) and str(c.get("date") or "") > week_ago]
+        for c in changed:
+            out.append(f"- Changed this week: {_md(c.get('experiment'), 30)} {_md(c.get('from'), 20)} to "
+                       f"{_md(c.get('to'), 20)} ({_md(c.get('reason'))})")
+        out.append(f"- Buy signals logged so far: {int(_num(registry.get('signals_logged')))}")
+    else:
+        out.append("- No experiment registry found.")
 
     # ── Macro theses ─────────────────────────────────────────────────────────
     out.append("\n## Macro theses")

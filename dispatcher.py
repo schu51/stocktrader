@@ -50,6 +50,7 @@ TIMETABLE = [
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30
     # Saturday chain — each step feeds the next
     ("candidate_outcomes.yml", [SATURDAY], "08:00", "08:00", None),  # evidence the learning agent checks
+    ("experiments.yml",        [SATURDAY], "08:15", "08:15", None),  # promote / keep / drop technical trials
     ("learning.yml",           [SATURDAY], "08:30", "08:30", None),
     ("macro_research.yml",     [SATURDAY], "09:00", "09:00", None),
     ("weekly_review.yml",      [SATURDAY], "09:30", "09:30", None),  # summarizes all of the above

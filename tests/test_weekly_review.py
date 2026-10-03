@@ -158,3 +158,18 @@ def test_review_flags_a_shrunken_universe():
     from weekly_review import build_review
     title, body = build_review(_data(screener={"universe_size": 89, "final_count": 12, "data_coverage": 1.0}), TODAY)
     assert title.startswith("⚠️") and "only 89 tickers" in body
+
+
+def test_review_shows_experiment_states_and_this_weeks_changes():
+    from weekly_review import build_review
+    registry = {"signals_logged": 240, "experiments": {
+        "atr_stop": {"kind": "stop_arm", "state": "trial", "evidence": {"n_atr": 12, "n_fixed": 9, "difference": 1.5, "t": 0.8}},
+        "macd_cross": {"kind": "entry_signal", "state": "dropped", "evidence": {"days": 44, "mean": -0.012, "t": -1.4}},
+        "breakout": {"kind": "entry_signal", "state": "observing"}},
+        "changes": [{"date": "2026-10-03", "experiment": "macd_cross", "from": "active", "to": "dropped", "reason": "did worse"},
+                    {"date": "2026-08-01", "experiment": "old", "from": "a", "to": "b", "reason": "ancient"}]}
+    _, body = build_review(_data(experiments=registry), TODAY)
+    assert "## Experiments" in body
+    assert "atr_stop: **trial** — 12 ATR vs 9 fixed closed trades, difference +1.50% per trade" in body
+    assert "macd_cross: **dropped** — 44 days of evidence, fired vs not -1.20%" in body
+    assert "Changed this week: macd_cross active to dropped (did worse)" in body and "ancient" not in body

@@ -173,3 +173,14 @@ def test_stop_distance_is_clamped():
     assert stop_distance(atr_fraction=0.01, multiple=2.5) == 0.04      # floor
     assert stop_distance(atr_fraction=0.03, multiple=2.5) == 0.075
     assert stop_distance(atr_fraction=0.10, multiple=2.5) == 0.15      # ceiling (the hard-loss exit is at 15%)
+
+
+def test_compute_signals_returns_every_named_signal():
+    from technical_signals import SIGNAL_NAMES, compute_signals
+    n = 120
+    up = np.linspace(100, 180, n)
+    out = compute_signals(up, up + 1, up - 1, np.full(n, 1e6))
+    assert all(isinstance(out[name], bool) for name in SIGNAL_NAMES)
+    assert out["adx25"] is True and 0 < out["atr_pct"] < 0.05
+    short = compute_signals(up[:10], up[:10] + 1, up[:10] - 1, np.full(10, 1e6))
+    assert short["adx"] is None and short["atr_pct"] is None and short["macd_cross"] is False

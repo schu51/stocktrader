@@ -1,0 +1,75 @@
+{
+  "experiments": {
+    "atr_stop": {
+      "kind": "stop_arm",
+      "state": "trial",
+      "started": "2026-10-03",
+      "params": {
+        "multiple": 2.5
+      },
+      "note": "backtest 139% vs 124% control, same drawdown",
+      "evidence": {
+        "n_atr": 0,
+        "n_fixed": 0,
+        "difference": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-03"
+    },
+    "macd_cross": {
+      "kind": "entry_signal",
+      "state": "active",
+      "started": "2026-10-03",
+      "params": {},
+      "note": "backtest 119% vs 124% control, drawdown -13% vs -16%",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-03"
+    },
+    "ema21_reclaim": {
+      "kind": "entry_signal",
+      "state": "observing",
+      "started": "2026-10-03",
+      "params": {},
+      "note": "backtest 100% vs 124% control",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-03"
+    },
+    "breakout": {
+      "kind": "entry_signal",
+      "state": "observing",
+      "started": "2026-10-03",
+      "params": {},
+      "note": "backtest 47% vs 124% control; best per-trade quality",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-03"
+    },
+    "adx25": {
+      "kind": "entry_signal",
+      "state": "observing",
+      "started": "2026-10-03",
+      "params": {},
+      "note": "backtest 55% vs 124% control",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-03"
+    }
+  },
+  "changes": [],
+  "generated_at": "2026-10-03T15:45:17.263392",
+  "signals_logged": 0
+}

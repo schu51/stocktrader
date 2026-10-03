@@ -88,6 +88,29 @@ def check_exit_triggers(
     return False, "", ""
 
 
+MAX_RECONCILE_SHARE = 0.5   # cancelling more than half of all open trades at once is not "unfilled orders"
+MIN_OPEN_FOR_SHARE_CHECK = 4
+
+
+def safe_to_reconcile(trades: list, held_symbols: set, positions_verified: bool) -> Tuple[bool, str]:
+    """
+    Guard for reconcile_phantom_trades. Reconciliation trusts "the account does
+    not hold it" as proof an order never filled, so it must not run when the
+    position list is unknown (no broker, API error) or implausible: a failed
+    positions call looks exactly like an empty account and would cancel every
+    open trade in the log.
+    """
+    if not positions_verified:
+        return False, "positions could not be verified with the broker"
+    open_trades = [t for t in trades if t.get("status") == "OPEN"]
+    would_cancel = [t for t in open_trades if t.get("symbol") not in held_symbols]
+    if (len(open_trades) >= MIN_OPEN_FOR_SHARE_CHECK
+            and len(would_cancel) > MAX_RECONCILE_SHARE * len(open_trades)):
+        return False, (f"would cancel {len(would_cancel)} of {len(open_trades)} open trades — "
+                       f"more likely a data problem than unfilled orders")
+    return True, ""
+
+
 def reconcile_phantom_trades(trades: list, held_symbols: set) -> int:
     """
     Mark OPEN trades for symbols no longer held as CANCELLED, in place.

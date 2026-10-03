@@ -1,0 +1,41 @@
+name: Dispatcher
+
+# Triggered every 15 minutes by cron-job.org (GitHub's own schedule cron runs
+# hours late). Starts whichever workflows are due — timetable in dispatcher.py.
+
+on:
+  workflow_dispatch:
+    inputs:
+      now:
+        description: 'ISO timestamp to evaluate instead of the trigger time (testing)'
+        required: false
+      dry_run:
+        description: 'Only print what is due, start nothing'
+        type: boolean
+        default: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+      actions: write          # needed to start the other workflows
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start due workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOW_INPUT: ${{ inputs.now }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          # Use the time this run was triggered, not when the runner started,
+          # so a slow runner still lands in the slot cron-job.org fired for.
+          NOW="${NOW_INPUT:-$(gh run view "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --json createdAt -q .createdAt)}"
+          if [ "$DRY_RUN" = "true" ]; then
+            python3 dispatcher.py --now "$NOW"
+          else
+            python3 dispatcher.py --now "$NOW" --run
+          fi

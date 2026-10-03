@@ -91,6 +91,24 @@ def validate_thesis(t: Dict) -> Tuple[bool, str]:
     return True, "ok"
 
 
+def find_duplicate(candidate: Dict, live_theses: List[Dict]) -> Optional[str]:
+    """
+    Id of a live thesis this candidate repeats, or None. Two theses are the
+    same bet when they favour the same sectors and avoid mostly the same
+    crowded leaders (at least half of the smaller list).
+    """
+    sectors = set(candidate.get("beneficiary_sectors") or [])
+    names = {str(n).strip().upper() for n in (candidate.get("consensus_names_excluded") or [])}
+    for t in live_theses:
+        if set(t.get("beneficiary_sectors") or []) != sectors:
+            continue
+        other = {str(n).strip().upper() for n in (t.get("consensus_names_excluded") or [])}
+        smaller = min(len(names), len(other))
+        if smaller and len(names & other) / smaller >= 0.5:
+            return t.get("id")
+    return None
+
+
 def is_thesis_live(t: Dict, today: Optional[date] = None) -> bool:
     """
     A thesis tilts the screener only when live:

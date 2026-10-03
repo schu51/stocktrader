@@ -1,10 +1,12 @@
 """
 Macro Research Agent
 ====================
-Weekly. Re-validates the active thesis register, then asks Claude to reason new
-candidate theses from fetched macro/economic/policy news (plus WSB as a
-role-limited inverse-crowding signal). Every candidate is gated by
-macro_thesis.validate_thesis before it can enter the register.
+Weekly. Re-validates the active thesis register (asks Claude whether each
+thesis's own invalidation condition has been met; confirmed theses are
+refreshed, invalidated ones retired), then asks Claude to reason new candidate
+theses from fetched macro/economic/policy news (plus WSB as a role-limited
+inverse-crowding signal). Every candidate is gated by
+macro_thesis.validate_thesis and rejected if it repeats a live thesis.
 
 Writes docs/data/theses.json (register) and docs/data/macro_brief.json (audit).
 Any failure leaves theses.json untouched — the screener degrades to neutral —
@@ -124,21 +126,17 @@ def _parse_theses(text: str) -> List[Dict]:
     return []
 
 
-def _generate(context: str) -> List[Dict]:
-    """Call Claude to produce candidate theses. Returns parsed list (may be empty)."""
+def _ask(system: str, user: str) -> str:
+    """One research call to Claude with web search. Returns the reply text."""
     from anthropic import Anthropic
     client = Anthropic()   # reads ANTHROPIC_API_KEY
-    today = date.today().isoformat()
-    user = (f"Today is {today}. Using current macro/economic/policy conditions and the "
-            f"supplementary signal below, produce 1-4 high-quality theses per the rules.\n\n"
-            f"{context}\n\nReturn ONLY the JSON array.")
     messages = [{"role": "user", "content": user}]
     text = ""
     for _ in range(MAX_CONTINUATIONS + 1):
         resp = client.beta.messages.create(
             model=MODEL,
             max_tokens=16000,
-            system=SYSTEM_PROMPT,
+            system=system,
             # If a safety classifier declines, retry on Anthropic's recommended fallback model
             betas=["server-side-fallback-2026-07-01"],
             fallbacks="default",
@@ -156,11 +154,51 @@ def _generate(context: str) -> List[Dict]:
         raise RuntimeError(f"model declined the request (category: {category})")
     if resp.stop_reason in ("max_tokens", "pause_turn"):
         raise RuntimeError(f"model response incomplete (stop_reason: {resp.stop_reason})")
+    return text
 
-    theses = _parse_theses(text)
+
+def _generate(context: str, existing: List[str] = None) -> List[Dict]:
+    """Call Claude to produce candidate theses. Returns parsed list (may be empty)."""
+    today = date.today().isoformat()
+    already = ""
+    if existing:
+        already = ("\n\nThese theses are already active — do not repeat them or restate them "
+                   "in other words:\n" + "\n".join(f"- {t}" for t in existing))
+    user = (f"Today is {today}. Using current macro/economic/policy conditions and the "
+            f"supplementary signal below, produce 1-4 high-quality theses per the rules.{already}\n\n"
+            f"{context}\n\nReturn ONLY the JSON array.")
+    theses = _parse_theses(_ask(SYSTEM_PROMPT, user))
     if not theses:
         logger.warning("No JSON array of theses in model response")
     return theses
+
+
+REVALIDATE_PROMPT = """You audit active investment theses for a momentum trading model.
+For each thesis you are given its id, theme and invalidation_condition. Using current,
+real financial/economic news and data, decide whether the invalidation condition HAS
+BEEN MET as of today. Be literal: mark a thesis invalidated only when the stated
+condition has actually occurred, not because the thesis looks weaker.
+
+Return ONLY a JSON array with one object per thesis:
+{"id": "<thesis id>", "invalidated": true or false, "evidence": "<one sentence with the fact you relied on>"}"""
+
+
+def _parse_verdicts(text: str) -> Dict[str, Dict]:
+    """{thesis id: {"invalidated": bool, "evidence": str}} — entries without a real boolean are dropped."""
+    verdicts = {}
+    for item in _parse_theses(text):
+        if item.get("id") and isinstance(item.get("invalidated"), bool):
+            verdicts[str(item["id"])] = {"invalidated": item["invalidated"],
+                                         "evidence": str(item.get("evidence") or "")}
+    return verdicts
+
+
+def _revalidate(active: List[Dict]) -> Dict[str, Dict]:
+    """Ask Claude whether each active thesis's invalidation condition has been met."""
+    today = date.today().isoformat()
+    listing = json.dumps([{"id": t["id"], "theme": t["theme"],
+                           "invalidation_condition": t["invalidation_condition"]} for t in active], indent=2)
+    return _parse_verdicts(_ask(REVALIDATE_PROMPT, f"Today is {today}. Theses to audit:\n{listing}"))
 
 
 def _next_id(reg: Dict) -> int:
@@ -174,50 +212,94 @@ def _next_id(reg: Dict) -> int:
 
 
 def run() -> Dict:
-    from macro_thesis import validate_thesis, retire_expired, compute_conviction
+    from macro_thesis import (validate_thesis, retire_expired, compute_conviction,
+                              find_duplicate, is_thesis_live)
 
     reg = _load_register()
+    today = date.today().isoformat()
 
     # 1. Retire expired
     retire_expired(reg.get("theses", []))
 
-    # 2. Generate candidates
+    # 2. Re-validate active theses against their own invalidation conditions.
+    #    A thesis only tilts the screener while its last_validated is recent, so
+    #    one that is not confirmed here lapses on its own after STALE_DAYS.
+    active = [t for t in reg.get("theses", []) if t.get("status") == "active"]
+    revalidation = {"checked": len(active), "confirmed": [], "invalidated": []}
+    revalidation_error = None
+    if active:
+        try:
+            verdicts = _revalidate(active)
+            for t in active:
+                verdict = verdicts.get(t["id"])
+                if verdict is None:
+                    continue
+                if verdict["invalidated"]:
+                    t["status"] = "invalidated"
+                    t["invalidated_at"] = today
+                    t["invalidation_evidence"] = verdict["evidence"]
+                    revalidation["invalidated"].append({"id": t["id"], "evidence": verdict["evidence"]})
+                else:
+                    t["last_validated"] = today
+                    revalidation["confirmed"].append(t["id"])
+        except Exception as e:
+            revalidation_error = str(e)
+            logger.error(f"Re-validation failed: {e} — active theses left as they were")
+
+    live = [t for t in reg.get("theses", []) if is_thesis_live(t)]
+
+    # 3. Generate candidates
     try:
         context = _gather_context()
-        candidates = _generate(context)
+        candidates = _generate(context, existing=[t["theme"] for t in live])
     except Exception as e:
-        logger.error(f"Generation failed: {e} — register left unchanged")
-        _write_brief("error", {"error": str(e)})
+        logger.error(f"Generation failed: {e} — no new theses")
+        if revalidation["confirmed"] or revalidation["invalidated"]:
+            reg["generated_at"] = datetime.now().isoformat()
+            _save_register(reg)      # keep the re-validation results
+        _write_brief("error", {"error": str(e), "revalidation": revalidation,
+                               **({"revalidation_error": revalidation_error} if revalidation_error else {})})
         return {"status": "error"}
 
-    # 3. Gate + admit
+    # 4. Gate + admit
     admitted, rejected = [], []
     seq = _next_id(reg)
     for c in candidates:
         ok, reason = validate_thesis(c)
+        if ok:
+            duplicate_of = find_duplicate(c, live + admitted)
+            if duplicate_of:
+                ok, reason = False, f"duplicate of {duplicate_of}"
         if not ok:
             rejected.append({"theme": c.get("theme", "?"), "reason": reason})
             continue
         c["id"] = f"TH-{date.today().year}-{seq:04d}"; seq += 1
         c["conviction"] = round(compute_conviction(c["conviction_breakdown"]), 3)
         c["status"] = "active"
-        c["created_at"] = date.today().isoformat()
-        c["last_validated"] = date.today().isoformat()
+        c["created_at"] = today
+        c["last_validated"] = today
         admitted.append(c)
 
     reg["theses"] = reg.get("theses", []) + admitted
     reg["generated_at"] = datetime.now().isoformat()
     _save_register(reg)
 
-    live = [t for t in reg["theses"] if t.get("status") == "active"]
-    _write_brief("generated", {
+    live = [t for t in reg["theses"] if is_thesis_live(t)]
+    detail = {
         "admitted": len(admitted), "rejected": rejected,
+        "revalidation": revalidation,
         "active_total": len(live),
         "active": [{"id": t["id"], "theme": t["theme"], "conviction": t["conviction"],
                     "beneficiary_sectors": t["beneficiary_sectors"]} for t in live],
-    })
-    logger.info(f"Macro research: admitted {len(admitted)}, rejected {len(rejected)}, active {len(live)}")
-    return {"status": "generated", "admitted": len(admitted), "active": len(live)}
+    }
+    if revalidation_error:
+        detail["revalidation_error"] = revalidation_error
+    _write_brief("partial" if revalidation_error else "generated", detail)
+    logger.info(f"Macro research: admitted {len(admitted)}, rejected {len(rejected)}, "
+                f"confirmed {len(revalidation['confirmed'])}, invalidated {len(revalidation['invalidated'])}, "
+                f"live {len(live)}")
+    return {"status": "error" if revalidation_error else "generated",
+            "admitted": len(admitted), "active": len(live)}
 
 
 def main() -> int:

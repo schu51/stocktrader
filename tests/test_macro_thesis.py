@@ -208,3 +208,17 @@ def test_live_register_excludes_by_ticker():
     reg = json.loads((Path(__file__).parent.parent / "docs" / "data" / "theses.json").read_text())
     for thesis in reg["theses"]:
         assert all(is_ticker(n) for n in thesis["consensus_names_excluded"]), thesis["id"]
+
+
+def test_is_duplicate_same_sectors_and_overlapping_leaders():
+    from macro_thesis import find_duplicate
+    live = [_good_thesis(id="TH-1", beneficiary_sectors=["energy", "industrials"], consensus_names_excluded=["XOM", "CVX"])]
+    cand = _good_thesis(beneficiary_sectors=["industrials", "energy"], consensus_names_excluded=["CVX", "XOM", "COP"])
+    assert find_duplicate(cand, live) == "TH-1"
+
+
+def test_not_duplicate_when_sectors_or_leaders_differ():
+    from macro_thesis import find_duplicate
+    live = [_good_thesis(id="TH-1", beneficiary_sectors=["energy"], consensus_names_excluded=["XOM", "CVX"])]
+    assert find_duplicate(_good_thesis(beneficiary_sectors=["financials"], consensus_names_excluded=["XOM", "CVX"]), live) is None
+    assert find_duplicate(_good_thesis(beneficiary_sectors=["energy"], consensus_names_excluded=["SLB", "HAL"]), live) is None

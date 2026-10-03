@@ -101,3 +101,33 @@ def test_summary_is_json_serializable_and_complete():
     assert s["candidate_days"] == 72 and s["days"] == 12
     assert len(s["weights"]) == len(HORIZONS) * len(WEIGHT_GRID)
     assert len(s["ic"]) == len(HORIZONS) * 2
+
+
+def _evidence_frame(thesis_wins: bool, days: int = 50):
+    rows = []
+    for d in range(days):
+        for i in range(6):
+            rs, th = 70 + i * 5, 60 - i * 5          # rs and thesis rank the names in opposite order
+            good = th if thesis_wins else rs
+            rows.append({"date": f"2026-{1 + d // 28:02d}-{1 + d % 28:02d}", "symbol": f"S{i}",
+                         "rs_rank": rs, "thesis_score": th, "sector_leader": False,
+                         "excess_10d": 0.001 * good + 0.0005 * ((d * 7 + i * 3) % 5)})
+    return pd.DataFrame(rows)
+
+
+def test_compare_weights_supports_a_move_the_candidates_agree_with():
+    from candidate_outcomes import compare_weights
+    ev = compare_weights(_evidence_frame(thesis_wins=True), w_rs_new=0.1, w_rs_current=0.6)
+    assert ev["available"] and ev["mean_difference"] > 0 and not ev["contradicts"]
+
+
+def test_compare_weights_contradicts_a_move_the_candidates_disagree_with():
+    from candidate_outcomes import compare_weights
+    ev = compare_weights(_evidence_frame(thesis_wins=False), w_rs_new=0.1, w_rs_current=0.6)
+    assert ev["available"] and ev["mean_difference"] < 0 and ev["contradicts"]
+
+
+def test_compare_weights_unavailable_on_thin_history():
+    from candidate_outcomes import compare_weights
+    ev = compare_weights(_evidence_frame(thesis_wins=False, days=10), w_rs_new=0.1, w_rs_current=0.6)
+    assert not ev["available"] and not ev["contradicts"]

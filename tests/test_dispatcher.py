@@ -43,10 +43,11 @@ def test_sync_window_edges():
     assert _due(2026, 10, 5, 19, 0) == []
 
 
-def test_saturday_runs_learning_then_macro_only():
-    assert _due(2026, 10, 3, 8, 0) == ["learning.yml"]
-    assert _due(2026, 10, 3, 8, 30) == ["macro_research.yml"]
-    assert _due(2026, 10, 3, 9, 0) == ["candidate_outcomes.yml"]
+def test_saturday_chain_runs_in_dependency_order():
+    assert _due(2026, 10, 3, 8, 0) == ["candidate_outcomes.yml"]
+    assert _due(2026, 10, 3, 8, 30) == ["learning.yml"]
+    assert _due(2026, 10, 3, 9, 0) == ["macro_research.yml"]
+    assert _due(2026, 10, 3, 9, 30) == ["weekly_review.yml"]
     assert _due(2026, 10, 3, 10, 0) == []
 
 

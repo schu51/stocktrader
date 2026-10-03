@@ -11,6 +11,8 @@ probation window provide auto-rollback.
 Guardrails:
   - sample-size gate: >= 30 closed instrumented trades
   - significance gate: both coefficients' |t| > 2.05
+  - second opinion: new weights are not applied if the weekly candidate-outcome
+    data says they would have picked worse names than the current weights
   - auto-rollback: a provisional weight underperforming the champion over its
     first 10 trades is reverted and locked (the champion's baseline is its own
     closed trades' mean pnl, recorded when the provisional is applied)
@@ -176,10 +178,14 @@ def _write_report(report: Dict, report_path: Path = REPORT_FILE):
         logger.warning(f"Could not write report: {e}")
 
 
-def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
+def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE, candidate_evidence=None) -> Dict:
     """
     Core agent logic: given the full trades list and a weights file path, run the
     gates and rollback, persist weights, return the report dict.
+
+    candidate_evidence(w_rs_new, w_rs_current) -> dict, optional: a second
+    opinion from the much larger set of screener candidates. New weights are
+    not applied when it reports that they would have picked worse names.
     """
     import numpy as np
     from learning_stats import ols_fit, zscore, derive_weights
@@ -245,6 +251,23 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
         _write_report(report, report_path)
         return report
 
+    # --- Second opinion: a few dozen trades must not overrule ~1,000 candidates ---
+    if candidate_evidence is not None:
+        try:
+            evidence = candidate_evidence(w_rs, weights["active"]["w_rs"])
+        except Exception as e:
+            evidence = {"available": False, "contradicts": False, "error": str(e)}
+            logger.warning(f"Candidate evidence unavailable: {e}")
+        report["candidate_evidence"] = evidence
+        if evidence.get("contradicts"):
+            report["status"] = "blocked_by_candidate_evidence"
+            report["derived"] = {"w_rs": w_rs, "w_thesis": w_thesis}
+            report["t_rs"] = float(fit["t"][0])
+            report["t_thesis"] = float(fit["t"][1])
+            save_weights(weights_path, weights)
+            _write_report(report, report_path)
+            return report
+
     # --- Apply new provisional weights ---
     # Record what the outgoing champion earned, so probation has a real bar to clear.
     _record_champion_baseline(weights, instrumented)
@@ -274,10 +297,17 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE) -> Dict:
     return report
 
 
+def _candidate_evidence(w_rs_new: float, w_rs_current: float) -> Dict:
+    """Compare two weightings on research/candidate_outcomes.csv (built weekly, before this agent)."""
+    import pandas as pd
+    from candidate_outcomes import OUT_FILE, compare_weights
+    return compare_weights(pd.read_csv(OUT_FILE), w_rs_new, w_rs_current)
+
+
 def main():
     logger.info("=== Learning Agent Starting ===")
     trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
-    report = run(trades)
+    report = run(trades, candidate_evidence=_candidate_evidence)
     logger.info(f"Status: {report['status']} | instrumented trades: {report['trades_so_far']}")
     if report.get("new_weights"):
         logger.info(f"New weights: {report['new_weights']}")

@@ -48,9 +48,11 @@ TIMETABLE = [
     ("intraday_exit.yml",  WEEKDAYS,   "09:45", "15:45", 30),    # :15/:45, offset from sync
     ("postmarket.yml",     WEEKDAYS,   "16:15", "16:15", None),
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30
-    ("learning.yml",       [SATURDAY], "08:00", "08:00", None),
-    ("macro_research.yml", [SATURDAY], "08:30", "08:30", None),  # after learning
-    ("candidate_outcomes.yml", [SATURDAY], "09:00", "09:00", None),
+    # Saturday chain — each step feeds the next
+    ("candidate_outcomes.yml", [SATURDAY], "08:00", "08:00", None),  # evidence the learning agent checks
+    ("learning.yml",           [SATURDAY], "08:30", "08:30", None),
+    ("macro_research.yml",     [SATURDAY], "09:00", "09:00", None),
+    ("weekly_review.yml",      [SATURDAY], "09:30", "09:30", None),  # summarizes all of the above
 ]
 
 

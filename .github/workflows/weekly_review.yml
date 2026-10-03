@@ -1,0 +1,29 @@
+name: Weekly Review
+
+# Posts one summary issue each Saturday: account, trades, what the learning
+# agent decided, candidate evidence, live macro theses, and anything that broke.
+# Started by dispatcher.yml after the other Saturday jobs.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read          # to list failed runs
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and post the review
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SINCE=$(date -u -d '7 days ago' +%Y-%m-%d)
+          gh run list --status failure --created ">=$SINCE" --limit 50 --json name,createdAt > failed_runs.json || echo "[]" > failed_runs.json
+          python3 weekly_review.py --failed-runs failed_runs.json --body-file review.md --title-file title.txt
+          gh issue create --title "$(cat title.txt)" --body-file review.md

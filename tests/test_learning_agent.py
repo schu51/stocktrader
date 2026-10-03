@@ -243,3 +243,45 @@ def test_run_records_champion_baseline_when_applying(tmp_path):
     champion = la.load_weights(wf)["champion"]
     assert champion["n_trades"] == 40
     assert abs(champion["mean_pnl"] - sum(x["pnl_pct"] for x in trades) / 40) < 1e-9
+
+
+def _significant_trades(n=40, seed=3):
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    trades = []
+    for i in range(n):
+        rs = float(rng.uniform(50, 99))
+        trades.append(_trade(f"T{i}", 0.3 * rs + rng.normal(0, 2), 1, rs_rank=rs,
+                             thesis_score=float(rng.uniform(0, 100))))
+    return trades
+
+
+def test_run_blocked_when_candidate_evidence_contradicts(tmp_path):
+    import learning_agent as la
+    wf = tmp_path / "weights.json"
+    evidence = lambda w_new, w_cur: {"available": True, "contradicts": True, "mean_difference": -0.02, "days": 80}
+    report = la.run(_significant_trades(), wf, candidate_evidence=evidence)
+    assert report["status"] == "blocked_by_candidate_evidence"
+    assert report["candidate_evidence"]["mean_difference"] == -0.02
+    assert la.load_weights(wf)["active"]["version"] == 1          # nothing applied
+
+
+def test_run_applies_when_candidate_evidence_agrees_or_is_unavailable(tmp_path):
+    import learning_agent as la
+    for i, ev in enumerate([{"available": True, "contradicts": False, "mean_difference": 0.01, "days": 80},
+                            {"available": False, "contradicts": False, "days": 5}]):
+        wf = tmp_path / f"weights{i}.json"
+        report = la.run(_significant_trades(), wf, candidate_evidence=lambda a, b, ev=ev: ev)
+        assert report["status"] == "applied"
+        assert report["candidate_evidence"] == ev
+
+
+def test_run_applies_when_evidence_check_itself_fails(tmp_path):
+    import learning_agent as la
+    wf = tmp_path / "weights.json"
+
+    def broken(w_new, w_cur):
+        raise RuntimeError("csv missing")
+    report = la.run(_significant_trades(), wf, candidate_evidence=broken)
+    assert report["status"] == "applied"
+    assert "csv missing" in report["candidate_evidence"]["error"]

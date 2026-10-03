@@ -27,6 +27,8 @@ _VALID_SECTORS = {
 }
 
 
+_TEXT_LIMITS = {"theme": 240, "invalidation_condition": 400}
+
 _TICKER_RE = re.compile(r"^[A-Z]{1,5}([.-][A-Z]{1,2})?$")
 
 
@@ -61,6 +63,13 @@ def validate_thesis(t: Dict) -> Tuple[bool, str]:
       - every beneficiary_sectors entry is a valid SECTOR_MAP key
       - conviction (mean of sub-scores) >= CONVICTION_FLOOR
     """
+    # Free text is stored and replayed into later model prompts: keep it short
+    # and single-line so it cannot carry a block of instructions.
+    for field, limit in _TEXT_LIMITS.items():
+        value = str(t.get(field) or "")
+        if len(value) > limit or "\n" in value or "\r" in value:
+            return False, f"{field} must be a single line of at most {limit} characters"
+
     sources = t.get("sources") or []
     if not sources or not _has_primary_source(sources):
         return False, "needs at least one primary-tier source (Reddit-only/empty rejected)"

@@ -107,6 +107,31 @@ def summarize(series: pd.Series, horizon: int) -> Dict:
     return {"n": n, "mean": float(s.mean()), "t": t}
 
 
+MIN_EVIDENCE_DAYS = 40     # fewer paired days than this is not evidence either way
+EVIDENCE_HORIZON = 10
+
+
+def compare_weights(df: pd.DataFrame, w_rs_new: float, w_rs_current: float,
+                    k: int = 3, horizon: int = EVIDENCE_HORIZON) -> Dict:
+    """
+    Would the new ranking weights have picked better candidates than the
+    current ones? Paired, same days: top-k return under the new weights minus
+    top-k under the current weights. `contradicts` is True when there is
+    enough history and the new weights picked worse names on average.
+    """
+    col = f"excess_{horizon}d"
+    scored = df.dropna(subset=["rs_rank", "thesis_score", col])
+    diff = (top_k_edge(scored, w_rs_new, k, col) - top_k_edge(scored, w_rs_current, k, col)).dropna()
+    stats = summarize(diff, horizon)
+    available = stats["n"] >= MIN_EVIDENCE_DAYS
+    return {
+        "available": bool(available), "days": int(stats["n"]), "horizon": horizon, "top_k": k,
+        "mean_difference": stats["mean"] if stats["n"] >= 2 else None,
+        "t": stats["t"] if stats["n"] >= 2 else None,
+        "contradicts": bool(available and stats["mean"] < 0),
+    }
+
+
 # ---------------------------------------------------------------------------
 # I/O
 # ---------------------------------------------------------------------------

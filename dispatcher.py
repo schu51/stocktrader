@@ -50,6 +50,7 @@ TIMETABLE = [
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30
     ("learning.yml",       [SATURDAY], "08:00", "08:00", None),
     ("macro_research.yml", [SATURDAY], "08:30", "08:30", None),  # after learning
+    ("candidate_outcomes.yml", [SATURDAY], "09:00", "09:00", None),
 ]
 
 

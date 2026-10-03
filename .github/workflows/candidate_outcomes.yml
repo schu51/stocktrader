@@ -1,0 +1,58 @@
+name: Candidate Outcomes
+
+# Weekly: what every screener candidate did next, and whether the scores
+# predicted it. Started by dispatcher.yml (Saturday, after macro research).
+
+on:
+  workflow_dispatch:
+
+jobs:
+  outcomes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write          # to open a failure issue
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0     # snapshots are read from past commits
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Build candidate outcomes
+        run: python candidate_outcomes.py
+
+      - name: Commit dataset + report
+        if: always()
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add research/candidate_outcomes.csv docs/data/candidate_outcomes.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Candidate outcomes update [skip ci]"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      # In-workflow alert: runs started by the dispatcher belong to the Actions
+      # bot, which neither emails anyone nor triggers a workflow_run listener.
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create \
+            --title "🚨 ${GITHUB_WORKFLOW} run failed $(date -u +%Y-%m-%d)" \
+            --body "The ${GITHUB_WORKFLOW} workflow failed. Run log: ${RUN_URL}"

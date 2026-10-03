@@ -132,6 +132,34 @@ FALLBACK_UNIVERSE: Dict[str, str] = {
 }
 
 
+def _ticker_from_cell(cell) -> str:
+    """
+    Ticker symbol from a Finviz screener ticker cell.
+
+    The cell's visible text is not reliable: since July 2026 it holds a logo
+    whose placeholder is the ticker's first letter, so get_text() returns
+    "AAAPL" for AAPL. Prefer the data attribute, then the link target.
+    """
+    ticker = (cell.get("data-boxover-ticker") or "").strip()
+    if ticker:
+        return ticker
+    for link in cell.find_all("a"):
+        href = link.get("href") or ""
+        if "t=" in href:
+            return href.split("t=", 1)[1].split("&", 1)[0].strip()
+    return cell.get_text(strip=True)
+
+
+def data_coverage(tickers: List[str], raw_scores: Dict[str, float]) -> float:
+    """Share of the universe that came back with usable price history."""
+    if not tickers:
+        return 0.0
+    return sum(1 for t in tickers if t in raw_scores) / len(tickers)
+
+
+MIN_DATA_COVERAGE = 0.80   # below this the universe itself is suspect (bad tickers)
+
+
 def _scrape_finviz_index(session, index_filter: str) -> Dict[str, str]:
     """
     Paginate through one Finviz index filter and return {ticker: sector}.
@@ -158,7 +186,7 @@ def _scrape_finviz_index(session, index_filter: str) -> Dict[str, str]:
                 cells = row.find_all("td")
                 if len(cells) < 4:
                     continue
-                ticker = cells[1].get_text(strip=True)
+                ticker = _ticker_from_cell(cells[1])
                 sector = cells[3].get_text(strip=True)
                 if ticker and 2 <= len(ticker) <= 5 and ticker.replace("-", "").isalpha():
                     results[ticker] = _FINVIZ_SECTOR_NORM.get(sector, "other")
@@ -496,6 +524,13 @@ def run_screener(
     raw_scores = calculate_rs_scores(tickers, data)
     rs_ranks   = percentile_rank(raw_scores)
 
+    coverage = data_coverage(tickers, raw_scores)
+    if coverage < MIN_DATA_COVERAGE:
+        logger.error(
+            f"Only {coverage:.0%} of the universe has price history — the ticker "
+            f"list is probably corrupt (check the Finviz scraper)"
+        )
+
     # 5 + 6 + 7. Quality gate + technical gate + sector boost
     # Sector comes from Finviz universe dict — covers all 11 GICS sectors.
     sector_leaders = get_sector_leaders(rs_ranks, universe)
@@ -642,6 +677,7 @@ def run_screener(
         "rs_qualifying":   len(universe) - rejected["rs_rank"],
         "quality_pass":    len(universe) - rejected["rs_rank"] - rejected["quality"],
         "tech_gate_pass":  len(candidates),
+        "data_coverage":   round(coverage, 3),
         "final_count":     len(candidates),
         "sector_leaders":  sector_leaders[:6],
         "rejection_stats": rejected,

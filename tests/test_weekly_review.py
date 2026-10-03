@@ -146,3 +146,9 @@ def test_md_is_an_allowlist():
     assert _md("\uff20user \uff48ttps\uff1a\uff0f\uff0fevil") == "user https evil"
     assert _md("see https://evil.example/login and www.evil.example") == "see https evil.example/login and www evil.example"
     assert _md("consumer_cyclical ANTHROPIC_API_KEY") == "consumer_cyclical ANTHROPIC_API_KEY"
+
+
+def test_md_drops_entity_and_block_markers():
+    from weekly_review import _md
+    assert _md("&commat;schu51 and &lt;b") == "andcommat;schu51 and andlt;b"
+    assert _md("--- heading") == "heading" and _md("===") == ""

@@ -62,6 +62,11 @@ def test_main_succeeds_when_generation_returns_nothing(tmp_path, monkeypatch):
 
 # ── weekly re-validation and duplicate control ──────────────────────────────
 
+def _in_days(n):
+    from datetime import date, timedelta
+    return (date.today() + timedelta(days=n)).isoformat()
+
+
 def _thesis(**over):
     th = {
         "id": "TH-2026-0001", "theme": "Oil services over majors", "status": "active",
@@ -69,7 +74,7 @@ def _thesis(**over):
         "consensus_names_excluded": ["XOM", "CVX"],
         "conviction_breakdown": {"source_corroboration": 0.6, "causal_directness": 0.6,
                                  "non_consensus": 0.6, "invalidation_clarity": 0.6},
-        "conviction": 0.6, "invalidation_condition": "Brent falls 15%", "horizon": "2099-12-31",
+        "conviction": 0.6, "invalidation_condition": "Brent falls 15%", "horizon": _in_days(180),
         "sources": ["https://reuters.com/x"], "created_at": "2026-09-01", "last_validated": "2026-09-01",
     }
     th.update(over)
@@ -232,3 +237,19 @@ def test_candidate_text_is_normalized_before_validation(tmp_path, monkeypatch):
     th = read()[0]
     assert th["theme"] == "Regional banks - 'higher for longer'"
     assert th["invalidation_condition"] == "Fed cuts - or signals cuts"
+
+
+def test_candidate_with_a_far_off_horizon_is_rejected(tmp_path, monkeypatch):
+    # Bounds how long any one thesis (including a poisoned one) can stay in force
+    import json as _json
+    import macro_research_agent as mra
+    far = _thesis(theme="Decade-long bet", beneficiary_sectors=["financials"], consensus_names_excluded=["JPM"],
+                  horizon=_in_days(mra.MAX_HORIZON_DAYS + 30))
+    far.pop("id")
+    ok = _thesis(theme="Six month bet", beneficiary_sectors=["utilities"], consensus_names_excluded=["NEE"],
+                 horizon=_in_days(mra.MAX_HORIZON_DAYS - 30))
+    ok.pop("id")
+    read = _setup(mra, tmp_path, monkeypatch, [], candidates=[far, ok])
+    assert mra.main() == 0
+    assert [t["theme"] for t in read()] == ["Six month bet"]
+    assert "horizon" in _json.loads((tmp_path / "macro_brief.json").read_text())["rejected"][0]["reason"]

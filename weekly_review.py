@@ -62,6 +62,9 @@ def _md(value, limit: int = 300) -> str:
     Everything interpolated into the review goes through this or _num.
     """
     text = clean_text(value, limit, extra="_")
+    # "&" could spell an HTML entity (&commat; for a mention); "=" and leading
+    # "-" / "+" are block markers. The value is always placed mid-line in a list item.
+    text = text.replace("&", "and").replace("=", " ").lstrip("-+ ")
     return text.replace("://", " ").replace("www.", "www ")
 
 

@@ -557,9 +557,22 @@ class Backtest:
 # Data
 # ---------------------------------------------------------------------------
 
-def load_universe() -> Dict[str, str]:
-    from screener import get_universe
-    return get_universe()
+def load_universe(refresh: bool = False) -> Dict[str, str]:
+    """
+    Today's index members, scraped once per day and saved. Every run that day
+    reads the same file, so parallel runs are compared on identical universes
+    (concurrent scrapes get throttled and return partial lists).
+    """
+    from screener import MIN_FINVIZ_UNIVERSE, get_universe
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    saved = CACHE_DIR / f"universe_{date.today().isoformat()}.json"
+    if saved.exists() and not refresh:
+        return json.loads(saved.read_text())
+    universe = get_universe()
+    if len(universe) < MIN_FINVIZ_UNIVERSE:
+        raise RuntimeError(f"Universe has only {len(universe)} tickers — Finviz scrape failed; not backtesting on it")
+    saved.write_text(json.dumps(universe))
+    return universe
 
 
 def load_prices(tickers: List[str], start: str, end: Optional[str]) -> Dict[str, pd.DataFrame]:

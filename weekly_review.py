@@ -29,6 +29,7 @@ from macro_thesis import clean_text
 
 PROBATION = 10
 MIN_DATA_COVERAGE = 0.80
+MIN_UNIVERSE = 400
 
 
 def _load(name: str):
@@ -190,6 +191,10 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
     coverage = _num(coverage) if coverage is not None else None
     if coverage is not None and coverage < MIN_DATA_COVERAGE:
         problems.append(f"Screener: only {coverage:.0%} of the universe has price data — the ticker list is probably corrupt.")
+    universe_size = int(_num(screener.get("universe_size"))) if screener else None
+    if universe_size is not None and universe_size < MIN_UNIVERSE:
+        problems.append(f"Screener: universe is only {universe_size} tickers (expected about 520) — "
+                        f"the Finviz scrape failed and the fallback list is in use.")
     for run in data.get("failed_runs") or []:
         problems.append(f"Failed run: {_md(run.get('name'), 60)} at {_md(run.get('createdAt'), 30)}")
 

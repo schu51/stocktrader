@@ -158,6 +158,12 @@ def data_coverage(tickers: List[str], raw_scores: Dict[str, float]) -> float:
 
 
 MIN_DATA_COVERAGE = 0.80   # below this the universe itself is suspect (bad tickers)
+MIN_FINVIZ_UNIVERSE = 400  # S&P 500 + Nasdaq 100 is ~520; fewer means the scrape was cut short
+FINVIZ_PAGE_ATTEMPTS = 4
+
+
+class IncompleteScrape(Exception):
+    """A Finviz page could not be fetched, so the ticker list would be partial."""
 
 
 def _scrape_finviz_index(session, index_filter: str) -> Dict[str, str]:
@@ -172,10 +178,18 @@ def _scrape_finviz_index(session, index_filter: str) -> Dict[str, str]:
 
     for start in range(1, 1200, 20):
         try:
-            resp = session.get(f"{base}&r={start}", timeout=15)
+            # A throttled page must not silently end the scrape: the result would
+            # be an alphabetical slice of the index that still looks like a universe.
+            resp = None
+            for attempt in range(FINVIZ_PAGE_ATTEMPTS):
+                resp = session.get(f"{base}&r={start}", timeout=15)
+                if resp.status_code == 200:
+                    break
+                logger.warning(f"Finviz {index_filter} HTTP {resp.status_code} at r={start} "
+                               f"(attempt {attempt + 1}/{FINVIZ_PAGE_ATTEMPTS})")
+                time.sleep(2 * (attempt + 1))
             if resp.status_code != 200:
-                logger.warning(f"Finviz {index_filter} HTTP {resp.status_code} at r={start}")
-                break
+                raise IncompleteScrape(f"{index_filter} page r={start} failed with HTTP {resp.status_code}")
 
             soup = BeautifulSoup(resp.text, "lxml")
             rows = soup.select("tr.styled-row")
@@ -196,9 +210,10 @@ def _scrape_finviz_index(session, index_filter: str) -> Dict[str, str]:
 
             time.sleep(0.4)
 
+        except IncompleteScrape:
+            raise
         except Exception as e:
-            logger.warning(f"Finviz fetch error ({index_filter} r={start}): {e}")
-            break
+            raise IncompleteScrape(f"{index_filter} page r={start}: {e}")
 
     return results
 
@@ -254,12 +269,12 @@ def get_universe() -> Dict[str, str]:
 
     try:
         universe = _fetch_finviz_universe()
-        if len(universe) >= 100:
+        if len(universe) >= MIN_FINVIZ_UNIVERSE:
             logger.info(f"Finviz: fetched {len(universe)} tickers with sectors")
         else:
             raise ValueError(f"Finviz returned only {len(universe)} tickers — too few")
     except Exception as e:
-        logger.warning(f"Finviz fetch failed ({e}) — using fallback universe")
+        logger.error(f"Finviz fetch failed ({e}) — using fallback universe")
         universe = dict(FALLBACK_UNIVERSE)
 
     # NDX high-growth supplement — names sometimes missing from S&P 500 filter

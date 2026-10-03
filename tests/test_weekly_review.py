@@ -152,3 +152,9 @@ def test_md_drops_entity_and_block_markers():
     from weekly_review import _md
     assert _md("&commat;schu51 and &lt;b") == "andcommat;schu51 and andlt;b"
     assert _md("--- heading") == "heading" and _md("===") == ""
+
+
+def test_review_flags_a_shrunken_universe():
+    from weekly_review import build_review
+    title, body = build_review(_data(screener={"universe_size": 89, "final_count": 12, "data_coverage": 1.0}), TODAY)
+    assert title.startswith("⚠️") and "only 89 tickers" in body

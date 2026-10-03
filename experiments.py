@@ -24,8 +24,9 @@ Two kinds of experiment:
                    dropped    none
 
 State lives in docs/data/experiments.json; the log of buy signals in
-docs/data/signal_log.json. The live hook (on_buy_signal) never raises and
-never blocks a buy if anything in here fails.
+docs/data/signal_log.json. The live hook (on_buy_signal) never raises. It
+fails closed: if the gate cannot be evaluated the stock is not bought and
+the daily run raises an alert.
 
 Usage:
     python experiments.py          # weekly: score, update states, save
@@ -58,6 +59,8 @@ MAX_ACTIVE_GATES = 1
 LOG_KEEP_DAYS = 400
 
 GATING_STATES = ("active", "adopted")
+STATES = ("observing", "active", "adopted", "trial", "dropped")
+HOOK_FAILED = "experiment_error"     # blocked_by value when the gate could not be evaluated
 
 
 def default_registry(today: date) -> Dict:
@@ -78,14 +81,32 @@ def default_registry(today: date) -> Dict:
     }
 
 
-def load_registry(path: Path = REGISTRY_FILE, today: Optional[date] = None) -> Dict:
+class RegistryError(Exception):
+    """The experiment registry is missing or unreadable."""
+
+
+def load_registry(path: Path = REGISTRY_FILE, today: Optional[date] = None, create: bool = False) -> Dict:
+    """
+    Read the registry. A missing or corrupt file is an error, not a reason to
+    fall back to defaults: defaults would revive experiments that were dropped
+    and restart every trial. Only `create=True` (the weekly job, first run)
+    may start from defaults, and only when the file does not exist at all.
+    """
+    path = Path(path)
+    if not path.exists():
+        if create:
+            return default_registry(today or date.today())
+        raise RegistryError(f"{path.name} does not exist")
     try:
-        reg = json.loads(Path(path).read_text())
-        if isinstance(reg.get("experiments"), dict) and reg["experiments"]:
-            return reg
-    except Exception:
-        pass
-    return default_registry(today or date.today())
+        reg = json.loads(path.read_text())
+    except Exception as e:
+        raise RegistryError(f"{path.name} is not valid JSON: {e}")
+    exps = reg.get("experiments") if isinstance(reg, dict) else None
+    if not isinstance(exps, dict) or not exps or not all(
+            isinstance(e, dict) and e.get("kind") in ("entry_signal", "stop_arm")
+            and e.get("state") in STATES and e.get("started") for e in exps.values()):
+        raise RegistryError(f"{path.name} does not hold a valid experiment registry")
+    return reg
 
 
 def _write_json(path: Path, data) -> None:
@@ -111,10 +132,14 @@ def stop_arm(trade_key: str, registry: Dict) -> str:
 
 
 def entry_gate(signals: Dict, registry: Dict) -> Optional[str]:
-    """Name of a gating experiment this candidate fails, or None. An unknown signal never blocks."""
+    """
+    Name of a gating experiment this candidate does not pass, or None.
+    Fail closed: only an explicit True passes a gate. A missing or unknown
+    signal value is treated as not fired.
+    """
     for name, exp in registry["experiments"].items():
         if exp.get("kind") == "entry_signal" and exp.get("state") in GATING_STATES:
-            if signals.get(name) is False:
+            if signals.get(name) is not True:
                 return name
     return None
 
@@ -124,9 +149,10 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
     """
     Live hook, called for every stock the decision engine wants to buy.
     Logs its signals and returns {"signals", "stop_arm", "stop_dist", "blocked_by"}.
-    Never raises. If the signals cannot be computed the buy proceeds under the
-    standing rules and the result carries "error", which the daily run turns
-    into an alert so an active gate cannot be switched off silently.
+    Never raises. If the gate cannot be evaluated (signals not computable,
+    registry missing or corrupt) the stock is NOT bought: blocked_by is
+    "experiment_error" and the result carries "error", which the daily run
+    turns into an alert.
     """
     try:
         from technical_signals import compute_signals, stop_distance
@@ -140,8 +166,11 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
             arm = "fixed"
         blocked_by = entry_gate(signals, registry)
     except Exception as e:
-        logger.warning(f"Experiment hook failed for {symbol}: {e} — buying under the standing rules")
-        return {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": None, "error": str(e)}
+        # Fail closed: if the gate cannot be evaluated the stock is not bought.
+        # The caller raises an alert, so this is visible the same day.
+        logger.error(f"Experiment hook failed for {symbol}: {e} — not buying")
+        return {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": HOOK_FAILED,
+                "error": str(e)}
 
     out = {"signals": signals, "stop_arm": arm, "stop_dist": dist, "blocked_by": blocked_by}
     # Logging is separate: a log that cannot be written must not switch the gate off.
@@ -314,7 +343,7 @@ def scored_log(log: List[Dict]):
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
     today = date.today()
-    registry = load_registry(REGISTRY_FILE, today)
+    registry = load_registry(REGISTRY_FILE, today, create=True)   # a corrupt file raises: fix it, do not reset it
     try:
         log = json.loads(SIGNAL_LOG_FILE.read_text())
     except Exception:

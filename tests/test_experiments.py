@@ -27,12 +27,40 @@ def test_default_registry_reflects_the_backtest_verdicts():
                       "breakout": "observing", "adx25": "observing"}
 
 
-def test_load_registry_creates_defaults_and_survives_garbage(tmp_path):
+def _seed(tmp_path, **states):
+    import experiments as ex
+    path = tmp_path / "e.json"
+    ex._write_json(path, _registry(**states))
+    return path
+
+
+def test_missing_registry_is_an_error_unless_explicitly_created(tmp_path):
+    import pytest
     import experiments as ex
     path = tmp_path / "experiments.json"
-    assert ex.load_registry(path, TODAY)["experiments"]["atr_stop"]["state"] == "trial"
-    path.write_text("{not json")
-    assert "atr_stop" in ex.load_registry(path, TODAY)["experiments"]
+    with pytest.raises(ex.RegistryError):
+        ex.load_registry(path, TODAY)
+    assert ex.load_registry(path, TODAY, create=True)["experiments"]["atr_stop"]["state"] == "trial"
+
+
+def test_corrupt_registry_is_never_replaced_with_defaults(tmp_path):
+    # Defaults would revive dropped experiments and restart every trial
+    import pytest
+    import experiments as ex
+    path = tmp_path / "experiments.json"
+    for garbage in ("{not json", "[]", '{"experiments": {}}', '{"experiments": {"x": {"state": "bogus"}}}'):
+        path.write_text(garbage)
+        for create in (False, True):
+            with pytest.raises(ex.RegistryError):
+                ex.load_registry(path, TODAY, create=create)
+
+
+def test_hook_fails_closed_on_a_corrupt_registry(tmp_path):
+    import experiments as ex
+    bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    (tmp_path / "e.json").write_text("{not json")
+    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=tmp_path / "e.json", log_path=tmp_path / "log.json")
+    assert out["blocked_by"] == ex.HOOK_FAILED and "not valid JSON" in out["error"]
 
 
 # ── stop arm assignment ──────────────────────────────────────────────────────
@@ -62,9 +90,12 @@ def test_entry_gate_applies_only_active_or_adopted_signals():
     assert ex.entry_gate(signals, _registry(macd_cross="dropped", breakout="adopted")) == "breakout"
 
 
-def test_entry_gate_does_not_block_when_the_signal_is_unknown():
+def test_entry_gate_fails_closed_when_the_signal_is_unknown():
     import experiments as ex
-    assert ex.entry_gate({}, _registry()) is None
+    assert ex.entry_gate({}, _registry()) == "macd_cross"
+    assert ex.entry_gate({"macd_cross": None}, _registry()) == "macd_cross"
+    assert ex.entry_gate({"macd_cross": "yes"}, _registry()) == "macd_cross"     # only a real True passes
+    assert ex.entry_gate({}, _registry(macd_cross="dropped")) is None           # no gate, nothing to fail
 
 
 # ── live hook ────────────────────────────────────────────────────────────────
@@ -78,7 +109,7 @@ class _Bar:
 def test_on_buy_signal_logs_the_candidate_and_returns_arm_and_gate(tmp_path):
     import experiments as ex
     bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]       # steady uptrend: no fresh MACD cross
-    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=tmp_path / "e.json", log_path=tmp_path / "log.json")
+    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed(tmp_path), log_path=tmp_path / "log.json")
     assert out["blocked_by"] == "macd_cross"
     assert out["stop_arm"] in ("atr", "fixed")
     assert (out["stop_dist"] is not None) == (out["stop_arm"] == "atr")
@@ -89,17 +120,18 @@ def test_on_buy_signal_logs_the_candidate_and_returns_arm_and_gate(tmp_path):
 def test_on_buy_signal_replaces_same_day_duplicates(tmp_path):
     import experiments as ex
     bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    path = _seed(tmp_path)
     for _ in range(3):
-        ex.on_buy_signal("AMD", bars, TODAY, registry_path=tmp_path / "e.json", log_path=tmp_path / "log.json")
+        ex.on_buy_signal("AMD", bars, TODAY, registry_path=path, log_path=tmp_path / "log.json")
     assert len(json.loads((tmp_path / "log.json").read_text())) == 1
 
 
-def test_on_buy_signal_never_blocks_or_raises_when_it_breaks(tmp_path):
+def test_on_buy_signal_never_raises_and_fails_closed_when_it_breaks(tmp_path):
     import experiments as ex
-    out = ex.on_buy_signal("AMD", None, TODAY, registry_path=tmp_path / "e.json", log_path=tmp_path / "log.json")
+    out = ex.on_buy_signal("AMD", None, TODAY, registry_path=_seed(tmp_path), log_path=tmp_path / "log.json")
     assert out["error"]                                     # reported, so the run can raise an alert
     assert {k: out[k] for k in ("signals", "stop_arm", "stop_dist", "blocked_by")} == \
-        {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": None}
+        {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": ex.HOOK_FAILED}
 
 
 def test_gate_still_applies_when_the_signal_log_cannot_be_written(tmp_path):
@@ -107,7 +139,7 @@ def test_gate_still_applies_when_the_signal_log_cannot_be_written(tmp_path):
     bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
     unwritable = tmp_path / "log.json"
     unwritable.mkdir()                                       # a directory where the log file should be
-    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=tmp_path / "e.json", log_path=unwritable)
+    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed(tmp_path), log_path=unwritable)
     assert out["blocked_by"] == "macd_cross"                # the gate held
     assert "signal log" in out["error"]
 

@@ -551,7 +551,9 @@ class DailyRunner:
                         decision_dict["stop_arm"]  = exp["stop_arm"]
                         decision_dict["stop_dist"] = exp["stop_dist"]
                         if exp["blocked_by"]:
-                            reason = f"experiment gate: {exp['blocked_by']} has not fired"
+                            reason = (f"experiment gate could not be evaluated: {exp.get('error')}"
+                                      if exp.get("error") and exp["signals"] is None
+                                      else f"experiment gate: {exp['blocked_by']} has not fired")
                             holds.append({"symbol": symbol, "reason": reason})
                             logger.info(f"Skipping {symbol}: {reason}")
                             continue
@@ -573,8 +575,8 @@ class DailyRunner:
 
             if experiment_failures:
                 results["alerts"].append(
-                    f"Experiment hook failed for {len(experiment_failures)} buy signal(s); those were "
-                    f"evaluated under the standing rules without the active gate ({experiment_failures[0]})")
+                    f"Experiment hook failed for {len(experiment_failures)} buy signal(s) "
+                    f"({experiment_failures[0]}); any it could not evaluate were not bought")
 
             opportunities.sort(
                 key=lambda x: (x.get("signal_strength", 0), x.get("trend_score") or 0),
@@ -2020,8 +2022,14 @@ def main():
 
         print("=" * 60)
 
-    if args.execute and results.get("alerts"):
-        for alert in results["alerts"]:
+    # A run that crashed, could not execute, or raised an alert must not look green.
+    alerts = list(results.get("alerts") or [])
+    if results.get("status") != "success":
+        alerts.append(f"Run status is {results.get('status')!r}: {results.get('errors')}")
+    if (results.get("execution") or {}).get("status") == "error":
+        alerts.append(f"Order execution failed: {results['execution'].get('reason')}")
+    if args.execute and alerts:
+        for alert in alerts:
             print(f"::error::{alert}")
         sys.exit(2)
 

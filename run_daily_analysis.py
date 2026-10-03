@@ -386,7 +386,10 @@ class DailyRunner:
             "risk_assessment": {},
             "performers_update": [],
             "portfolio": {},
-            "errors": []
+            "errors": [],
+            # Conditions that must reach a human: in execute mode any alert makes
+            # the process exit non-zero, so the workflow fails and opens an issue.
+            "alerts": [],
         }
 
         try:
@@ -398,6 +401,8 @@ class DailyRunner:
             # 0b. Evaluate exits on ALL open positions before looking for new entries
             exit_results = self._evaluate_exits(execute=execute)
             results["exits"] = exit_results
+            if exit_results.get("error"):
+                results["alerts"].append(f"Exit checks did not run: {exit_results['error']}")
 
             # Build rich portfolio state with real Position objects (unlocks engine methods)
             live_portfolio = self._build_portfolio_state()
@@ -415,6 +420,7 @@ class DailyRunner:
                     ok, why = safe_to_reconcile(trades, held, positions_verified)
                     if not ok:
                         logger.error(f"Trade log reconciliation skipped: {why}")
+                        results["alerts"].append(f"Trade log reconciliation skipped: {why}")
                     else:
                         n = reconcile_phantom_trades(trades, held)
                         if n:
@@ -557,15 +563,15 @@ class DailyRunner:
             # 3. Execute trades (or dry-run)
             # Fail closed: without a confirmed position list the engine cannot see
             # what is already held (duplicate buys, no sector or position caps).
-            execute_entries = execute
             if execute and not positions_verified:
-                execute_entries = False
                 msg = "New entries skipped: positions could not be verified with the broker"
                 logger.error(msg)
-                results["errors"].append({"symbol": "*", "error": msg})
-            results["execution"] = self._execute_opportunities(
-                opportunities, execute_entries, min_confidence, portfolio=live_portfolio
-            )
+                results["alerts"].append(msg)
+                results["execution"] = {"status": "skipped", "reason": msg, "submitted": 0}
+            else:
+                results["execution"] = self._execute_opportunities(
+                    opportunities, execute, min_confidence, portfolio=live_portfolio
+                )
 
             # 4. Build summary
             total_investment = sum(o.get("position_value", 0) for o in opportunities)
@@ -994,7 +1000,10 @@ class DailyRunner:
         if not self.broker:
             return {}
         try:
-            positions = self.broker.get_positions() or []
+            # From the portfolio state already built and verified for this run —
+            # a second positions call could fail and silently switch the cap off.
+            positions = [{"symbol": sym, "market_value": pos.market_value}
+                         for sym, pos in (self.portfolio.positions or {}).items()]
             total_value = self.portfolio.total_value or 1
             # Build symbol → sector lookup
             sym_to_sector = {}
@@ -1281,6 +1290,9 @@ class DailyRunner:
             return result
 
         positions = self.broker.get_positions() or []
+        if getattr(self.broker, "last_positions_ok", True) is False:
+            result["error"] = "positions could not be fetched from the broker"
+            return result
         result["positions_checked"] = len(positions)
 
         if not positions:
@@ -1983,6 +1995,11 @@ def main():
             print("No BUY signals today.")
 
         print("=" * 60)
+
+    if args.execute and results.get("alerts"):
+        for alert in results["alerts"]:
+            print(f"::error::{alert}")
+        sys.exit(2)
 
     return results
 

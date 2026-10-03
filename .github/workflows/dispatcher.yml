@@ -7,12 +7,17 @@ on:
   workflow_dispatch:
     inputs:
       now:
-        description: 'ISO timestamp to evaluate instead of the trigger time (testing)'
+        description: 'Preview only: print what would be due at this ISO timestamp, start nothing'
         required: false
       dry_run:
         description: 'Only print what is due, start nothing'
         type: boolean
         default: false
+
+# One dispatcher at a time, so the once-per-slot check in dispatcher.py cannot race.
+concurrency:
+  group: dispatcher
+  cancel-in-progress: false
 
 jobs:
   dispatch:
@@ -33,9 +38,12 @@ jobs:
         run: |
           # Use the time this run was triggered, not when the runner started,
           # so a slow runner still lands in the slot cron-job.org fired for.
-          NOW="${NOW_INPUT:-$(gh run view "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --json createdAt -q .createdAt)}"
-          if [ "$DRY_RUN" = "true" ]; then
-            python3 dispatcher.py --now "$NOW"
+          # A supplied timestamp is preview-only: real runs always use the true time,
+          # so a caller cannot make the dispatcher trade as if it were another time.
+          if [ -n "$NOW_INPUT" ]; then
+            python3 dispatcher.py --now "$NOW_INPUT"
+          elif [ "$DRY_RUN" = "true" ]; then
+            python3 dispatcher.py
           else
-            python3 dispatcher.py --now "$NOW" --run
+            python3 dispatcher.py --run --at "$(gh run view "$GITHUB_RUN_ID" --json createdAt -q .createdAt)"
           fi

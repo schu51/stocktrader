@@ -80,3 +80,40 @@ def test_utc_input_follows_new_york_across_dst():
 def test_parse_now_accepts_github_timestamp():
     from dispatcher import parse_now
     assert parse_now("2026-10-05T14:00:11Z") == datetime(2026, 10, 5, 14, 0, 11, tzinfo=timezone.utc)
+
+
+def test_slot_start_floors_to_quarter_hour_utc():
+    from dispatcher import slot_start
+    assert slot_start(datetime(2026, 10, 5, 10, 14, 59, tzinfo=ET)) == datetime(2026, 10, 5, 14, 0, tzinfo=timezone.utc)
+
+
+def test_dispatch_skips_workflow_already_started_in_slot():
+    from dispatcher import dispatch
+    started = []
+    failed = dispatch(
+        ["daily_trade.yml", "portfolio_sync.yml"], datetime(2026, 10, 5, 14, 0, tzinfo=timezone.utc), "main",
+        already_started=lambda wf, since: wf == "daily_trade.yml",
+        start=lambda wf, ref: started.append(wf) or True,
+    )
+    assert started == ["portfolio_sync.yml"]
+    assert failed == 0
+
+
+def test_dispatch_does_not_start_when_duplicate_check_fails():
+    from dispatcher import dispatch
+    started = []
+
+    def broken(wf, since):
+        raise RuntimeError("gh unavailable")
+
+    failed = dispatch(["daily_trade.yml"], datetime(2026, 10, 5, 14, 0, tzinfo=timezone.utc), "main",
+                      already_started=broken, start=lambda wf, ref: started.append(wf) or True)
+    assert started == []
+    assert failed == 1
+
+
+def test_dispatch_counts_start_failures():
+    from dispatcher import dispatch
+    failed = dispatch(["premarket.yml"], datetime(2026, 10, 5, 13, 0, tzinfo=timezone.utc), "main",
+                      already_started=lambda wf, since: False, start=lambda wf, ref: False)
+    assert failed == 1

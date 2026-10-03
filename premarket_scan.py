@@ -2,6 +2,9 @@
 """
 Pre-market scan: overnight gaps, trend health, candidate prioritization.
 Run at ~6 AM PT (market opens 6:30 AM PT).
+
+Gaps compare this morning's premarket price (extended-hours bars) with the
+prior session's close — see premarket_quotes.py.
 """
 
 import sys
@@ -18,8 +21,10 @@ import pandas as pd
 import numpy as np
 
 from config import DEFAULT_UNIVERSE
+from premarket_quotes import fetch_premarket_prices, completed_sessions, gap_reasons
 
 PT = pytz.timezone("America/Los_Angeles")
+ET = pytz.timezone("America/New_York")
 now_pt = datetime.now(PT)
 
 print("=" * 65)
@@ -52,67 +57,68 @@ if missing:
 
 
 # ---------------------------------------------------------------------------
-# TASK 1: OVERNIGHT GAP SCAN
+# TASK 1: OVERNIGHT GAP SCAN  (this morning's premarket price vs prior close)
 # ---------------------------------------------------------------------------
 print("\n" + "=" * 65)
 print("  TASK 1: OVERNIGHT GAP SCAN")
 print("=" * 65)
 
+today_et = datetime.now(ET).date()
+premarket_prices, premarket_as_of = fetch_premarket_prices(valid_tickers, today_et)
+no_premarket_quote = [t for t in valid_tickers if t not in premarket_prices]
+
+if premarket_prices:
+    print(f"\n  Premarket quotes: {len(premarket_prices)} / {len(valid_tickers)} tickers"
+          f"  (as of {premarket_as_of.strftime('%H:%M')} ET)")
+    if no_premarket_quote:
+        print(f"  No premarket trades yet: {no_premarket_quote}")
+else:
+    print("\n  ⚠  No premarket quotes available — gap scan skipped (not a trading morning, or data source down).")
+
 gap_flags = []
 
 for ticker in valid_tickers:
-    prices = close[ticker].dropna()
-    vols   = volume[ticker].dropna() if ticker in volume.columns else pd.Series(dtype=float)
+    # Completed sessions only: if this runs after the open, today's partial
+    # daily bar must not be mistaken for the prior close.
+    prices = completed_sessions(close[ticker].dropna(), today_et)
+    vols   = completed_sessions(volume[ticker].dropna(), today_et) if ticker in volume.columns else pd.Series(dtype=float)
 
     if len(prices) < 2:
         continue
 
-    prev_close = prices.iloc[-2]
-    today_open_proxy = prices.iloc[-1]   # using today's close as proxy for open direction
-    pct_change = (today_open_proxy - prev_close) / prev_close
+    prev_close = prices.iloc[-1]
+    premarket  = premarket_prices.get(ticker)
 
-    # 50-day MA
+    # 50-day MA through the prior close
     ma50 = prices.iloc[-50:].mean() if len(prices) >= 50 else None
 
-    reasons = []
+    pct_change, reasons = (None, [])
+    if premarket is not None:
+        pct_change, reasons = gap_reasons(prev_close, premarket, ma50)
 
-    # Gap down > 3%
-    if pct_change < -0.03:
-        reasons.append(f"gap down {pct_change:.1%}")
-
-    # Crossed below 50MA overnight (prev close above, today close below)
-    if ma50 is not None:
-        prev_above = prices.iloc[-2] >= ma50
-        today_below = prices.iloc[-1] < ma50
-        if prev_above and today_below:
-            reasons.append(f"crossed BELOW 50MA ({ma50:.2f})")
-
-    # Volume spike > 2x 20-day avg
+    # Volume spike > 2x 20-day avg in the prior session
     if len(vols) >= 21:
         avg_vol_20 = vols.iloc[-21:-1].mean()
-        today_vol  = vols.iloc[-1]
-        if avg_vol_20 > 0 and today_vol > 2 * avg_vol_20:
-            reasons.append(f"volume spike {today_vol / avg_vol_20:.1f}x avg")
-
-    # Also flag strong gap UP (> 3%) above 50MA for prioritization
-    if pct_change > 0.03 and ma50 is not None and today_open_proxy > ma50:
-        reasons.append(f"gap UP {pct_change:.1%} above 50MA — momentum alert")
+        last_vol   = vols.iloc[-1]
+        if avg_vol_20 > 0 and last_vol > 2 * avg_vol_20:
+            reasons.append(f"volume spike {last_vol / avg_vol_20:.1f}x avg (prior session)")
 
     if reasons:
         gap_flags.append({
             "ticker": ticker,
             "prev_close": round(prev_close, 2),
-            "current": round(today_open_proxy, 2),
-            "pct_chg": round(pct_change * 100, 2),
+            "current": round(premarket, 2) if premarket is not None else None,
+            "pct_chg": round(pct_change * 100, 2) if pct_change is not None else None,
             "ma50": round(ma50, 2) if ma50 else None,
             "reasons": reasons,
         })
 
 if gap_flags:
     # Sort: gap-downs first, then gap-ups
-    gap_flags.sort(key=lambda x: x["pct_chg"])
+    gap_flags.sort(key=lambda x: (x["pct_chg"] is None, x["pct_chg"] or 0))
     for f in gap_flags:
-        print(f"\n  {f['ticker']:6s}  {f['pct_chg']:+.1f}%  (prev {f['prev_close']}  |  cur {f['current']}  |  50MA {f['ma50']})")
+        chg = f"{f['pct_chg']:+.1f}%" if f["pct_chg"] is not None else "  n/a"
+        print(f"\n  {f['ticker']:6s}  {chg}  (prev close {f['prev_close']}  |  premarket {f['current']}  |  50MA {f['ma50']})")
         for r in f["reasons"]:
             print(f"           → {r}")
 else:
@@ -253,9 +259,9 @@ for ticker in strong:
 
 scored.sort(key=lambda x: -x["score"])
 
-gap_down_avoid = [f["ticker"] for f in gap_flags if f["pct_chg"] < -3.0 or
+gap_down_avoid = [f["ticker"] for f in gap_flags if (f["pct_chg"] is not None and f["pct_chg"] < -3.0) or
                   any("crossed BELOW 50MA" in r for r in f["reasons"])]
-gap_up_priority = [f["ticker"] for f in gap_flags if f["pct_chg"] > 3.0 and
+gap_up_priority = [f["ticker"] for f in gap_flags if f["pct_chg"] is not None and f["pct_chg"] > 3.0 and
                    any("gap UP" in r for r in f["reasons"])]
 
 print("\n  TOP 10 BUY CANDIDATES (STRONG trend + best momentum score):")
@@ -367,6 +373,10 @@ _brief = {
         "mixed":  len(mixed),
         "weak":   len(weak),
     },
+    "gap_basis":       "premarket" if premarket_prices else "unavailable",
+    "premarket_as_of": premarket_as_of.isoformat() if premarket_as_of is not None else None,
+    "premarket_quotes": len(premarket_prices),
+    "no_premarket_quote": no_premarket_quote,
     "gap_alerts":      gap_flags,
     "avoids":          gap_down_avoid,
     "gap_up_priority": gap_up_priority,

@@ -1,4 +1,65 @@
 {
-  "generated_at": null,
-  "theses": []
+  "generated_at": "2026-10-03T18:25:19.577396",
+  "theses": [
+    {
+      "theme": "Oil-driven inflation forces the Fed to hike: sustained high crude favors oilfield services and midstream over the integrated majors",
+      "causal_chain": "Spiraling oil prices feed headline inflation -> the Fed raised rates 25bp to 3.75%-4% on 2026-09-16, its first hike since 2023, and signaled another this year -> if crude stays elevated and policy stays restrictive, producers keep capital discipline and spend on maintenance, well-service intensity and takeaway capacity rather than buybacks alone -> revenue shifts toward oilfield service, equipment and pipeline/midstream firms, which are priced for much lower activity than the integrated majors.",
+      "beneficiary_sectors": [
+        "energy",
+        "industrials"
+      ],
+      "second_order": "Oilfield services, drilling and completion equipment makers, pipeline and midstream operators, and industrial suppliers to energy capex. They benefit from sustained activity and volume, not just the spot crude price.",
+      "consensus_names_excluded": [
+        "Exxon Mobil",
+        "Chevron",
+        "ConocoPhillips",
+        "Occidental Petroleum"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.3,
+        "causal_directness": 0.5,
+        "non_consensus": 0.55,
+        "invalidation_clarity": 0.7
+      },
+      "invalidation_condition": "Brent crude closes more than 15% below its 2026-10-02 close for 10 consecutive trading days, or the Fed signals it will not hike again and begins guiding toward cuts, before the horizon date.",
+      "horizon": "2027-03-31",
+      "sources": [
+        "https://www.cnbc.com/2026/09/16/fed-rate-decision-september-2026.html"
+      ],
+      "id": "TH-2026-0001",
+      "conviction": 0.512,
+      "status": "active",
+      "created_at": "2026-10-03",
+      "last_validated": "2026-10-03"
+    },
+    {
+      "theme": "Higher-for-longer policy rates: asset-sensitive regional and mid-cap banks and non-bank lenders over the money-center banks",
+      "causal_chain": "The Fed hiked to 3.75%-4% and projections point to another increase this year, with AI-related investment cited as a possible inflationary factor -> the front end of the curve reprices upward and the 'transitory' narrative is discredited -> banks with floating-rate loan books, cheap core deposits and short-duration securities see net interest income expand -> earnings estimates for these banks lag, while the large money-center banks already trade as consensus beneficiaries of rates and capital markets.",
+      "beneficiary_sectors": [
+        "financials"
+      ],
+      "second_order": "Regional and community banks with asset-sensitive balance sheets, floating-rate lenders and short-duration credit managers. They benefit from wider loan yields and from deposit costs that lag policy rates.",
+      "consensus_names_excluded": [
+        "JPMorgan Chase",
+        "Goldman Sachs",
+        "Bank of America"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.25,
+        "causal_directness": 0.4,
+        "non_consensus": 0.5,
+        "invalidation_clarity": 0.75
+      },
+      "invalidation_condition": "The Fed cuts rates or officially signals an end to hikes before the horizon date, or the 2s10s Treasury curve inverts by more than 50bp, or the KBW Regional Banking Index underperforms the S&P 500 by more than 10 percentage points between 2026-10-03 and the horizon.",
+      "horizon": "2027-03-31",
+      "sources": [
+        "https://www.cnbc.com/2026/09/16/fed-rate-decision-september-2026.html"
+      ],
+      "id": "TH-2026-0002",
+      "conviction": 0.475,
+      "status": "active",
+      "created_at": "2026-10-03",
+      "last_validated": "2026-10-03"
+    }
+  ]
 }

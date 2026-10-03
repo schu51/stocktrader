@@ -175,3 +175,36 @@ def test_screener_macro_multiplier_default_when_absent(tmp_path, monkeypatch):
     import screener
     monkeypatch.setattr(screener, "_THESES_PATH", tmp_path / "nope.json")
     assert screener._live_theses() == []
+
+
+def test_validate_rejects_company_names_as_excluded_leaders():
+    # The multiplier matches on ticker symbols, so names would never dampen anything
+    from macro_thesis import validate_thesis
+    ok, reason = validate_thesis(_good_thesis(consensus_names_excluded=["Exxon Mobil", "CVX"]))
+    assert not ok
+    assert "ticker" in reason
+
+
+def test_validate_accepts_ticker_symbols_including_share_classes():
+    from macro_thesis import validate_thesis
+    ok, _ = validate_thesis(_good_thesis(consensus_names_excluded=["XOM", "BRK.B", "GOOGL"]))
+    assert ok
+
+
+def test_multiplier_dampens_excluded_ticker_regardless_of_case():
+    from macro_thesis import macro_multiplier, MULTIPLIER_FLOOR
+    live = [_good_thesis(beneficiary_sectors=["energy"], conviction=0.5,
+                         consensus_names_excluded=["xom ", "CVX"])]
+    assert macro_multiplier("XOM", "energy", live) == MULTIPLIER_FLOOR
+    assert macro_multiplier("CVX", "energy", live) == MULTIPLIER_FLOOR
+    assert macro_multiplier("SLB", "energy", live) > 1.0
+
+
+def test_live_register_excludes_by_ticker():
+    # The committed register must hold tickers, or the crowded-leader dampening is dead
+    import json
+    from pathlib import Path
+    from macro_thesis import is_ticker
+    reg = json.loads((Path(__file__).parent.parent / "docs" / "data" / "theses.json").read_text())
+    for thesis in reg["theses"]:
+        assert all(is_ticker(n) for n in thesis["consensus_names_excluded"]), thesis["id"]

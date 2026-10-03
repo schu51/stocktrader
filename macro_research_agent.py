@@ -43,7 +43,8 @@ Rules you MUST follow or the thesis will be rejected:
 - Every thesis cites >=1 PRIMARY source (real financial/economic news or data).
   Reddit/retail sentiment is supplementary only and can never be the sole source.
 - Every thesis names the crowded consensus leaders it is AVOIDING (consensus_names_excluded)
-  and points at second-order beneficiary SECTORS instead.
+  and points at second-order beneficiary SECTORS instead. List them as US TICKER
+  SYMBOLS only (e.g. ["XOM", "CVX"]) — never company names; the model matches on tickers.
 - Every thesis states a measurable invalidation_condition and a future horizon date.
 - beneficiary_sectors must come from this exact set:
   technology, healthcare, financials, consumer_cyclical, industrials,

@@ -8,6 +8,7 @@ A thesis tilts the screener's ranking only when it is live, source-grounded,
 second-order, and falsifiable. See docs/superpowers/specs/2026-06-14-macro-thesis-agent-design.md
 """
 
+import re
 from datetime import date, datetime
 from typing import Dict, List, Optional, Tuple
 
@@ -24,6 +25,14 @@ _VALID_SECTORS = {
     "communication_services", "consumer_defensive", "energy", "basic_materials",
     "real_estate", "utilities",
 }
+
+
+_TICKER_RE = re.compile(r"^[A-Z]{1,5}([.-][A-Z]{1,2})?$")
+
+
+def is_ticker(name) -> bool:
+    """True for a US ticker symbol like XOM or BRK.B — not a company name."""
+    return isinstance(name, str) and bool(_TICKER_RE.match(name.strip().upper())) and " " not in name.strip()
 
 
 def compute_conviction(breakdown: Dict[str, float]) -> float:
@@ -48,6 +57,7 @@ def validate_thesis(t: Dict) -> Tuple[bool, str]:
       - >=1 primary-tier source (not Reddit-only, not empty)
       - non-empty invalidation_condition AND a future horizon
       - second_order is True AND consensus_names_excluded is non-empty
+      - every consensus_names_excluded entry is a ticker symbol
       - every beneficiary_sectors entry is a valid SECTOR_MAP key
       - conviction (mean of sub-scores) >= CONVICTION_FLOOR
     """
@@ -67,6 +77,9 @@ def validate_thesis(t: Dict) -> Tuple[bool, str]:
 
     if not t.get("second_order") or not (t.get("consensus_names_excluded") or []):
         return False, "not second-order: must name consensus leaders excluded"
+
+    if not all(is_ticker(n) for n in t["consensus_names_excluded"]):
+        return False, "consensus_names_excluded must be ticker symbols (e.g. XOM), not company names"
 
     sectors = t.get("beneficiary_sectors") or []
     if not sectors or any(s not in _VALID_SECTORS for s in sectors):
@@ -121,8 +134,10 @@ def macro_multiplier(symbol: str, sector: str, live_theses: List[Dict]) -> float
       3. otherwise -> 1.0
     Result is hard-capped to [MULTIPLIER_FLOOR, 1 + MULTIPLIER_SPAN].
     """
+    symbol = symbol.strip().upper()
     for t in live_theses:
-        if symbol in (t.get("consensus_names_excluded") or []):
+        excluded = {str(n).strip().upper() for n in (t.get("consensus_names_excluded") or [])}
+        if symbol in excluded:
             return MULTIPLIER_FLOOR
 
     matches = [t for t in live_theses if sector in (t.get("beneficiary_sectors") or [])]

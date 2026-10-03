@@ -1,22 +1,29 @@
 {
   "active": {
-    "version": 2,
-    "w_rs": 0.1,
-    "w_thesis": 0.9,
-    "state": "provisional",
-    "applied_at": "2026-09-12T14:59:14.293816",
-    "derived_from_trades": 32,
-    "trades_under_this_version": 0
+    "version": 1,
+    "w_rs": 0.6,
+    "w_thesis": 0.4,
+    "state": "champion",
+    "applied_at": "2026-10-03T12:22:18.382627",
+    "derived_from_trades": 35
   },
   "champion": {
     "version": 1,
     "w_rs": 0.6,
     "w_thesis": 0.4,
     "state": "champion",
-    "mean_pnl": null,
-    "n_trades": 0
+    "mean_pnl": -1.5197142857142856,
+    "n_trades": 35
   },
-  "rejected": [],
+  "rejected": [
+    {
+      "w_rs": 0.1,
+      "w_thesis": 0.9,
+      "rejected_at": "2026-10-03T12:22:18.382627",
+      "mean_pnl": null,
+      "note": "manual revert 2026-10-03: 3-year backtest 60/40 +124% vs 10/90 +39% (research/backtest_summary_3y_*.json)"
+    }
+  ],
   "history": [
     {
       "version": 1,
@@ -31,6 +38,13 @@
       "t_rs": -1.1118686305671313,
       "t_thesis": 2.2809319085748014,
       "applied_at": "2026-09-12T14:59:14.293824"
+    },
+    {
+      "version": 1,
+      "w_rs": 0.6,
+      "w_thesis": 0.4,
+      "applied_at": "2026-10-03T12:22:18.382627",
+      "note": "manual revert from version 2 (10/90) after 3-year backtest"
     }
   ]
 }

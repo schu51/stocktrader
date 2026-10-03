@@ -295,6 +295,10 @@ def run() -> Dict:
     admitted, rejected = [], []
     seq = _next_id(reg)
     for c in candidates:
+        # Normalize free text to the allowlist first, then validate strictly
+        for field, limit in TEXT_LIMITS.items():
+            if isinstance(c.get(field), str):
+                c[field] = clean_text(c[field], 10_000)
         ok, reason = validate_thesis(c)
         if ok:
             duplicate_of = find_duplicate(c, live + admitted)

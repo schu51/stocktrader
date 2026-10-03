@@ -24,6 +24,9 @@ from typing import Dict, List, Tuple
 ROOT = Path(__file__).parent.resolve()
 DOCS_DATA = ROOT / "docs" / "data"
 
+sys.path.insert(0, str(ROOT))
+from macro_thesis import clean_text
+
 PROBATION = 10
 MIN_DATA_COVERAGE = 0.80
 
@@ -52,14 +55,14 @@ def load_data(failed_runs_file: str = None) -> Dict:
 
 def _md(value, limit: int = 300) -> str:
     """
-    Any value read from a data file, made safe to place in a GitHub issue:
-    one line, no mentions, links (markdown or bare URLs), HTML or headings.
+    Any value read from a data file, made safe to place in a GitHub issue.
+    Allowlist, not denylist: only plain letters, digits and basic punctuation
+    survive (clean_text), so mentions, HTML, markdown structure and invisible
+    characters cannot. Bare URLs are then defused.
     Everything interpolated into the review goes through this or _num.
     """
-    text = " ".join(str(value if value is not None else "").split())[:limit]
-    for ch in "<>`[]#|!":
-        text = text.replace(ch, "")
-    return text.replace("@", "(at)").replace("://", " ").replace("www.", "www ")
+    text = clean_text(value, limit, extra="_")
+    return text.replace("://", " ").replace("www.", "www ")
 
 
 def _num(value, default: float = 0.0) -> float:

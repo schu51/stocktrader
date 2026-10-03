@@ -271,7 +271,10 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE, candidate_evidenc
     # --- Apply new provisional weights ---
     # Record what the outgoing champion earned, so probation has a real bar to clear.
     _record_champion_baseline(weights, instrumented)
-    new_version = weights["active"]["version"] + 1
+    # Never reuse a number: trades stay tagged with retired versions, and a
+    # reused number would count them toward the new weights' probation.
+    used = [h.get("version", 0) for h in weights.get("history", [])]
+    new_version = max(used + [weights["active"]["version"], weights["champion"]["version"]]) + 1
     weights["active"] = {
         "version":  new_version,
         "w_rs":     round(w_rs, 4),

@@ -137,3 +137,12 @@ def test_review_tolerates_wrong_types_in_data_files():
         candidate_outcomes={"average_candidate": [{"horizon": 10, "mean": "bad", "t": None}]},
     ), TODAY)
     assert "## Health" in body
+
+
+def test_md_is_an_allowlist():
+    from weekly_review import _md
+    assert _md("a\u3164b\u2800c\ufe0f @x #h *b* [l](u) <i> `c` |t| ![img](u) {x}") == "a b c x h b l (u) i c t ! img (u) x"
+    # Fullwidth look-alikes are normalized first, then filtered: no differential
+    assert _md("\uff20user \uff48ttps\uff1a\uff0f\uff0fevil") == "user https evil"
+    assert _md("see https://evil.example/login and www.evil.example") == "see https evil.example/login and www evil.example"
+    assert _md("consumer_cyclical ANTHROPIC_API_KEY") == "consumer_cyclical ANTHROPIC_API_KEY"

@@ -31,28 +31,39 @@ _VALID_SECTORS = {
 TEXT_LIMITS = {"theme": 240, "invalidation_condition": 400}
 _TEXT_LIMITS = TEXT_LIMITS
 
-# Characters that can break a value out of "one plain line": control and format
-# characters, and line/paragraph separators (which str.splitlines also honours).
-_UNSAFE_CATEGORIES = {"Cc", "Cf", "Cs", "Co", "Zl", "Zp"}
+# Text that is stored and later replayed into prompts or reports is held to an
+# ALLOWLIST of plain characters. A denylist of "dangerous" Unicode is never
+# complete (invisible fillers, variation selectors, tag characters, ...).
+_ALLOWED_CHARS = frozenset(
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    " .,;:!?'\"()-+/%$&="
+)
+# Common typographic characters the model writes, mapped to plain equivalents
+_PLAIN_EQUIVALENTS = str.maketrans({
+    "\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": '"',
+    "\u2013": "-", "\u2014": "-", "\u2212": "-", "\u2026": "...",
+})
 
 
-def _unsafe_char(ch: str) -> bool:
-    return ch in "<>" or unicodedata.category(ch) in _UNSAFE_CATEGORIES
+def is_safe_text(value, limit: int, extra: str = "") -> bool:
+    """True for a string of at most `limit` allowlisted characters (plus `extra`)."""
+    if not isinstance(value, str) or len(value) > limit:
+        return False
+    allowed = _ALLOWED_CHARS | set(extra)
+    return all(c in allowed for c in value)
 
 
-def is_safe_text(value, limit: int) -> bool:
-    """True for a string that is one plain line: no control/format characters, no line
-    separators of any kind, no angle brackets, and at most `limit` characters."""
-    return isinstance(value, str) and len(value) <= limit and not any(_unsafe_char(c) for c in value)
-
-
-def clean_text(value, limit: int) -> str:
-    """Coerce any value to one plain line of at most `limit` characters."""
+def clean_text(value, limit: int, extra: str = "") -> str:
+    """
+    Coerce any value to one line of at most `limit` allowlisted characters.
+    Typographic quotes and dashes become plain ones; every other character
+    outside the allowlist becomes a space.
+    """
     if value is None:
         return ""
-    text = "".join(" " if unicodedata.category(c) in _UNSAFE_CATEGORIES else c
-                   for c in str(value) if c not in "<>")
-    return " ".join(text.split())[:limit]
+    allowed = _ALLOWED_CHARS | set(extra)
+    text = unicodedata.normalize("NFKC", str(value)).translate(_PLAIN_EQUIVALENTS)
+    return " ".join("".join(c if c in allowed else " " for c in text).split())[:limit]
 
 
 _TICKER_RE = re.compile(r"^[A-Z]{1,5}([.-][A-Z]{1,2})?$")

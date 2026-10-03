@@ -251,7 +251,7 @@ def test_clean_text_makes_any_value_a_short_plain_line():
     assert out == "a b c tag d e f"
     assert is_safe_text(out, 240)
     assert len(clean_text("x" * 1000, 50)) == 50
-    assert clean_text(None, 10) == "" and clean_text({"k": 1}, 100) == "{'k': 1}"
+    assert clean_text(None, 10) == "" and clean_text({"k": 1}, 100) == "'k': 1"
 
 
 def test_validate_fails_closed_on_missing_or_empty_text():
@@ -264,3 +264,21 @@ def test_validate_fails_closed_on_missing_or_empty_text():
         del missing[field]
         ok, reason = validate_thesis(missing)
         assert not ok and field in reason
+
+
+def test_text_is_held_to_an_allowlist_not_a_denylist():
+    from macro_thesis import validate_thesis, clean_text, is_safe_text
+    invisible = ["\u3164", "\u2800", "\ufe0f", "\U000e0041", "\u0301", "\u00ad", "\u115f", "\uffa0"]
+    for ch in invisible:
+        ok, reason = validate_thesis(_good_thesis(theme=f"AI power{ch}constrained"))
+        assert not ok and "theme" in reason, repr(ch)
+        cleaned = clean_text(f"AI power{ch}constrained", 240)
+        assert is_safe_text(cleaned, 240) and ch not in cleaned
+    for ch in "*#@_[]`|{}\\^~":
+        assert not is_safe_text(f"a{ch}b", 240), ch
+
+
+def test_clean_text_keeps_ordinary_prose_readable():
+    from macro_thesis import clean_text
+    assert clean_text("Fed \u2018higher-for-longer\u2019 \u2014 banks\u2026 +50bp (2s10s), 15% & up", 240) == \
+        "Fed 'higher-for-longer' - banks... +50bp (2s10s), 15% & up"

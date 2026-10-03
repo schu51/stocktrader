@@ -209,7 +209,7 @@ def test_replayed_register_text_is_cleaned_even_if_it_predates_validation(monkey
 def test_stored_evidence_and_rejected_themes_are_cleaned(tmp_path, monkeypatch):
     import json as _json
     import macro_research_agent as mra
-    bad = _thesis(theme="evil\n@everyone [click](http://x)", beneficiary_sectors=["financials"])
+    bad = _thesis(theme="evil\n@everyone [click](http://x)", beneficiary_sectors=["not_a_sector"])
     bad.pop("id")
     read = _setup(mra, tmp_path, monkeypatch, [_thesis()],
                   verdicts={"TH-2026-0001": {"invalidated": True, "evidence": "line1\nline2 " + "y" * 900}},
@@ -218,4 +218,17 @@ def test_stored_evidence_and_rejected_themes_are_cleaned(tmp_path, monkeypatch):
     evidence = read()[0]["invalidation_evidence"]
     assert "\n" not in evidence and len(evidence) <= 300
     rejected = _json.loads((tmp_path / "macro_brief.json").read_text())["rejected"][0]["theme"]
-    assert "\n" not in rejected
+    assert rejected == "evil everyone click (http://x)"
+
+
+def test_candidate_text_is_normalized_before_validation(tmp_path, monkeypatch):
+    # The model writes typographic dashes and quotes; those must not cost a good thesis
+    import macro_research_agent as mra
+    cand = _thesis(theme="Regional banks \u2014 \u2018higher for longer\u2019\u3164", beneficiary_sectors=["financials"],
+                   consensus_names_excluded=["JPM"], invalidation_condition="Fed cuts \u2013 or signals cuts")
+    cand.pop("id")
+    read = _setup(mra, tmp_path, monkeypatch, [], candidates=[cand])
+    assert mra.main() == 0
+    th = read()[0]
+    assert th["theme"] == "Regional banks - 'higher for longer'"
+    assert th["invalidation_condition"] == "Fed cuts - or signals cuts"

@@ -285,3 +285,20 @@ def test_run_applies_when_evidence_check_itself_fails(tmp_path):
     report = la.run(_significant_trades(), wf, candidate_evidence=broken)
     assert report["status"] == "applied"
     assert "csv missing" in report["candidate_evidence"]["error"]
+
+
+def test_new_version_never_reuses_a_retired_number(tmp_path):
+    # After a revert, active is version 1 again while trades tagged version 2
+    # (the retired weights) are still open. A new provisional must not be
+    # numbered 2, or those old trades would count toward its probation.
+    import json
+    import learning_agent as la
+    wf = tmp_path / "weights.json"
+    weights = la.default_weights()
+    weights["history"].append({"version": 2, "w_rs": 0.1, "w_thesis": 0.9})
+    weights["rejected"].append({"w_rs": 0.1, "w_thesis": 0.9})
+    wf.write_text(json.dumps(weights))
+    report = la.run(_significant_trades(), wf)
+    assert report["status"] == "applied"
+    assert report["active_version"] == 3
+    assert la.load_weights(wf)["active"]["version"] == 3

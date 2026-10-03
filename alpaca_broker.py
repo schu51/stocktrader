@@ -256,7 +256,12 @@ class AlpacaBroker:
             - current_price: Current price
         """
         result = self._request("GET", "/v2/positions")
-        
+
+        # An API error falls through to [] below, which looks exactly like an
+        # empty account. Callers that act on "the account does not hold X"
+        # must check this flag for the same call they used.
+        self.last_positions_ok = isinstance(result, list)
+
         if isinstance(result, list):
             for pos in result:
                 for key in ["qty", "avg_entry_price", "market_value", 

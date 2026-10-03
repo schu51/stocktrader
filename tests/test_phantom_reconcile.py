@@ -47,3 +47,32 @@ def test_reconcile_allowed_for_ordinary_unfilled_orders():
     assert safe_to_reconcile([_open("A"), _open("B"), _open("C")], {"A", "B"}, True)[0]
     assert safe_to_reconcile([_open("A")], set(), True)[0]            # a single unfilled order is normal
     assert safe_to_reconcile([], set(), True)[0]
+
+
+def _broker(monkeypatch, response):
+    from alpaca_broker import AlpacaBroker
+    broker = AlpacaBroker(api_key="test", secret_key="test", paper=True)
+    monkeypatch.setattr(broker, "_request", lambda method, path, **kw: response)
+    return broker
+
+
+def test_broker_flags_a_failed_positions_call(monkeypatch):
+    broker = _broker(monkeypatch, {"error": "503", "status_code": 503})
+    assert broker.get_positions() == [] and broker.last_positions_ok is False
+
+
+def test_broker_flags_a_real_positions_list_including_an_empty_one(monkeypatch):
+    broker = _broker(monkeypatch, [])
+    assert broker.get_positions() == [] and broker.last_positions_ok is True
+    broker = _broker(monkeypatch, [{"symbol": "AMD", "qty": "7"}])
+    assert broker.get_positions()[0]["qty"] == 7.0 and broker.last_positions_ok is True
+
+
+def test_runner_verification_reads_the_same_call(monkeypatch):
+    from types import SimpleNamespace
+    from run_daily_analysis import DailyRunner
+    verified = lambda broker: DailyRunner._positions_verified(SimpleNamespace(broker=broker))
+    assert verified(None) is False
+    assert verified(SimpleNamespace()) is False                              # never asked
+    assert verified(SimpleNamespace(last_positions_ok=False)) is False
+    assert verified(SimpleNamespace(last_positions_ok=True)) is True

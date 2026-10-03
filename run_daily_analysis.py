@@ -263,16 +263,11 @@ class DailyRunner:
 
     def _positions_verified(self) -> bool:
         """
-        True only if Alpaca answered a positions request with a real list.
-        get_positions() returns [] on an API error, which is indistinguishable
-        from an empty account, so ask the raw endpoint.
+        True only if the positions call that built the current portfolio state
+        returned a real list. Read from the same call (broker.last_positions_ok),
+        not a second request, so the answer cannot disagree with the data in use.
         """
-        if not self.broker:
-            return False
-        try:
-            return isinstance(self.broker._request("GET", "/v2/positions"), list)
-        except Exception:
-            return False
+        return bool(self.broker) and getattr(self.broker, "last_positions_ok", False) is True
 
     def _initialize_portfolio(self, default_value: float) -> PortfolioState:
         """Load portfolio from Alpaca if available, otherwise use default value."""
@@ -407,6 +402,7 @@ class DailyRunner:
             # Build rich portfolio state with real Position objects (unlocks engine methods)
             live_portfolio = self._build_portfolio_state()
             self.portfolio = live_portfolio  # keep instance state current for sizing calcs
+            positions_verified = self._positions_verified()   # about the call just made
 
             # Reconcile phantom OPEN trades — DAY limit orders that never filled
             # are cancelled by Alpaca at EOD without notifying trades.json, so
@@ -416,7 +412,7 @@ class DailyRunner:
                 if trades_file.exists():
                     trades = json.loads(trades_file.read_text())
                     held = set(live_portfolio.positions.keys())
-                    ok, why = safe_to_reconcile(trades, held, self._positions_verified())
+                    ok, why = safe_to_reconcile(trades, held, positions_verified)
                     if not ok:
                         logger.error(f"Trade log reconciliation skipped: {why}")
                     else:
@@ -559,8 +555,16 @@ class DailyRunner:
             opportunities = opportunities[:8]
 
             # 3. Execute trades (or dry-run)
+            # Fail closed: without a confirmed position list the engine cannot see
+            # what is already held (duplicate buys, no sector or position caps).
+            execute_entries = execute
+            if execute and not positions_verified:
+                execute_entries = False
+                msg = "New entries skipped: positions could not be verified with the broker"
+                logger.error(msg)
+                results["errors"].append({"symbol": "*", "error": msg})
             results["execution"] = self._execute_opportunities(
-                opportunities, execute, min_confidence, portfolio=live_portfolio
+                opportunities, execute_entries, min_confidence, portfolio=live_portfolio
             )
 
             # 4. Build summary

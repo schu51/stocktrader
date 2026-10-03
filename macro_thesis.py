@@ -9,6 +9,7 @@ second-order, and falsifiable. See docs/superpowers/specs/2026-06-14-macro-thesi
 """
 
 import re
+import unicodedata
 from datetime import date, datetime
 from typing import Dict, List, Optional, Tuple
 
@@ -27,7 +28,32 @@ _VALID_SECTORS = {
 }
 
 
-_TEXT_LIMITS = {"theme": 240, "invalidation_condition": 400}
+TEXT_LIMITS = {"theme": 240, "invalidation_condition": 400}
+_TEXT_LIMITS = TEXT_LIMITS
+
+# Characters that can break a value out of "one plain line": control and format
+# characters, and line/paragraph separators (which str.splitlines also honours).
+_UNSAFE_CATEGORIES = {"Cc", "Cf", "Zl", "Zp"}
+
+
+def _unsafe_char(ch: str) -> bool:
+    return ch in "<>" or unicodedata.category(ch) in _UNSAFE_CATEGORIES
+
+
+def is_safe_text(value, limit: int) -> bool:
+    """True for a string that is one plain line: no control/format characters, no line
+    separators of any kind, no angle brackets, and at most `limit` characters."""
+    return isinstance(value, str) and len(value) <= limit and not any(_unsafe_char(c) for c in value)
+
+
+def clean_text(value, limit: int) -> str:
+    """Coerce any value to one plain line of at most `limit` characters."""
+    if value is None:
+        return ""
+    text = "".join(" " if unicodedata.category(c) in _UNSAFE_CATEGORIES else c
+                   for c in str(value) if c not in "<>")
+    return " ".join(text.split())[:limit]
+
 
 _TICKER_RE = re.compile(r"^[A-Z]{1,5}([.-][A-Z]{1,2})?$")
 
@@ -66,9 +92,8 @@ def validate_thesis(t: Dict) -> Tuple[bool, str]:
     # Free text is stored and replayed into later model prompts: keep it short
     # and single-line so it cannot carry a block of instructions.
     for field, limit in _TEXT_LIMITS.items():
-        value = str(t.get(field) or "")
-        if len(value) > limit or "\n" in value or "\r" in value:
-            return False, f"{field} must be a single line of at most {limit} characters"
+        if t.get(field) is not None and not is_safe_text(t.get(field), limit):
+            return False, f"{field} must be a plain single line of at most {limit} characters"
 
     sources = t.get("sources") or []
     if not sources or not _has_primary_source(sources):

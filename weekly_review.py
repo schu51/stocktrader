@@ -50,6 +50,18 @@ def load_data(failed_runs_file: str = None) -> Dict:
     }
 
 
+def _md(value, limit: int = 300) -> str:
+    """
+    Text written by a model (thesis themes, rejection reasons, evidence) made
+    safe to place in a GitHub issue: one line, no mentions, links, HTML or
+    markdown structure.
+    """
+    text = " ".join(str(value if value is not None else "").split())[:limit]
+    for ch in "<>`[]#|":
+        text = text.replace(ch, "")
+    return text.replace("@", "(at)")
+
+
 def _horizon(rows, horizon: int = 10) -> Dict:
     return next((r for r in rows or [] if r.get("horizon") == horizon), {})
 
@@ -138,20 +150,20 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
     out.append("\n## Macro theses")
     brief = data.get("macro_brief") or {}
     if brief.get("status") in ("error", "partial"):
-        problems.append(f"Macro research: {brief.get('error') or brief.get('revalidation_error') or 'failed'}")
+        problems.append(f"Macro research: {_md(brief.get('error') or brief.get('revalidation_error') or 'failed')}")
     live = brief.get("active") or []
     out.append(f"- Live: {len(live)}")
     for t in live:
-        out.append(f"  - {t['id']} ({t.get('conviction', 0):.2f}): {t.get('theme')} "
-                   f"[{', '.join(t.get('beneficiary_sectors') or [])}]")
+        out.append(f"  - {_md(t.get('id'), 40)} ({float(t.get('conviction') or 0):.2f}): {_md(t.get('theme'))} "
+                   f"({', '.join(_md(x, 40) for x in t.get('beneficiary_sectors') or [])})")
     reval = brief.get("revalidation") or {}
     if reval:
         out.append(f"- Re-validated: {len(reval.get('confirmed') or [])} of {reval.get('checked', 0)} confirmed")
         for inv in reval.get("invalidated") or []:
-            out.append(f"  - Retired {inv['id']}: {inv.get('evidence')}")
+            out.append(f"  - Retired {_md(inv.get('id'), 40)}: {_md(inv.get('evidence'))}")
     out.append(f"- New this week: {brief.get('admitted', 0)} admitted")
     for r in brief.get("rejected") or []:
-        out.append(f"  - Rejected \"{r.get('theme')}\": {r.get('reason')}")
+        out.append(f"  - Rejected \"{_md(r.get('theme'))}\": {_md(r.get('reason'))}")
 
     # ── Health ───────────────────────────────────────────────────────────────
     screener = data.get("screener") or {}

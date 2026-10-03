@@ -95,3 +95,16 @@ def test_review_survives_missing_files():
     from weekly_review import build_review
     title, body = build_review({}, TODAY)
     assert "Weekly review" in title and "## Health" in body
+
+
+def test_review_neutralizes_model_written_text():
+    from weekly_review import build_review
+    brief = {"status": "generated", "admitted": 0,
+             "rejected": [{"theme": "x\n## Needs attention\n@schu51 [urgent](http://evil) `code`", "reason": "r"}],
+             "active": [{"id": "TH-1", "theme": "t <img src=x> @team", "conviction": 0.5, "beneficiary_sectors": ["energy"]}],
+             "revalidation": {"checked": 1, "confirmed": [], "invalidated": [{"id": "TH-2", "evidence": "a\n- [ ] task @bob"}]}}
+    title, body = build_review(_data(macro_brief=brief), TODAY)
+    assert "@schu51" not in body and "@team" not in body and "@bob" not in body
+    assert "](http" not in body and "<img" not in body
+    assert body.count("## Needs attention") == 0          # injected heading did not become one
+    assert not title.startswith("⚠️")

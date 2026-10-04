@@ -48,6 +48,7 @@ USER_AGENT = "Mozilla/5.0 (compatible; stocktrader-research/1.0)"
 
 # Thresholds for the yes/no signals the experiments score
 NEWS_MIN_HEADLINES = 5
+NEWS_MIN_PUBLISHERS = 3        # a view has to come from several outlets, not one
 NEWS_POSITIVE = 0.10
 NEWS_NEGATIVE = -0.10
 SOCIAL_MIN_TAGGED = 8
@@ -102,14 +103,34 @@ def score_headline(text: str) -> float:
     return (pos - neg) / (pos + neg) if pos + neg else 0.0
 
 
+def split_publisher(title: str):
+    """('Headline text', 'Publisher') from a Google News title of the form 'Headline - Publisher'."""
+    text, sep, publisher = str(title).rpartition(" - ")
+    return (text, publisher.strip().lower()) if sep else (str(title), "")
+
+
 def news_summary(headlines: List[str]) -> Dict:
-    """Aggregate headline scores. news_score is the mean over headlines that matched any listed word."""
-    scores = [score_headline(h) for h in headlines]
-    scored = [s for s in scores if s != 0.0]
+    """
+    Aggregate headline scores with one vote per publisher: each outlet's
+    scored headlines are averaged first, then the outlets are averaged. Twenty
+    negative stories from one site therefore count the same as one, and the
+    yes/no signals also need several different outlets (NEWS_MIN_PUBLISHERS).
+    Headlines with no listed word are counted but do not vote.
+    """
+    by_publisher: Dict[str, List[float]] = {}
+    scored = 0
+    for raw in headlines:
+        text, publisher = split_publisher(raw)
+        score = score_headline(text)
+        if score != 0.0:
+            scored += 1
+            by_publisher.setdefault(publisher, []).append(score)
+    votes = [sum(v) / len(v) for v in by_publisher.values()]
     return {
         "news_n": len(headlines),
-        "news_scored": len(scored),
-        "news_score": round(sum(scored) / len(scored), 3) if scored else None,
+        "news_scored": scored,
+        "news_publishers": len(votes),
+        "news_score": round(sum(votes) / len(votes), 3) if votes else None,
     }
 
 
@@ -128,7 +149,8 @@ def to_signals(s: Dict) -> Dict:
     which is different from False.
     """
     out = {"news_positive": None, "news_negative": None, "social_bullish": None, "social_bearish": None}
-    if s.get("news_score") is not None and (s.get("news_scored") or 0) >= NEWS_MIN_HEADLINES:
+    if (s.get("news_score") is not None and (s.get("news_scored") or 0) >= NEWS_MIN_HEADLINES
+            and (s.get("news_publishers") or 0) >= NEWS_MIN_PUBLISHERS):
         out["news_positive"] = s["news_score"] >= NEWS_POSITIVE
         out["news_negative"] = s["news_score"] <= NEWS_NEGATIVE
     tagged = (s.get("st_bullish") or 0) + (s.get("st_bearish") or 0)
@@ -139,7 +161,7 @@ def to_signals(s: Dict) -> Dict:
 
 
 def parse_rss_titles(xml_bytes: bytes, since: datetime) -> List[str]:
-    """Headline text from a Google News RSS document, newest `MAX_HEADLINES`, publisher suffix removed."""
+    """Titles ("Headline - Publisher") from a Google News RSS document, newest `MAX_HEADLINES`."""
     from email.utils import parsedate_to_datetime
     # Untrusted XML. A feed has no need for a DTD or entity declarations, and
     # those are what XXE and entity-expansion attacks are made of: refuse them
@@ -159,16 +181,30 @@ def parse_rss_titles(xml_bytes: bytes, since: datetime) -> List[str]:
         except Exception:
             continue
         if title:
-            titles.append(title.rsplit(" - ", 1)[0])
+            titles.append(title)             # "Headline - Publisher"; news_summary splits them
     return titles[:MAX_HEADLINES]
 
 
 def parse_stocktwits_tags(payload: Dict) -> List[Optional[str]]:
-    tags = []
+    """
+    One tag per author. A single account posting the same view twenty times
+    counts once (its most recent tagged post), so the crowd reading cannot be
+    set by one user. Posts with no author id are kept as separate, untagged
+    entries: they add to the message count but never to either side.
+    """
+    by_author: Dict = {}
+    anonymous = 0
     for message in (payload or {}).get("messages") or []:
+        if not isinstance(message, dict):
+            continue
         basic = ((message.get("entities") or {}).get("sentiment") or {}).get("basic")
-        tags.append(basic if basic in ("Bullish", "Bearish") else None)
-    return tags
+        tag = basic if basic in ("Bullish", "Bearish") else None
+        author = (message.get("user") or {}).get("id") if isinstance(message.get("user"), dict) else None
+        if author is None:
+            anonymous += 1
+        elif author not in by_author or (by_author[author] is None and tag is not None):
+            by_author[author] = tag          # messages arrive newest first
+    return list(by_author.values()) + [None] * anonymous
 
 
 # ---------------------------------------------------------------------------
@@ -196,7 +232,7 @@ def fetch_stocktwits(symbol: str, session=None) -> List[Optional[str]]:
 
 def sentiment_for(symbol: str, fetch_news=fetch_headlines, fetch_social=fetch_stocktwits) -> Dict:
     """Scores for one symbol. Never raises: a source that fails leaves its fields as None."""
-    out = {"news_n": None, "news_scored": None, "news_score": None,
+    out = {"news_n": None, "news_scored": None, "news_publishers": None, "news_score": None,
            "st_msgs": None, "st_bullish": None, "st_bearish": None, "st_bull_ratio": None}
     try:
         out.update(news_summary(fetch_news(symbol)))

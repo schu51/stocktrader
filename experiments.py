@@ -28,7 +28,10 @@ Two kinds of experiment:
   news_arm       news_veto
                  A/B test of technical rules with and without news: half of
                  buy signals are skipped when news is negative or social is
-                 bearish. Sentiment can only block a buy, never cause one.
+                 bearish. Sentiment can only block a buy, never cause one,
+                 and at most three buys a day. Each StockTwits author and each
+                 news outlet counts once, so one account or one site cannot
+                 set the reading.
 
   stop_arm       atr_stop
                  A/B test on real positions: new buys are split between a
@@ -173,6 +176,19 @@ def news_arm(trade_key: str, registry: Dict) -> str:
     return "control"
 
 
+MAX_NEWS_VETOES_PER_DAY = 3
+
+
+def _vetoes_today(log_path: Path, day: date, symbol: str) -> int:
+    """Buys already blocked by the news veto today, other than this symbol."""
+    try:
+        log = json.loads(Path(log_path).read_text())
+    except Exception:
+        return 0
+    return sum(1 for r in log if isinstance(r, dict) and r.get("date") == day.isoformat()
+               and r.get("blocked_by") == "news_veto" and r.get("symbol") != symbol)
+
+
 def news_veto(signals: Dict) -> bool:
     """True when sentiment says do not buy: negative news or bearish social. Unknown is not a veto."""
     return signals.get("news_negative") is True or signals.get("social_bearish") is True
@@ -240,7 +256,11 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
         side = news_arm(f"{symbol}:{day.isoformat()}", registry)
         veto = news_veto(signals)
         if blocked_by is None and side == "news" and veto:
-            blocked_by = "news_veto"
+            # Bound what public text can do: it may block a few buys a day, not
+            # all of them. Beyond the cap the buy proceeds and is still logged
+            # as vetoed, so the measurement is unaffected.
+            if _vetoes_today(log_path, day, symbol) < MAX_NEWS_VETOES_PER_DAY:
+                blocked_by = "news_veto"
     except Exception as e:
         # Fail closed: if the gate cannot be evaluated the stock is not bought.
         # The caller raises an alert, so this is visible the same day.

@@ -457,3 +457,20 @@ def test_source_weights_follow_the_evidence():
     assert ex.source_weights(thin)["basis"].startswith("equal")
     undefined = {"news_score": {"days": 40, "t": float("nan")}, "st_bull_ratio": {"days": 40, "t": 1.0}}
     assert ex.source_weights(undefined) == {"basis": "equal (not enough evidence yet)", "news_score": 0.5, "st_bull_ratio": 0.5}
+
+
+def test_news_can_block_only_a_few_buys_a_day(tmp_path):
+    # Bound on what public text can do: a flood of bad sentiment cannot stop all buying
+    import experiments as ex
+    bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    path = _seed(tmp_path, macd_cross="dropped", news_veto="adopted")
+    symbols = [f"BAD{c}" for c in "ABCDEF"]
+    sent = tmp_path / "sentiment_log.json"
+    sent.write_text(json.dumps([{"date": "2026-10-03", "symbol": sym, "news_negative": True} for sym in symbols]))
+    outs = [ex.on_buy_signal(sym, bars, TODAY, registry_path=path, log_path=tmp_path / "log.json", sentiment_path=sent)
+            for sym in symbols]
+    assert [o["blocked_by"] for o in outs] == ["news_veto"] * ex.MAX_NEWS_VETOES_PER_DAY + [None] * 3
+    log = json.loads((tmp_path / "log.json").read_text())
+    assert all(r["news_veto"] is True for r in log)                   # still recorded as vetoed, for the measurement
+    again = ex.on_buy_signal("BADA", bars, TODAY, registry_path=path, log_path=tmp_path / "log.json", sentiment_path=sent)
+    assert again["blocked_by"] == "news_veto"                         # a re-run gives the same answer for the same stock

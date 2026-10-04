@@ -28,38 +28,59 @@ def test_negation_flips_the_word():
 
 def test_news_summary_ignores_headlines_with_no_listed_words():
     from news_sentiment import news_summary
-    s = news_summary(["Analyst upgrades stock", "Firm downgrades stock", "Shares surge on record profit",
-                      "Company to present at conference"])
-    assert s["news_n"] == 4 and s["news_scored"] == 3
+    s = news_summary(["Analyst upgrades stock - A", "Firm downgrades stock - B", "Shares surge on record profit - C",
+                      "Company to present at conference - D"])
+    assert s["news_n"] == 4 and s["news_scored"] == 3 and s["news_publishers"] == 3
     assert s["news_score"] == pytest.approx(1 / 3, abs=1e-3)
     assert news_summary([])["news_score"] is None
 
 
+def test_one_outlet_cannot_set_the_news_reading():
+    from news_sentiment import news_summary, to_signals
+    flood = [f"Company faces lawsuit and fraud probe {i} - Shady Site" for i in range(20)]
+    real = ["Analyst upgrades stock - Reuters", "Shares surge on record profit - CNBC"]
+    s = news_summary(flood + real)
+    assert s["news_publishers"] == 3
+    assert s["news_score"] == pytest.approx(1 / 3, abs=1e-3)          # 20 stories from one site = one vote
+    only = news_summary(flood)
+    assert only["news_score"] == -1.0 and only["news_publishers"] == 1
+    assert to_signals(only)["news_negative"] is None                  # one outlet is not enough to say anything
+
+
 # ── social ───────────────────────────────────────────────────────────────────
 
-def test_stocktwits_tags_and_ratio():
+def _msg(user, tag):
+    return {"user": {"id": user}, "entities": {"sentiment": {"basic": tag} if tag else None}}
+
+
+def test_stocktwits_one_vote_per_author():
     from news_sentiment import parse_stocktwits_tags, social_summary
-    payload = {"messages": [{"entities": {"sentiment": {"basic": "Bullish"}}},
-                            {"entities": {"sentiment": {"basic": "Bearish"}}},
-                            {"entities": {"sentiment": None}}, {"entities": {}}, {},
-                            {"entities": {"sentiment": {"basic": "<script>"}}}]}
+    spam = [_msg(1, "Bearish")] * 20 + [_msg(2, "Bullish"), _msg(3, "Bullish"), _msg(4, None)]
+    tags = parse_stocktwits_tags({"messages": spam})
+    assert sorted(tags, key=str) == ["Bearish", "Bullish", "Bullish", None]      # 20 posts by one account = one vote
+    s = social_summary(tags)
+    assert (s["st_bullish"], s["st_bearish"], s["st_bull_ratio"]) == (2, 1, 0.667)
+
+
+def test_stocktwits_parsing_is_defensive():
+    from news_sentiment import parse_stocktwits_tags, social_summary
+    payload = {"messages": [_msg(1, "Bullish"), _msg(2, "<script>"), {"entities": {"sentiment": {"basic": "Bearish"}}},
+                            {}, "garbage", _msg(1, "Bearish")]}
     tags = parse_stocktwits_tags(payload)
-    assert tags == ["Bullish", "Bearish", None, None, None, None]
-    s = social_summary(tags + ["Bullish", "Bullish"])
-    assert (s["st_bullish"], s["st_bearish"], s["st_bull_ratio"]) == (3, 1, 0.75)
-    assert social_summary([None, None])["st_bull_ratio"] is None
+    assert tags.count("Bullish") == 1 and tags.count("Bearish") == 0     # no author id: counted, but no vote
     assert parse_stocktwits_tags(None) == [] and parse_stocktwits_tags({"messages": None}) == []
+    assert social_summary([None, None])["st_bull_ratio"] is None
 
 
 # ── yes/no signals ───────────────────────────────────────────────────────────
 
 def test_signals_need_enough_data_and_none_is_not_false():
     from news_sentiment import to_signals
-    thin = to_signals({"news_score": 0.9, "news_scored": 2, "st_bull_ratio": 1.0, "st_bullish": 3, "st_bearish": 0})
+    thin = to_signals({"news_score": 0.9, "news_scored": 2, "news_publishers": 2, "st_bull_ratio": 1.0, "st_bullish": 3, "st_bearish": 0})
     assert thin == {"news_positive": None, "news_negative": None, "social_bullish": None, "social_bearish": None}
-    good = to_signals({"news_score": 0.4, "news_scored": 9, "st_bull_ratio": 0.9, "st_bullish": 9, "st_bearish": 1})
+    good = to_signals({"news_score": 0.4, "news_scored": 9, "news_publishers": 5, "st_bull_ratio": 0.9, "st_bullish": 9, "st_bearish": 1})
     assert good == {"news_positive": True, "news_negative": False, "social_bullish": True, "social_bearish": False}
-    bad = to_signals({"news_score": -0.5, "news_scored": 9, "st_bull_ratio": 0.4, "st_bullish": 4, "st_bearish": 6})
+    bad = to_signals({"news_score": -0.5, "news_scored": 9, "news_publishers": 5, "st_bull_ratio": 0.4, "st_bullish": 4, "st_bearish": 6})
     assert bad == {"news_positive": False, "news_negative": True, "social_bullish": False, "social_bearish": True}
 
 
@@ -72,9 +93,9 @@ RSS = b"""<?xml version="1.0"?><rss><channel>
 </channel></rss>"""
 
 
-def test_rss_titles_are_recent_and_stripped_of_publisher():
+def test_rss_titles_are_recent_and_keep_their_publisher():
     from news_sentiment import parse_rss_titles
-    assert parse_rss_titles(RSS, datetime(2026, 9, 28)) == ["Nvidia upgraded by Morgan Stanley"]
+    assert parse_rss_titles(RSS, datetime(2026, 9, 28)) == ["Nvidia upgraded by Morgan Stanley - CNBC"]
 
 
 def test_feed_with_a_dtd_or_entities_is_refused():

@@ -29,7 +29,8 @@ Two kinds of experiment:
                  A/B test of technical rules with and without news: half of
                  buy signals are skipped when news is negative or social is
                  bearish. Sentiment can only block a buy, never cause one,
-                 and at most three buys a day. Each StockTwits author and each
+                 and at most three buys a day (a buy let through by that cap
+                 is tagged "capped" and left out of the A/B). Each StockTwits author and each
                  news outlet counts once, so one account or one site cannot
                  set the reading.
 
@@ -177,14 +178,25 @@ def news_arm(trade_key: str, registry: Dict) -> str:
 
 
 MAX_NEWS_VETOES_PER_DAY = 3
+NEWS_ARM_CAPPED = "capped"      # veto applied but not enforced; excluded from the A/B
 
 
 def _vetoes_today(log_path: Path, day: date, symbol: str) -> int:
-    """Buys already blocked by the news veto today, other than this symbol."""
-    try:
-        log = json.loads(Path(log_path).read_text())
-    except Exception:
+    """
+    Buys already blocked by the news veto today, other than this symbol.
+    If the log exists but cannot be read, the count is unknown: report the cap
+    as reached, so the limit on what news can block is never silently lifted.
+    """
+    path = Path(log_path)
+    if not path.exists():
         return 0
+    try:
+        log = json.loads(path.read_text())
+        if not isinstance(log, list):
+            raise ValueError("signal log is not a list")
+    except Exception as e:
+        logger.warning(f"Signal log unreadable ({e}) — treating the daily veto cap as reached")
+        return MAX_NEWS_VETOES_PER_DAY
     return sum(1 for r in log if isinstance(r, dict) and r.get("date") == day.isoformat()
                and r.get("blocked_by") == "news_veto" and r.get("symbol") != symbol)
 
@@ -261,6 +273,11 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
             # as vetoed, so the measurement is unaffected.
             if _vetoes_today(log_path, day, symbol) < MAX_NEWS_VETOES_PER_DAY:
                 blocked_by = "news_veto"
+            else:
+                # The veto applied but was not enforced. This buy is no longer a
+                # fair member of either half of the A/B, so it is tagged apart
+                # and left out of the comparison.
+                side = NEWS_ARM_CAPPED
     except Exception as e:
         # Fail closed: if the gate cannot be evaluated the stock is not bought.
         # The caller raises an alert, so this is visible the same day.
@@ -284,6 +301,11 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
     except Exception as e:
         logger.warning(f"Could not write the signal log for {symbol}: {e}")
         out["error"] = f"signal log not written: {e}"
+        # A veto that is not recorded cannot be counted against the daily cap.
+        # Do not enforce it, and keep the trade out of the A/B.
+        if out["blocked_by"] == "news_veto":
+            out["blocked_by"] = None
+            out["news_arm"] = NEWS_ARM_CAPPED
     return out
 
 

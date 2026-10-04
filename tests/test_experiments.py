@@ -470,7 +470,47 @@ def test_news_can_block_only_a_few_buys_a_day(tmp_path):
     outs = [ex.on_buy_signal(sym, bars, TODAY, registry_path=path, log_path=tmp_path / "log.json", sentiment_path=sent)
             for sym in symbols]
     assert [o["blocked_by"] for o in outs] == ["news_veto"] * ex.MAX_NEWS_VETOES_PER_DAY + [None] * 3
+    # Buys let through by the cap are not fair members of either half of the A/B
+    assert [o["news_arm"] for o in outs] == ["news"] * 3 + [ex.NEWS_ARM_CAPPED] * 3
     log = json.loads((tmp_path / "log.json").read_text())
     assert all(r["news_veto"] is True for r in log)                   # still recorded as vetoed, for the measurement
     again = ex.on_buy_signal("BADA", bars, TODAY, registry_path=path, log_path=tmp_path / "log.json", sentiment_path=sent)
     assert again["blocked_by"] == "news_veto"                         # a re-run gives the same answer for the same stock
+
+
+def test_capped_trades_are_left_out_of_the_ab_result():
+    import experiments as ex
+    capped_losers = [{"status": "CLOSED", "news_arm": ex.NEWS_ARM_CAPPED, "entry_date": "2026-10-10", "pnl_pct": -40.0}] * 50
+    reg, _ = ex.evaluate(_registry(), {}, _news_trades(30, 6, 0) + capped_losers, TODAY)
+    ev = reg["experiments"]["news_veto"]["evidence"]
+    assert (ev["n_news"], ev["n_control"]) == (30, 30)
+    assert reg["experiments"]["news_veto"]["state"] == "adopted"      # unchanged by the capped trades
+
+
+def test_unreadable_log_counts_as_cap_reached(tmp_path):
+    # The cap must not be lifted because the count is unknown
+    import experiments as ex
+    bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    path = _seed(tmp_path, macd_cross="dropped", news_veto="adopted")
+    sent = tmp_path / "sentiment_log.json"
+    sent.write_text(json.dumps([{"date": "2026-10-03", "symbol": "BAD", "news_negative": True}]))
+    for garbage in ("{not json", '{"a": 1}'):
+        log = tmp_path / "log.json"
+        log.write_text(garbage)
+        assert ex._vetoes_today(log, TODAY, "BAD") == ex.MAX_NEWS_VETOES_PER_DAY
+        out = ex.on_buy_signal("BAD", bars, TODAY, registry_path=path, log_path=log, sentiment_path=sent)
+        assert out["blocked_by"] is None and out["news_arm"] == ex.NEWS_ARM_CAPPED
+    assert ex._vetoes_today(tmp_path / "missing.json", TODAY, "BAD") == 0        # first run of the day: nothing yet
+
+
+def test_a_veto_that_cannot_be_recorded_is_not_enforced(tmp_path):
+    import experiments as ex
+    bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    path = _seed(tmp_path, macd_cross="dropped", news_veto="adopted")
+    sent = tmp_path / "sentiment_log.json"
+    sent.write_text(json.dumps([{"date": "2026-10-03", "symbol": "BAD", "news_negative": True}]))
+    unwritable = tmp_path / "logdir"
+    unwritable.mkdir()                                              # reads as "unreadable" and cannot be written
+    out = ex.on_buy_signal("BAD", bars, TODAY, registry_path=path, log_path=unwritable, sentiment_path=sent)
+    assert out["blocked_by"] is None and out["news_arm"] == ex.NEWS_ARM_CAPPED
+    assert out["error"]                                             # surfaced, so the run raises an alert

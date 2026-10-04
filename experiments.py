@@ -279,6 +279,21 @@ def arm_evidence(trades: List[Dict], started: str) -> Dict:
     return out
 
 
+# Signals computed from price data only. Fixed in code: the registry is a data
+# file and must not be able to grant this.
+AUTO_PROMOTABLE = frozenset({"macd_cross", "ema21_reclaim", "breakout", "adx25", "ma50_room"})
+
+
+def may_auto_promote(name: str, exp: Dict) -> bool:
+    """
+    Fail closed. A signal may be promoted to a gate without a person only if it
+    is on the price-derived list above. Anything else — the sentiment signals,
+    or a name this code does not know — never is, whatever the registry says.
+    The registry can only restrict further (auto_promote: false).
+    """
+    return name in AUTO_PROMOTABLE and exp.get("auto_promote") is not False
+
+
 NEEDS_APPROVAL = ("qualifies on the evidence, but it is driven by public posts and headlines: "
                   "promotion to a gate needs manual approval")
 
@@ -337,9 +352,7 @@ def evaluate(registry: Dict, rows, trades: List[Dict], today: date) -> Tuple[Dic
             ev = signal_evidence(frame, name, exp["started"])
             slot_free = sum(1 for e in exps.values()
                             if e["kind"] == "entry_signal" and e["state"] in GATING_STATES) < MAX_ACTIVE_GATES
-            # Only an explicit True allows automatic promotion of an externally driven signal
-            auto = exp.get("auto_promote", True) is True
-            new_state, reason = _decide_signal(exp["state"], ev, slot_free, auto)
+            new_state, reason = _decide_signal(exp["state"], ev, slot_free, may_auto_promote(name, exp))
         else:
             ev = arm_evidence(trades, exp["started"])
             new_state, reason = _decide_stop_arm(exp["state"], ev)

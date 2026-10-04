@@ -323,12 +323,35 @@ def test_externally_driven_signals_are_still_dropped_automatically():
     assert reg["experiments"]["news_positive"]["state"] == "dropped"
 
 
-def test_a_malformed_auto_promote_value_does_not_enable_promotion():
+def test_the_registry_cannot_grant_automatic_promotion():
+    # The rule lives in code. A missing, true or malformed flag in the data file changes nothing.
+    import experiments as ex
+    for tamper in ("delete", True, "true", 1):
+        reg = _registry(macd_cross="dropped")
+        if tamper == "delete":
+            del reg["experiments"]["news_positive"]["auto_promote"]
+        else:
+            reg["experiments"]["news_positive"]["auto_promote"] = tamper
+        reg, changes = ex.evaluate(reg, {"news_positive": _rows(60, 0.05, "news_positive")}, [], TODAY)
+        assert reg["experiments"]["news_positive"]["state"] == "observing", tamper
+        assert changes == []
+
+
+def test_an_unknown_signal_is_never_promoted_automatically():
     import experiments as ex
     reg = _registry(macd_cross="dropped")
-    reg["experiments"]["news_positive"]["auto_promote"] = "true"      # not the boolean True
-    reg, _ = ex.evaluate(reg, {"news_positive": _rows(60, 0.05, "news_positive")}, [], TODAY)
-    assert reg["experiments"]["news_positive"]["state"] == "observing"
+    reg["experiments"]["mystery"] = {"kind": "entry_signal", "state": "observing", "started": "2026-10-03"}
+    reg, _ = ex.evaluate(reg, {"mystery": _rows(60, 0.05, "mystery")}, [], TODAY)
+    assert reg["experiments"]["mystery"]["state"] == "observing"
+    assert not ex.may_auto_promote("mystery", {}) and not ex.may_auto_promote("news_positive", {"auto_promote": True})
+
+
+def test_the_registry_can_still_restrict_a_technical_signal():
+    import experiments as ex
+    reg = _registry(macd_cross="dropped")
+    reg["experiments"]["breakout"]["auto_promote"] = False
+    reg, _ = ex.evaluate(reg, {"breakout": _rows(60, 0.03)}, [], TODAY)
+    assert reg["experiments"]["breakout"]["state"] == "observing"
 
 
 def test_technical_signals_still_promote_automatically():

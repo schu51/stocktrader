@@ -184,3 +184,13 @@ def test_compute_signals_returns_every_named_signal():
     assert out["adx25"] is True and 0 < out["atr_pct"] < 0.05
     short = compute_signals(up[:10], up[:10] + 1, up[:10] - 1, np.full(10, 1e6))
     assert short["adx"] is None and short["atr_pct"] is None and short["macd_cross"] is False
+
+
+def test_ma50_room_signal():
+    from technical_signals import compute_signals
+    flat = np.full(80, 100.0)
+    just_above = np.append(flat, 102.0)                     # 2% above its 50-day average
+    well_above = np.append(flat, 108.0)
+    args = lambda c: (c, c + 1, c - 1, np.full(len(c), 1e6))
+    assert compute_signals(*args(just_above))["ma50_room"] is False
+    assert compute_signals(*args(well_above))["ma50_room"] is True

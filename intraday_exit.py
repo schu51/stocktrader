@@ -189,8 +189,12 @@ def main():
         logger.info("Market closed — intraday exit monitor skipped")
         return
 
-    positions = broker.get_positions() or []
-    logger.info(f"Evaluating {len(positions)} positions")
+    from exit_logic import split_positions
+    positions, unmanaged = split_positions(broker.get_positions() or [])
+    logger.info(f"Evaluating {len(positions)} long stock positions")
+    if unmanaged:
+        logger.info(f"Leaving {len(unmanaged)} short/option position(s) alone: "
+                    f"{[p['symbol'] for p in unmanaged]}")
 
     # Build 50MA for all held symbols in ONE batched call (cached for the day)
     from exit_logic import get_sma50_map

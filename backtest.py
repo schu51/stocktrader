@@ -206,7 +206,7 @@ class Backtest:
                  start: str, end: Optional[str] = None, capital: float = 100_000.0,
                  w_rs: float = 0.60, w_thesis: float = 0.40, slippage_bps: float = 10.0,
                  quiet: bool = True, entry_trigger: str = "none", atr_stop: float = 0.0,
-                 min_adx: float = 0.0):
+                 min_adx: float = 0.0, min_above_50ma: float = 0.0):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -216,6 +216,7 @@ class Backtest:
         self.slip = slippage_bps / 10_000.0
         # Experimental variants (all off = the live rules)
         self.entry_trigger, self.atr_stop, self.min_adx = entry_trigger, atr_stop, min_adx
+        self.min_above_50ma = min_above_50ma
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -229,7 +230,7 @@ class Backtest:
         self.equity: Dict[pd.Timestamp, float] = {}
         self.cash_share: List[float] = []
         self.counters = {"candidates": 0, "gate_rsi": 0, "gate_bb": 0, "gate_sector": 0,
-                         "gate_trigger": 0, "gate_adx": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
+                         "gate_trigger": 0, "gate_adx": 0, "gate_50ma_room": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
                          "unfilled_no_cash": 0, "unfilled_at_cap": 0}
 
         if quiet:
@@ -410,6 +411,11 @@ class Backtest:
                 if not fired:
                     self.counters["gate_trigger"] += 1
                     continue
+            if self.min_above_50ma and len(c) >= 50 and c[-1] / c[-50:].mean() - 1 < self.min_above_50ma:
+                # The main exit is a close below the 50-day average: an entry
+                # sitting just above it has no room for an ordinary down day.
+                self.counters["gate_50ma_room"] += 1
+                continue
             if self.min_adx and not adx(h, l, c) >= self.min_adx:
                 self.counters["gate_adx"] += 1
                 continue
@@ -473,7 +479,8 @@ class Backtest:
             "start": equity.index[0].date().isoformat(), "end": equity.index[-1].date().isoformat(),
             "sessions": int(len(equity)), "universe": len(self.universe),
             "w_rs": self.w_rs, "w_thesis": self.w_thesis, "slippage_bps": self.slip * 10_000,
-            "variant": {"entry_trigger": self.entry_trigger, "atr_stop": self.atr_stop, "min_adx": self.min_adx},
+            "variant": {"entry_trigger": self.entry_trigger, "atr_stop": self.atr_stop, "min_adx": self.min_adx,
+                        "min_above_50ma": self.min_above_50ma},
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),
                          "cagr": cagr(equity), "max_drawdown": max_drawdown(equity)},
@@ -580,6 +587,8 @@ def main() -> int:
     parser.add_argument("--atr-stop", type=float, default=0.0,
                         help="experimental: entry stop at this multiple of 14-day ATR instead of a fixed 8%%")
     parser.add_argument("--min-adx", type=float, default=0.0, help="experimental: require ADX(14) at least this")
+    parser.add_argument("--min-above-50ma", type=float, default=0.0,
+                        help="experimental: require the close to be at least this fraction above its 50-day average")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -593,7 +602,7 @@ def main() -> int:
 
     bt = Backtest(universe, prices, args.start, args.end, args.capital,
                   args.w_rs, args.w_thesis, args.slippage_bps, entry_trigger=args.entry_trigger,
-                  atr_stop=args.atr_stop, min_adx=args.min_adx)
+                  atr_stop=args.atr_stop, min_adx=args.min_adx, min_above_50ma=args.min_above_50ma)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

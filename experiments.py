@@ -6,7 +6,7 @@ on fixed rules, without anyone having to decide.
 
 Two kinds of experiment:
 
-  entry_signal   macd_cross, ema21_reclaim, breakout, adx25
+  entry_signal   macd_cross, ema21_reclaim, breakout, adx25, ma50_room
                  Every stock the engine wants to buy is logged with all four
                  signals, bought or not, and scored weekly on what it did
                  over the next 10 sessions versus SPY.
@@ -76,6 +76,8 @@ def default_registry(today: date) -> Dict:
             "ema21_reclaim": exp("entry_signal", "observing", "backtest 100% vs 124% control"),
             "breakout": exp("entry_signal", "observing", "backtest 47% vs 124% control; best per-trade quality"),
             "adx25": exp("entry_signal", "observing", "backtest 55% vs 124% control"),
+            "ma50_room": exp("entry_signal", "observing",
+                             "backtest: with the ATR stop 161% vs 115% control; alone 111%"),
         },
         "changes": [],
     }

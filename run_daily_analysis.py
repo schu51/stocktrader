@@ -44,7 +44,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import reconcile_phantom_trades, safe_to_reconcile
+from exit_logic import (is_long_equity, reconcile_phantom_trades, safe_to_reconcile,
+                        split_positions)
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
 
@@ -227,6 +228,8 @@ class DailyRunner:
         positions = {}
         total_unrealized = 0.0
         for p in raw:
+            if not is_long_equity(p):
+                continue   # shorts and options are not holdings of the long engine
             mv  = float(p["market_value"])
             pnl = float(p["unrealized_pl"])
             total_unrealized += pnl
@@ -1317,6 +1320,9 @@ class DailyRunner:
         if getattr(self.broker, "last_positions_ok", True) is False:
             result["error"] = "positions could not be fetched from the broker"
             return result
+        # The long-stock exit rules must not touch shorts or options
+        positions, unmanaged = split_positions(positions)
+        result["unmanaged"] = [p["symbol"] for p in unmanaged]
         result["positions_checked"] = len(positions)
 
         if not positions:

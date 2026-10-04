@@ -28,6 +28,7 @@ sys.path.insert(0, str(ROOT))
 from macro_thesis import clean_text
 
 PROBATION = 10
+FAIL_DAYS = 30
 MIN_DATA_COVERAGE = 0.80
 MIN_UNIVERSE = 400
 
@@ -124,6 +125,18 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
         out.append("- Closed: none")
     if unfilled:
         out.append(f"- Orders that never filled: {', '.join(sym(t) for t in unfilled)}")
+    # First-month failure rate: closed within 30 days at a loss. Where the strategy loses its money.
+    all_closed = [t for t in trades if t.get("status") == "CLOSED" and t.get("hold_days") is not None
+                  and t.get("pnl_usd") is not None]
+    if all_closed:
+        failed = lambda ts: sum(1 for t in ts if _num(t.get("hold_days")) <= FAIL_DAYS and _num(t.get("pnl_usd")) <= 0)
+        cutoff = (today - timedelta(days=90)).isoformat()
+        recent = [t for t in all_closed if str(t.get("exit_date") or "") > cutoff]
+        line = (f"- First-month failure rate (closed within {FAIL_DAYS} days at a loss): "
+                f"**{failed(all_closed) / len(all_closed):.0%}** of {len(all_closed)} closed trades")
+        if recent:
+            line += f"; last 90 days {failed(recent) / len(recent):.0%} of {len(recent)}"
+        out.append(line + ". Three-year backtest: 59%.")
 
     # ── Learning agent ───────────────────────────────────────────────────────
     out.append("\n## Learning agent")

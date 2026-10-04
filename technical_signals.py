@@ -80,7 +80,8 @@ def stop_distance(atr_fraction: float, multiple: float) -> float:
 
 ATR_STOP_MULTIPLE = 2.5
 ADX_MIN = 25.0
-SIGNAL_NAMES = ("macd_cross", "ema21_reclaim", "breakout", "adx25")
+MA50_ROOM_MIN = 0.06       # close at least this far above the 50-day average
+SIGNAL_NAMES = ("macd_cross", "ema21_reclaim", "breakout", "adx25", "ma50_room")
 
 
 def compute_signals(closes, highs, lows, volumes) -> Dict:
@@ -94,6 +95,9 @@ def compute_signals(closes, highs, lows, volumes) -> Dict:
         "ema21_reclaim": ema_reclaim(c),
         "breakout": breakout(c, v),
         "adx25": bool(strength >= ADX_MIN),
+        # The main exit is a close below the 50-day average; an entry just above
+        # it has no room for an ordinary down day (78% fail within a month).
+        "ma50_room": bool(len(c) >= 50 and c[-1] / c[-50:].mean() - 1 >= MA50_ROOM_MIN),
         "adx": None if np.isnan(strength) else round(strength, 1),
         "atr_pct": None if np.isnan(volatility) else round(volatility, 5),
     }

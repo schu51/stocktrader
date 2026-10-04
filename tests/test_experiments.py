@@ -24,7 +24,7 @@ def test_default_registry_reflects_the_backtest_verdicts():
     reg = _registry()
     states = {k: v["state"] for k, v in reg["experiments"].items()}
     assert states == {"atr_stop": "trial", "macd_cross": "active", "ema21_reclaim": "observing",
-                      "breakout": "observing", "adx25": "observing"}
+                      "breakout": "observing", "adx25": "observing", "ma50_room": "observing"}
 
 
 def _seed(tmp_path, **states):

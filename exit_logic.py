@@ -21,6 +21,30 @@ from typing import Optional, Tuple
 logger = logging.getLogger(__name__)
 
 
+def is_long_equity(pos: dict) -> bool:
+    """
+    True for a long stock position — the only kind the stop tiers, the 50-day
+    exit and the long decision engine understand. A short or an option must
+    never be passed to them: a sell stop would add to a short, and "price
+    below its 50-day average" is the profitable direction for a short or a put.
+    Missing fields mean an older long-stock record; a bad quantity means no.
+    """
+    try:
+        qty = float(pos.get("qty"))
+    except (TypeError, ValueError):
+        return False
+    return (qty > 0
+            and pos.get("side", "long") == "long"
+            and pos.get("asset_class", "us_equity") == "us_equity")
+
+
+def split_positions(positions: list) -> Tuple[list, list]:
+    """(long stock positions, everything else — shorts, options, other assets)."""
+    longs = [p for p in positions or [] if is_long_equity(p)]
+    others = [p for p in positions or [] if not is_long_equity(p)]
+    return longs, others
+
+
 def calculate_stop_price(
     current: float,
     pnl_pct: float,

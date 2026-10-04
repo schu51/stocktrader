@@ -135,6 +135,9 @@ def main():
             "unrealized_pnl":     round(pnl, 2),
             "unrealized_pnl_pct": round(pnl_pct, 2),
             "stop_loss":          stop_map.get(sym),
+            # What the position is: long/short, stock/option
+            "side":               p.get("side", "long"),
+            "asset_class":        p.get("asset_class", "us_equity"),
         }
 
         # Attach cached company metadata (no fresh API calls)

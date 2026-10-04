@@ -39,8 +39,9 @@ def build_protected_set(open_orders: List[Dict]) -> Set[str]:
 def positions_needing_stops(
     positions: List[Dict], protected: Set[str]
 ) -> List[Dict]:
-    """Return positions that have no active stop order."""
-    return [p for p in positions if p["symbol"] not in protected]
+    """Return long stock positions that have no active stop order (shorts and options are left alone)."""
+    from exit_logic import is_long_equity
+    return [p for p in positions if is_long_equity(p) and p["symbol"] not in protected]
 
 
 STOP_DIST_BOUNDS = (0.04, 0.15)   # same clamp as technical_signals.stop_distance

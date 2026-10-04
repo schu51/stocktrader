@@ -121,3 +121,14 @@ def test_open_trade_for_picks_the_latest_open_entry():
               {"symbol": "BBB", "status": "OPEN", "stop_arm": "atr"}]
     assert open_trade_for("AAA", trades)["stop_arm"] == "fixed"
     assert open_trade_for("ZZZ", trades) is None and open_trade_for("AAA", None) is None
+
+
+def test_no_sell_stop_is_placed_on_a_short_or_an_option():
+    # A sell stop on a short would add to it; options do not take stop orders
+    from stop_placement import positions_needing_stops
+    positions = [
+        {"symbol": "AMD", "qty": 7.0, "side": "long", "asset_class": "us_equity"},
+        {"symbol": "XOM", "qty": -10.0, "side": "short", "asset_class": "us_equity"},
+        {"symbol": "AMD261218P00400000", "qty": 2.0, "side": "long", "asset_class": "us_option"},
+    ]
+    assert [p["symbol"] for p in positions_needing_stops(positions, set())] == ["AMD"]

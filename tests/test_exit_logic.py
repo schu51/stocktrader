@@ -71,3 +71,36 @@ def test_no_exit_when_no_sma50():
         pnl_pct=-10.0, sma50=None
     )
     assert should_exit is False
+
+
+# ── the long-stock rules must leave shorts and options alone ─────────────────
+
+def _p(**over):
+    pos = {"symbol": "AMD", "qty": 7.0, "side": "long", "asset_class": "us_equity"}
+    pos.update(over)
+    return pos
+
+
+def test_long_stock_is_managed():
+    from exit_logic import is_long_equity
+    assert is_long_equity(_p())
+    assert is_long_equity({"symbol": "AMD", "qty": "7"})                 # older records without the fields
+
+
+def test_shorts_and_options_are_not_managed_by_long_rules():
+    from exit_logic import is_long_equity
+    assert not is_long_equity(_p(qty=-7.0, side="short"))                # short stock
+    assert not is_long_equity(_p(qty=-7.0))                              # negative quantity alone is enough
+    assert not is_long_equity(_p(symbol="AMD261218P00400000", asset_class="us_option", qty=2.0))   # long put
+    assert not is_long_equity(_p(asset_class="us_option", side="short", qty=-1.0))
+    assert not is_long_equity(_p(asset_class="crypto"))
+    assert not is_long_equity(_p(qty="garbage")) and not is_long_equity(_p(qty=0))
+
+
+def test_split_positions():
+    from exit_logic import split_positions
+    put = _p(symbol="AMD261218P00400000", asset_class="us_option", qty=2.0)
+    short = _p(symbol="XOM", qty=-10.0, side="short")
+    longs, others = split_positions([_p(), put, short])
+    assert [p["symbol"] for p in longs] == ["AMD"]
+    assert [p["symbol"] for p in others] == ["AMD261218P00400000", "XOM"]

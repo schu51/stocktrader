@@ -173,3 +173,12 @@ def test_review_shows_experiment_states_and_this_weeks_changes():
     assert "atr_stop: **trial** — 12 ATR vs 9 fixed closed trades, difference +1.50% per trade" in body
     assert "macd_cross: **dropped** — 44 days of evidence, fired vs not -1.20%" in body
     assert "Changed this week: macd_cross active to dropped (did worse)" in body and "ancient" not in body
+
+
+def test_review_reports_first_month_failure_rate():
+    from weekly_review import build_review
+    trades = [{"symbol": f"S{i}", "status": "CLOSED", "exit_date": "2026-09-20", "entry_date": "2026-09-01",
+               "hold_days": h, "pnl_usd": p, "pnl_pct": p / 10} for i, (h, p) in
+              enumerate([(5, -50), (12, -40), (20, 30), (45, 200), (60, -10)])]
+    _, body = build_review(_data(trades=trades), TODAY)
+    assert "First-month failure rate (closed within 30 days at a loss): **40%** of 5 closed trades" in body

@@ -12,6 +12,9 @@ Two kinds of experiment:
                  signals, bought or not, and scored weekly on what it did
                  over the next 10 sessions versus SPY.
                    observing  measured only, never blocks a buy
+                              (news_positive / social_bullish stay here until a
+                              person promotes them: public text must not start
+                              deciding buys on its own)
                    active     also a gate: only buy when the signal fired
                    adopted    a gate that has proven itself (still monitored)
                    dropped    off for good
@@ -77,10 +80,14 @@ def default_registry(today: date) -> Dict:
             "ema21_reclaim": exp("entry_signal", "observing", "backtest 100% vs 124% control"),
             "breakout": exp("entry_signal", "observing", "backtest 47% vs 124% control; best per-trade quality"),
             "adx25": exp("entry_signal", "observing", "backtest 55% vs 124% control"),
-            "news_positive": exp("entry_signal", "observing",
-                                 "week of Google News headlines scores positive (finance word list); no backtest possible"),
-            "social_bullish": exp("entry_signal", "observing",
-                                  "StockTwits posts tagged Bullish >= 75%; no backtest possible"),
+            # Driven by public posts and headlines, which anyone can write: these are
+            # scored like the others but are never promoted to a gate automatically.
+            "news_positive": dict(exp("entry_signal", "observing",
+                                      "week of Google News headlines scores positive (finance word list); no backtest possible"),
+                                  auto_promote=False),
+            "social_bullish": dict(exp("entry_signal", "observing",
+                                       "StockTwits posts tagged Bullish >= 75%; no backtest possible"),
+                                   auto_promote=False),
             "ma50_room": exp("entry_signal", "observing",
                              "backtest: with the ATR stop 161% vs 115% control; alone 111%"),
         },
@@ -272,13 +279,19 @@ def arm_evidence(trades: List[Dict], started: str) -> Dict:
     return out
 
 
-def _decide_signal(state: str, ev: Dict, slot_free: bool) -> Tuple[str, str]:
+NEEDS_APPROVAL = ("qualifies on the evidence, but it is driven by public posts and headlines: "
+                  "promotion to a gate needs manual approval")
+
+
+def _decide_signal(state: str, ev: Dict, slot_free: bool, auto_promote: bool = True) -> Tuple[str, str]:
     days, mean, t = ev["days"], ev["mean"], ev["t"]
     if state == "dropped" or days < MIN_SIGNAL_DAYS or mean is None:
         return state, ""
     strong = t is not None and mean > 0 and t >= T_ADOPT
     weak = t is not None and mean < 0 and t <= T_DROP
     if state == "observing":
+        if strong and not auto_promote:
+            return state, NEEDS_APPROVAL
         if strong and slot_free:
             return "active", f"signal-fired candidates beat the rest by {mean:+.2%} over {days} days (t = {t:.2f})"
         if strong:
@@ -324,7 +337,9 @@ def evaluate(registry: Dict, rows, trades: List[Dict], today: date) -> Tuple[Dic
             ev = signal_evidence(frame, name, exp["started"])
             slot_free = sum(1 for e in exps.values()
                             if e["kind"] == "entry_signal" and e["state"] in GATING_STATES) < MAX_ACTIVE_GATES
-            new_state, reason = _decide_signal(exp["state"], ev, slot_free)
+            # Only an explicit True allows automatic promotion of an externally driven signal
+            auto = exp.get("auto_promote", True) is True
+            new_state, reason = _decide_signal(exp["state"], ev, slot_free, auto)
         else:
             ev = arm_evidence(trades, exp["started"])
             new_state, reason = _decide_stop_arm(exp["state"], ev)

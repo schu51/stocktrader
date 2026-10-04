@@ -195,6 +195,8 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
                 detail = f"{int(_num(ev.get('days')))} days of evidence"
                 if ev.get("mean") is not None:
                     detail += f", fired vs not {_num(ev.get('mean')):+.2%} over 10 days (t = {_num(ev.get('t')):+.2f})"
+            if "manual approval" in str(ev.get("note") or ""):
+                detail += ". **Qualifies on the evidence; needs your approval to become a gate.**"
             out.append(f"- {_md(name, 30)}: **{_md(exp.get('state'), 20)}** — {detail}")
         changed = [c for c in registry.get("changes") or [] if isinstance(c, dict) and str(c.get("date") or "") > week_ago]
         for c in changed:

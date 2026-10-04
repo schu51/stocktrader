@@ -302,3 +302,36 @@ def test_sentiment_report_measures_whether_bad_news_names_did_worse():
     assert report["news_score"]["ic"] > 0.8
     assert report["negative_news_vs_rest"]["mean"] < 0       # negative-news names underperformed
     assert ex.sentiment_report([], {})["rows"] == 0
+
+
+def test_externally_driven_signals_are_never_promoted_automatically():
+    import experiments as ex
+    reg = _registry(macd_cross="dropped")                       # the gate slot is free
+    assert reg["experiments"]["news_positive"]["auto_promote"] is False
+    assert reg["experiments"]["social_bullish"]["auto_promote"] is False
+    reg, changes = ex.evaluate(reg, {"news_positive": _rows(60, 0.05, "news_positive"),
+                                     "social_bullish": _rows(60, 0.05, "social_bullish")}, [], TODAY)
+    assert reg["experiments"]["news_positive"]["state"] == "observing"
+    assert reg["experiments"]["social_bullish"]["state"] == "observing"
+    assert changes == []
+    assert "manual approval" in reg["experiments"]["news_positive"]["evidence"]["note"]
+
+
+def test_externally_driven_signals_are_still_dropped_automatically():
+    import experiments as ex
+    reg, changes = ex.evaluate(_registry(), {"news_positive": _rows(ex.MAX_SIGNAL_DAYS + 5, 0.0, "news_positive")}, [], TODAY)
+    assert reg["experiments"]["news_positive"]["state"] == "dropped"
+
+
+def test_a_malformed_auto_promote_value_does_not_enable_promotion():
+    import experiments as ex
+    reg = _registry(macd_cross="dropped")
+    reg["experiments"]["news_positive"]["auto_promote"] = "true"      # not the boolean True
+    reg, _ = ex.evaluate(reg, {"news_positive": _rows(60, 0.05, "news_positive")}, [], TODAY)
+    assert reg["experiments"]["news_positive"]["state"] == "observing"
+
+
+def test_technical_signals_still_promote_automatically():
+    import experiments as ex
+    reg, _ = ex.evaluate(_registry(macd_cross="dropped"), {"breakout": _rows(60, 0.03)}, [], TODAY)
+    assert reg["experiments"]["breakout"]["state"] == "active"

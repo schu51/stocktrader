@@ -30,6 +30,13 @@ jobs:
         # If screener fails, trading run falls back to static DEFAULT_UNIVERSE.
         continue-on-error: true
 
+      - name: Scan news and social sentiment
+        run: python news_sentiment.py --scan
+        # Free sources (Google News RSS, StockTwits), no API key. Writes
+        # docs/data/sentiment_log.json for the trade run to read and the weekly
+        # job to score. Observation only: if it fails, trading is unaffected.
+        continue-on-error: true
+
       - name: Run analysis and execute trades
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}

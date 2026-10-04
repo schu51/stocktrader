@@ -24,7 +24,8 @@ def test_default_registry_reflects_the_backtest_verdicts():
     reg = _registry()
     states = {k: v["state"] for k, v in reg["experiments"].items()}
     assert states == {"atr_stop": "trial", "macd_cross": "active", "ema21_reclaim": "observing",
-                      "breakout": "observing", "adx25": "observing", "ma50_room": "observing"}
+                      "breakout": "observing", "adx25": "observing", "ma50_room": "observing",
+                      "news_positive": "observing", "social_bullish": "observing"}
 
 
 def _seed(tmp_path, **states):
@@ -249,3 +250,55 @@ def test_trades_before_the_trial_started_or_without_an_arm_are_ignored():
     untagged = [{"status": "CLOSED", "entry_date": "2026-10-10", "pnl_pct": -50.0}] * 40
     reg, changes = ex.evaluate(_registry(), {}, old + untagged, TODAY)
     assert reg["experiments"]["atr_stop"]["state"] == "trial" and changes == []
+
+
+# ── news and social sentiment ────────────────────────────────────────────────
+
+def test_hook_attaches_todays_logged_sentiment(tmp_path):
+    import experiments as ex
+    bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    sent = tmp_path / "sentiment_log.json"
+    sent.write_text(json.dumps([{"date": "2026-10-03", "symbol": "AMD", "news_positive": True, "news_negative": False,
+                                 "social_bullish": False, "news_score": 0.4, "st_bull_ratio": 0.5}]))
+    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed(tmp_path), log_path=tmp_path / "log.json",
+                           sentiment_path=sent)
+    assert (out["signals"]["news_positive"], out["signals"]["social_bullish"]) == (True, False)
+    assert out["signals"]["news_score"] == 0.4
+    assert out["blocked_by"] == "macd_cross"                 # observing signals never gate
+
+
+def test_missing_or_malformed_sentiment_is_unknown_not_false(tmp_path):
+    import experiments as ex
+    bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    sent = tmp_path / "sentiment_log.json"
+    for content in ("[]", "{not json", json.dumps([{"date": "2026-10-03", "symbol": "AMD", "news_positive": "yes",
+                                                   "news_score": "high"}])):
+        sent.write_text(content)
+        out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed(tmp_path), log_path=tmp_path / "log.json",
+                               sentiment_path=sent)
+        assert out["signals"]["news_positive"] is None and out["signals"]["news_score"] is None
+        assert out.get("error") is None                      # a missing scan must not stop trading
+
+
+def test_scored_log_has_a_column_for_each_registered_signal():
+    import experiments as ex
+    log = [{"date": "2026-10-05", "symbol": "AMD", "signals": {"news_positive": True, "macd_cross": False}}]
+    frame = ex.scored_log(log, ["macd_cross", "news_positive"], {("2026-10-05", "AMD"): 0.03})
+    assert frame.iloc[0].to_dict() == {"date": "2026-10-05", "symbol": "AMD", "excess_10d": 0.03,
+                                       "macd_cross": False, "news_positive": True}
+
+
+def test_sentiment_report_measures_whether_bad_news_names_did_worse():
+    import experiments as ex
+    rows, excess = [], {}
+    for d in pd.bdate_range("2026-10-05", periods=30):
+        for i in range(8):
+            day, sym = d.date().isoformat(), f"S{i}"
+            rows.append({"date": day, "symbol": sym, "news_score": (i - 3.5) / 4, "st_bull_ratio": 0.5 + i / 20,
+                         "news_negative": i < 2})
+            excess[(day, sym)] = 0.01 * (i - 3.5) + 0.001 * ((d.day + i) % 3)
+    report = ex.sentiment_report(rows, excess)
+    assert report["days"] == 30 and report["enough_history"]
+    assert report["news_score"]["ic"] > 0.8
+    assert report["negative_news_vs_rest"]["mean"] < 0       # negative-news names underperformed
+    assert ex.sentiment_report([], {})["rows"] == 0

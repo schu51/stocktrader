@@ -14,7 +14,7 @@
         "difference": null,
         "t": null
       },
-      "last_evaluated": "2026-10-03"
+      "last_evaluated": "2026-10-04"
     },
     "macd_cross": {
       "kind": "entry_signal",
@@ -27,7 +27,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-03"
+      "last_evaluated": "2026-10-04"
     },
     "ema21_reclaim": {
       "kind": "entry_signal",
@@ -40,7 +40,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-03"
+      "last_evaluated": "2026-10-04"
     },
     "breakout": {
       "kind": "entry_signal",
@@ -53,7 +53,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-03"
+      "last_evaluated": "2026-10-04"
     },
     "adx25": {
       "kind": "entry_signal",
@@ -66,17 +66,54 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-03"
+      "last_evaluated": "2026-10-04"
     },
     "ma50_room": {
       "kind": "entry_signal",
       "state": "observing",
       "started": "2026-10-04",
       "params": {},
-      "note": "backtest: with the ATR stop 161% vs 115% control; alone 111%"
+      "note": "backtest: with the ATR stop 161% vs 115% control; alone 111%",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-04"
+    },
+    "news_positive": {
+      "kind": "entry_signal",
+      "state": "observing",
+      "started": "2026-10-04",
+      "params": {},
+      "note": "week of Google News headlines scores positive (finance word list); no backtest possible",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-04"
+    },
+    "social_bullish": {
+      "kind": "entry_signal",
+      "state": "observing",
+      "started": "2026-10-04",
+      "params": {},
+      "note": "StockTwits posts tagged Bullish >= 75%; no backtest possible",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-04"
     }
   },
   "changes": [],
-  "generated_at": "2026-10-03T15:45:17.263392",
-  "signals_logged": 0
+  "generated_at": "2026-10-04T08:12:14.473383",
+  "signals_logged": 0,
+  "sentiment": {
+    "rows": 18,
+    "days": 1,
+    "horizon": 10
+  }
 }

@@ -182,3 +182,15 @@ def test_review_reports_first_month_failure_rate():
               enumerate([(5, -50), (12, -40), (20, 30), (45, 200), (60, -10)])]
     _, body = build_review(_data(trades=trades), TODAY)
     assert "First-month failure rate (closed within 30 days at a loss): **40%** of 5 closed trades" in body
+
+
+def test_review_reports_sentiment_evidence():
+    from weekly_review import build_review
+    registry = {"signals_logged": 10, "experiments": {"news_positive": {"kind": "entry_signal", "state": "observing"}},
+                "sentiment": {"rows": 900, "days": 30, "enough_history": True,
+                              "news_score": {"days": 28, "ic": 0.041, "t": 1.2},
+                              "negative_news_vs_rest": {"days": 25, "mean": -0.013, "t": -1.6}}}
+    _, body = build_review(_data(experiments=registry), TODAY)
+    assert "900 stock-days scanned over 30 days" in body
+    assert "news score vs next 10 days: rank correlation +0.041 (t = +1.20, 28 days)" in body
+    assert "stocks with negative news vs the rest: -1.30% over 10 days" in body

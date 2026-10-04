@@ -6,7 +6,8 @@ on fixed rules, without anyone having to decide.
 
 Two kinds of experiment:
 
-  entry_signal   macd_cross, ema21_reclaim, breakout, adx25, ma50_room
+  entry_signal   macd_cross, ema21_reclaim, breakout, adx25, ma50_room,
+                 news_positive, social_bullish (news_sentiment.py)
                  Every stock the engine wants to buy is logged with all four
                  signals, bought or not, and scored weekly on what it did
                  over the next 10 sessions versus SPY.
@@ -76,6 +77,10 @@ def default_registry(today: date) -> Dict:
             "ema21_reclaim": exp("entry_signal", "observing", "backtest 100% vs 124% control"),
             "breakout": exp("entry_signal", "observing", "backtest 47% vs 124% control; best per-trade quality"),
             "adx25": exp("entry_signal", "observing", "backtest 55% vs 124% control"),
+            "news_positive": exp("entry_signal", "observing",
+                                 "week of Google News headlines scores positive (finance word list); no backtest possible"),
+            "social_bullish": exp("entry_signal", "observing",
+                                  "StockTwits posts tagged Bullish >= 75%; no backtest possible"),
             "ma50_room": exp("entry_signal", "observing",
                              "backtest: with the ATR stop 161% vs 115% control; alone 111%"),
         },
@@ -146,8 +151,32 @@ def entry_gate(signals: Dict, registry: Dict) -> Optional[str]:
     return None
 
 
+def _sentiment_signals(symbol: str, day: date, sentiment_path: Optional[Path]) -> Dict:
+    """
+    Today's news and social signals for a symbol, read from the log the daily
+    scan wrote before the trade run. Missing or unreadable means None (unknown),
+    never a guess.
+    """
+    blank = {"news_positive": None, "news_negative": None, "social_bullish": None,
+             "news_score": None, "st_bull_ratio": None}
+    try:
+        from news_sentiment import SENTIMENT_LOG, lookup
+        row = lookup(symbol, day, sentiment_path or SENTIMENT_LOG)
+        if not row:
+            return blank
+        out = dict(blank)
+        for key in ("news_positive", "news_negative", "social_bullish"):
+            out[key] = row.get(key) if isinstance(row.get(key), bool) else None
+        for key in ("news_score", "st_bull_ratio"):
+            out[key] = float(row[key]) if isinstance(row.get(key), (int, float)) and not isinstance(row.get(key), bool) else None
+        return out
+    except Exception as e:
+        logger.warning(f"Sentiment lookup failed for {symbol}: {e}")
+        return blank
+
+
 def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGISTRY_FILE,
-                  log_path: Path = SIGNAL_LOG_FILE) -> Dict:
+                  log_path: Path = SIGNAL_LOG_FILE, sentiment_path: Optional[Path] = None) -> Dict:
     """
     Live hook, called for every stock the decision engine wants to buy.
     Logs its signals and returns {"signals", "stop_arm", "stop_dist", "blocked_by"}.
@@ -160,6 +189,7 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
         from technical_signals import compute_signals, stop_distance
         signals = compute_signals([b.close for b in price_bars], [b.high for b in price_bars],
                                   [b.low for b in price_bars], [b.volume for b in price_bars])
+        signals.update(_sentiment_signals(symbol, day, sentiment_path))
         registry = load_registry(registry_path, day)
         arm = stop_arm(f"{symbol}:{day.isoformat()}", registry)
         multiple = (registry["experiments"].get("atr_stop", {}).get("params") or {}).get("multiple", 2.5)
@@ -316,30 +346,70 @@ def evaluate(registry: Dict, rows, trades: List[Dict], today: date) -> Tuple[Dic
 # Weekly job
 # ---------------------------------------------------------------------------
 
-def scored_log(log: List[Dict]):
-    """The signal log as a DataFrame with each signal as a column and forward excess returns attached."""
+def _forward_excess(pairs: List[Tuple[str, str]]) -> Dict[Tuple[str, str], Optional[float]]:
+    """{(date, symbol): excess return over the next HORIZON sessions vs SPY} for the given pairs."""
     import pandas as pd
-    from candidate_outcomes import BENCHMARK, forward_return
-    from technical_signals import SIGNAL_NAMES
-    if not log:
-        return pd.DataFrame()
     import yfinance as yf
-    symbols = sorted({r["symbol"] for r in log})
-    start = (pd.Timestamp(min(r["date"] for r in log)) - pd.Timedelta(days=5)).strftime("%Y-%m-%d")
+    from candidate_outcomes import BENCHMARK, forward_return
+    if not pairs:
+        return {}
+    symbols = sorted({sym for _, sym in pairs})
+    start = (pd.Timestamp(min(d for d, _ in pairs)) - pd.Timedelta(days=5)).strftime("%Y-%m-%d")
     raw = yf.download(symbols + [BENCHMARK], start=start, auto_adjust=True, progress=False, threads=True)
     opens, closes = raw["Open"], raw["Close"]
+    out = {}
+    for d, sym in set(pairs):
+        day = date.fromisoformat(d)
+        own = forward_return(opens[sym].dropna(), closes[sym].dropna(), day, HORIZON) if sym in closes.columns else None
+        bench = forward_return(opens[BENCHMARK].dropna(), closes[BENCHMARK].dropna(), day, HORIZON)
+        out[(d, sym)] = own - bench if own is not None and bench is not None else None
+    return out
+
+
+def scored_log(log: List[Dict], names: List[str], excess: Dict):
+    """The buy-signal log as a DataFrame: one column per entry signal, plus the forward excess return."""
+    import pandas as pd
     rows = []
     for r in log:
-        sym, day = r["symbol"], date.fromisoformat(r["date"])
-        own = bench = None
-        if sym in closes.columns:
-            own = forward_return(opens[sym].dropna(), closes[sym].dropna(), day, HORIZON)
-        bench = forward_return(opens[BENCHMARK].dropna(), closes[BENCHMARK].dropna(), day, HORIZON)
-        row = {"date": r["date"], "symbol": sym,
-               f"excess_{HORIZON}d": own - bench if own is not None and bench is not None else None}
-        row.update({name: (r.get("signals") or {}).get(name) for name in SIGNAL_NAMES})
+        row = {"date": r["date"], "symbol": r["symbol"], f"excess_{HORIZON}d": excess.get((r["date"], r["symbol"]))}
+        row.update({name: (r.get("signals") or {}).get(name) for name in names})
         rows.append(row)
     return pd.DataFrame(rows)
+
+
+MIN_SENTIMENT_DAYS = 20
+
+
+def sentiment_report(rows: List[Dict], excess: Dict) -> Dict:
+    """
+    Does sentiment predict what a stock does next, across every stock scanned
+    (not only buy signals)? Rank correlation per day for the two scores, and
+    how stocks with negative news did against the rest — the evidence a
+    bearish (short / put) signal would need.
+    """
+    import pandas as pd
+    from candidate_outcomes import daily_ic, summarize
+    col = f"excess_{HORIZON}d"
+    frame = pd.DataFrame([{**r, col: excess.get((r.get("date"), r.get("symbol")))} for r in rows])
+    out = {"rows": int(len(frame)), "days": int(frame["date"].nunique()) if len(frame) else 0, "horizon": HORIZON}
+    if not len(frame) or col not in frame or frame[col].notna().sum() == 0:
+        return out
+    for score in ("news_score", "st_bull_ratio"):
+        if score in frame:
+            s = summarize(daily_ic(frame, score, col), HORIZON)
+            out[score] = {"days": s["n"], "ic": None if s["n"] < 2 else s["mean"], "t": None if s["n"] < 2 else s["t"]}
+    if "news_negative" in frame:
+        known = frame.dropna(subset=["news_negative", col])
+        diffs = []
+        for _, day in known.groupby("date"):
+            bad, rest = day[day["news_negative"].astype(bool)], day[~day["news_negative"].astype(bool)]
+            if len(bad) and len(rest):
+                diffs.append(float(bad[col].mean() - rest[col].mean()))
+        if diffs:
+            mean, t = _mean_t(diffs, overlap=HORIZON)
+            out["negative_news_vs_rest"] = {"days": len(diffs), "mean": mean, "t": None if math.isnan(t) else t}
+    out["enough_history"] = out["days"] >= MIN_SENTIMENT_DAYS
+    return out
 
 
 def main() -> int:
@@ -355,7 +425,21 @@ def main() -> int:
     except Exception:
         trades = []
 
-    registry, changes = evaluate(registry, scored_log(log), trades, today)
+    # Experiments added to the defaults after the registry was created start now, as observing
+    for name, exp in default_registry(today)["experiments"].items():
+        registry["experiments"].setdefault(name, exp)
+
+    try:
+        from news_sentiment import load_log as load_sentiment_log
+        sentiment_rows = load_sentiment_log()
+    except Exception:
+        sentiment_rows = []
+    excess = _forward_excess([(r["date"], r["symbol"]) for r in log]
+                             + [(r["date"], r["symbol"]) for r in sentiment_rows if r.get("date") and r.get("symbol")])
+    names = [n for n, e in registry["experiments"].items() if e["kind"] == "entry_signal"]
+
+    registry, changes = evaluate(registry, scored_log(log, names, excess), trades, today)
+    registry["sentiment"] = sentiment_report(sentiment_rows, excess)
     registry["generated_at"] = datetime.now().isoformat()
     registry["signals_logged"] = len(log)
     _write_json(REGISTRY_FILE, registry)

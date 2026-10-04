@@ -201,6 +201,20 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
             out.append(f"- Changed this week: {_md(c.get('experiment'), 30)} {_md(c.get('from'), 20)} to "
                        f"{_md(c.get('to'), 20)} ({_md(c.get('reason'))})")
         out.append(f"- Buy signals logged so far: {int(_num(registry.get('signals_logged')))}")
+        sent = registry.get("sentiment") if isinstance(registry.get("sentiment"), dict) else {}
+        if sent.get("rows"):
+            out.append(f"- News and social sentiment: {int(_num(sent.get('rows')))} stock-days scanned over "
+                       f"{int(_num(sent.get('days')))} days"
+                       + ("" if sent.get("enough_history") else " (too little history to judge yet)"))
+            for key, label in (("news_score", "news score"), ("st_bull_ratio", "StockTwits bullish share")):
+                ev = sent.get(key) if isinstance(sent.get(key), dict) else {}
+                if ev.get("ic") is not None:
+                    out.append(f"  - {label} vs next 10 days: rank correlation {_num(ev.get('ic')):+.3f} "
+                               f"(t = {_num(ev.get('t')):+.2f}, {int(_num(ev.get('days')))} days)")
+            neg = sent.get("negative_news_vs_rest") if isinstance(sent.get("negative_news_vs_rest"), dict) else {}
+            if neg.get("mean") is not None:
+                out.append(f"  - stocks with negative news vs the rest: {_num(neg.get('mean')):+.2%} over 10 days "
+                           f"(t = {_num(neg.get('t')):+.2f}, {int(_num(neg.get('days')))} days) — the case for a bearish signal")
     else:
         out.append("- No experiment registry found.")
 

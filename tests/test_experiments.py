@@ -25,7 +25,8 @@ def test_default_registry_reflects_the_backtest_verdicts():
     states = {k: v["state"] for k, v in reg["experiments"].items()}
     assert states == {"atr_stop": "trial", "macd_cross": "active", "ema21_reclaim": "observing",
                       "breakout": "observing", "adx25": "observing", "ma50_room": "observing",
-                      "news_positive": "observing", "social_bullish": "observing"}
+                      "news_positive": "observing", "social_bullish": "observing",
+                      "news_negative": "observing", "social_bearish": "observing", "news_veto": "trial"}
 
 
 def _seed(tmp_path, **states):
@@ -131,8 +132,8 @@ def test_on_buy_signal_never_raises_and_fails_closed_when_it_breaks(tmp_path):
     import experiments as ex
     out = ex.on_buy_signal("AMD", None, TODAY, registry_path=_seed(tmp_path), log_path=tmp_path / "log.json")
     assert out["error"]                                     # reported, so the run can raise an alert
-    assert {k: out[k] for k in ("signals", "stop_arm", "stop_dist", "blocked_by")} == \
-        {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": ex.HOOK_FAILED}
+    assert {k: out[k] for k in ("signals", "stop_arm", "stop_dist", "news_arm", "blocked_by")} == \
+        {"signals": None, "stop_arm": "fixed", "stop_dist": None, "news_arm": "control", "blocked_by": ex.HOOK_FAILED}
 
 
 def test_gate_still_applies_when_the_signal_log_cannot_be_written(tmp_path):
@@ -285,7 +286,7 @@ def test_scored_log_has_a_column_for_each_registered_signal():
     log = [{"date": "2026-10-05", "symbol": "AMD", "signals": {"news_positive": True, "macd_cross": False}}]
     frame = ex.scored_log(log, ["macd_cross", "news_positive"], {("2026-10-05", "AMD"): 0.03})
     assert frame.iloc[0].to_dict() == {"date": "2026-10-05", "symbol": "AMD", "excess_10d": 0.03,
-                                       "macd_cross": False, "news_positive": True}
+                                       "news_veto": None, "macd_cross": False, "news_positive": True}
 
 
 def test_sentiment_report_measures_whether_bad_news_names_did_worse():
@@ -297,53 +298,49 @@ def test_sentiment_report_measures_whether_bad_news_names_did_worse():
             rows.append({"date": day, "symbol": sym, "news_score": (i - 3.5) / 4, "st_bull_ratio": 0.5 + i / 20,
                          "news_negative": i < 2})
             excess[(day, sym)] = 0.01 * (i - 3.5) + 0.001 * ((d.day + i) % 3)
-    report = ex.sentiment_report(rows, excess)
+    report = ex.sentiment_report(ex.sentiment_frame(rows, excess))
     assert report["days"] == 30 and report["enough_history"]
     assert report["news_score"]["ic"] > 0.8
-    assert report["negative_news_vs_rest"]["mean"] < 0       # negative-news names underperformed
-    assert ex.sentiment_report([], {})["rows"] == 0
+    assert report["news_negative_vs_rest"]["mean"] < 0       # negative-news names underperformed
+    assert abs(report["weights"]["news_score"] + report["weights"]["st_bull_ratio"] - 1) < 0.01
+    empty = ex.sentiment_report(ex.sentiment_frame([], {}))
+    assert empty["rows"] == 0 and empty["weights"]["news_score"] == 0.5
 
 
-def test_externally_driven_signals_are_never_promoted_automatically():
+def test_sentiment_signals_promote_themselves_but_need_more_evidence():
+    # No manual approval: the system decides. Public text gets a higher bar than price data.
     import experiments as ex
-    reg = _registry(macd_cross="dropped")                       # the gate slot is free
-    assert reg["experiments"]["news_positive"]["auto_promote"] is False
-    assert reg["experiments"]["social_bullish"]["auto_promote"] is False
-    reg, changes = ex.evaluate(reg, {"news_positive": _rows(60, 0.05, "news_positive"),
-                                     "social_bullish": _rows(60, 0.05, "social_bullish")}, [], TODAY)
-    assert reg["experiments"]["news_positive"]["state"] == "observing"
-    assert reg["experiments"]["social_bullish"]["state"] == "observing"
-    assert changes == []
-    assert "manual approval" in reg["experiments"]["news_positive"]["evidence"]["note"]
+    assert ex.promotion_bar("breakout", {}) == (ex.MIN_SIGNAL_DAYS, ex.T_ADOPT)
+    assert ex.promotion_bar("news_positive", {}) == (ex.EXTERNAL_MIN_DAYS, ex.EXTERNAL_T_ADOPT)
+    assert ex.EXTERNAL_MIN_DAYS > ex.MIN_SIGNAL_DAYS and ex.EXTERNAL_T_ADOPT > ex.T_ADOPT
+
+    early = _registry(macd_cross="dropped")
+    early, changes = ex.evaluate(early, {"news_positive": _rows(45, 0.05, "news_positive")}, [], TODAY)
+    assert early["experiments"]["news_positive"]["state"] == "observing" and changes == []   # strong, but too soon
+
+    later = _registry(macd_cross="dropped")
+    later, changes = ex.evaluate(later, {"news_positive": _rows(65, 0.05, "news_positive")}, [], TODAY)
+    assert later["experiments"]["news_positive"]["state"] == "active"
+    assert changes[0]["to"] == "active"
 
 
-def test_externally_driven_signals_are_still_dropped_automatically():
+def test_sentiment_signals_are_still_dropped_automatically():
     import experiments as ex
-    reg, changes = ex.evaluate(_registry(), {"news_positive": _rows(ex.MAX_SIGNAL_DAYS + 5, 0.0, "news_positive")}, [], TODAY)
+    reg, _ = ex.evaluate(_registry(), {"news_positive": _rows(ex.MAX_SIGNAL_DAYS + 5, 0.0, "news_positive")}, [], TODAY)
     assert reg["experiments"]["news_positive"]["state"] == "dropped"
 
 
-def test_the_registry_cannot_grant_automatic_promotion():
-    # The rule lives in code. A missing, true or malformed flag in the data file changes nothing.
+def test_the_registry_can_switch_promotion_off_but_never_on():
     import experiments as ex
-    for tamper in ("delete", True, "true", 1):
-        reg = _registry(macd_cross="dropped")
-        if tamper == "delete":
-            del reg["experiments"]["news_positive"]["auto_promote"]
-        else:
-            reg["experiments"]["news_positive"]["auto_promote"] = tamper
-        reg, changes = ex.evaluate(reg, {"news_positive": _rows(60, 0.05, "news_positive")}, [], TODAY)
-        assert reg["experiments"]["news_positive"]["state"] == "observing", tamper
-        assert changes == []
-
-
-def test_an_unknown_signal_is_never_promoted_automatically():
-    import experiments as ex
+    assert ex.promotion_bar("news_positive", {"auto_promote": False}) is None
+    assert ex.promotion_bar("breakout", {"auto_promote": False}) is None
+    for granted in (True, "true", 1):
+        assert ex.promotion_bar("mystery", {"auto_promote": granted}) is None      # unknown name: never
     reg = _registry(macd_cross="dropped")
-    reg["experiments"]["mystery"] = {"kind": "entry_signal", "state": "observing", "started": "2026-10-03"}
-    reg, _ = ex.evaluate(reg, {"mystery": _rows(60, 0.05, "mystery")}, [], TODAY)
+    reg["experiments"]["mystery"] = {"kind": "entry_signal", "state": "observing", "started": "2026-10-03",
+                                     "auto_promote": True}
+    reg, _ = ex.evaluate(reg, {"mystery": _rows(80, 0.05, "mystery")}, [], TODAY)
     assert reg["experiments"]["mystery"]["state"] == "observing"
-    assert not ex.may_auto_promote("mystery", {}) and not ex.may_auto_promote("news_positive", {"auto_promote": True})
 
 
 def test_the_registry_can_still_restrict_a_technical_signal():
@@ -358,3 +355,105 @@ def test_technical_signals_still_promote_automatically():
     import experiments as ex
     reg, _ = ex.evaluate(_registry(macd_cross="dropped"), {"breakout": _rows(60, 0.03)}, [], TODAY)
     assert reg["experiments"]["breakout"]["state"] == "active"
+
+
+# ── bearish signals (the put case) ───────────────────────────────────────────
+
+def test_bearish_signal_is_confirmed_when_flagged_stocks_lag():
+    import experiments as ex
+    reg, changes = ex.evaluate(_registry(), {}, [], TODAY,
+                               sentiment_rows={"news_negative": _rows(60, -0.03, "news_negative")})
+    assert reg["experiments"]["news_negative"]["state"] == "confirmed"
+    assert "lagged" in changes[0]["reason"]
+
+
+def test_bearish_signal_is_dropped_when_flagged_stocks_do_not_lag():
+    import experiments as ex
+    reg, _ = ex.evaluate(_registry(), {}, [], TODAY,
+                         sentiment_rows={"social_bearish": _rows(ex.MAX_SIGNAL_DAYS + 5, 0.0, "social_bearish")})
+    assert reg["experiments"]["social_bearish"]["state"] == "dropped"
+    reg, _ = ex.evaluate(_registry(news_negative="confirmed"), {}, [], TODAY,
+                         sentiment_rows={"news_negative": _rows(60, 0.03, "news_negative")})
+    assert reg["experiments"]["news_negative"]["state"] == "dropped"         # confirmed, then stopped working
+
+
+def test_bearish_signal_never_gates_a_buy():
+    import experiments as ex
+    reg = _registry(macd_cross="dropped", news_negative="confirmed")
+    assert ex.entry_gate({"news_negative": True}, reg) is None
+
+
+# ── news A/B on real buys ────────────────────────────────────────────────────
+
+def test_news_arm_splits_evenly_and_independently_of_the_stop_arm():
+    import experiments as ex
+    reg = _registry()
+    keys = [f"SYM{i}:2026-10-05" for i in range(600)]
+    news = [ex.news_arm(k, reg) == "news" for k in keys]
+    atr = [ex.stop_arm(k, reg) == "atr" for k in keys]
+    assert 0.42 < sum(news) / 600 < 0.58
+    both = sum(1 for n, a in zip(news, atr) if n and a) / 600
+    assert 0.18 < both < 0.32                                    # ~25% if the two splits are unrelated
+    assert {ex.news_arm(k, _registry(news_veto="dropped")) for k in keys} == {"control"}
+    assert {ex.news_arm(k, _registry(news_veto="adopted")) for k in keys} == {"news"}
+
+
+def test_veto_blocks_only_in_the_news_arm_and_only_on_bad_sentiment(tmp_path):
+    import experiments as ex
+    bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
+    sent = tmp_path / "sentiment_log.json"
+    path = _seed(tmp_path, macd_cross="dropped", news_veto="adopted")        # everything in the news arm, no other gate
+    sent.write_text(json.dumps([{"date": "2026-10-03", "symbol": "BAD", "news_negative": True, "social_bearish": False},
+                                {"date": "2026-10-03", "symbol": "OK", "news_negative": False, "social_bearish": False}]))
+    args = dict(registry_path=path, log_path=tmp_path / "log.json", sentiment_path=sent)
+    assert ex.on_buy_signal("BAD", bars, TODAY, **args)["blocked_by"] == "news_veto"
+    assert ex.on_buy_signal("OK", bars, TODAY, **args)["blocked_by"] is None
+    assert ex.on_buy_signal("UNSEEN", bars, TODAY, **args)["blocked_by"] is None     # no data is not a veto
+    log = {r["symbol"]: r for r in json.loads((tmp_path / "log.json").read_text())}
+    assert log["BAD"]["news_veto"] is True and log["OK"]["news_veto"] is False       # logged either way, for the shadow A/B
+    control = _seed(tmp_path, macd_cross="dropped", news_veto="dropped")
+    out = ex.on_buy_signal("BAD", bars, TODAY, registry_path=control, log_path=tmp_path / "log.json", sentiment_path=sent)
+    assert out["blocked_by"] is None and out["news_arm"] == "control"
+
+
+def _news_trades(n, news_mean, control_mean):
+    rng = np.random.default_rng(5)
+    return [{"status": "CLOSED", "news_arm": arm, "entry_date": "2026-10-10", "pnl_pct": float(mean + rng.normal(0, 4))}
+            for arm, mean in (("news", news_mean), ("control", control_mean)) for _ in range(n)]
+
+
+def test_news_arm_is_adopted_or_dropped_on_closed_trades():
+    import experiments as ex
+    reg, _ = ex.evaluate(_registry(), {}, _news_trades(5, 10, -10), TODAY)
+    assert reg["experiments"]["news_veto"]["state"] == "trial"                       # too few trades
+    reg, changes = ex.evaluate(_registry(), {}, _news_trades(30, 6, 0), TODAY)
+    assert reg["experiments"]["news_veto"]["state"] == "adopted"
+    reg, _ = ex.evaluate(_registry(), {}, _news_trades(30, -4, 2), TODAY)
+    assert reg["experiments"]["news_veto"]["state"] == "dropped"
+
+
+def test_shadow_ab_compares_technical_only_with_technical_plus_news():
+    import experiments as ex
+    rows = []
+    for d in pd.bdate_range("2026-10-05", periods=30):
+        for i in range(8):
+            vetoed = i < 2
+            rows.append({"date": d.date().isoformat(), "symbol": f"S{i}", "news_veto": vetoed,
+                         "excess_10d": (-0.04 if vetoed else 0.01) + 0.001 * ((d.day + i) % 3)})
+    ab = ex.news_ab_shadow(pd.DataFrame(rows))
+    assert ab["signals"] == 240 and ab["vetoed_share"] == 0.25
+    assert ab["technical_plus_news"] > ab["technical_only"]              # dropping the vetoed names helped
+    assert ab["gain_from_news"] > 0 and ab["t"] > 2
+    assert ex.news_ab_shadow(pd.DataFrame())["signals"] == 0
+
+
+def test_source_weights_follow_the_evidence():
+    import experiments as ex
+    report = {"news_score": {"days": 40, "t": 3.0}, "st_bull_ratio": {"days": 40, "t": 1.0}}
+    assert ex.source_weights(report) == {"basis": "evidence", "news_score": 0.75, "st_bull_ratio": 0.25}
+    report = {"news_score": {"days": 40, "t": 2.0}, "st_bull_ratio": {"days": 40, "t": -1.5}}
+    assert ex.source_weights(report)["st_bull_ratio"] == 0.0             # a source that points the wrong way earns nothing
+    thin = {"news_score": {"days": 5, "t": 3.0}, "st_bull_ratio": {"days": 5, "t": 1.0}}
+    assert ex.source_weights(thin)["basis"].startswith("equal")
+    undefined = {"news_score": {"days": 40, "t": float("nan")}, "st_bull_ratio": {"days": 40, "t": 1.0}}
+    assert ex.source_weights(undefined) == {"basis": "equal (not enough evidence yet)", "news_score": 0.5, "st_bull_ratio": 0.5}

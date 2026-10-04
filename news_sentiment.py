@@ -52,6 +52,7 @@ NEWS_POSITIVE = 0.10
 NEWS_NEGATIVE = -0.10
 SOCIAL_MIN_TAGGED = 8
 SOCIAL_BULLISH = 0.75
+SOCIAL_BEARISH = 0.60          # StockTwits tags skew bullish (median share ~0.88), so 60% is already a sour crowd
 
 # Finance word lists (in the spirit of Loughran-McDonald: words that are
 # positive or negative in a financial headline, not in everyday English).
@@ -126,13 +127,14 @@ def to_signals(s: Dict) -> Dict:
     Yes/no signals for the experiments. None means "not enough data to say",
     which is different from False.
     """
-    out = {"news_positive": None, "news_negative": None, "social_bullish": None}
+    out = {"news_positive": None, "news_negative": None, "social_bullish": None, "social_bearish": None}
     if s.get("news_score") is not None and (s.get("news_scored") or 0) >= NEWS_MIN_HEADLINES:
         out["news_positive"] = s["news_score"] >= NEWS_POSITIVE
         out["news_negative"] = s["news_score"] <= NEWS_NEGATIVE
     tagged = (s.get("st_bullish") or 0) + (s.get("st_bearish") or 0)
     if s.get("st_bull_ratio") is not None and tagged >= SOCIAL_MIN_TAGGED:
         out["social_bullish"] = s["st_bull_ratio"] >= SOCIAL_BULLISH
+        out["social_bearish"] = s["st_bull_ratio"] <= SOCIAL_BEARISH
     return out
 
 

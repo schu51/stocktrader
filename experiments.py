@@ -12,13 +12,23 @@ Two kinds of experiment:
                  signals, bought or not, and scored weekly on what it did
                  over the next 10 sessions versus SPY.
                    observing  measured only, never blocks a buy
-                              (news_positive / social_bullish stay here until a
-                              person promotes them: public text must not start
-                              deciding buys on its own)
                    active     also a gate: only buy when the signal fired
                    adopted    a gate that has proven itself (still monitored)
                    dropped    off for good
                  At most one entry gate is on at a time.
+
+                 The system promotes and drops these itself. Sentiment signals
+                 need more evidence than price signals (60 days, t >= 2.5).
+
+  bearish_signal news_negative, social_bearish
+                 Scored on every stock the daily scan covers. "confirmed" means
+                 the stocks it flagged went on to lag: the evidence for puts.
+                 It does not trade.
+
+  news_arm       news_veto
+                 A/B test of technical rules with and without news: half of
+                 buy signals are skipped when news is negative or social is
+                 bearish. Sentiment can only block a buy, never cause one.
 
   stop_arm       atr_stop
                  A/B test on real positions: new buys are split between a
@@ -63,7 +73,13 @@ MAX_ACTIVE_GATES = 1
 LOG_KEEP_DAYS = 400
 
 GATING_STATES = ("active", "adopted")
-STATES = ("observing", "active", "adopted", "trial", "dropped")
+STATES = ("observing", "active", "adopted", "trial", "confirmed", "dropped")
+KINDS = ("entry_signal", "stop_arm", "bearish_signal", "news_arm")
+
+# Sentiment is written by the public, so it gets a higher bar than price-derived
+# signals before it may act, and it can only ever block a buy, never cause one.
+EXTERNAL_MIN_DAYS = 60
+EXTERNAL_T_ADOPT = 2.5
 HOOK_FAILED = "experiment_error"     # blocked_by value when the gate could not be evaluated
 
 
@@ -80,14 +96,16 @@ def default_registry(today: date) -> Dict:
             "ema21_reclaim": exp("entry_signal", "observing", "backtest 100% vs 124% control"),
             "breakout": exp("entry_signal", "observing", "backtest 47% vs 124% control; best per-trade quality"),
             "adx25": exp("entry_signal", "observing", "backtest 55% vs 124% control"),
-            # Driven by public posts and headlines, which anyone can write: these are
-            # scored like the others but are never promoted to a gate automatically.
-            "news_positive": dict(exp("entry_signal", "observing",
-                                      "week of Google News headlines scores positive (finance word list); no backtest possible"),
-                                  auto_promote=False),
-            "social_bullish": dict(exp("entry_signal", "observing",
-                                       "StockTwits posts tagged Bullish >= 75%; no backtest possible"),
-                                   auto_promote=False),
+            # Sentiment (news_sentiment.py). No backtest is possible for these; they are
+            # judged only on what happens after they are logged.
+            "news_positive": exp("entry_signal", "observing", "week of Google News headlines scores positive"),
+            "social_bullish": exp("entry_signal", "observing", "StockTwits posts tagged Bullish >= 75%"),
+            "news_negative": exp("bearish_signal", "observing",
+                                 "week of headlines scores negative; confirmed if those stocks then lag (the put case)"),
+            "social_bearish": exp("bearish_signal", "observing",
+                                  "StockTwits Bullish share <= 60%; confirmed if those stocks then lag"),
+            "news_veto": exp("news_arm", "trial",
+                             "A/B on real buys: half are skipped when news is negative or social is bearish"),
             "ma50_room": exp("entry_signal", "observing",
                              "backtest: with the ATR stop 161% vs 115% control; alone 111%"),
         },
@@ -117,7 +135,7 @@ def load_registry(path: Path = REGISTRY_FILE, today: Optional[date] = None, crea
         raise RegistryError(f"{path.name} is not valid JSON: {e}")
     exps = reg.get("experiments") if isinstance(reg, dict) else None
     if not isinstance(exps, dict) or not exps or not all(
-            isinstance(e, dict) and e.get("kind") in ("entry_signal", "stop_arm")
+            isinstance(e, dict) and e.get("kind") in KINDS
             and e.get("state") in STATES and e.get("started") for e in exps.values()):
         raise RegistryError(f"{path.name} does not hold a valid experiment registry")
     return reg
@@ -145,6 +163,21 @@ def stop_arm(trade_key: str, registry: Dict) -> str:
     return "fixed"
 
 
+def news_arm(trade_key: str, registry: Dict) -> str:
+    """Which side of the news A/B a buy signal is on: 'news' (veto applies) or 'control'."""
+    state = (registry["experiments"].get("news_veto") or {}).get("state")
+    if state == "adopted":
+        return "news"
+    if state == "trial":   # salted, so it is independent of the stop-arm split
+        return "news" if int(hashlib.sha256(f"news|{trade_key}".encode()).hexdigest(), 16) % 2 == 0 else "control"
+    return "control"
+
+
+def news_veto(signals: Dict) -> bool:
+    """True when sentiment says do not buy: negative news or bearish social. Unknown is not a veto."""
+    return signals.get("news_negative") is True or signals.get("social_bearish") is True
+
+
 def entry_gate(signals: Dict, registry: Dict) -> Optional[str]:
     """
     Name of a gating experiment this candidate does not pass, or None.
@@ -164,7 +197,7 @@ def _sentiment_signals(symbol: str, day: date, sentiment_path: Optional[Path]) -
     scan wrote before the trade run. Missing or unreadable means None (unknown),
     never a guess.
     """
-    blank = {"news_positive": None, "news_negative": None, "social_bullish": None,
+    blank = {"news_positive": None, "news_negative": None, "social_bullish": None, "social_bearish": None,
              "news_score": None, "st_bull_ratio": None}
     try:
         from news_sentiment import SENTIMENT_LOG, lookup
@@ -172,7 +205,7 @@ def _sentiment_signals(symbol: str, day: date, sentiment_path: Optional[Path]) -
         if not row:
             return blank
         out = dict(blank)
-        for key in ("news_positive", "news_negative", "social_bullish"):
+        for key in ("news_positive", "news_negative", "social_bullish", "social_bearish"):
             out[key] = row.get(key) if isinstance(row.get(key), bool) else None
         for key in ("news_score", "st_bull_ratio"):
             out[key] = float(row[key]) if isinstance(row.get(key), (int, float)) and not isinstance(row.get(key), bool) else None
@@ -204,14 +237,18 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
         if dist is None:
             arm = "fixed"
         blocked_by = entry_gate(signals, registry)
+        side = news_arm(f"{symbol}:{day.isoformat()}", registry)
+        veto = news_veto(signals)
+        if blocked_by is None and side == "news" and veto:
+            blocked_by = "news_veto"
     except Exception as e:
         # Fail closed: if the gate cannot be evaluated the stock is not bought.
         # The caller raises an alert, so this is visible the same day.
         logger.error(f"Experiment hook failed for {symbol}: {e} — not buying")
-        return {"signals": None, "stop_arm": "fixed", "stop_dist": None, "blocked_by": HOOK_FAILED,
-                "error": str(e)}
+        return {"signals": None, "stop_arm": "fixed", "stop_dist": None, "news_arm": "control",
+                "blocked_by": HOOK_FAILED, "error": str(e)}
 
-    out = {"signals": signals, "stop_arm": arm, "stop_dist": dist, "blocked_by": blocked_by}
+    out = {"signals": signals, "stop_arm": arm, "stop_dist": dist, "news_arm": side, "blocked_by": blocked_by}
     # Logging is separate: a log that cannot be written must not switch the gate off.
     try:
         try:
@@ -222,7 +259,7 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
         log = [r for r in log if r.get("date", "") >= cutoff
                and not (r.get("date") == day.isoformat() and r.get("symbol") == symbol)]
         log.append({"date": day.isoformat(), "symbol": symbol, "price": float(price_bars[-1].close),
-                    "signals": signals, "blocked_by": blocked_by})
+                    "signals": signals, "blocked_by": blocked_by, "news_arm": side, "news_veto": veto})
         _write_json(log_path, log)
     except Exception as e:
         logger.warning(f"Could not write the signal log for {symbol}: {e}")
@@ -279,34 +316,35 @@ def arm_evidence(trades: List[Dict], started: str) -> Dict:
     return out
 
 
-# Signals computed from price data only. Fixed in code: the registry is a data
-# file and must not be able to grant this.
-AUTO_PROMOTABLE = frozenset({"macd_cross", "ema21_reclaim", "breakout", "adx25", "ma50_room"})
+PRICE_SIGNALS = frozenset({"macd_cross", "ema21_reclaim", "breakout", "adx25", "ma50_room"})
+SENTIMENT_SIGNALS = frozenset({"news_positive", "social_bullish"})
 
 
-def may_auto_promote(name: str, exp: Dict) -> bool:
+def promotion_bar(name: str, exp: Dict) -> Optional[Tuple[int, float]]:
     """
-    Fail closed. A signal may be promoted to a gate without a person only if it
-    is on the price-derived list above. Anything else — the sentiment signals,
-    or a name this code does not know — never is, whatever the registry says.
-    The registry can only restrict further (auto_promote: false).
+    (days of evidence, t-statistic) a signal needs before the system promotes
+    it to a gate on its own, or None if it never may. Decided in code: the
+    registry can only switch promotion off (auto_promote: false), not on.
+    Price-derived signals use the standard bar, sentiment signals a higher
+    one, and a name this code does not know never promotes.
     """
-    return name in AUTO_PROMOTABLE and exp.get("auto_promote") is not False
+    if exp.get("auto_promote") is False:
+        return None
+    if name in PRICE_SIGNALS:
+        return MIN_SIGNAL_DAYS, T_ADOPT
+    if name in SENTIMENT_SIGNALS:
+        return EXTERNAL_MIN_DAYS, EXTERNAL_T_ADOPT
+    return None
 
 
-NEEDS_APPROVAL = ("qualifies on the evidence, but it is driven by public posts and headlines: "
-                  "promotion to a gate needs manual approval")
-
-
-def _decide_signal(state: str, ev: Dict, slot_free: bool, auto_promote: bool = True) -> Tuple[str, str]:
+def _decide_signal(state: str, ev: Dict, slot_free: bool,
+                   bar: Optional[Tuple[int, float]] = (MIN_SIGNAL_DAYS, T_ADOPT)) -> Tuple[str, str]:
     days, mean, t = ev["days"], ev["mean"], ev["t"]
     if state == "dropped" or days < MIN_SIGNAL_DAYS or mean is None:
         return state, ""
-    strong = t is not None and mean > 0 and t >= T_ADOPT
+    strong = bar is not None and t is not None and mean > 0 and t >= bar[1] and days >= bar[0]
     weak = t is not None and mean < 0 and t <= T_DROP
     if state == "observing":
-        if strong and not auto_promote:
-            return state, NEEDS_APPROVAL
         if strong and slot_free:
             return "active", f"signal-fired candidates beat the rest by {mean:+.2%} over {days} days (t = {t:.2f})"
         if strong:
@@ -324,35 +362,85 @@ def _decide_signal(state: str, ev: Dict, slot_free: bool, auto_promote: bool = T
     return state, ""
 
 
-def _decide_stop_arm(state: str, ev: Dict) -> Tuple[str, str]:
-    n = min(ev["n_atr"], ev["n_fixed"])
-    if state != "trial" or n < MIN_ARM_TRADES or ev["t"] is None:
+def _decide_bearish(state: str, ev: Dict) -> Tuple[str, str]:
+    """
+    A bearish signal is right when the stocks it flags then do WORSE than the
+    rest. confirmed = evidence a put or short on its flags would have been on
+    the right side. It does not trade by itself.
+    """
+    days, mean, t = ev["days"], ev["mean"], ev["t"]
+    if state == "dropped" or days < MIN_SIGNAL_DAYS or mean is None or t is None:
         return state, ""
-    diff, t = ev["difference"], ev["t"]
-    if diff > 0 and t >= T_ADOPT:
-        return "adopted", f"ATR-stop trades beat fixed-stop trades by {diff:+.2f}% per trade on {n}+ each (t = {t:.2f})"
-    if diff < 0 and t <= T_DROP:
-        return "dropped", f"ATR-stop trades did worse by {diff:+.2f}% per trade on {n}+ each (t = {t:.2f})"
-    if n >= MAX_ARM_TRADES:
-        return "dropped", f"did not beat the fixed stop after {n} trades per arm ({diff:+.2f}%)"
+    if state == "observing":
+        if mean < 0 and t <= -T_ADOPT:
+            return "confirmed", f"flagged stocks lagged the rest by {mean:+.2%} over {days} days (t = {t:.2f})"
+        if days >= MAX_SIGNAL_DAYS:
+            return "dropped", f"flagged stocks did not lag in {days} days ({mean:+.2%}, t = {t:.2f})"
+    elif state == "confirmed" and mean > 0 and t >= -T_DROP:
+        return "dropped", f"flagged stocks went on to beat the rest by {mean:+.2%} (t = {t:.2f})"
     return state, ""
 
 
-def evaluate(registry: Dict, rows, trades: List[Dict], today: date) -> Tuple[Dict, List[Dict]]:
+def _decide_arm(state: str, n: int, diff: Optional[float], t: Optional[float], label: str) -> Tuple[str, str]:
+    """Shared A/B rule: adopt a clear winner, drop a clear loser, end at the cap."""
+    if state != "trial" or n < MIN_ARM_TRADES or t is None:
+        return state, ""
+    if diff > 0 and t >= T_ADOPT:
+        return "adopted", f"{label} trades beat the control by {diff:+.2f}% per trade on {n}+ each (t = {t:.2f})"
+    if diff < 0 and t <= T_DROP:
+        return "dropped", f"{label} trades did worse by {diff:+.2f}% per trade on {n}+ each (t = {t:.2f})"
+    if n >= MAX_ARM_TRADES:
+        return "dropped", f"did not beat the control after {n} trades per arm ({diff:+.2f}%)"
+    return state, ""
+
+
+def _decide_stop_arm(state: str, ev: Dict) -> Tuple[str, str]:
+    state, reason = _decide_arm(state, min(ev["n_atr"], ev["n_fixed"]), ev["difference"], ev["t"], "ATR-stop")
+    return state, reason.replace("the control", "the fixed stop")
+
+
+def news_arm_evidence(trades: List[Dict], started: str) -> Dict:
+    """Closed trades opened since the A/B began: news-veto arm vs control."""
+    arms = {"news": [], "control": []}
+    for t in trades:
+        if (t.get("status") == "CLOSED" and t.get("news_arm") in arms and t.get("pnl_pct") is not None
+                and str(t.get("entry_date") or "") >= started):
+            arms[t["news_arm"]].append(float(t["pnl_pct"]))
+    out = {"n_news": len(arms["news"]), "n_control": len(arms["control"]), "difference": None, "t": None}
+    if min(out["n_news"], out["n_control"]) >= 2:
+        (mn, _), (mc, _) = _mean_t(arms["news"]), _mean_t(arms["control"])
+        var = lambda xs, m: sum((x - m) ** 2 for x in xs) / (len(xs) - 1)
+        se = math.sqrt(var(arms["news"], mn) / len(arms["news"]) + var(arms["control"], mc) / len(arms["control"]))
+        out.update(mean_news=mn, mean_control=mc, difference=mn - mc, t=(mn - mc) / se if se > 0 else None)
+    return out
+
+
+def evaluate(registry: Dict, rows, trades: List[Dict], today: date, sentiment_rows=None) -> Tuple[Dict, List[Dict]]:
     """
     Score every experiment and apply the transition rules.
     `rows`: DataFrame of logged buy signals with forward returns (or a dict of
-    such frames keyed by signal name). Returns (registry, changes made).
+    such frames keyed by signal name). `sentiment_rows`: the same for every
+    stock the daily sentiment scan covered, used for the bearish signals.
+    Returns (registry, changes made).
     """
     changes = []
     exps = registry["experiments"]
     for name, exp in exps.items():
-        frame = rows.get(name) if isinstance(rows, dict) else rows
-        if exp["kind"] == "entry_signal":
+        kind = exp["kind"]
+        if kind == "entry_signal":
+            frame = rows.get(name) if isinstance(rows, dict) else rows
             ev = signal_evidence(frame, name, exp["started"])
             slot_free = sum(1 for e in exps.values()
                             if e["kind"] == "entry_signal" and e["state"] in GATING_STATES) < MAX_ACTIVE_GATES
-            new_state, reason = _decide_signal(exp["state"], ev, slot_free, may_auto_promote(name, exp))
+            new_state, reason = _decide_signal(exp["state"], ev, slot_free, promotion_bar(name, exp))
+        elif kind == "bearish_signal":
+            frame = sentiment_rows.get(name) if isinstance(sentiment_rows, dict) else sentiment_rows
+            ev = signal_evidence(frame, name, exp["started"])
+            new_state, reason = _decide_bearish(exp["state"], ev)
+        elif kind == "news_arm":
+            ev = news_arm_evidence(trades, exp["started"])
+            new_state, reason = _decide_arm(exp["state"], min(ev["n_news"], ev["n_control"]),
+                                            ev["difference"], ev["t"], "News-veto")
         else:
             ev = arm_evidence(trades, exp["started"])
             new_state, reason = _decide_stop_arm(exp["state"], ev)
@@ -399,44 +487,98 @@ def scored_log(log: List[Dict], names: List[str], excess: Dict):
     import pandas as pd
     rows = []
     for r in log:
-        row = {"date": r["date"], "symbol": r["symbol"], f"excess_{HORIZON}d": excess.get((r["date"], r["symbol"]))}
+        row = {"date": r["date"], "symbol": r["symbol"], f"excess_{HORIZON}d": excess.get((r["date"], r["symbol"])),
+               "news_veto": r.get("news_veto")}
         row.update({name: (r.get("signals") or {}).get(name) for name in names})
         rows.append(row)
     return pd.DataFrame(rows)
 
 
 MIN_SENTIMENT_DAYS = 20
+SENTIMENT_SCORES = ("news_score", "st_bull_ratio")      # one per source: news, social
+BEARISH_FLAGS = ("news_negative", "social_bearish")
 
 
-def sentiment_report(rows: List[Dict], excess: Dict) -> Dict:
+def sentiment_frame(rows: List[Dict], excess: Dict):
+    """The daily sentiment scan as a DataFrame with each stock's forward excess return."""
+    import pandas as pd
+    col = f"excess_{HORIZON}d"
+    return pd.DataFrame([{**r, col: excess.get((r.get("date"), r.get("symbol")))} for r in rows])
+
+
+def source_weights(report: Dict) -> Dict:
+    """
+    How much each source has earned: weights proportional to the t-statistic of
+    its rank correlation with what stocks did next, floored at zero. Equal
+    weights until there is enough history, or if neither source has shown
+    anything.
+    """
+    earned = {}
+    for score in SENTIMENT_SCORES:
+        ev = report.get(score) or {}
+        t = ev.get("t")
+        enough = ((ev.get("days") or 0) >= MIN_SENTIMENT_DAYS
+                  and isinstance(t, (int, float)) and math.isfinite(t))
+        earned[score] = max(float(t), 0.0) if enough else None
+    if any(v is None for v in earned.values()) or sum(earned.values()) == 0:
+        return {"basis": "equal (not enough evidence yet)", **{k: round(1 / len(earned), 3) for k in earned}}
+    total = sum(earned.values())
+    return {"basis": "evidence", **{k: round(v / total, 3) for k, v in earned.items()}}
+
+
+def sentiment_report(frame) -> Dict:
     """
     Does sentiment predict what a stock does next, across every stock scanned
-    (not only buy signals)? Rank correlation per day for the two scores, and
-    how stocks with negative news did against the rest — the evidence a
-    bearish (short / put) signal would need.
+    (not only buy signals)? Per source: the rank correlation of its score with
+    the next HORIZON sessions. Per bearish flag: how flagged stocks did against
+    the rest, which is the evidence a put or short would need.
     """
-    import pandas as pd
     from candidate_outcomes import daily_ic, summarize
     col = f"excess_{HORIZON}d"
-    frame = pd.DataFrame([{**r, col: excess.get((r.get("date"), r.get("symbol")))} for r in rows])
     out = {"rows": int(len(frame)), "days": int(frame["date"].nunique()) if len(frame) else 0, "horizon": HORIZON}
     if not len(frame) or col not in frame or frame[col].notna().sum() == 0:
+        out["weights"] = source_weights(out)
         return out
-    for score in ("news_score", "st_bull_ratio"):
+    for score in SENTIMENT_SCORES:
         if score in frame:
-            s = summarize(daily_ic(frame, score, col), HORIZON)
-            out[score] = {"days": s["n"], "ic": None if s["n"] < 2 else s["mean"], "t": None if s["n"] < 2 else s["t"]}
-    if "news_negative" in frame:
-        known = frame.dropna(subset=["news_negative", col])
-        diffs = []
-        for _, day in known.groupby("date"):
-            bad, rest = day[day["news_negative"].astype(bool)], day[~day["news_negative"].astype(bool)]
-            if len(bad) and len(rest):
-                diffs.append(float(bad[col].mean() - rest[col].mean()))
-        if diffs:
-            mean, t = _mean_t(diffs, overlap=HORIZON)
-            out["negative_news_vs_rest"] = {"days": len(diffs), "mean": mean, "t": None if math.isnan(t) else t}
+            st = summarize(daily_ic(frame, score, col), HORIZON)
+            out[score] = {"days": st["n"], "ic": None if st["n"] < 2 else st["mean"], "t": None if st["n"] < 2 else st["t"]}
+    for flag in BEARISH_FLAGS:
+        ev = signal_evidence(frame, flag, "")
+        if ev["days"]:
+            out[f"{flag}_vs_rest"] = ev
     out["enough_history"] = out["days"] >= MIN_SENTIMENT_DAYS
+    out["weights"] = source_weights(out)
+    return out
+
+
+def news_ab_shadow(frame) -> Dict:
+    """
+    The A/B answered on every buy signal, whether or not it was bought:
+    'technical only' is every stock that passed the technical rules;
+    'technical + news' drops the ones sentiment would have vetoed.
+    Reports each group's average forward excess return and the per-day gap.
+    """
+    col = f"excess_{HORIZON}d"
+    out = {"days": 0, "signals": 0}
+    if frame is None or not len(frame) or "news_veto" not in frame or col not in frame:
+        return out
+    known = frame.dropna(subset=[col, "news_veto"])
+    if not len(known):
+        return out
+    vetoed = known["news_veto"].astype(bool)
+    out.update(signals=int(len(known)), vetoed_share=float(vetoed.mean()),
+               technical_only=float(known[col].mean()),
+               technical_plus_news=float(known.loc[~vetoed, col].mean()) if (~vetoed).any() else None)
+    diffs = []
+    for _, day in known.groupby("date"):
+        keep = day[~day["news_veto"].astype(bool)]
+        if len(keep) and len(keep) < len(day):
+            diffs.append(float(keep[col].mean() - day[col].mean()))
+    out["days"] = int(known["date"].nunique())
+    if diffs:
+        mean, t = _mean_t(diffs, overlap=HORIZON)
+        out.update(days_with_a_veto=len(diffs), gain_from_news=mean, t=None if math.isnan(t) else t)
     return out
 
 
@@ -466,8 +608,11 @@ def main() -> int:
                              + [(r["date"], r["symbol"]) for r in sentiment_rows if r.get("date") and r.get("symbol")])
     names = [n for n, e in registry["experiments"].items() if e["kind"] == "entry_signal"]
 
-    registry, changes = evaluate(registry, scored_log(log, names, excess), trades, today)
-    registry["sentiment"] = sentiment_report(sentiment_rows, excess)
+    buy_signals = scored_log(log, names, excess)
+    scanned = sentiment_frame(sentiment_rows, excess)
+    registry, changes = evaluate(registry, buy_signals, trades, today, sentiment_rows=scanned)
+    registry["sentiment"] = sentiment_report(scanned)
+    registry["news_ab"] = news_ab_shadow(buy_signals)
     registry["generated_at"] = datetime.now().isoformat()
     registry["signals_logged"] = len(log)
     _write_json(REGISTRY_FILE, registry)

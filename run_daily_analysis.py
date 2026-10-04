@@ -553,9 +553,12 @@ class DailyRunner:
                         decision_dict["signals"]   = exp["signals"]
                         decision_dict["stop_arm"]  = exp["stop_arm"]
                         decision_dict["stop_dist"] = exp["stop_dist"]
+                        decision_dict["news_arm"]  = exp.get("news_arm")
                         if exp["blocked_by"]:
                             reason = (f"experiment gate could not be evaluated: {exp.get('error')}"
                                       if exp.get("error") and exp["signals"] is None
+                                      else "news A/B: negative news or bearish social sentiment"
+                                      if exp["blocked_by"] == "news_veto"
                                       else f"experiment gate: {exp['blocked_by']} has not fired")
                             holds.append({"symbol": symbol, "reason": reason})
                             logger.info(f"Skipping {symbol}: {reason}")
@@ -1236,6 +1239,7 @@ class DailyRunner:
                     "signals":        (experiment or {}).get("signals"),
                     "stop_arm":       (experiment or {}).get("stop_arm"),
                     "stop_dist":      (experiment or {}).get("stop_dist"),
+                    "news_arm":       (experiment or {}).get("news_arm"),
                     "exit_date":   None,
                     "exit_price":  None,
                     "exit_reason": None,
@@ -1872,7 +1876,7 @@ class DailyRunner:
                         weight_version=self._active_weight_version(),
                         order_id=result.get("order_id"),
                         experiment={"signals": opp.get("signals"), "stop_arm": opp.get("stop_arm"),
-                                    "stop_dist": opp.get("stop_dist")},
+                                    "stop_dist": opp.get("stop_dist"), "news_arm": opp.get("news_arm")},
                     )
                 else:
                     logger.warning(f"Order not submitted for {symbol}: {result.get('reason')}")

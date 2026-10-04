@@ -56,11 +56,11 @@ def test_stocktwits_tags_and_ratio():
 def test_signals_need_enough_data_and_none_is_not_false():
     from news_sentiment import to_signals
     thin = to_signals({"news_score": 0.9, "news_scored": 2, "st_bull_ratio": 1.0, "st_bullish": 3, "st_bearish": 0})
-    assert thin == {"news_positive": None, "news_negative": None, "social_bullish": None}
+    assert thin == {"news_positive": None, "news_negative": None, "social_bullish": None, "social_bearish": None}
     good = to_signals({"news_score": 0.4, "news_scored": 9, "st_bull_ratio": 0.9, "st_bullish": 9, "st_bearish": 1})
-    assert good == {"news_positive": True, "news_negative": False, "social_bullish": True}
+    assert good == {"news_positive": True, "news_negative": False, "social_bullish": True, "social_bearish": False}
     bad = to_signals({"news_score": -0.5, "news_scored": 9, "st_bull_ratio": 0.4, "st_bullish": 4, "st_bearish": 6})
-    assert bad == {"news_positive": False, "news_negative": True, "social_bullish": False}
+    assert bad == {"news_positive": False, "news_negative": True, "social_bullish": False, "social_bearish": True}
 
 
 # ── feed parsing ─────────────────────────────────────────────────────────────

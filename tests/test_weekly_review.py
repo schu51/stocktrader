@@ -189,8 +189,20 @@ def test_review_reports_sentiment_evidence():
     registry = {"signals_logged": 10, "experiments": {"news_positive": {"kind": "entry_signal", "state": "observing"}},
                 "sentiment": {"rows": 900, "days": 30, "enough_history": True,
                               "news_score": {"days": 28, "ic": 0.041, "t": 1.2},
-                              "negative_news_vs_rest": {"days": 25, "mean": -0.013, "t": -1.6}}}
+                              "news_negative_vs_rest": {"days": 25, "mean": -0.013, "t": -1.6},
+                              "social_bearish_vs_rest": {"days": 22, "mean": -0.004, "t": -0.5},
+                              "weights": {"basis": "evidence", "news_score": 0.75, "st_bull_ratio": 0.25}},
+                "news_ab": {"signals": 180, "vetoed_share": 0.08, "technical_only": 0.004,
+                            "technical_plus_news": 0.007, "gain_from_news": 0.003, "t": 1.1}}
+    registry["experiments"].update({
+        "news_negative": {"kind": "bearish_signal", "state": "observing", "evidence": {"days": 25, "mean": -0.013, "t": -1.6}},
+        "news_veto": {"kind": "news_arm", "state": "trial", "evidence": {"n_news": 6, "n_control": 7, "difference": 0.9, "t": 0.4}}})
     _, body = build_review(_data(experiments=registry), TODAY)
     assert "900 stock-days scanned over 30 days" in body
     assert "news score vs next 10 days: rank correlation +0.041 (t = +1.20, 28 days)" in body
     assert "stocks with negative news vs the rest: -1.30% over 10 days" in body
+    assert "stocks with bearish social vs the rest: -0.40% over 10 days" in body
+    assert "source weights (evidence): news 75%, StockTwits 25%" in body
+    assert "news_negative: **observing** — 25 days of evidence, flagged vs rest -1.30%" in body
+    assert "news_veto: **trial** — 6 with news vs 7 without closed trades, difference +0.90% per trade" in body
+    assert "technical only +0.40% over 10 days vs SPY, technical + news +0.70%" in body

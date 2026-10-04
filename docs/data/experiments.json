@@ -92,8 +92,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04",
-      "auto_promote": false
+      "last_evaluated": "2026-10-04"
     },
     "social_bullish": {
       "kind": "entry_signal",
@@ -106,16 +105,64 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04",
-      "auto_promote": false
+      "last_evaluated": "2026-10-04"
+    },
+    "news_negative": {
+      "kind": "bearish_signal",
+      "state": "observing",
+      "started": "2026-10-04",
+      "params": {},
+      "note": "week of headlines scores negative; confirmed if those stocks then lag (the put case)",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-04"
+    },
+    "social_bearish": {
+      "kind": "bearish_signal",
+      "state": "observing",
+      "started": "2026-10-04",
+      "params": {},
+      "note": "StockTwits Bullish share <= 60%; confirmed if those stocks then lag",
+      "evidence": {
+        "days": 0,
+        "mean": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-04"
+    },
+    "news_veto": {
+      "kind": "news_arm",
+      "state": "trial",
+      "started": "2026-10-04",
+      "params": {},
+      "note": "A/B on real buys: half are skipped when news is negative or social is bearish",
+      "evidence": {
+        "n_news": 0,
+        "n_control": 0,
+        "difference": null,
+        "t": null
+      },
+      "last_evaluated": "2026-10-04"
     }
   },
   "changes": [],
-  "generated_at": "2026-10-04T08:12:14.473383",
+  "generated_at": "2026-10-04T08:25:54.400857",
   "signals_logged": 0,
   "sentiment": {
     "rows": 18,
     "days": 1,
-    "horizon": 10
+    "horizon": 10,
+    "weights": {
+      "basis": "equal (not enough evidence yet)",
+      "news_score": 0.5,
+      "st_bull_ratio": 0.5
+    }
+  },
+  "news_ab": {
+    "days": 0,
+    "signals": 0
   }
 }

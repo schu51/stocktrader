@@ -187,16 +187,18 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
             if not isinstance(exp, dict):
                 continue
             ev = exp.get("evidence") if isinstance(exp.get("evidence"), dict) else {}
-            if exp.get("kind") == "stop_arm":
-                detail = f"{int(_num(ev.get('n_atr')))} ATR vs {int(_num(ev.get('n_fixed')))} fixed closed trades"
+            kind = exp.get("kind")
+            if kind in ("stop_arm", "news_arm"):
+                a_key, b_key, a_label, b_label = (("n_atr", "n_fixed", "ATR", "fixed") if kind == "stop_arm"
+                                                  else ("n_news", "n_control", "with news", "without"))
+                detail = (f"{int(_num(ev.get(a_key)))} {a_label} vs {int(_num(ev.get(b_key)))} {b_label} closed trades")
                 if ev.get("difference") is not None:
                     detail += f", difference {_num(ev.get('difference')):+.2f}% per trade (t = {_num(ev.get('t')):+.2f})"
             else:
                 detail = f"{int(_num(ev.get('days')))} days of evidence"
                 if ev.get("mean") is not None:
-                    detail += f", fired vs not {_num(ev.get('mean')):+.2%} over 10 days (t = {_num(ev.get('t')):+.2f})"
-            if "manual approval" in str(ev.get("note") or ""):
-                detail += ". **Qualifies on the evidence; needs your approval to become a gate.**"
+                    what = "flagged vs rest" if kind == "bearish_signal" else "fired vs not"
+                    detail += f", {what} {_num(ev.get('mean')):+.2%} over 10 days (t = {_num(ev.get('t')):+.2f})"
             out.append(f"- {_md(name, 30)}: **{_md(exp.get('state'), 20)}** — {detail}")
         changed = [c for c in registry.get("changes") or [] if isinstance(c, dict) and str(c.get("date") or "") > week_ago]
         for c in changed:
@@ -213,10 +215,25 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
                 if ev.get("ic") is not None:
                     out.append(f"  - {label} vs next 10 days: rank correlation {_num(ev.get('ic')):+.3f} "
                                f"(t = {_num(ev.get('t')):+.2f}, {int(_num(ev.get('days')))} days)")
-            neg = sent.get("negative_news_vs_rest") if isinstance(sent.get("negative_news_vs_rest"), dict) else {}
-            if neg.get("mean") is not None:
-                out.append(f"  - stocks with negative news vs the rest: {_num(neg.get('mean')):+.2%} over 10 days "
-                           f"(t = {_num(neg.get('t')):+.2f}, {int(_num(neg.get('days')))} days) — the case for a bearish signal")
+            for flag, label in (("news_negative_vs_rest", "negative news"), ("social_bearish_vs_rest", "bearish social")):
+                neg = sent.get(flag) if isinstance(sent.get(flag), dict) else {}
+                if neg.get("mean") is not None:
+                    out.append(f"  - stocks with {label} vs the rest: {_num(neg.get('mean')):+.2%} over 10 days "
+                               f"(t = {_num(neg.get('t')):+.2f}, {int(_num(neg.get('days')))} days) — the case for puts")
+            weights = sent.get("weights") if isinstance(sent.get("weights"), dict) else {}
+            if weights:
+                out.append(f"  - source weights ({_md(weights.get('basis'), 40)}): news {_num(weights.get('news_score')):.0%}, "
+                           f"StockTwits {_num(weights.get('st_bull_ratio')):.0%}")
+        ab = registry.get("news_ab") if isinstance(registry.get("news_ab"), dict) else {}
+        if ab.get("signals"):
+            line = (f"- A/B on every buy signal ({int(_num(ab.get('signals')))} so far, "
+                    f"{_num(ab.get('vetoed_share')):.0%} vetoed by news): technical only "
+                    f"{_num(ab.get('technical_only')):+.2%} over 10 days vs SPY")
+            if ab.get("technical_plus_news") is not None:
+                line += f", technical + news {_num(ab.get('technical_plus_news')):+.2%}"
+            if ab.get("gain_from_news") is not None:
+                line += f" (gain from news {_num(ab.get('gain_from_news')):+.2%} per day with a veto, t = {_num(ab.get('t')):+.2f})"
+            out.append(line)
     else:
         out.append("- No experiment registry found.")
 

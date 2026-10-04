@@ -19,7 +19,7 @@ import argparse
 import json
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 ET = ZoneInfo("America/New_York")
@@ -119,6 +119,43 @@ def dispatch(due: list, since: datetime, ref: str,
     return failed
 
 
+CATCHUP_SLOTS = 3    # a once-a-day job is still started up to 45 minutes after a missed trigger
+
+
+def catch_up(now: datetime) -> list:
+    """
+    Once-a-day workflows whose slot fell in the last CATCHUP_SLOTS slots, as
+    (workflow, start of the slot it was due in), oldest first.
+
+    One trigger from cron-job.org can time out. Without this, a timeout at
+    10:00 would skip the whole day's trade run. Repeating jobs are left out:
+    they come round again on their own. Whether a job already ran is decided
+    by dispatch(), which checks for a run since the job's own slot.
+    """
+    once_a_day = {workflow for workflow, _, _, _, every in TIMETABLE if every is None}
+    local = now.astimezone(ET)
+    current = set(due_workflows(now))
+    missed, seen = [], set()
+    for k in range(CATCHUP_SLOTS, 0, -1):
+        earlier = local - timedelta(minutes=SLOT_MINUTES * k)
+        if earlier.date() != local.date():
+            continue
+        for workflow in due_workflows(earlier):
+            if workflow in once_a_day and workflow not in current and workflow not in seen:
+                seen.add(workflow)
+                missed.append((workflow, slot_start(earlier)))
+    return missed
+
+
+def run_due(now: datetime, ref: str, already_started=already_started, start=start) -> int:
+    """Start this slot's workflows, then any once-a-day workflow a missed trigger skipped. Returns failures."""
+    failed = 0
+    for workflow, since in catch_up(now):
+        failed += dispatch([workflow], since, ref, already_started=already_started, start=start)
+    failed += dispatch(due_workflows(now), slot_start(now), ref, already_started=already_started, start=start)
+    return failed
+
+
 def parse_now(value: str) -> datetime:
     """Parse an ISO timestamp as GitHub prints it (e.g. 2026-10-05T14:00:11Z)."""
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
@@ -147,7 +184,11 @@ def main() -> int:
         print(f"self-test: starting {SELFTEST_WORKFLOW} only")
         return 1 if dispatch([SELFTEST_WORKFLOW], slot_start(now), args.ref) else 0
 
-    failed = dispatch(due, slot_start(now), args.ref) if args.run else 0
+    missed = catch_up(now)
+    if missed:
+        print("catch-up candidates (started only if they have not run): "
+              + ", ".join(f"{wf} due {since.astimezone(ET):%H:%M}" for wf, since in missed))
+    failed = run_due(now, args.ref) if args.run else 0
     return 1 if failed else 0
 
 

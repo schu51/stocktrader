@@ -135,3 +135,54 @@ def test_selftest_workflow_is_not_an_order_placing_job():
     import dispatcher
     assert dispatcher.SELFTEST_WORKFLOW not in {
         "daily_trade.yml", "stop_placement.yml", "intraday_exit.yml", "postmarket.yml"}
+
+
+# ── catch-up after a missed trigger ──────────────────────────────────────────
+
+def _catch_up(y, m, d, hh, mm):
+    from dispatcher import catch_up
+    return [(wf, since.astimezone(ET).strftime("%H:%M")) for wf, since in catch_up(datetime(y, m, d, hh, mm, 5, tzinfo=ET))]
+
+
+def test_missed_daily_trade_slot_is_caught_up_by_the_next_trigger():
+    # cron-job.org timed out at 10:00; the 10:15 trigger must still start the trade run
+    assert ("daily_trade.yml", "10:00") in _catch_up(2026, 10, 5, 10, 15)
+    assert ("daily_trade.yml", "10:00") in _catch_up(2026, 10, 5, 10, 45)
+
+
+def test_catch_up_window_closes():
+    assert all(wf != "daily_trade.yml" for wf, _ in _catch_up(2026, 10, 5, 11, 0))
+    assert all(wf != "daily_trade.yml" for wf, _ in _catch_up(2026, 10, 5, 12, 0))
+
+
+def test_catch_up_ignores_repeating_jobs_and_the_current_slot():
+    caught = [wf for wf, _ in _catch_up(2026, 10, 5, 10, 15)]
+    assert "portfolio_sync.yml" not in caught and "intraday_exit.yml" not in caught   # they run again anyway
+    assert all(wf != "daily_trade.yml" for wf, _ in _catch_up(2026, 10, 5, 10, 0))    # that is the normal slot
+
+
+def test_catch_up_covers_the_saturday_chain_and_never_crosses_days():
+    assert ("candidate_outcomes.yml", "08:00") in _catch_up(2026, 10, 3, 8, 15)
+    assert _catch_up(2026, 10, 4, 0, 15) == []                                         # Sunday: nothing from Saturday
+    assert _catch_up(2026, 10, 5, 0, 0) == []
+
+
+def test_run_due_starts_missed_jobs_once_and_skips_ones_that_did_run():
+    from dispatcher import run_due
+    started = []
+    ran_already = {"premarket.yml"}                      # 09:00 slot ran fine; 09:30 and 10:00 were missed
+    failed = run_due(
+        datetime(2026, 10, 5, 10, 15, 5, tzinfo=ET), "main",
+        already_started=lambda wf, since: wf in ran_already,
+        start=lambda wf, ref: started.append(wf) or True)
+    assert failed == 0
+    assert started == ["stop_placement.yml", "daily_trade.yml", "intraday_exit.yml"]   # missed ones first, then this slot
+
+
+def test_run_due_on_a_normal_slot_starts_exactly_that_slot():
+    from dispatcher import run_due
+    started = []
+    run_due(datetime(2026, 10, 5, 10, 0, 5, tzinfo=ET), "main",
+            already_started=lambda wf, since: wf in {"premarket.yml", "stop_placement.yml"},
+            start=lambda wf, ref: started.append(wf) or True)
+    assert started == ["daily_trade.yml", "portfolio_sync.yml"]

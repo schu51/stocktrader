@@ -20,6 +20,12 @@ Two kinds of experiment:
                  The system promotes and drops these itself. Sentiment signals
                  need more evidence than price signals (60 days, t >= 2.5).
 
+                 macd_cross is the exception: it is measured like the others
+                 but may never gate (auto_promote: false). As the only gate it
+                 blocked every buy on its first live day (2026-10-05). Its
+                 evidence line answers the open question: did the buys it would
+                 have blocked do worse than the ones it would have allowed?
+
   bearish_signal news_negative, social_bearish
                  Scored on every stock the daily scan covers. "confirmed" means
                  the stocks it flagged went on to lag: the evidence for puts.
@@ -93,10 +99,15 @@ def default_registry(today: date) -> Dict:
 
     def exp(kind, state, note, **params):
         return {"kind": kind, "state": state, "started": started, "params": params, "note": note}
+
+    # One indicator among several, never a gate on its own (see the module docstring)
+    macd = exp("entry_signal", "observing",
+               "backtest 119% vs 124% control, drawdown -13% vs -16%; measured only, never blocks a buy")
+    macd["auto_promote"] = False
     return {
         "experiments": {
             "atr_stop": exp("stop_arm", "trial", "backtest 139% vs 124% control, same drawdown", multiple=2.5),
-            "macd_cross": exp("entry_signal", "active", "backtest 119% vs 124% control, drawdown -13% vs -16%"),
+            "macd_cross": macd,
             "ema21_reclaim": exp("entry_signal", "observing", "backtest 100% vs 124% control"),
             "breakout": exp("entry_signal", "observing", "backtest 47% vs 124% control; best per-trade quality"),
             "adx25": exp("entry_signal", "observing", "backtest 55% vs 124% control"),

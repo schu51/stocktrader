@@ -18,12 +18,19 @@ def _registry(**states):
     return reg
 
 
+def _gated(**states):
+    """Registry with macd_cross forced on as the entry gate — the gate mechanism under test. It is off by default."""
+    reg = _registry(**{"macd_cross": "active", **states})
+    reg["experiments"]["macd_cross"].pop("auto_promote", None)
+    return reg
+
+
 # ── defaults ─────────────────────────────────────────────────────────────────
 
 def test_default_registry_reflects_the_backtest_verdicts():
     reg = _registry()
     states = {k: v["state"] for k, v in reg["experiments"].items()}
-    assert states == {"atr_stop": "trial", "macd_cross": "active", "ema21_reclaim": "observing",
+    assert states == {"atr_stop": "trial", "macd_cross": "observing", "ema21_reclaim": "observing",
                       "breakout": "observing", "adx25": "observing", "ma50_room": "observing",
                       "news_positive": "observing", "social_bullish": "observing",
                       "news_negative": "observing", "social_bearish": "observing", "news_veto": "trial"}
@@ -34,6 +41,29 @@ def _seed(tmp_path, **states):
     path = tmp_path / "e.json"
     ex._write_json(path, _registry(**states))
     return path
+
+
+def _seed_gated(tmp_path, **states):
+    import experiments as ex
+    path = tmp_path / "e.json"
+    ex._write_json(path, _gated(**states))
+    return path
+
+
+def test_no_entry_gate_is_on_by_default():
+    # 2026-10-05: macd_cross was the only gate and blocked all five buy signals of the day
+    import experiments as ex
+    assert ex.entry_gate({"macd_cross": False}, _registry()) is None
+    assert ex.entry_gate({}, _registry()) is None
+
+
+def test_macd_cross_is_measured_but_never_promoted_to_a_gate():
+    import experiments as ex
+    reg = _registry()
+    assert reg["experiments"]["macd_cross"]["auto_promote"] is False
+    reg, changes = ex.evaluate(reg, {"macd_cross": _rows(60, 0.03, "macd_cross")}, [], TODAY)
+    assert reg["experiments"]["macd_cross"]["state"] == "observing" and changes == []
+    assert reg["experiments"]["macd_cross"]["evidence"]["days"] == 60        # still scored every week
 
 
 def test_missing_registry_is_an_error_unless_explicitly_created(tmp_path):
@@ -86,17 +116,17 @@ def test_stop_arm_follows_state():
 def test_entry_gate_applies_only_active_or_adopted_signals():
     import experiments as ex
     signals = {"macd_cross": False, "ema21_reclaim": False, "breakout": False, "adx25": False}
-    assert ex.entry_gate(signals, _registry()) == "macd_cross"                       # active by default
-    assert ex.entry_gate({**signals, "macd_cross": True}, _registry()) is None
+    assert ex.entry_gate(signals, _gated()) == "macd_cross"
+    assert ex.entry_gate({**signals, "macd_cross": True}, _gated()) is None
     assert ex.entry_gate(signals, _registry(macd_cross="dropped")) is None           # observing ones never block
     assert ex.entry_gate(signals, _registry(macd_cross="dropped", breakout="adopted")) == "breakout"
 
 
 def test_entry_gate_fails_closed_when_the_signal_is_unknown():
     import experiments as ex
-    assert ex.entry_gate({}, _registry()) == "macd_cross"
-    assert ex.entry_gate({"macd_cross": None}, _registry()) == "macd_cross"
-    assert ex.entry_gate({"macd_cross": "yes"}, _registry()) == "macd_cross"     # only a real True passes
+    assert ex.entry_gate({}, _gated()) == "macd_cross"
+    assert ex.entry_gate({"macd_cross": None}, _gated()) == "macd_cross"
+    assert ex.entry_gate({"macd_cross": "yes"}, _gated()) == "macd_cross"     # only a real True passes
     assert ex.entry_gate({}, _registry(macd_cross="dropped")) is None           # no gate, nothing to fail
 
 
@@ -111,7 +141,7 @@ class _Bar:
 def test_on_buy_signal_logs_the_candidate_and_returns_arm_and_gate(tmp_path):
     import experiments as ex
     bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]       # steady uptrend: no fresh MACD cross
-    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed(tmp_path), log_path=tmp_path / "log.json")
+    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed_gated(tmp_path), log_path=tmp_path / "log.json")
     assert out["blocked_by"] == "macd_cross"
     assert out["stop_arm"] in ("atr", "fixed")
     assert (out["stop_dist"] is not None) == (out["stop_arm"] == "atr")
@@ -141,7 +171,7 @@ def test_gate_still_applies_when_the_signal_log_cannot_be_written(tmp_path):
     bars = [_Bar(float(x)) for x in np.linspace(100, 180, 120)]
     unwritable = tmp_path / "log.json"
     unwritable.mkdir()                                       # a directory where the log file should be
-    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed(tmp_path), log_path=unwritable)
+    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed_gated(tmp_path), log_path=unwritable)
     assert out["blocked_by"] == "macd_cross"                # the gate held
     assert "signal log" in out["error"]
 
@@ -169,7 +199,7 @@ def test_observing_signal_is_promoted_on_strong_evidence():
 
 def test_only_one_entry_gate_is_active_at_a_time():
     import experiments as ex
-    reg = _registry()                                         # macd_cross already active
+    reg = _gated()                                            # macd_cross holds the one gate slot
     reg, changes = ex.evaluate(reg, {"breakout": _rows(60, 0.03)}, [], TODAY)
     assert reg["experiments"]["breakout"]["state"] == "observing"
     assert "already active" in reg["experiments"]["breakout"]["evidence"]["note"]
@@ -177,26 +207,26 @@ def test_only_one_entry_gate_is_active_at_a_time():
 
 def test_too_little_history_changes_nothing():
     import experiments as ex
-    reg, changes = ex.evaluate(_registry(), {"macd_cross": _rows(10, -0.05, "macd_cross")}, [], TODAY)
+    reg, changes = ex.evaluate(_gated(), {"macd_cross": _rows(10, -0.05, "macd_cross")}, [], TODAY)
     assert reg["experiments"]["macd_cross"]["state"] == "active" and changes == []
 
 
 def test_active_gate_is_dropped_when_it_picks_worse_names():
     import experiments as ex
-    reg, changes = ex.evaluate(_registry(), {"macd_cross": _rows(60, -0.03, "macd_cross")}, [], TODAY)
+    reg, changes = ex.evaluate(_gated(), {"macd_cross": _rows(60, -0.03, "macd_cross")}, [], TODAY)
     assert reg["experiments"]["macd_cross"]["state"] == "dropped"
     assert "worse" in changes[0]["reason"]
 
 
 def test_active_gate_is_adopted_when_it_proves_itself():
     import experiments as ex
-    reg, _ = ex.evaluate(_registry(), {"macd_cross": _rows(60, 0.03, "macd_cross")}, [], TODAY)
+    reg, _ = ex.evaluate(_gated(), {"macd_cross": _rows(60, 0.03, "macd_cross")}, [], TODAY)
     assert reg["experiments"]["macd_cross"]["state"] == "adopted"
 
 
 def test_signal_that_never_proves_itself_is_dropped_at_the_deadline():
     import experiments as ex
-    reg, changes = ex.evaluate(_registry(), {"macd_cross": _rows(ex.MAX_SIGNAL_DAYS + 5, 0.0, "macd_cross"),
+    reg, changes = ex.evaluate(_gated(), {"macd_cross": _rows(ex.MAX_SIGNAL_DAYS + 5, 0.0, "macd_cross"),
                                              "adx25": _rows(ex.MAX_SIGNAL_DAYS + 5, 0.0, "adx25")}, [], TODAY)
     assert reg["experiments"]["macd_cross"]["state"] == "dropped"
     assert reg["experiments"]["adx25"]["state"] == "dropped"
@@ -261,11 +291,11 @@ def test_hook_attaches_todays_logged_sentiment(tmp_path):
     sent = tmp_path / "sentiment_log.json"
     sent.write_text(json.dumps([{"date": "2026-10-03", "symbol": "AMD", "news_positive": True, "news_negative": False,
                                  "social_bullish": False, "news_score": 0.4, "st_bull_ratio": 0.5}]))
-    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed(tmp_path), log_path=tmp_path / "log.json",
+    out = ex.on_buy_signal("AMD", bars, TODAY, registry_path=_seed_gated(tmp_path), log_path=tmp_path / "log.json",
                            sentiment_path=sent)
     assert (out["signals"]["news_positive"], out["signals"]["social_bullish"]) == (True, False)
     assert out["signals"]["news_score"] == 0.4
-    assert out["blocked_by"] == "macd_cross"                 # observing signals never gate
+    assert out["blocked_by"] == "macd_cross"                 # sentiment is attached; only the gate blocks
 
 
 def test_missing_or_malformed_sentiment_is_unknown_not_false(tmp_path):

@@ -18,16 +18,17 @@
     },
     "macd_cross": {
       "kind": "entry_signal",
-      "state": "active",
+      "state": "observing",
       "started": "2026-10-03",
       "params": {},
-      "note": "backtest 119% vs 124% control, drawdown -13% vs -16%",
+      "note": "backtest 119% vs 124% control, drawdown -13% vs -16%; measured only, never blocks a buy",
       "evidence": {
         "days": 0,
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-04",
+      "auto_promote": false
     },
     "ema21_reclaim": {
       "kind": "entry_signal",
@@ -148,7 +149,15 @@
       "last_evaluated": "2026-10-04"
     }
   },
-  "changes": [],
+  "changes": [
+    {
+      "date": "2026-10-05",
+      "experiment": "macd_cross",
+      "from": "active",
+      "to": "observing",
+      "reason": "owner decision: as the only gate it blocked all 5 buy signals on its first live day; it stays measured as one indicator and may not gate"
+    }
+  ],
   "generated_at": "2026-10-04T08:25:54.400857",
   "signals_logged": 0,
   "sentiment": {

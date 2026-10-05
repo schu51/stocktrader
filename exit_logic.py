@@ -77,44 +77,43 @@ def find_untradable(positions: list, protected, get_asset) -> dict:
     return stuck
 
 
-def order_filled(broker, order_id: Optional[str], wait_seconds: float = 20, poll: float = 2) -> bool:
+SALE_FILLED, SALE_DEAD, SALE_PARTIAL, SALE_WORKING = "filled", "dead", "partial", "working"
+_ENDED_UNFILLED = ("canceled", "expired", "rejected")
+
+
+def sale_status(broker, order_id: Optional[str], wait_seconds: float = 20, poll: float = 2) -> str:
     """
-    True once Alpaca reports the order filled. A sell that was accepted is not
-    yet a sale: until it fills the shares are still held, and the stops that
-    were cancelled to make way for it are gone. Anything else — no order id,
-    a status that cannot be read, still open when the wait runs out — is False.
+    Where a sell order stands. An accepted sell is not yet a sale.
+
+      filled   every share sold
+      dead     the order ended with nothing sold — the shares are still held
+      partial  the order ended with some shares sold
+      working  anything else: still open, or its status cannot be read
+
+    "working" is the unknown case. It must be tracked until it settles
+    (intraday_exit.settle_pending_exits), never assumed to be sold or unsold.
     """
     import time
     if not order_id:
-        return False
+        return SALE_WORKING
     deadline = time.monotonic() + wait_seconds
     while True:
         try:
-            status = (broker.get_order(order_id) or {}).get("status")
+            order = broker.get_order(order_id) or {}
         except Exception:
-            status = None
+            order = {}
+        status = order.get("status")
         if status == "filled":
-            return True
-        if status in ("canceled", "expired", "rejected") or time.monotonic() >= deadline:
-            return False
+            return SALE_FILLED
+        if status in _ENDED_UNFILLED:
+            try:
+                sold = float(order.get("filled_qty") or 0)
+            except (TypeError, ValueError):
+                sold = 0.0
+            return SALE_PARTIAL if sold > 0 else SALE_DEAD
+        if time.monotonic() >= deadline:
+            return SALE_WORKING
         time.sleep(poll)
-
-
-def confirm_sale(broker, order_id: Optional[str], wait_seconds: float = 20) -> bool:
-    """
-    True only if the sell order filled. If it has not filled in time it is
-    cancelled, so it cannot fill later behind a record that says the position
-    is still held, and the answer is taken from the order's final status.
-    """
-    if order_filled(broker, order_id, wait_seconds):
-        return True
-    if not order_id:
-        return False
-    try:
-        broker.cancel_order(order_id)
-    except Exception:
-        pass
-    return order_filled(broker, order_id, wait_seconds=0)     # it may have filled before the cancel landed
 
 
 def split_positions(positions: list) -> Tuple[list, list]:
@@ -229,7 +228,9 @@ def reconcile_phantom_trades(trades: list, held_symbols: set) -> int:
     """
     reconciled = 0
     for t in trades:
-        if t.get("status") == "OPEN" and t.get("symbol") not in held_symbols:
+        # A trade with a sell in flight is not an unfilled buy: it settles through
+        # intraday_exit.settle_pending_exits, with its real exit recorded.
+        if t.get("status") == "OPEN" and t.get("symbol") not in held_symbols and not t.get("pending_exit"):
             t["status"] = "CANCELLED"
             t["exit_reason"] = "ORDER_NOT_FILLED"
             reconciled += 1

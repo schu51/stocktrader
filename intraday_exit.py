@@ -35,6 +35,85 @@ sys.path.insert(0, str(ROOT))
 EXIT_CONFIRM_SECONDS = 20   # how long to wait for a market sell to report filled
 
 
+def _rewrite_trades(change) -> bool:
+    """Apply `change(trades)` to trades.json with an atomic write. False if it could not be done."""
+    try:
+        import os
+        trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
+        change(trades)
+        tmp = TRADES_FILE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(trades, indent=2))
+        os.replace(tmp, TRADES_FILE)
+        return True
+    except Exception as e:
+        logger.error(f"Could not update trades.json: {e}")
+        return False
+
+
+def mark_pending_exit(symbol: str, order_id: Optional[str], trigger: str, price: float, pnl_pct: float) -> bool:
+    """
+    Record on the open trade that a sell has been sent but has not been seen to
+    fill. The trade stays OPEN — it is not closed on a guess — and the sell is
+    followed up on every later run until it settles.
+    """
+    def change(trades):
+        for t in reversed(trades):
+            if t.get("symbol") == symbol and t.get("status") == "OPEN":
+                t["pending_exit"] = {"order_id": order_id, "trigger": trigger, "price": price,
+                                     "pnl_pct": pnl_pct, "sent": datetime.now().isoformat()}
+                return
+    return _rewrite_trades(change)
+
+
+def settle_pending_exits(broker) -> List[Dict]:
+    """
+    Follow up sells that had not filled when they were last checked.
+      filled   the trade is closed with the exit that triggered it
+      dead     nothing sold; the mark is cleared and the position is managed as usual
+      partial  the shares sold are taken off the trade, which stays open
+      working  left as it is, and reported
+    Returns one row per pending exit: {"symbol", "order_id", "status"}.
+    """
+    from exit_logic import SALE_DEAD, SALE_FILLED, SALE_PARTIAL, sale_status
+    try:
+        trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
+    except Exception as e:
+        logger.error(f"Could not read trades.json to settle pending exits: {e}")
+        return [{"symbol": None, "order_id": None, "status": "working", "error": str(e)}]
+    out = []
+    for t in [t for t in trades if t.get("status") == "OPEN" and t.get("pending_exit")]:
+        sym, pe = t["symbol"], t["pending_exit"]
+        status = sale_status(broker, pe.get("order_id"), wait_seconds=0)
+        row = {"symbol": sym, "order_id": pe.get("order_id"), "status": status}
+        if status in (SALE_FILLED, SALE_PARTIAL):
+            try:
+                order = broker.get_order(pe["order_id"]) or {}
+                price = float(order.get("filled_avg_price") or pe.get("price") or 0)
+                sold = int(float(order.get("filled_qty") or 0))
+            except Exception:
+                price, sold = float(pe.get("price") or 0), 0
+        if status == SALE_FILLED:
+            _log_exit(sym, price, sold or t.get("shares", 0), pe.get("trigger") or "EXIT",
+                      realized_pnl_pct=pe.get("pnl_pct"))
+            logger.info(f"PENDING EXIT SETTLED: {sym} filled @ ${price:.2f}")
+        elif status == SALE_PARTIAL:
+            logger.error(f"PENDING EXIT PARTLY FILLED: {sym} sold {sold} share(s); the rest is still held")
+            row["sold"] = sold
+        elif status == SALE_DEAD:
+            logger.warning(f"PENDING EXIT DID NOT FILL: {sym} — still held")
+        if status != "working":
+            def change(all_trades, sym=sym, oid=pe.get("order_id"), sold=row.get("sold")):
+                for x in reversed(all_trades):
+                    if x.get("symbol") == sym and (x.get("pending_exit") or {}).get("order_id") == oid:
+                        x.pop("pending_exit", None)
+                        if sold and x.get("status") == "OPEN":
+                            x["shares"] = max(0, int(x.get("shares", 0)) - sold)
+                        return
+            _rewrite_trades(change)
+        out.append(row)
+    return out
+
+
 def _cancel_open_stops(broker, symbol: str):
     """Cancel any existing stop sell orders for a symbol."""
     try:
@@ -204,7 +283,7 @@ def main():
         logger.info("Market closed — intraday exit monitor skipped")
         return
 
-    from exit_logic import confirm_sale, split_positions
+    from exit_logic import SALE_DEAD, SALE_FILLED, sale_status, split_positions
     positions, unmanaged = split_positions(broker.get_positions() or [])
     logger.info(f"Evaluating {len(positions)} long stock positions")
     if unmanaged:
@@ -219,8 +298,18 @@ def main():
     stops_updated   = []
     stop_failures   = []   # an exit or stop that could not be carried out; fails the run
 
+    # Sells from an earlier run that had not filled when it finished
+    pending = settle_pending_exits(broker)
+    in_flight = {p["symbol"] for p in pending if p["status"] == "working" and p.get("symbol")}
+    for p in pending:
+        if p["status"] in ("working", "partial"):
+            stop_failures.append({"symbol": p["symbol"], "status": f"exit_{p['status']}",
+                                  "error": p.get("error") or f"sell order {p['order_id']} has not fully filled"})
+
     for pos in positions:
         sym = pos["symbol"]
+        if sym in in_flight:
+            continue   # its sell is still working; a second one would only be rejected
 
         # --- Exit evaluation ---
         action = evaluate_position(pos, sma_map.get(sym))
@@ -234,19 +323,28 @@ def main():
             action["executed"] = "error" not in result
             action["order_id"] = result.get("id")
             # An accepted sell is not a sale. The trade is recorded closed only
-            # once the order has filled; one that does not fill is cancelled.
-            action["confirmed"] = action["executed"] and confirm_sale(
-                broker, action["order_id"], wait_seconds=EXIT_CONFIRM_SECONDS)
-            if action["confirmed"]:
+            # once the order has filled. A sell that has not filled yet is left
+            # working — cancelling it would undo the exit — and is tracked on the
+            # trade until a later run sees how it ended.
+            sale = sale_status(broker, action["order_id"], wait_seconds=EXIT_CONFIRM_SECONDS) \
+                if action["executed"] else SALE_DEAD
+            action["confirmed"] = sale == SALE_FILLED
+            action["sale"] = sale
+            if sale == SALE_FILLED:
                 _log_exit(sym, action["price"], action["qty"], action["trigger"],
                           realized_pnl_pct=action["pnl_pct"])
-            else:
+            elif sale == SALE_DEAD:
                 # Still held, and its stops were just cancelled. The sweep below
                 # puts a stop back; the failed exit itself fails the run.
-                why = result.get("error") if not action["executed"] else "sell order accepted but not filled"
+                why = result.get("error") or "sell order ended without filling"
                 logger.error(f"EXIT FAILED: {sym} — {why}")
-                stop_failures.append({"symbol": sym, "error": why,
-                                      "status": "exit_unconfirmed" if action["executed"] else "exit_failed"})
+                stop_failures.append({"symbol": sym, "status": "exit_failed", "error": why})
+            else:
+                logger.error(f"EXIT NOT CONFIRMED: {sym} — sell order {action['order_id']} is still working")
+                mark_pending_exit(sym, action["order_id"], action["trigger"], action["price"], action["pnl_pct"])
+                in_flight.add(sym)
+                stop_failures.append({"symbol": sym, "status": "exit_unconfirmed",
+                                      "error": "sell order accepted but not yet filled"})
             exits_triggered.append(action)
             continue  # Skip stop update for exited position
 
@@ -262,8 +360,10 @@ def main():
     stops_placed = []
     try:
         from stop_placement import place_missing_stops
-        # Skip only what was actually sold: a failed or unfilled exit is still held and needs its stop back
-        sweep = place_missing_stops(broker, skip={a["symbol"] for a in exits_triggered if a.get("confirmed")})
+        # Skip what was sold and what has a sell still working (its shares are
+        # reserved). A sell that ended unfilled is still held and needs its stop back.
+        sweep = place_missing_stops(
+            broker, skip={a["symbol"] for a in exits_triggered if a.get("confirmed")} | in_flight)
         stops_placed = [r for r in sweep["results"] if r.get("status") == "placed"]
         stop_failures += [r for r in sweep["results"] if r.get("status") in ("failed", "error")]
         if sweep.get("error"):

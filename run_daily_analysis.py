@@ -1999,7 +1999,8 @@ class DailyRunner:
         out = {"sold": [], "failed": [], "planned": [l["symbol"] for l in laggards]}
         if not laggards or not execute or not self.broker:
             return out
-        from exit_logic import confirm_sale
+        from exit_logic import SALE_DEAD, SALE_FILLED, SALE_WORKING, sale_status
+        from intraday_exit import mark_pending_exit
         from stop_placement import place_missing_stops, stop_coverage
         # Same precondition as a buy (Gate 1 in _execute_opportunities): the
         # market must be confirmed open. A sell sent while it is closed would
@@ -2026,10 +2027,19 @@ class DailyRunner:
                 if "error" in result:
                     raise RuntimeError(result.get("error"))
                 # An accepted sell is not a sale: only a filled one frees the slot.
-                # One that does not fill is cancelled, so it cannot fill later
-                # behind a trade log that still shows the position open.
-                if not confirm_sale(self.broker, result.get("id"), wait_seconds=confirm_seconds):
-                    raise RuntimeError("sell order accepted but not filled; cancelled")
+                # A rotation is optional, so one that has not filled is cancelled.
+                sale = sale_status(self.broker, result.get("id"), wait_seconds=confirm_seconds)
+                if sale == SALE_WORKING:
+                    self.broker.cancel_order(result.get("id"))
+                    sale = sale_status(self.broker, result.get("id"), wait_seconds=min(confirm_seconds, 6))
+                if sale != SALE_FILLED:
+                    if sale != SALE_DEAD:
+                        # Outcome unknown (still open, partly filled, unreadable): keep
+                        # the trade open and let the intraday check settle it.
+                        mark_pending_exit(sym, result.get("id"), rotation.EXIT_REASON,
+                                          getattr(pos, "current_price", 0), getattr(pos, "unrealized_pnl_pct", 0))
+                    raise RuntimeError("sell did not fill; cancelled" if sale == SALE_DEAD
+                                       else f"sell outcome not known ({sale}); tracked as a pending exit")
             except Exception as e:
                 logger.error(f"ROTATION FAILED: {sym} — {e}")
                 out["failed"].append({"symbol": sym, "error": str(e)})

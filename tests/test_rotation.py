@@ -97,8 +97,10 @@ class _Broker:
 
 
 def _runner(broker, monkeypatch, tmp_path):
-    import rotation
+    import intraday_exit, rotation
     monkeypatch.setattr(rotation, "ROTATION_LOG", tmp_path / "rotation_log.json")
+    monkeypatch.setattr(intraday_exit, "TRADES_FILE", tmp_path / "trades.json")
+    (tmp_path / "trades.json").write_text(json.dumps([{"symbol": "ANET", "status": "OPEN", "shares": 13}]))
     logged = []
     pos = SimpleNamespace(shares=13, current_price=208.12, unrealized_pnl_pct=8.25)
     runner = SimpleNamespace(broker=broker, portfolio=SimpleNamespace(positions={"ANET": pos}),
@@ -130,9 +132,9 @@ def test_dry_run_plans_but_sells_nothing(monkeypatch, tmp_path):
     assert broker.cancelled == [] and broker.closed == [] and logged == []
 
 
-def test_a_rejected_or_unfilled_rotation_sell_frees_no_slot_and_the_stop_goes_back(monkeypatch, tmp_path):
+def test_a_rejected_rotation_sell_frees_no_slot_and_the_stop_goes_back(monkeypatch, tmp_path):
     from run_daily_analysis import DailyRunner
-    for broker in (_Broker(close={"error": "insufficient qty"}), _Broker(fill="accepted")):
+    for broker in (_Broker(close={"error": "insufficient qty"}), _Broker(fill=["accepted", "canceled"])):
         runner, logged = _runner(broker, monkeypatch, tmp_path)
         out = DailyRunner._rotate_out(runner, LAG, ["TRGP"], execute=True, confirm_seconds=0)
         assert out["sold"] == [] and out["failed"][0]["symbol"] == "ANET"
@@ -141,6 +143,17 @@ def test_a_rejected_or_unfilled_rotation_sell_frees_no_slot_and_the_stop_goes_ba
         assert not (tmp_path / "rotation_log.json").exists()
     assert broker.cancelled == ["stopA", "sell1"]            # the unfilled sell was cancelled, not left working
 
+
+def test_a_rotation_sell_whose_outcome_is_unknown_is_tracked_not_guessed(monkeypatch, tmp_path):
+    from run_daily_analysis import DailyRunner
+    broker = _Broker(fill="pending_cancel")                  # cancel sent, result not known
+    runner, logged = _runner(broker, monkeypatch, tmp_path)
+    out = DailyRunner._rotate_out(runner, LAG, ["TRGP"], execute=True, confirm_seconds=0)
+    assert out["sold"] == [] and "pending exit" in out["failed"][0]["error"]
+    assert logged == []
+    trade = json.loads((tmp_path / "trades.json").read_text())[0]
+    assert trade["status"] == "OPEN" and trade["pending_exit"] == {**trade["pending_exit"], "order_id": "sell1",
+                                                                  "trigger": "ROTATED_OUT"}
 
 def test_a_sell_that_fills_while_being_cancelled_still_counts_as_sold(monkeypatch, tmp_path):
     from run_daily_analysis import DailyRunner

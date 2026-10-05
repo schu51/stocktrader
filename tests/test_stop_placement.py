@@ -333,6 +333,7 @@ def _intraday(monkeypatch, tmp_path, broker, sma):
     monkeypatch.setattr(alpaca_broker, "AlpacaBroker", lambda: broker)
     monkeypatch.setattr(exit_logic, "get_sma50_map", lambda symbols: sma)
     monkeypatch.setattr(intraday_exit, "DOCS_DATA", tmp_path)
+    monkeypatch.setattr(intraday_exit, "TRADES_FILE", tmp_path / "trades.json")
     return intraday_exit
 
 
@@ -417,7 +418,7 @@ def test_daily_run_confirms_stops_against_the_account_not_the_sweeps_own_report(
     assert out["stops_placed"] == 1 and out["unprotected"] == ["AME"]
 
 
-def test_an_exit_that_is_accepted_but_never_fills_is_not_treated_as_sold(monkeypatch, tmp_path):
+def test_an_exit_that_has_not_filled_stays_working_and_is_tracked_not_recorded_as_sold(monkeypatch, tmp_path):
     import json, pytest
     pos = {**make_position("VRT", 5, 100.0, 80.0, -20.0), "side": "long", "asset_class": "us_equity"}
     broker = _Broker([pos], orders=[_stop("VRT", 5, 92.0, "old")])
@@ -426,16 +427,82 @@ def test_an_exit_that_is_accepted_but_never_fills_is_not_treated_as_sold(monkeyp
     broker.get_order = lambda oid: {"status": "accepted"}
     intraday = _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0})
     monkeypatch.setattr(intraday, "EXIT_CONFIRM_SECONDS", 0)
-    closed_in_log = []
-    monkeypatch.setattr(intraday, "_log_exit", lambda *a, **k: closed_in_log.append(a))
+    (tmp_path / "trades.json").write_text(json.dumps([{"symbol": "VRT", "status": "OPEN", "entry_date": "2026-09-01",
+                                                       "entry_price": 100.0, "shares": 5}]))
     with pytest.raises(SystemExit):
         intraday.main()
-    assert closed_in_log == []                                                   # not recorded closed before it is
-    assert broker.cancelled == ["old", "sell1"]                                  # the unfilled sell is cancelled
-    assert [(o["symbol"], o["qty"]) for o in broker.placed] == [("VRT", 5)]      # not skipped: stop goes back on
+    assert broker.cancelled == ["old"]              # the exit itself is NOT cancelled: it is still the right action
+    assert broker.placed == []                      # no stop while the sell holds the shares
+    trade = json.loads((tmp_path / "trades.json").read_text())[0]
+    assert trade["status"] == "OPEN" and trade["pending_exit"]["order_id"] == "sell1"     # not closed on a guess
     out = json.loads((tmp_path / "intraday_exit.json").read_text())
     assert out["exits_triggered"][0]["confirmed"] is False
     assert out["stop_failures"][0]["status"] == "exit_unconfirmed"
+
+
+def _pending_trade(tmp_path):
+    import json
+    (tmp_path / "trades.json").write_text(json.dumps([{
+        "symbol": "VRT", "status": "OPEN", "entry_date": "2026-09-01", "entry_price": 100.0, "shares": 5,
+        "pending_exit": {"order_id": "sell1", "trigger": "HARD_LOSS_STOP", "price": 80.0, "pnl_pct": -20.0}}]))
+
+
+def test_a_pending_exit_that_later_fills_is_closed_with_its_real_exit(monkeypatch, tmp_path):
+    import json
+    broker = _Broker([])                                                    # the shares are gone
+    broker.get_order = lambda oid: {"status": "filled", "filled_avg_price": "79.50", "filled_qty": "5"}
+    intraday = _intraday(monkeypatch, tmp_path, broker, {})
+    _pending_trade(tmp_path)
+    intraday.main()
+    trade = json.loads((tmp_path / "trades.json").read_text())[0]
+    assert (trade["status"], trade["exit_reason"], trade["exit_price"]) == ("CLOSED", "HARD_LOSS_STOP", 79.5)
+    assert "pending_exit" not in trade
+
+
+def test_a_pending_exit_that_died_unfilled_gets_its_stop_back(monkeypatch, tmp_path):
+    import json
+    pos = {**make_position("VRT", 5, 100.0, 99.0, -1.0), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos])
+    broker.get_order = lambda oid: {"status": "canceled", "filled_qty": "0"}
+    intraday = _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0})
+    _pending_trade(tmp_path)
+    intraday.main()
+    trade = json.loads((tmp_path / "trades.json").read_text())[0]
+    assert trade["status"] == "OPEN" and "pending_exit" not in trade
+    assert [(o["symbol"], o["qty"]) for o in broker.placed] == [("VRT", 5)]
+
+
+def test_a_pending_exit_still_working_is_left_alone_and_keeps_failing_the_run(monkeypatch, tmp_path):
+    import json, pytest
+    pos = {**make_position("VRT", 5, 100.0, 80.0, -20.0), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos])
+    closes = []
+    broker.close_position = lambda sym: closes.append(sym) or {"id": "sell2"}
+    broker.get_order = lambda oid: {"status": "new"}
+    intraday = _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0})
+    _pending_trade(tmp_path)
+    with pytest.raises(SystemExit):
+        intraday.main()
+    assert closes == [] and broker.placed == []                             # no second sell, no stop on reserved shares
+    assert json.loads((tmp_path / "trades.json").read_text())[0]["pending_exit"]["order_id"] == "sell1"
+
+
+def test_a_trade_with_a_sell_in_flight_is_not_reconciled_as_an_unfilled_buy():
+    from exit_logic import reconcile_phantom_trades
+    trades = [{"symbol": "VRT", "status": "OPEN", "pending_exit": {"order_id": "sell1"}},
+              {"symbol": "ZZZ", "status": "OPEN"}]
+    assert reconcile_phantom_trades(trades, held_symbols=set()) == 1
+    assert [t["status"] for t in trades] == ["OPEN", "CANCELLED"]
+
+
+def test_sale_status_tells_sold_unsold_part_sold_and_unknown_apart():
+    from types import SimpleNamespace
+    from exit_logic import sale_status
+    for order, expected in (({"status": "filled"}, "filled"), ({"status": "canceled", "filled_qty": "0"}, "dead"),
+                            ({"status": "rejected"}, "dead"), ({"status": "canceled", "filled_qty": "2"}, "partial"),
+                            ({"status": "new"}, "working"), ({"error": "timeout"}, "working"), (None, "working")):
+        assert sale_status(SimpleNamespace(get_order=lambda oid, o=order: o), "x", wait_seconds=0) == expected
+    assert sale_status(SimpleNamespace(get_order=lambda oid: {"status": "filled"}), None, wait_seconds=0) == "working"
 
 
 def test_a_filled_exit_is_left_alone_by_the_sweep(monkeypatch, tmp_path):

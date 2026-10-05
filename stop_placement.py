@@ -230,7 +230,12 @@ def main():
         logger.error(f"Alpaca connection failed: {e}")
         sys.exit(1)
 
-    if not broker.is_market_open():
+    is_open = broker.market_clock()
+    if is_open is None:
+        # "Could not ask" is not "closed": skipping quietly would leave positions unchecked
+        logger.error("Could not read the market clock from Alpaca — stop placement did not run")
+        sys.exit(1)
+    if not is_open:
         logger.info("Market is closed — stop placement skipped")
         return
 

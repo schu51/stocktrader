@@ -153,7 +153,7 @@ def test_main_reports_a_delisted_holding_separately(monkeypatch, tmp_path):
 
     class Broker:
         orders = []
-        def is_market_open(self): return True
+        def market_clock(self): return True
         def get_positions(self):
             return [make_position("CTLP", 281, 10.64, 11.2, 5.26), make_position("AMD", 7, 506.44, 621.86, 22.79)]
         def get_orders(self, status=None, limit=50): return []
@@ -232,7 +232,7 @@ def test_stop_placement_run_fails_loudly_when_a_stop_cannot_be_placed(monkeypatc
     import pytest
     import alpaca_broker, stop_placement
     broker = _Broker([make_position("AME", 16, 254.01, 253.90, -0.04)])
-    broker.is_market_open = lambda: True
+    broker.market_clock = lambda: True
     broker.place_order = lambda **kw: {"error": "rejected"}
     monkeypatch.setattr(alpaca_broker, "AlpacaBroker", lambda: broker)
     monkeypatch.setattr(stop_placement, "ROOT", tmp_path)
@@ -304,7 +304,7 @@ def test_intraday_check_sweeps_for_positions_without_a_stop(monkeypatch, tmp_pat
     import alpaca_broker, exit_logic, intraday_exit
     pos = {**make_position("EXPD", 13, 192.39, 192.38, -0.01), "side": "long", "asset_class": "us_equity"}
     broker = _Broker([pos])
-    broker.is_market_open = lambda: True
+    broker.market_clock = lambda: True
     monkeypatch.setattr(alpaca_broker, "AlpacaBroker", lambda: broker)
     monkeypatch.setattr(exit_logic, "get_sma50_map", lambda symbols: {"EXPD": 150.0})
     monkeypatch.setattr(intraday_exit, "DOCS_DATA", tmp_path)
@@ -329,7 +329,7 @@ def test_daily_run_treats_an_unreadable_order_as_still_filling_and_an_unreadable
 
 def _intraday(monkeypatch, tmp_path, broker, sma):
     import alpaca_broker, exit_logic, intraday_exit
-    broker.is_market_open = lambda: True
+    broker.market_clock = lambda: True
     monkeypatch.setattr(alpaca_broker, "AlpacaBroker", lambda: broker)
     monkeypatch.setattr(exit_logic, "get_sma50_map", lambda symbols: sma)
     monkeypatch.setattr(intraday_exit, "DOCS_DATA", tmp_path)
@@ -371,3 +371,47 @@ def test_stop_is_left_alone_when_open_orders_cannot_be_read():
     broker.last_orders_ok = False
     out = intraday_exit._update_stop_if_better(broker, pos)
     assert broker.cancelled == [] and broker.placed == [] and out["status"] == "failed"
+
+
+def test_a_failed_exit_gets_its_stop_back_and_fails_the_run(monkeypatch, tmp_path):
+    # The exit cancels the stop, then the sell is rejected: the position is still held
+    import json, pytest
+    pos = {**make_position("VRT", 5, 100.0, 80.0, -20.0), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos], orders=[_stop("VRT", 5, 92.0, "old")])
+    broker.get_orders = lambda status=None, limit=50, symbols=None: [o for o in broker.orders if o["id"] not in broker.cancelled]
+    broker.close_position = lambda sym: {"error": "rejected"}
+    with pytest.raises(SystemExit):
+        _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0}).main()
+    assert broker.cancelled == ["old"]
+    assert [(o["symbol"], o["qty"]) for o in broker.placed] == [("VRT", 5)]      # protected again
+    out = json.loads((tmp_path / "intraday_exit.json").read_text())
+    assert out["stop_failures"][0]["status"] == "exit_failed"
+
+
+def test_jobs_fail_instead_of_skipping_when_the_market_clock_cannot_be_read(monkeypatch, tmp_path):
+    import pytest
+    import alpaca_broker, stop_placement
+    broker = _Broker([make_position("AME", 16, 254.01, 253.90, -0.04)])
+    broker.market_clock = lambda: None
+    monkeypatch.setattr(alpaca_broker, "AlpacaBroker", lambda: broker)
+    monkeypatch.setattr(stop_placement, "ROOT", tmp_path)
+    with pytest.raises(SystemExit):
+        stop_placement.main()
+    intraday = _intraday(monkeypatch, tmp_path, broker, {})
+    broker.market_clock = lambda: None
+    with pytest.raises(SystemExit):
+        intraday.main()
+    broker.market_clock = lambda: False                       # a real "closed" is a quiet no-op
+    stop_placement.main()
+    assert broker.placed == []
+
+
+def test_daily_run_confirms_stops_against_the_account_not_the_sweeps_own_report():
+    from types import SimpleNamespace
+    from run_daily_analysis import DailyRunner
+    broker = _Broker([make_position("AME", 16, 254.01, 253.90, -0.04)])
+    broker.get_order = lambda oid: {"status": "filled"}
+    broker.place_order = lambda **kw: {"id": "accepted-but-never-live"}        # reports success, no order appears
+    execution = {"details": [{"symbol": "AME", "status": "submitted", "order_id": "o1"}]}
+    out = DailyRunner._protect_new_buys(SimpleNamespace(broker=broker), execution, wait_seconds=0)
+    assert out["stops_placed"] == 1 and out["unprotected"] == ["AME"]

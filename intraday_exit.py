@@ -192,7 +192,12 @@ def main():
         logger.error(f"Alpaca connection failed: {e}")
         sys.exit(1)
 
-    if not broker.is_market_open():
+    is_open = broker.market_clock()
+    if is_open is None:
+        # "Could not ask" is not "closed": skipping quietly would leave exits and stops unchecked
+        logger.error("Could not read the market clock from Alpaca — intraday exit monitor did not run")
+        sys.exit(1)
+    if not is_open:
         logger.info("Market closed — intraday exit monitor skipped")
         return
 
@@ -209,7 +214,7 @@ def main():
 
     exits_triggered = []
     stops_updated   = []
-    stop_failures   = []   # a stop that could not be raised or placed; fails the run
+    stop_failures   = []   # an exit or stop that could not be carried out; fails the run
 
     for pos in positions:
         sym = pos["symbol"]
@@ -228,6 +233,11 @@ def main():
             if action["executed"]:
                 _log_exit(sym, action["price"], action["qty"], action["trigger"],
                           realized_pnl_pct=action["pnl_pct"])
+            else:
+                # Still held, and its stops were just cancelled. The sweep below
+                # puts a stop back; the failed exit itself fails the run.
+                logger.error(f"EXIT FAILED: {sym} — {result.get('error')}")
+                stop_failures.append({"symbol": sym, "status": "exit_failed", "error": result.get("error")})
             exits_triggered.append(action)
             continue  # Skip stop update for exited position
 
@@ -243,7 +253,8 @@ def main():
     stops_placed = []
     try:
         from stop_placement import place_missing_stops
-        sweep = place_missing_stops(broker, skip={a["symbol"] for a in exits_triggered})
+        # Skip only what was actually sold: a failed exit is still held and needs its stop back
+        sweep = place_missing_stops(broker, skip={a["symbol"] for a in exits_triggered if a.get("executed")})
         stops_placed = [r for r in sweep["results"] if r.get("status") == "placed"]
         stop_failures += [r for r in sweep["results"] if r.get("status") in ("failed", "error")]
         if sweep.get("error"):

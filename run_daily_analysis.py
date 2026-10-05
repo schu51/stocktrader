@@ -1949,7 +1949,7 @@ class DailyRunner:
         bought = [d for d in execution.get("details", []) if d.get("status") == "submitted" and d.get("order_id")]
         symbols = [d["symbol"] for d in bought]
         try:
-            from stop_placement import place_missing_stops
+            from stop_placement import place_missing_stops, uncovered_positions
             # Anything not known to be finished counts as still filling,
             # including an order whose status could not be read.
             finished = ("filled", "canceled", "expired", "rejected", "done_for_day", "replaced")
@@ -1965,7 +1965,18 @@ class DailyRunner:
                 # The account could not be read: nothing is known to be protected
                 return {"stops_placed": 0, "stops_failed": 0, "results": [], "pending": pending,
                         "unprotected": symbols, "error": sweep["error"]}
-            unprotected = sorted({r["symbol"] for r in sweep["results"] if r.get("status") in ("failed", "error")})
+            # Verify against the account rather than trust the sweep's own report
+            positions = self.broker.get_positions() or []
+            positions_ok = getattr(self.broker, "last_positions_ok", True)
+            orders = self.broker.get_orders(status="open", limit=500) or []
+            if not (positions_ok and getattr(self.broker, "last_orders_ok", True)):
+                return {"stops_placed": sweep["stops_placed"], "stops_failed": sweep["stops_failed"],
+                        "results": sweep["results"], "pending": pending, "unprotected": symbols,
+                        "error": "could not re-read the account to confirm the stops"}
+            stuck = {r["symbol"] for r in sweep["results"] if r.get("status") == "untradable"}
+            unprotected = sorted(
+                {p["symbol"] for p in uncovered_positions(positions, orders)} - stuck
+                | {r["symbol"] for r in sweep["results"] if r.get("status") in ("failed", "error")})
             logger.info(f"Stops after buy: {sweep['stops_placed']} placed, {sweep['stops_failed']} failed, "
                         f"still filling: {pending or 'none'}, unprotected: {unprotected or 'none'}")
             return {"stops_placed": sweep["stops_placed"], "stops_failed": sweep["stops_failed"],

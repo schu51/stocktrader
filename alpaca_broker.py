@@ -494,6 +494,17 @@ class AlpacaBroker:
         result = self._request("GET", "/v2/clock")
         return result.get("is_open", False)
     
+    def market_clock(self) -> Optional[bool]:
+        """
+        True if the market is open, False if closed, None if Alpaca did not
+        answer. is_market_open() reports a failed call as "closed", which lets a
+        job that protects positions skip its work and still finish green.
+        """
+        result = self._request("GET", "/v2/clock")
+        if not isinstance(result, dict) or "is_open" not in result:
+            return None
+        return bool(result["is_open"])
+
     def get_market_calendar(self, start: str = None, end: str = None) -> List[Dict]:
         """Get market calendar."""
         params = {}

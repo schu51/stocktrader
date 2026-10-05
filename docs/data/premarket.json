@@ -1,113 +1,51 @@
 {
-  "generated_at": "2026-10-02T11:06:55.045082-07:00",
+  "generated_at": "2026-10-05T06:00:53.556609-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
     "strong": 32,
     "mixed": 9,
     "weak": 34
   },
+  "gap_basis": "premarket",
+  "premarket_as_of": "2026-10-05T09:00:59-04:00",
+  "premarket_quotes": 75,
+  "no_premarket_quote": [],
   "gap_alerts": [
     {
-      "ticker": "COIN",
-      "prev_close": 189.29,
-      "current": 182.49,
-      "pct_chg": -3.59,
-      "ma50": 172.83,
+      "ticker": "VST",
+      "prev_close": 140.02,
+      "current": 144.73,
+      "pct_chg": 3.36,
+      "ma50": 143.12,
       "reasons": [
-        "gap down -3.6%"
+        "gap UP 3.4% above 50MA \u2014 momentum alert",
+        "volume spike 2.6x avg (prior session)"
       ]
     },
     {
-      "ticker": "SPOT",
-      "prev_close": 491.4,
-      "current": 473.95,
-      "pct_chg": -3.55,
-      "ma50": 516.52,
+      "ticker": "NU",
+      "prev_close": 13.43,
+      "current": 15.15,
+      "pct_chg": 12.81,
+      "ma50": 14.25,
       "reasons": [
-        "gap down -3.6%"
-      ]
-    },
-    {
-      "ticker": "APP",
-      "prev_close": 281.31,
-      "current": 271.55,
-      "pct_chg": -3.47,
-      "ma50": 330.78,
-      "reasons": [
-        "gap down -3.5%"
-      ]
-    },
-    {
-      "ticker": "KLAC",
-      "prev_close": 200.33,
-      "current": 206.67,
-      "pct_chg": 3.16,
-      "ma50": 187.14,
-      "reasons": [
-        "gap UP 3.2% above 50MA \u2014 momentum alert"
-      ]
-    },
-    {
-      "ticker": "SMCI",
-      "prev_close": 41.92,
-      "current": 43.35,
-      "pct_chg": 3.41,
-      "ma50": 36.51,
-      "reasons": [
-        "gap UP 3.4% above 50MA \u2014 momentum alert"
-      ]
-    },
-    {
-      "ticker": "ON",
-      "prev_close": 80.08,
-      "current": 83.15,
-      "pct_chg": 3.84,
-      "ma50": 76.61,
-      "reasons": [
-        "gap UP 3.8% above 50MA \u2014 momentum alert"
-      ]
-    },
-    {
-      "ticker": "TSLA",
-      "prev_close": 354.11,
-      "current": 371.64,
-      "pct_chg": 4.95,
-      "ma50": 347.6,
-      "reasons": [
-        "gap UP 5.0% above 50MA \u2014 momentum alert"
-      ]
-    },
-    {
-      "ticker": "ARM",
-      "prev_close": 292.34,
-      "current": 308.62,
-      "pct_chg": 5.57,
-      "ma50": 265.81,
-      "reasons": [
-        "gap UP 5.6% above 50MA \u2014 momentum alert"
+        "gap UP 12.8% above 50MA \u2014 momentum alert"
       ]
     }
   ],
-  "avoids": [
-    "COIN",
-    "SPOT",
-    "APP"
-  ],
+  "avoids": [],
   "gap_up_priority": [
-    "KLAC",
-    "SMCI",
-    "ON",
-    "TSLA",
-    "ARM"
+    "VST",
+    "NU"
   ],
   "top_candidates": [
     {
       "ticker": "OKTA",
-      "price": 213.77,
-      "ma50": 164.8,
-      "ret_5d": 9.5,
-      "ret_20d": 25.4,
-      "score": 0.2237,
+      "price": 211.49,
+      "ma50": 164.75,
+      "ret_5d": 8.4,
+      "ret_20d": 24.1,
+      "score": 0.2108,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 57.0

@@ -1,26 +1,26 @@
 {
-  "date": "2026-10-02",
-  "generated_at": "2026-10-02T23:44:55.697022",
+  "date": "2026-10-05",
+  "generated_at": "2026-10-05T21:16:08.048469",
   "portfolio": {
-    "value": 114438.63,
-    "cash": 57954.64,
-    "total_unrealized": 5765.3,
-    "positions": 17,
-    "winners": 17,
-    "losers": 0,
+    "value": 115102.3,
+    "cash": 37434.43,
+    "total_unrealized": 6428.97,
+    "positions": 23,
+    "winners": 20,
+    "losers": 3,
     "risk_level": "LOW",
-    "risk_score": 25.7
+    "risk_score": 24.8
   },
   "execution": {
-    "signals_generated": 0,
-    "orders_executed": 0,
+    "signals_generated": 6,
+    "orders_executed": 6,
     "orders_skipped": 0,
     "skip_reasons": [],
-    "candidates_screened": 15
+    "candidates_screened": 30
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 3,
+    "stops_updated": 2,
     "detail": []
   },
   "closed_today": [],
@@ -30,7 +30,7 @@
       "pnl_pct": 5.26,
       "value": 3147.2,
       "has_stop": false,
-      "risk": "no_stop"
+      "risk": "untradable"
     }
   ]
 }

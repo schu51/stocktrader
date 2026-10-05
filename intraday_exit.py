@@ -147,22 +147,20 @@ def _update_stop_if_better(broker, pos: Dict):
 
     new_stop, tier = calculate_stop_price(current, pnl_pct, avg_cost)
 
-    # Find the existing stop price (if any)
-    open_orders    = broker.get_orders(status="open", symbols=[sym]) or []
-    existing_stop  = None
-    existing_stop_id = None
-    for o in open_orders:
-        if o.get("side") == "sell" and o.get("type") in ("stop", "stop_limit"):
-            try:
-                existing_stop    = float(o.get("stop_price", 0))
-                existing_stop_id = o["id"]
-            except (TypeError, ValueError):
-                pass
+    # Find the existing stops (a position can carry more than one, see stop_placement)
+    open_orders = broker.get_orders(status="open", symbols=[sym]) or []
+    if not getattr(broker, "last_orders_ok", True):
+        # Unknown is not "no stop": cancelling and replacing blind could drop the one that exists
+        logger.warning(f"Could not read open orders for {sym} — stop left as it is")
+        return {"symbol": sym, "status": "failed", "error": "could not read open orders"}
+    from stop_placement import stop_coverage
+    cover         = stop_coverage(open_orders).get(sym) or {"qty": 0, "stop": None, "ids": []}
+    existing_stop = cover["stop"]
 
     # Only update if new stop is strictly higher (never lower a stop)
     if existing_stop is None or new_stop > existing_stop:
-        if existing_stop_id:
-            broker.cancel_order(existing_stop_id)
+        for order_id in cover["ids"]:
+            broker.cancel_order(order_id)
         result = broker.place_order(
             symbol=sym, qty=qty, side="sell",
             order_type="stop", stop_price=new_stop, time_in_force="gtc",
@@ -170,8 +168,17 @@ def _update_stop_if_better(broker, pos: Dict):
         if "error" not in result:
             logger.info(f"STOP RAISED: {sym} → ${new_stop:.2f} ({tier}) | P&L: {pnl_pct:+.1f}%")
             return {"symbol": sym, "new_stop": new_stop, "tier": tier, "pnl_pct": round(pnl_pct, 2)}
-        else:
-            logger.warning(f"Stop update failed for {sym}: {result.get('error')}")
+        logger.warning(f"Stop update failed for {sym}: {result.get('error')}")
+        # The old stop is already cancelled. Put it back rather than leave the
+        # position with none; the sweep in main() is the second line of defence.
+        restored = False
+        if existing_stop is not None:
+            back = broker.place_order(symbol=sym, qty=qty, side="sell", order_type="stop",
+                                      stop_price=existing_stop, time_in_force="gtc")
+            restored = "error" not in back
+            if not restored:
+                logger.error(f"{sym}: could not restore the previous stop at ${existing_stop:.2f}: {back.get('error')}")
+        return {"symbol": sym, "status": "failed", "error": result.get("error"), "restored": restored}
     return None
 
 
@@ -202,6 +209,7 @@ def main():
 
     exits_triggered = []
     stops_updated   = []
+    stop_failures   = []   # a stop that could not be raised or placed; fails the run
 
     for pos in positions:
         sym = pos["symbol"]
@@ -225,7 +233,9 @@ def main():
 
         # --- Trailing stop update (profitable positions only) ---
         stop_update = _update_stop_if_better(broker, pos)
-        if stop_update:
+        if stop_update and stop_update.get("status") == "failed":
+            stop_failures.append(stop_update)
+        elif stop_update:
             stops_updated.append(stop_update)
 
     # Blanket rule: no long position without a stop for all its shares. Catches a
@@ -234,10 +244,13 @@ def main():
     try:
         from stop_placement import place_missing_stops
         sweep = place_missing_stops(broker, skip={a["symbol"] for a in exits_triggered})
-        stops_placed = [r for r in sweep["results"] if r.get("status") != "untradable"]
+        stops_placed = [r for r in sweep["results"] if r.get("status") == "placed"]
+        stop_failures += [r for r in sweep["results"] if r.get("status") in ("failed", "error")]
+        if sweep.get("error"):
+            stop_failures.append({"status": "error", "error": sweep["error"]})
     except Exception as e:
         logger.error(f"Stop sweep failed: {e}")
-        stops_placed = [{"status": "error", "error": str(e)}]
+        stop_failures.append({"status": "error", "error": str(e)})
 
     output = {
         "generated_at":     datetime.now().isoformat(),
@@ -245,6 +258,7 @@ def main():
         "exits_triggered":   exits_triggered,
         "stops_updated":     stops_updated,
         "stops_placed":      stops_placed,
+        "stop_failures":     stop_failures,
         "mode":              "EXECUTE",
     }
     out_path = DOCS_DATA / "intraday_exit.json"
@@ -253,8 +267,12 @@ def main():
 
     logger.info(
         f"=== Intraday Exit Complete: {len(exits_triggered)} exits, "
-        f"{len(stops_updated)} stops updated ==="
+        f"{len(stops_updated)} stops updated, {len(stops_placed)} placed, {len(stop_failures)} stop failures ==="
     )
+    # A position that may be without a stop must reach a human: fail the workflow
+    # (after the result file is written, so the commit step still records it).
+    if stop_failures:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

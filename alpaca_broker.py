@@ -419,6 +419,10 @@ class AlpacaBroker:
             params["symbols"] = ",".join(symbols)
         
         result = self._request("GET", "/v2/orders", params=params)
+        # An API error falls through to [] below, which looks exactly like "no
+        # open orders". Callers that act on "this position has no stop" must
+        # check this flag for the same call they used.
+        self.last_orders_ok = isinstance(result, list)
         return result if isinstance(result, list) else []
     
     def cancel_order(self, order_id: str) -> Dict:

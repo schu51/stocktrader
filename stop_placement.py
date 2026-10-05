@@ -135,12 +135,25 @@ def place_missing_stops(broker, trades: Optional[List[Dict]] = None, skip: Optio
 
     Called right after the daily run submits its buys, on every intraday check,
     and at the open, so a position is never left without one for longer than the
-    gap between those runs. A position with a stop on only part of its shares has
-    that stop replaced by one for the full quantity, never at a lower price.
+    gap between those runs. A position with a stop on only part of its shares gets
+    a second stop for the rest, never below the first; nothing is cancelled, so a
+    failure here cannot leave a position with less protection than it had.
     `skip`: symbols being sold in this same run.
+
+    If positions or open orders cannot be read, nothing is placed and the result
+    carries "error": an empty answer from a failed call must not be read as
+    "nothing to protect" or as "nothing is protected".
     """
     positions   = broker.get_positions() or []
+    positions_ok = getattr(broker, "last_positions_ok", True)
     open_orders = broker.get_orders(status="open", limit=500) or []   # every stop, not the first 50
+    orders_ok   = getattr(broker, "last_orders_ok", True)
+    if not (positions_ok and orders_ok):
+        what = "positions" if not positions_ok else "open orders"
+        logger.error(f"Could not read {what} from Alpaca — stop check did not run")
+        return {"generated_at": datetime.now().isoformat(), "positions_checked": 0, "already_protected": 0,
+                "stops_placed": 0, "stops_failed": 0, "untradable": 0, "results": [],
+                "error": f"could not read {what} from Alpaca; stop check did not run"}
     cover       = stop_coverage(open_orders)
     to_protect  = uncovered_positions(positions, open_orders, skip)
     trades      = load_trades() if trades is None else trades
@@ -168,11 +181,11 @@ def place_missing_stops(broker, trades: Optional[List[Dict]] = None, skip: Optio
             stop_price, tier = calculate_stop_for_position(pos, open_trade_for(sym, trades))
             partial = cover.get(sym)
             if partial:
-                # Replace a stop that covers only some of the shares; keep the higher price
+                # Some shares already have a stop: add one for the rest, never lower.
+                # The existing order is left in place, so this cannot reduce protection.
+                qty -= partial["qty"]
                 if partial["stop"] is not None and partial["stop"] > stop_price:
-                    stop_price, tier = round(partial["stop"], 2), "kept existing stop price"
-                for order_id in partial["ids"]:
-                    broker.cancel_order(order_id)
+                    stop_price, tier = round(partial["stop"], 2), "matched existing stop price"
             result = broker.place_order(
                 symbol=sym,
                 qty=qty,
@@ -228,6 +241,9 @@ def main():
 
     logger.info(f"=== Stop Placement Complete: {output['stops_placed']} placed, "
                 f"{output['stops_failed']} failed, {output['untradable']} untradable ===")
+    # A position left without a stop must reach a human: fail the workflow
+    if output.get("error") or output["stops_failed"]:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

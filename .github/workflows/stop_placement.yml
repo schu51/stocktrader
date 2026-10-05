@@ -9,6 +9,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: write
+      issues: write          # to open a failure issue
     env:
       ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
       ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
@@ -42,3 +43,20 @@ jobs:
             sleep $((RANDOM % 4 + 2))
           done
           [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      # Runs started by the dispatcher belong to the Actions bot, which emails no
+      # one. One issue per day; later failures the same day are added as comments.
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="🚨 ${GITHUB_WORKFLOW} failed $(date -u +%Y-%m-%d)"
+          existing=$(gh issue list --state open --search "\"${title}\" in:title" --json number --jq '.[0].number // empty' || true)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Failed again. Run log: ${RUN_URL}"
+          else
+            gh issue create --title "$title" \
+              --body "The ${GITHUB_WORKFLOW} workflow failed — a position may be without a stop. Run log: ${RUN_URL}"
+          fi

@@ -67,6 +67,7 @@ def reconcile(latest: dict, trades: list) -> dict:
             "has_stop": p.get("stop_loss") is not None,
             "risk":     (
                 "deep_loss"        if p.get("unrealized_pnl_pct", 0) < -8
+                else "untradable"  if p.get("untradable")   # delisted: no stop is possible
                 else "no_stop"     if not p.get("stop_loss")
                 else "approaching" if p.get("unrealized_pnl_pct", 0) < -5
                 else "ok"

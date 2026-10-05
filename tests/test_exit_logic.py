@@ -104,3 +104,33 @@ def test_split_positions():
     longs, others = split_positions([_p(), put, short])
     assert [p["symbol"] for p in longs] == ["AMD"]
     assert [p["symbol"] for p in others] == ["AMD261218P00400000", "XOM"]
+
+
+def test_find_untradable_flags_only_the_delisted_holding():
+    from exit_logic import find_untradable
+    looked_up = []
+
+    def get_asset(sym):
+        looked_up.append(sym)
+        return {"status": "inactive", "tradable": False} if sym == "CTLP" else {"status": "active", "tradable": True}
+
+    positions = [
+        {"symbol": "CTLP", "qty": 281, "side": "long", "asset_class": "us_equity"},
+        {"symbol": "SHOP", "qty": 26, "side": "long", "asset_class": "us_equity"},   # bought today, no stop yet
+        {"symbol": "AMD", "qty": 7, "side": "long", "asset_class": "us_equity"},     # has a stop
+        {"symbol": "XOM", "qty": -10, "side": "short", "asset_class": "us_equity"},
+    ]
+    stuck = find_untradable(positions, {"AMD": 514.04}, get_asset)
+    assert list(stuck) == ["CTLP"] and "inactive" in stuck["CTLP"]
+    assert looked_up == ["CTLP", "SHOP"]   # a live stop already proves the asset trades
+
+
+def test_find_untradable_treats_a_failed_lookup_as_tradable():
+    from exit_logic import find_untradable
+
+    def boom(sym):
+        raise RuntimeError("alpaca down")
+
+    positions = [{"symbol": "CTLP", "qty": 281}]
+    assert find_untradable(positions, set(), boom) == {}
+    assert find_untradable(positions, set(), lambda s: {"error": "timeout"}) == {}

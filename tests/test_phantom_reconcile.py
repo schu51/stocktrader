@@ -102,3 +102,16 @@ def test_exit_check_reports_a_failed_positions_call():
     broker = SimpleNamespace(get_positions=lambda: [], last_positions_ok=False)
     out = DailyRunner._evaluate_exits(SimpleNamespace(broker=broker), execute=True)
     assert "could not be fetched" in out["error"]
+
+
+def test_untradable_holding_takes_no_sector_allocation():
+    # CTLP: delisted, cannot be sold — it must not push a sector over its cap
+    from types import SimpleNamespace
+    from run_daily_analysis import DailyRunner
+    from config import SECTOR_MAP
+    sector, symbols = next((s, syms) for s, syms in SECTOR_MAP.items() if len(syms) >= 2)
+    live, stuck = list(symbols)[:2]
+    stub = SimpleNamespace(broker=object(), _untradable={stuck: "asset is inactive"}, portfolio=SimpleNamespace(
+        total_value=100_000.0, positions={live: SimpleNamespace(market_value=30_000.0),
+                                          stuck: SimpleNamespace(market_value=10_000.0)}))
+    assert DailyRunner._get_sector_allocations(stub) == {sector: 0.3}

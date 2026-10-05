@@ -132,3 +132,40 @@ def test_no_sell_stop_is_placed_on_a_short_or_an_option():
         {"symbol": "AMD261218P00400000", "qty": 2.0, "side": "long", "asset_class": "us_option"},
     ]
     assert [p["symbol"] for p in positions_needing_stops(positions, set())] == ["AMD"]
+
+
+def test_delisted_holding_is_untradable_not_a_failed_stop():
+    # CTLP: acquired and delisted, still in the account, rejects every order
+    from stop_placement import untradable_reason
+    assert "inactive" in untradable_reason({"symbol": "CTLP", "status": "inactive", "tradable": False})
+    assert untradable_reason({"symbol": "HALT", "status": "active", "tradable": False}) == "asset is not tradable on Alpaca"
+    assert untradable_reason({"symbol": "AMD", "status": "active", "tradable": True}) is None
+
+
+def test_failed_asset_lookup_still_attempts_the_stop():
+    from stop_placement import untradable_reason
+    assert untradable_reason({"error": "timeout"}) is None
+    assert untradable_reason(None) is None
+
+
+def test_main_reports_a_delisted_holding_separately(monkeypatch, tmp_path):
+    import stop_placement, alpaca_broker, json
+
+    class Broker:
+        orders = []
+        def is_market_open(self): return True
+        def get_positions(self):
+            return [make_position("CTLP", 281, 10.64, 11.2, 5.26), make_position("AMD", 7, 506.44, 621.86, 22.79)]
+        def get_orders(self, status=None): return []
+        def get_asset(self, symbol):
+            return {"status": "inactive", "tradable": False} if symbol == "CTLP" else {"status": "active", "tradable": True}
+        def place_order(self, **kw):
+            self.orders.append(kw["symbol"]); return {"id": "1"}
+
+    monkeypatch.setattr(alpaca_broker, "AlpacaBroker", Broker)
+    monkeypatch.setattr(stop_placement, "ROOT", tmp_path)
+    stop_placement.main()
+    out = json.loads((tmp_path / "docs" / "data" / "stop_placement.json").read_text())
+    assert Broker.orders == ["AMD"]
+    assert (out["stops_placed"], out["stops_failed"], out["untradable"]) == (1, 0, 1)
+    assert [r["status"] for r in out["results"]] == ["untradable", "placed"]

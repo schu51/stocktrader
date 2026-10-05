@@ -38,6 +38,45 @@ def is_long_equity(pos: dict) -> bool:
             and pos.get("asset_class", "us_equity") == "us_equity")
 
 
+def untradable_reason(asset: Optional[dict]) -> Optional[str]:
+    """
+    Why Alpaca will not take an order for this asset, or None if it trades normally.
+
+    A holding whose stock was delisted or acquired (CTLP) stays in the account but
+    rejects every order, so it can be neither protected with a stop nor sold. A
+    failed lookup returns None: when in doubt the holding is treated as tradable.
+    """
+    if not isinstance(asset, dict) or "error" in asset:
+        return None
+    status = asset.get("status")
+    if status and status != "active":
+        return f"asset is {status} on Alpaca (delisted or acquired)"
+    if asset.get("tradable") is False:
+        return "asset is not tradable on Alpaca"
+    return None
+
+
+def find_untradable(positions: list, protected, get_asset) -> dict:
+    """
+    {symbol: reason} for long stock holdings Alpaca will take no order for.
+
+    Only holdings without a live stop are looked up — a working stop order already
+    proves the asset trades — so a normal run costs zero or one extra request.
+    """
+    stuck = {}
+    for p in positions or []:
+        sym = p.get("symbol")
+        if not sym or sym in protected or not is_long_equity(p):
+            continue
+        try:
+            reason = untradable_reason(get_asset(sym))
+        except Exception:
+            reason = None
+        if reason:
+            stuck[sym] = reason
+    return stuck
+
+
 def split_positions(positions: list) -> Tuple[list, list]:
     """(long stock positions, everything else — shorts, options, other assets)."""
     longs = [p for p in positions or [] if is_long_equity(p)]

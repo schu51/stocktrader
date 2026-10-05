@@ -24,6 +24,8 @@ logger = logging.getLogger(__name__)
 ROOT = Path(__file__).parent.resolve()
 sys.path.insert(0, str(ROOT))
 
+from exit_logic import untradable_reason  # noqa: E402
+
 
 def build_protected_set(open_orders: List[Dict]) -> Set[str]:
     """Return set of symbols that already have an active stop sell order."""
@@ -113,12 +115,26 @@ def main():
 
     placed  = 0
     failed  = 0
+    untradable = 0
     results = []
     trades  = load_trades()
 
     for pos in to_protect:
         sym = pos["symbol"]
         qty = int(pos["qty"])
+
+        # A delisted holding rejects every order: report it as stuck, not as a
+        # stop that failed, so a real failure is not lost among the daily repeats.
+        try:
+            reason = untradable_reason(broker.get_asset(sym))
+        except Exception:
+            reason = None
+        if reason:
+            untradable += 1
+            logger.warning(f"UNTRADABLE: {sym} {qty}sh — {reason}; no stop possible, close it with the broker")
+            results.append({"symbol": sym, "status": "untradable", "reason": reason,
+                            "market_value": pos.get("market_value")})
+            continue
 
         try:
             stop_price, tier = calculate_stop_for_position(pos, open_trade_for(sym, trades))
@@ -149,13 +165,14 @@ def main():
         "already_protected": len(protected),
         "stops_placed":      placed,
         "stops_failed":      failed,
+        "untradable":        untradable,
         "results":           results,
     }
     out_path = ROOT / "docs" / "data" / "stop_placement.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2))
 
-    logger.info(f"=== Stop Placement Complete: {placed} placed, {failed} failed ===")
+    logger.info(f"=== Stop Placement Complete: {placed} placed, {failed} failed, {untradable} untradable ===")
 
 
 if __name__ == "__main__":

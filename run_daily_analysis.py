@@ -44,8 +44,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import (is_long_equity, reconcile_phantom_trades, safe_to_reconcile,
-                        split_positions)
+from exit_logic import (find_untradable, is_long_equity, reconcile_phantom_trades,
+                        safe_to_reconcile, split_positions)
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
 
@@ -225,6 +225,14 @@ class DailyRunner:
         except Exception:
             pass
 
+        # Delisted holdings (CTLP) stay in the account but cannot be sold. They are
+        # kept in `positions` so the trade log still reconciles against them, but
+        # they hold no position slot and no sector allocation: dead weight should
+        # not block a new entry.
+        self._untradable = find_untradable(raw, stop_map, self.broker.get_asset)
+        for sym, reason in self._untradable.items():
+            logger.warning(f"{sym} is untradable ({reason}) — excluded from position and sector caps")
+
         positions = {}
         total_unrealized = 0.0
         for p in raw:
@@ -261,7 +269,7 @@ class DailyRunner:
             cash=cash,
             invested=float(account.get("long_market_value", 0)),
             positions=positions,
-            num_positions=len(positions),
+            num_positions=len([s for s in positions if s not in self._untradable]),
             cash_allocation=cash / total_value if total_value > 0 else 0.0,
             available_cash=available,
             buying_power=bp,
@@ -449,6 +457,12 @@ class DailyRunner:
             # Portfolio risk assessment
             try:
                 risk = self.engine.risk_manager.assess_portfolio_risk(live_portfolio)
+                # A stop cannot be placed on an untradable holding; say what it is instead
+                stuck = getattr(self, "_untradable", {})
+                risk["recommendations"] = [
+                    r for r in risk.get("recommendations", [])
+                    if not (r.endswith("Add stop-loss protection") and r.split(":")[0] in stuck)
+                ] + [f"{sym}: Untradable — ask the broker to close it" for sym in stuck]
                 results["risk_assessment"] = risk
                 logger.info(
                     f"Portfolio risk: {risk.get('risk_level','?')} "
@@ -777,6 +791,8 @@ class DailyRunner:
                         "unrealized_pnl": round(float(p["unrealized_pl"]), 2),
                         "unrealized_pnl_pct": round(float(p["unrealized_plpc"]) * 100, 2),
                         "stop_loss": stop_map.get(p["symbol"]),
+                        **({"untradable": self._untradable[p["symbol"]]}
+                           if p["symbol"] in getattr(self, "_untradable", {}) else {}),
                     })
             else:
                 # Alpaca unavailable — preserve last known positions so dashboard
@@ -1033,7 +1049,8 @@ class DailyRunner:
             # From the portfolio state already built and verified for this run —
             # a second positions call could fail and silently switch the cap off.
             positions = [{"symbol": sym, "market_value": pos.market_value}
-                         for sym, pos in (self.portfolio.positions or {}).items()]
+                         for sym, pos in (self.portfolio.positions or {}).items()
+                         if sym not in getattr(self, "_untradable", {})]
             total_value = self.portfolio.total_value or 1
             # Build symbol → sector lookup
             sym_to_sector = {}

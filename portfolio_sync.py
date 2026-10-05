@@ -115,6 +115,11 @@ def main():
         except Exception:
             pass
 
+    # Delisted holdings that reject every order — flagged so the dashboard shows
+    # them as stuck rather than as positions missing a stop.
+    from exit_logic import find_untradable
+    untradable = find_untradable(positions, stop_map, broker.get_asset)
+
     # ── Build updated positions list ───────────────────────────────────────
     updated_positions = []
     total_unrealized  = 0.0
@@ -139,6 +144,8 @@ def main():
             "side":               p.get("side", "long"),
             "asset_class":        p.get("asset_class", "us_equity"),
         }
+        if sym in untradable:
+            pos["untradable"] = untradable[sym]
 
         # Attach cached company metadata (no fresh API calls)
         if sym in companies:

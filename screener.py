@@ -696,6 +696,8 @@ def run_screener(
         "final_count":     len(candidates),
         "sector_leaders":  sector_leaders[:6],
         "rejection_stats": rejected,
+        # Every stock's rank, not just the candidates': rotation.py judges holdings by it
+        "rs_ranks":        {s: int(r) for s, r in rs_ranks.items()},
         "candidates":      candidates,
     }
 

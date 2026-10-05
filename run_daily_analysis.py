@@ -492,6 +492,14 @@ class DailyRunner:
             # Get current sector allocations for concentration check
             sector_allocations = self._get_sector_allocations()
 
+            # Rotation (rotation.py): holdings that have stopped keeping pace. If the
+            # cap is full and one can make room, size today's buys for that slot.
+            import rotation
+            cap = self.engine.config.portfolio_constraints.max_positions
+            held_count = self.portfolio.num_positions
+            laggards = self._find_laggards(exit_results) if positions_verified else []
+            self.portfolio.num_positions = rotation.planning_count(held_count, cap, len(laggards))
+
             for candidate in candidates:
                 symbol = candidate["symbol"]
 
@@ -607,6 +615,19 @@ class DailyRunner:
             # 3. Execute trades (or dry-run)
             # Fail closed: without a confirmed position list the engine cannot see
             # what is already held (duplicate buys, no sector or position caps).
+            # 2b. Rotate laggards out, to get back under the cap and to seat today's buys
+            buyable = [o for o in opportunities if o.get("confidence", 0) >= min_confidence
+                       and o.get("limit_price") and (o.get("shares") or 0) > 0]
+            n_rotate = rotation.sells_wanted(len(laggards), held_count, cap, len(buyable))
+            results["rotation"] = self._rotate_out(laggards[:n_rotate], [o["symbol"] for o in buyable], execute)
+            results["rotation"]["laggards"] = laggards
+            if results["rotation"]["failed"]:
+                results["alerts"].append(
+                    "Rotation sell failed: " + ", ".join(f["symbol"] for f in results["rotation"]["failed"]))
+            # Back to the real count: only slots actually freed may be filled
+            self.portfolio.num_positions = held_count - len(results["rotation"]["sold"])
+            self._position_count = self.portfolio.num_positions
+
             if execute and not positions_verified:
                 msg = "New entries skipped: account and positions could not be verified with the broker"
                 logger.error(msg)
@@ -1797,6 +1818,18 @@ class DailyRunner:
                 })
                 continue
 
+            # Gate 2b: position cap, counted as orders go out. The size was worked
+            # out against the count at the start of the run; six buys in one run
+            # took the account from 16 to 22 positions against a cap of 20.
+            cap = self.engine.config.portfolio_constraints.max_positions
+            count = getattr(self, "_position_count", None)
+            if count is not None and count + submitted >= cap:
+                reason = f"position cap reached ({count + submitted}/{cap})"
+                logger.info(f"Skipping {symbol}: {reason}")
+                skipped += 1
+                execution_results.append({"symbol": symbol, "status": "skipped", "reason": reason})
+                continue
+
             # Gate 3: valid order parameters
             if not limit_price or shares <= 0:
                 if limit_price and shares == 0:
@@ -1933,6 +1966,75 @@ class DailyRunner:
             "total_attempted": len(opportunities),
             "details": execution_results
         }
+
+    def _find_laggards(self, exit_results: Dict) -> List[Dict]:
+        """Holdings eligible for rotation today, weakest first. Empty whenever the inputs cannot be trusted."""
+        import rotation
+        try:
+            docs = Path(__file__).parent / "docs" / "data"
+            ranks = rotation.load_ranks(json.loads((docs / "screener.json").read_text()), date.today())
+            if ranks is None:
+                logger.info("Rotation: no trustworthy ranks from today's screen — nothing rotated")
+                return []
+            trades = json.loads((docs / "trades.json").read_text())
+            exited = {e.get("symbol") for e in (exit_results or {}).get("exits_triggered", [])}
+            holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2)}
+                        for sym, pos in (self.portfolio.positions or {}).items()}
+            return rotation.find_laggards(holdings, trades, ranks, date.today(),
+                                          exclude=exited | set(getattr(self, "_untradable", {})))
+        except Exception as e:
+            logger.warning(f"Rotation: could not evaluate holdings ({e}) — nothing rotated")
+            return []
+
+    def _rotate_out(self, laggards: List[Dict], replacements: List[str], execute: bool,
+                    confirm_seconds: float = 20) -> Dict:
+        """
+        Sell the given laggards. A position's stops are cancelled before it is
+        sold; if the sale is then rejected the stops are put straight back, so a
+        failed rotation never leaves the position unprotected.
+        """
+        import rotation
+        out = {"sold": [], "failed": [], "planned": [l["symbol"] for l in laggards]}
+        if not laggards or not execute or not self.broker:
+            return out
+        from exit_logic import order_filled
+        from stop_placement import place_missing_stops, stop_coverage
+        log = []
+        for lag in laggards:
+            sym = lag["symbol"]
+            pos = self.portfolio.positions.get(sym)
+            try:
+                orders = self.broker.get_orders(status="open", symbols=[sym]) or []
+                if not getattr(self.broker, "last_orders_ok", True):
+                    raise RuntimeError("could not read open orders")
+                for order_id in (stop_coverage(orders).get(sym) or {}).get("ids", []):
+                    self.broker.cancel_order(order_id)
+                result = self.broker.close_position(sym)
+                if "error" in result:
+                    raise RuntimeError(result.get("error"))
+                # An accepted sell is not a sale: only a filled one frees the slot
+                if not order_filled(self.broker, result.get("id"), wait_seconds=confirm_seconds):
+                    raise RuntimeError("sell order accepted but not filled")
+            except Exception as e:
+                logger.error(f"ROTATION FAILED: {sym} — {e}")
+                out["failed"].append({"symbol": sym, "error": str(e)})
+                try:
+                    place_missing_stops(self.broker)      # still held: make sure it has its stop
+                except Exception as e2:
+                    logger.error(f"Could not restore stops after failed rotation of {sym}: {e2}")
+                continue
+            logger.info(f"ROTATED OUT: {sym} — RS rank {lag['rs_rank']} after {lag['hold_days']}d "
+                        f"({lag.get('pnl_pct')}%) to make room for {', '.join(replacements) or 'the position cap'}")
+            if pos is not None:
+                self._log_trade("EXIT", sym, pos.shares, pos.current_price,
+                                exit_reason=rotation.EXIT_REASON, realized_pnl_pct=pos.unrealized_pnl_pct)
+            out["sold"].append(sym)
+            log.append({"date": date.today().isoformat(), "symbol": sym, "rs_rank": lag["rs_rank"],
+                        "hold_days": lag["hold_days"], "pnl_pct": lag.get("pnl_pct"),
+                        "price": getattr(pos, "current_price", None), "replacements": replacements,
+                        "order_id": result.get("id")})
+        rotation.record(log)
+        return out
 
     def _protect_new_buys(self, execution: Dict, wait_seconds: float = 60, poll: float = 3) -> Dict:
         """

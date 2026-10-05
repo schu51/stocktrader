@@ -415,3 +415,34 @@ def test_daily_run_confirms_stops_against_the_account_not_the_sweeps_own_report(
     execution = {"details": [{"symbol": "AME", "status": "submitted", "order_id": "o1"}]}
     out = DailyRunner._protect_new_buys(SimpleNamespace(broker=broker), execution, wait_seconds=0)
     assert out["stops_placed"] == 1 and out["unprotected"] == ["AME"]
+
+
+def test_an_exit_that_is_accepted_but_never_fills_is_not_treated_as_sold(monkeypatch, tmp_path):
+    import json, pytest
+    pos = {**make_position("VRT", 5, 100.0, 80.0, -20.0), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos], orders=[_stop("VRT", 5, 92.0, "old")])
+    broker.get_orders = lambda status=None, limit=50, symbols=None: [o for o in broker.orders if o["id"] not in broker.cancelled]
+    broker.close_position = lambda sym: {"id": "sell1"}
+    broker.get_order = lambda oid: {"status": "accepted"}
+    intraday = _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0})
+    monkeypatch.setattr(intraday, "EXIT_CONFIRM_SECONDS", 0)
+    with pytest.raises(SystemExit):
+        intraday.main()
+    assert [(o["symbol"], o["qty"]) for o in broker.placed] == [("VRT", 5)]      # not skipped: stop goes back on
+    out = json.loads((tmp_path / "intraday_exit.json").read_text())
+    assert out["exits_triggered"][0]["confirmed"] is False
+    assert out["stop_failures"][0]["status"] == "exit_unconfirmed"
+
+
+def test_a_filled_exit_is_left_alone_by_the_sweep(monkeypatch, tmp_path):
+    import json
+    pos = {**make_position("VRT", 5, 100.0, 80.0, -20.0), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos], orders=[_stop("VRT", 5, 92.0, "old")])
+    broker.get_orders = lambda status=None, limit=50, symbols=None: [o for o in broker.orders if o["id"] not in broker.cancelled]
+    broker.close_position = lambda sym: {"id": "sell1"}
+    broker.get_order = lambda oid: {"status": "filled"}
+    monkeypatch.setattr("intraday_exit._log_exit", lambda *a, **k: None)
+    _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0}).main()               # no SystemExit
+    assert broker.placed == []
+    out = json.loads((tmp_path / "intraday_exit.json").read_text())
+    assert out["exits_triggered"][0]["confirmed"] is True and out["stop_failures"] == []

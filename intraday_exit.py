@@ -32,6 +32,9 @@ TRADES_FILE = DOCS_DATA / "trades.json"
 sys.path.insert(0, str(ROOT))
 
 
+EXIT_CONFIRM_SECONDS = 20   # how long to wait for a market sell to report filled
+
+
 def _cancel_open_stops(broker, symbol: str):
     """Cancel any existing stop sell orders for a symbol."""
     try:
@@ -248,13 +251,24 @@ def main():
         elif stop_update:
             stops_updated.append(stop_update)
 
+    # An accepted sell is not a sale. Confirm each exit filled; one that did not
+    # is still held with its stops cancelled, so it must not be skipped below.
+    from exit_logic import order_filled
+    for action in exits_triggered:
+        if action.get("executed"):
+            action["confirmed"] = order_filled(broker, action.get("order_id"), wait_seconds=EXIT_CONFIRM_SECONDS)
+            if not action["confirmed"]:
+                logger.error(f"EXIT NOT CONFIRMED: {action['symbol']} — sell order {action.get('order_id')} has not filled")
+                stop_failures.append({"symbol": action["symbol"], "status": "exit_unconfirmed",
+                                      "error": "sell order accepted but not filled"})
+
     # Blanket rule: no long position without a stop for all its shares. Catches a
     # buy that filled after the daily run finished, or only partly at the time.
     stops_placed = []
     try:
         from stop_placement import place_missing_stops
-        # Skip only what was actually sold: a failed exit is still held and needs its stop back
-        sweep = place_missing_stops(broker, skip={a["symbol"] for a in exits_triggered if a.get("executed")})
+        # Skip only what was actually sold: a failed or unfilled exit is still held and needs its stop back
+        sweep = place_missing_stops(broker, skip={a["symbol"] for a in exits_triggered if a.get("confirmed")})
         stops_placed = [r for r in sweep["results"] if r.get("status") == "placed"]
         stop_failures += [r for r in sweep["results"] if r.get("status") in ("failed", "error")]
         if sweep.get("error"):

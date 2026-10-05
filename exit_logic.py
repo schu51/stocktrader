@@ -77,6 +77,29 @@ def find_untradable(positions: list, protected, get_asset) -> dict:
     return stuck
 
 
+def order_filled(broker, order_id: Optional[str], wait_seconds: float = 20, poll: float = 2) -> bool:
+    """
+    True once Alpaca reports the order filled. A sell that was accepted is not
+    yet a sale: until it fills the shares are still held, and the stops that
+    were cancelled to make way for it are gone. Anything else — no order id,
+    a status that cannot be read, still open when the wait runs out — is False.
+    """
+    import time
+    if not order_id:
+        return False
+    deadline = time.monotonic() + wait_seconds
+    while True:
+        try:
+            status = (broker.get_order(order_id) or {}).get("status")
+        except Exception:
+            status = None
+        if status == "filled":
+            return True
+        if status in ("canceled", "expired", "rejected") or time.monotonic() >= deadline:
+            return False
+        time.sleep(poll)
+
+
 def split_positions(positions: list) -> Tuple[list, list]:
     """(long stock positions, everything else — shorts, options, other assets)."""
     longs = [p for p in positions or [] if is_long_equity(p)]

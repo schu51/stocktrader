@@ -619,6 +619,15 @@ class DailyRunner:
 
             # 4. Build summary
             total_investment = sum(o.get("position_value", 0) for o in opportunities)
+            # Every buy carries a stop: place them as soon as the orders fill
+            if execute and results["execution"].get("submitted", 0) > 0:
+                results["stops_after_buy"] = self._protect_new_buys(results["execution"])
+                unprotected = results["stops_after_buy"].get("unprotected") or []
+                if unprotected:
+                    results["alerts"].append(
+                        f"Bought and held without a stop: {', '.join(unprotected)} "
+                        f"(the next intraday check retries)")
+
             executed_count = results["execution"].get("submitted", 0)
 
             results["summary"] = {
@@ -1924,6 +1933,43 @@ class DailyRunner:
             "total_attempted": len(opportunities),
             "details": execution_results
         }
+
+    def _protect_new_buys(self, execution: Dict, wait_seconds: float = 60, poll: float = 3) -> Dict:
+        """
+        Place a stop on every position just bought. Waits briefly for the buy
+        orders to fill, then applies the same rule the other jobs use
+        (stop_placement.place_missing_stops). A buy still waiting to fill is
+        returned as `pending` — there is nothing to protect yet, and the intraday
+        check that runs every 30 minutes covers it once it fills. A buy that is
+        held without a stop for all its shares is `unprotected`, which raises an
+        alert. Never raises: a failure here must not undo the record of orders
+        already sent.
+        """
+        import time
+        bought = [d for d in execution.get("details", []) if d.get("status") == "submitted" and d.get("order_id")]
+        symbols = [d["symbol"] for d in bought]
+        try:
+            from stop_placement import place_missing_stops, uncovered_positions
+            deadline = time.monotonic() + wait_seconds
+            while True:
+                pending = [d["symbol"] for d in bought
+                           if (self.broker.get_order(d["order_id"]) or {}).get("status")
+                           in ("new", "accepted", "pending_new", "partially_filled")]
+                if not pending or time.monotonic() >= deadline:
+                    break
+                time.sleep(poll)
+            sweep = place_missing_stops(self.broker)
+            still = {p["symbol"] for p in uncovered_positions(
+                self.broker.get_positions() or [], self.broker.get_orders(status="open", limit=500) or [])}
+            unprotected = sorted(still & set(symbols))
+            logger.info(f"Stops after buy: {sweep['stops_placed']} placed, {sweep['stops_failed']} failed, "
+                        f"still filling: {pending or 'none'}, unprotected: {unprotected or 'none'}")
+            return {"stops_placed": sweep["stops_placed"], "stops_failed": sweep["stops_failed"],
+                    "results": sweep["results"], "pending": pending, "unprotected": unprotected}
+        except Exception as e:
+            logger.error(f"Could not place stops after buying: {e}")
+            return {"stops_placed": 0, "stops_failed": 0, "results": [], "pending": [],
+                    "unprotected": symbols, "error": str(e)}
 
     def _decision_to_dict(self, decision) -> Dict:
         """Convert Decision object to JSON-serializable dict."""

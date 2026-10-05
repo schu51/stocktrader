@@ -156,7 +156,7 @@ def test_main_reports_a_delisted_holding_separately(monkeypatch, tmp_path):
         def is_market_open(self): return True
         def get_positions(self):
             return [make_position("CTLP", 281, 10.64, 11.2, 5.26), make_position("AMD", 7, 506.44, 621.86, 22.79)]
-        def get_orders(self, status=None): return []
+        def get_orders(self, status=None, limit=50): return []
         def get_asset(self, symbol):
             return {"status": "inactive", "tradable": False} if symbol == "CTLP" else {"status": "active", "tradable": True}
         def place_order(self, **kw):
@@ -169,3 +169,122 @@ def test_main_reports_a_delisted_holding_separately(monkeypatch, tmp_path):
     assert Broker.orders == ["AMD"]
     assert (out["stops_placed"], out["stops_failed"], out["untradable"]) == (1, 0, 1)
     assert [r["status"] for r in out["results"]] == ["untradable", "placed"]
+
+
+# ── blanket rule: every long position carries a stop for all its shares ──────
+
+class _Broker:
+    """Minimal Alpaca stand-in: positions, open orders, and a record of what was sent."""
+    def __init__(self, positions, orders=(), inactive=()):
+        self.positions, self.orders, self.inactive = list(positions), list(orders), set(inactive)
+        self.placed, self.cancelled = [], []
+    def get_positions(self): return self.positions
+    def get_orders(self, status=None, limit=50): return [o for o in self.orders if o["id"] not in self.cancelled]
+    def get_asset(self, symbol):
+        return {"status": "inactive", "tradable": False} if symbol in self.inactive else {"status": "active", "tradable": True}
+    def cancel_order(self, order_id): self.cancelled.append(order_id); return {"success": True}
+    def place_order(self, **kw):
+        self.placed.append(kw)
+        self.orders.append({"id": f"new{len(self.placed)}", "symbol": kw["symbol"], "side": "sell", "type": "stop",
+                            "qty": str(kw["qty"]), "stop_price": str(kw["stop_price"])})
+        return {"id": f"new{len(self.placed)}"}
+
+
+def _stop(symbol, qty, price, oid):
+    return {"id": oid, "symbol": symbol, "side": "sell", "type": "stop", "qty": str(qty), "stop_price": str(price)}
+
+
+def test_a_position_bought_today_gets_a_stop_for_all_its_shares():
+    from stop_placement import place_missing_stops
+    broker = _Broker([make_position("AME", 16, 254.01, 253.90, -0.04), make_position("AMD", 7, 506.44, 630.18, 24.4)],
+                     orders=[_stop("AMD", 7, 514.04, "s1")])
+    out = place_missing_stops(broker, trades=[])
+    assert [(o["symbol"], o["qty"], o["side"], o["order_type"], o["time_in_force"]) for o in broker.placed] == \
+        [("AME", 16, "sell", "stop", "gtc")]
+    assert broker.placed[0]["stop_price"] == round(254.01 * 0.92, 2)       # default tier: 8% below entry
+    assert (out["stops_placed"], out["stops_failed"], out["already_protected"]) == (1, 0, 1)
+
+
+def test_a_stop_covering_only_part_of_the_shares_is_replaced_never_lowered():
+    # Bought in two fills: the stop from the first fill covers 6 of 9 shares
+    from stop_placement import place_missing_stops, uncovered_positions
+    pos = make_position("PSX", 9, 266.80, 266.63, -0.06)
+    broker = _Broker([pos], orders=[_stop("PSX", 6, 250.00, "old")])        # 250.00 is above the 8% tier (245.46)
+    assert [p["symbol"] for p in uncovered_positions([pos], broker.get_orders())] == ["PSX"]
+    place_missing_stops(broker, trades=[])
+    assert broker.cancelled == ["old"]
+    assert (broker.placed[0]["qty"], broker.placed[0]["stop_price"]) == (9, 250.00)
+    assert uncovered_positions([pos], broker.get_orders()) == []           # and now the rule holds
+
+
+def test_fully_covered_positions_and_positions_being_sold_are_left_alone():
+    from stop_placement import place_missing_stops
+    broker = _Broker([make_position("AMD", 7, 506.44, 630.18, 24.4), make_position("VRT", 5, 100.0, 80.0, -20.0)],
+                     orders=[_stop("AMD", 7, 514.04, "s1")])
+    out = place_missing_stops(broker, trades=[], skip={"VRT"})              # VRT's exit was just sent
+    assert broker.placed == [] and broker.cancelled == []
+    assert out["stops_placed"] == 0
+
+
+def test_stop_coverage_adds_up_several_orders_and_ignores_buys_and_limits():
+    from stop_placement import stop_coverage
+    cover = stop_coverage([_stop("GEV", 1, 900.0, "a"), _stop("GEV", 1, 910.0, "b"),
+                           {"id": "c", "symbol": "GEV", "side": "sell", "type": "limit", "qty": "2"},
+                           {"id": "d", "symbol": "GEV", "side": "buy", "type": "stop", "qty": "2"},
+                           {"id": "e", "symbol": "VLO", "side": "sell", "type": "trailing_stop", "qty": "5"}])
+    assert cover["GEV"] == {"qty": 2, "stop": 910.0, "ids": ["a", "b"]}
+    assert cover["VLO"]["qty"] == 5
+
+
+def test_daily_run_places_stops_on_what_it_just_bought():
+    from types import SimpleNamespace
+    from run_daily_analysis import DailyRunner
+    broker = _Broker([make_position("AME", 16, 254.01, 253.90, -0.04), make_position("AMD", 7, 506.44, 630.18, 24.4)],
+                     orders=[_stop("AMD", 7, 514.04, "s1")])
+    broker.get_order = lambda oid: {"status": "filled"}
+    execution = {"details": [{"symbol": "AME", "status": "submitted", "order_id": "o1"},
+                             {"symbol": "CAT", "status": "skipped"}]}
+    out = DailyRunner._protect_new_buys(SimpleNamespace(broker=broker), execution, wait_seconds=0)
+    assert [o["symbol"] for o in broker.placed] == ["AME"]
+    assert (out["stops_placed"], out["pending"], out["unprotected"]) == (1, [], [])
+
+
+def test_daily_run_reports_a_buy_still_filling_and_a_buy_left_without_a_stop():
+    from types import SimpleNamespace
+    from run_daily_analysis import DailyRunner
+    broker = _Broker([make_position("AME", 16, 254.01, 253.90, -0.04)])
+    broker.get_order = lambda oid: {"status": "new" if oid == "o2" else "filled"}
+    broker.place_order = lambda **kw: {"error": "insufficient qty available"}       # the stop is rejected
+    execution = {"details": [{"symbol": "AME", "status": "submitted", "order_id": "o1"},
+                             {"symbol": "EXPD", "status": "submitted", "order_id": "o2"}]}
+    out = DailyRunner._protect_new_buys(SimpleNamespace(broker=broker), execution, wait_seconds=0)
+    assert out["pending"] == ["EXPD"]            # not filled yet: nothing to protect, not an alert
+    assert out["unprotected"] == ["AME"]         # held without a stop: this is the alert
+    assert out["stops_failed"] == 1
+
+
+def test_daily_run_survives_a_broker_failure_while_placing_stops():
+    from types import SimpleNamespace
+    from run_daily_analysis import DailyRunner
+
+    class Down:
+        def get_order(self, oid): raise RuntimeError("alpaca down")
+    out = DailyRunner._protect_new_buys(
+        SimpleNamespace(broker=Down()), {"details": [{"symbol": "AME", "status": "submitted", "order_id": "o1"}]},
+        wait_seconds=0)
+    assert out["unprotected"] == ["AME"] and "alpaca down" in out["error"]
+
+
+def test_intraday_check_sweeps_for_positions_without_a_stop(monkeypatch, tmp_path):
+    import json
+    import alpaca_broker, exit_logic, intraday_exit
+    pos = {**make_position("EXPD", 13, 192.39, 192.38, -0.01), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos])
+    broker.is_market_open = lambda: True
+    monkeypatch.setattr(alpaca_broker, "AlpacaBroker", lambda: broker)
+    monkeypatch.setattr(exit_logic, "get_sma50_map", lambda symbols: {"EXPD": 150.0})
+    monkeypatch.setattr(intraday_exit, "DOCS_DATA", tmp_path)
+    intraday_exit.main()
+    assert [(o["symbol"], o["qty"]) for o in broker.placed] == [("EXPD", 13)]
+    out = json.loads((tmp_path / "intraday_exit.json").read_text())
+    assert out["exits_triggered"] == [] and [r["symbol"] for r in out["stops_placed"]] == ["EXPD"]

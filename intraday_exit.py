@@ -228,11 +228,23 @@ def main():
         if stop_update:
             stops_updated.append(stop_update)
 
+    # Blanket rule: no long position without a stop for all its shares. Catches a
+    # buy that filled after the daily run finished, or only partly at the time.
+    stops_placed = []
+    try:
+        from stop_placement import place_missing_stops
+        sweep = place_missing_stops(broker, skip={a["symbol"] for a in exits_triggered})
+        stops_placed = [r for r in sweep["results"] if r.get("status") != "untradable"]
+    except Exception as e:
+        logger.error(f"Stop sweep failed: {e}")
+        stops_placed = [{"status": "error", "error": str(e)}]
+
     output = {
         "generated_at":     datetime.now().isoformat(),
         "positions_checked": len(positions),
         "exits_triggered":   exits_triggered,
         "stops_updated":     stops_updated,
+        "stops_placed":      stops_placed,
         "mode":              "EXECUTE",
     }
     out_path = DOCS_DATA / "intraday_exit.json"

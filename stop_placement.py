@@ -1,8 +1,9 @@
 """
 Stop Placement Agent
 ====================
-Runs at 9:31 AM EDT Mon–Fri (1 minute after market open).
-Places a GTC stop order in Alpaca for every open position that has none.
+Every long stock position carries a GTC stop order in Alpaca for all its shares.
+Runs at the open Mon–Fri, and place_missing_stops() is also called by the daily
+run right after it buys and by every intraday exit check.
 
 Positions that already have an active stop/stop_limit sell order are skipped.
 Stop price is calculated using the same trailing stop tiers as the daily runner.
@@ -87,41 +88,68 @@ def load_trades() -> List[Dict]:
         return []
 
 
-def main():
-    logger.info("=== Stop Placement Agent Starting ===")
+STOP_ORDER_TYPES = ("stop", "stop_limit", "trailing_stop")
 
-    try:
-        from alpaca_broker import AlpacaBroker
-        broker = AlpacaBroker()
-    except Exception as e:
-        logger.error(f"Alpaca connection failed: {e}")
-        sys.exit(1)
 
-    if not broker.is_market_open():
-        logger.info("Market is closed — stop placement skipped")
-        return
+def stop_coverage(open_orders: List[Dict]) -> Dict[str, Dict]:
+    """Per symbol: shares covered by live sell stops, the highest stop price, and the order ids."""
+    cover: Dict[str, Dict] = {}
+    for o in open_orders or []:
+        if o.get("side") != "sell" or o.get("type") not in STOP_ORDER_TYPES or not o.get("symbol"):
+            continue
+        c = cover.setdefault(o["symbol"], {"qty": 0, "stop": None, "ids": []})
+        try:
+            c["qty"] += int(float(o.get("qty") or 0))
+        except (TypeError, ValueError):
+            pass
+        try:
+            price = float(o.get("stop_price"))
+            c["stop"] = price if c["stop"] is None else max(c["stop"], price)
+        except (TypeError, ValueError):
+            pass
+        if o.get("id"):
+            c["ids"].append(o["id"])
+    return cover
 
+
+def uncovered_positions(positions: List[Dict], open_orders: List[Dict], skip: Optional[Set[str]] = None) -> List[Dict]:
+    """
+    Long stock positions whose live stops cover fewer shares than are held.
+    A position bought in several fills can end up with a stop on only the first
+    fill; that counts as unprotected, not protected.
+    """
+    from exit_logic import is_long_equity
+    cover = stop_coverage(open_orders)
+    out = []
+    for p in positions or []:
+        if not is_long_equity(p) or p["symbol"] in (skip or ()):
+            continue
+        if cover.get(p["symbol"], {}).get("qty", 0) < int(float(p["qty"])):
+            out.append(p)
+    return out
+
+
+def place_missing_stops(broker, trades: Optional[List[Dict]] = None, skip: Optional[Set[str]] = None) -> Dict:
+    """
+    The blanket rule: every long stock position carries a stop for all its shares.
+
+    Called right after the daily run submits its buys, on every intraday check,
+    and at the open, so a position is never left without one for longer than the
+    gap between those runs. A position with a stop on only part of its shares has
+    that stop replaced by one for the full quantity, never at a lower price.
+    `skip`: symbols being sold in this same run.
+    """
     positions   = broker.get_positions() or []
-    open_orders = broker.get_orders(status="open") or []
+    open_orders = broker.get_orders(status="open", limit=500) or []   # every stop, not the first 50
+    cover       = stop_coverage(open_orders)
+    to_protect  = uncovered_positions(positions, open_orders, skip)
+    trades      = load_trades() if trades is None else trades
 
-    protected  = build_protected_set(open_orders)
-    to_protect = positions_needing_stops(positions, protected)
-
-    logger.info(
-        f"Positions: {len(positions)} total, "
-        f"{len(protected)} already protected, "
-        f"{len(to_protect)} need stops"
-    )
-
-    placed  = 0
-    failed  = 0
-    untradable = 0
-    results = []
-    trades  = load_trades()
+    placed, failed, untradable, results = 0, 0, 0, []
 
     for pos in to_protect:
         sym = pos["symbol"]
-        qty = int(pos["qty"])
+        qty = int(float(pos["qty"]))
 
         # A delisted holding rejects every order: report it as stuck, not as a
         # stop that failed, so a real failure is not lost among the daily repeats.
@@ -138,6 +166,13 @@ def main():
 
         try:
             stop_price, tier = calculate_stop_for_position(pos, open_trade_for(sym, trades))
+            partial = cover.get(sym)
+            if partial:
+                # Replace a stop that covers only some of the shares; keep the higher price
+                if partial["stop"] is not None and partial["stop"] > stop_price:
+                    stop_price, tier = round(partial["stop"], 2), "kept existing stop price"
+                for order_id in partial["ids"]:
+                    broker.cancel_order(order_id)
             result = broker.place_order(
                 symbol=sym,
                 qty=qty,
@@ -159,20 +194,40 @@ def main():
             logger.error(f"Error placing stop for {sym}: {e}")
             results.append({"symbol": sym, "status": "error", "error": str(e)})
 
-    output = {
-        "generated_at":     datetime.now().isoformat(),
+    from exit_logic import is_long_equity
+    longs = [p for p in positions if is_long_equity(p)]
+    return {
+        "generated_at":      datetime.now().isoformat(),
         "positions_checked": len(positions),
-        "already_protected": len(protected),
+        "already_protected": len(longs) - len(to_protect) - len([p for p in longs if p["symbol"] in (skip or ())]),
         "stops_placed":      placed,
         "stops_failed":      failed,
         "untradable":        untradable,
         "results":           results,
     }
+
+
+def main():
+    logger.info("=== Stop Placement Agent Starting ===")
+
+    try:
+        from alpaca_broker import AlpacaBroker
+        broker = AlpacaBroker()
+    except Exception as e:
+        logger.error(f"Alpaca connection failed: {e}")
+        sys.exit(1)
+
+    if not broker.is_market_open():
+        logger.info("Market is closed — stop placement skipped")
+        return
+
+    output = place_missing_stops(broker)
     out_path = ROOT / "docs" / "data" / "stop_placement.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2))
 
-    logger.info(f"=== Stop Placement Complete: {placed} placed, {failed} failed, {untradable} untradable ===")
+    logger.info(f"=== Stop Placement Complete: {output['stops_placed']} placed, "
+                f"{output['stops_failed']} failed, {output['untradable']} untradable ===")
 
 
 if __name__ == "__main__":

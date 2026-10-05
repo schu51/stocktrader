@@ -1,53 +1,16 @@
 {
-  "generated_at": "2026-10-05T15:15:40.792803",
+  "generated_at": "2026-10-05T15:45:45.644839",
   "positions_checked": 23,
   "exits_triggered": [],
   "stops_updated": [
     {
       "symbol": "VLO",
-      "new_stop": 374.26,
+      "new_stop": 376.33,
       "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 55.58
+      "pnl_pct": 56.45
     }
   ],
-  "stops_placed": [
-    {
-      "symbol": "AME",
-      "stop": 233.69,
-      "tier": "default \u2192 8% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "BE",
-      "stop": 265.65,
-      "tier": "default \u2192 8% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "EXPD",
-      "stop": 181.96,
-      "tier": "ATR stop \u2192 5.4% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "GEV",
-      "stop": 905.94,
-      "tier": "ATR stop \u2192 8.2% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "PSX",
-      "stop": 245.45,
-      "tier": "default \u2192 8% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "WAB",
-      "stop": 277.98,
-      "tier": "ATR stop \u2192 5.0% below entry",
-      "status": "placed"
-    }
-  ],
+  "stops_placed": [],
   "stop_failures": [],
   "mode": "EXECUTE"
 }

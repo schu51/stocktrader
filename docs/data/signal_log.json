@@ -1,1 +1,117 @@
-[]
+[
+  {
+    "date": "2026-10-05",
+    "symbol": "AME",
+    "price": 251.4600067138672,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 16.6,
+      "atr_pct": 0.01913,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.667,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "macd_cross",
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-05",
+    "symbol": "EXPD",
+    "price": 190.9499969482422,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 17.2,
+      "atr_pct": 0.02172,
+      "news_positive": false,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.0,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "macd_cross",
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-05",
+    "symbol": "CAT",
+    "price": 834.6199951171875,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 10.9,
+      "atr_pct": 0.02559,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": true,
+      "social_bearish": false,
+      "news_score": 0.429,
+      "st_bull_ratio": 0.867
+    },
+    "blocked_by": "macd_cross",
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-05",
+    "symbol": "PSX",
+    "price": 266.8299865722656,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": true,
+      "ma50_room": true,
+      "adx": 25.5,
+      "atr_pct": 0.03522,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.375,
+      "st_bull_ratio": 0.75
+    },
+    "blocked_by": "macd_cross",
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-05",
+    "symbol": "GEV",
+    "price": 974.8699951171875,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 9.0,
+      "atr_pct": 0.03316,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": true,
+      "social_bearish": false,
+      "news_score": 1.0,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "macd_cross",
+    "news_arm": "news",
+    "news_veto": false
+  }
+]

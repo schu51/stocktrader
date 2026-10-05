@@ -34,6 +34,12 @@ def test_the_buffer_keeps_a_holding_that_is_below_the_entry_bar_but_still_in_the
     assert rotation.find_laggards(HOLDINGS, TRADES, ranks, TODAY) == []
 
 
+def test_a_holding_with_a_sell_already_in_flight_is_never_rotated():
+    import rotation
+    trades = [{**_trade("HOOD", "2026-08-31"), "pending_exit": {"order_id": "sell1"}}, _trade("ANET", "2026-08-07")]
+    assert [l["symbol"] for l in rotation.find_laggards(HOLDINGS, trades, RANKS, TODAY)] == ["ANET"]
+
+
 def test_unknown_is_never_weak():
     import rotation
     assert rotation.find_laggards(HOLDINGS, TRADES, None, TODAY) == []

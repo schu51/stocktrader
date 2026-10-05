@@ -440,11 +440,44 @@ def test_an_exit_that_has_not_filled_stays_working_and_is_tracked_not_recorded_a
     assert out["stop_failures"][0]["status"] == "exit_unconfirmed"
 
 
-def _pending_trade(tmp_path):
+def _pending_trade(tmp_path, minutes_ago=5):
     import json
+    from datetime import datetime, timedelta
     (tmp_path / "trades.json").write_text(json.dumps([{
         "symbol": "VRT", "status": "OPEN", "entry_date": "2026-09-01", "entry_price": 100.0, "shares": 5,
-        "pending_exit": {"order_id": "sell1", "trigger": "HARD_LOSS_STOP", "price": 80.0, "pnl_pct": -20.0}}]))
+        "pending_exit": {"order_id": "sell1", "trigger": "HARD_LOSS_STOP", "price": 80.0, "pnl_pct": -20.0,
+                         "sent": (datetime.now() - timedelta(minutes=minutes_ago)).isoformat()}}]))
+
+
+def test_a_pending_exit_unsettled_for_too_long_is_given_up_and_the_position_managed_again(monkeypatch, tmp_path):
+    # Otherwise a sell whose status can never be read would exempt the position from exits and stops for ever
+    import json, pytest
+    pos = {**make_position("VRT", 5, 100.0, 99.0, -1.0), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos])
+    broker.get_order = lambda oid: {"error": "not found"}
+    intraday = _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0})
+    _pending_trade(tmp_path, minutes_ago=90)
+    with pytest.raises(SystemExit):                                          # still reported
+        intraday.main()
+    assert broker.cancelled == ["sell1"]
+    trade = json.loads((tmp_path / "trades.json").read_text())[0]
+    assert trade["status"] == "OPEN" and "pending_exit" not in trade
+    assert [(o["symbol"], o["qty"]) for o in broker.placed] == [("VRT", 5)]    # protected again
+    assert json.loads((tmp_path / "intraday_exit.json").read_text())["stop_failures"][0]["status"] == "exit_expired"
+
+
+def test_a_part_filled_pending_exit_takes_the_sold_shares_off_the_trade(monkeypatch, tmp_path):
+    import json, pytest
+    pos = {**make_position("VRT", 3, 100.0, 99.0, -1.0), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos])
+    broker.get_order = lambda oid: {"status": "canceled", "filled_qty": "2", "filled_avg_price": "79.0"}
+    intraday = _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0})
+    _pending_trade(tmp_path)
+    with pytest.raises(SystemExit):
+        intraday.main()
+    trade = json.loads((tmp_path / "trades.json").read_text())[0]
+    assert (trade["status"], trade["shares"]) == ("OPEN", 3) and "pending_exit" not in trade
+    assert [(o["symbol"], o["qty"]) for o in broker.placed] == [("VRT", 3)]
 
 
 def test_a_pending_exit_that_later_fills_is_closed_with_its_real_exit(monkeypatch, tmp_path):
@@ -499,7 +532,9 @@ def test_sale_status_tells_sold_unsold_part_sold_and_unknown_apart():
     from types import SimpleNamespace
     from exit_logic import sale_status
     for order, expected in (({"status": "filled"}, "filled"), ({"status": "canceled", "filled_qty": "0"}, "dead"),
-                            ({"status": "rejected"}, "dead"), ({"status": "canceled", "filled_qty": "2"}, "partial"),
+                            ({"status": "rejected", "filled_qty": "0"}, "dead"),
+                            ({"status": "rejected"}, "working"),          # ended, amount sold unreadable: unknown
+                            ({"status": "canceled", "filled_qty": "2"}, "partial"),
                             ({"status": "new"}, "working"), ({"error": "timeout"}, "working"), (None, "working")):
         assert sale_status(SimpleNamespace(get_order=lambda oid, o=order: o), "x", wait_seconds=0) == expected
     assert sale_status(SimpleNamespace(get_order=lambda oid: {"status": "filled"}), None, wait_seconds=0) == "working"

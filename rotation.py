@@ -70,9 +70,15 @@ def load_ranks(screener: Optional[Dict], today: date) -> Optional[Dict[str, int]
 
 
 def held_days(symbol: str, trades: Iterable[Dict], today: date) -> Optional[int]:
-    """Days since the latest OPEN trade-log entry for the symbol, or None if there is none."""
+    """
+    Days since the latest OPEN trade-log entry for the symbol. None if there is
+    none, or if that trade already has a sell in flight (pending_exit): it must
+    not be sold a second time.
+    """
     for t in reversed(list(trades or [])):
         if t.get("symbol") == symbol and t.get("status") == "OPEN":
+            if t.get("pending_exit"):
+                return None
             try:
                 return (today - date.fromisoformat(str(t.get("entry_date"))[:10])).days
             except (TypeError, ValueError):

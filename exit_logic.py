@@ -106,10 +106,12 @@ def sale_status(broker, order_id: Optional[str], wait_seconds: float = 20, poll:
         if status == "filled":
             return SALE_FILLED
         if status in _ENDED_UNFILLED:
+            # "Nothing sold" needs an explicit, readable zero. A missing or
+            # unreadable filled quantity is unknown, not zero.
             try:
-                sold = float(order.get("filled_qty") or 0)
-            except (TypeError, ValueError):
-                sold = 0.0
+                sold = float(order["filled_qty"])
+            except (KeyError, TypeError, ValueError):
+                return SALE_WORKING
             return SALE_PARTIAL if sold > 0 else SALE_DEAD
         if time.monotonic() >= deadline:
             return SALE_WORKING

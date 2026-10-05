@@ -65,6 +65,16 @@ def mark_pending_exit(symbol: str, order_id: Optional[str], trigger: str, price:
     return _rewrite_trades(change)
 
 
+PENDING_EXIT_MAX_MINUTES = 45   # a sell still unsettled after this is given up on and the exit re-evaluated
+
+
+def _pending_age_minutes(pending: Dict) -> Optional[float]:
+    try:
+        return (datetime.now() - datetime.fromisoformat(pending["sent"])).total_seconds() / 60
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
 def settle_pending_exits(broker) -> List[Dict]:
     """
     Follow up sells that had not filled when they were last checked.
@@ -72,9 +82,13 @@ def settle_pending_exits(broker) -> List[Dict]:
       dead     nothing sold; the mark is cleared and the position is managed as usual
       partial  the shares sold are taken off the trade, which stays open
       working  left as it is, and reported
-    Returns one row per pending exit: {"symbol", "order_id", "status"}.
+      expired  still unsettled after PENDING_EXIT_MAX_MINUTES (or untraceable):
+               the order is cancelled and the mark cleared, so the position is
+               evaluated and protected again instead of being skipped for ever
+    Returns one row per pending exit: {"symbol", "order_id", "status"}. A row
+    whose trade-log update failed keeps status "working" and carries "error".
     """
-    from exit_logic import SALE_DEAD, SALE_FILLED, SALE_PARTIAL, sale_status
+    from exit_logic import SALE_DEAD, SALE_FILLED, SALE_PARTIAL, SALE_WORKING, sale_status
     try:
         trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
     except Exception as e:
@@ -83,33 +97,71 @@ def settle_pending_exits(broker) -> List[Dict]:
     out = []
     for t in [t for t in trades if t.get("status") == "OPEN" and t.get("pending_exit")]:
         sym, pe = t["symbol"], t["pending_exit"]
-        status = sale_status(broker, pe.get("order_id"), wait_seconds=0)
-        row = {"symbol": sym, "order_id": pe.get("order_id"), "status": status}
+        oid = pe.get("order_id")
+        status = sale_status(broker, oid, wait_seconds=0)
+        age = _pending_age_minutes(pe)
+        if status == SALE_WORKING and (not oid or age is None or age > PENDING_EXIT_MAX_MINUTES):
+            # Give up on it rather than skip this position indefinitely
+            try:
+                if oid:
+                    broker.cancel_order(oid)
+            except Exception:
+                pass
+            status = sale_status(broker, oid, wait_seconds=0)
+            if status == SALE_WORKING:
+                status = "expired"
+        row = {"symbol": sym, "order_id": oid, "status": status}
+
+        price, sold = float(pe.get("price") or 0), None
         if status in (SALE_FILLED, SALE_PARTIAL):
             try:
-                order = broker.get_order(pe["order_id"]) or {}
-                price = float(order.get("filled_avg_price") or pe.get("price") or 0)
-                sold = int(float(order.get("filled_qty") or 0))
+                order = broker.get_order(oid) or {}
+                sold = int(float(order["filled_qty"]))
+                price = float(order.get("filled_avg_price") or price)
             except Exception:
-                price, sold = float(pe.get("price") or 0), 0
-        if status == SALE_FILLED:
-            _log_exit(sym, price, sold or t.get("shares", 0), pe.get("trigger") or "EXIT",
-                      realized_pnl_pct=pe.get("pnl_pct"))
+                sold = None
+        if status == SALE_PARTIAL and not sold:
+            row.update(status=SALE_WORKING, error="partly filled, quantity unreadable")   # unknown: keep tracking
+            out.append(row)
+            continue
+        if status == SALE_WORKING:
+            out.append(row)
+            continue
+
+        def change(all_trades, sym=sym, oid=oid, status=status, price=price, sold=sold, pe=pe):
+            for x in reversed(all_trades):
+                if x.get("symbol") == sym and x.get("status") == "OPEN" \
+                        and (x.get("pending_exit") or {}).get("order_id") == oid:
+                    x.pop("pending_exit", None)
+                    if status == SALE_FILLED:      # closed and unmarked in the same write
+                        entry = float(x.get("entry_price") or price or 0)
+                        pnl_pct = pe.get("pnl_pct")
+                        if pnl_pct is None:
+                            pnl_pct = ((price - entry) / entry) * 100 if entry else 0
+                        today = datetime.now().strftime("%Y-%m-%d")
+                        try:
+                            hold = (date.fromisoformat(today) - date.fromisoformat(x.get("entry_date", today))).days
+                        except Exception:
+                            hold = 0
+                        x.update({"status": "CLOSED", "exit_date": today, "exit_ts": datetime.now().isoformat(),
+                                  "exit_price": round(price, 2), "exit_reason": pe.get("trigger") or "EXIT",
+                                  "pnl_pct": round(pnl_pct, 2),
+                                  "pnl_usd": round((pnl_pct / 100.0) * entry * x.get("shares", sold or 0), 2),
+                                  "hold_days": hold})
+                    elif status == SALE_PARTIAL:
+                        x["shares"] = max(0, int(x.get("shares", 0)) - sold)
+                    return
+            raise LookupError(f"no open trade for {sym} carries pending exit {oid}")
+
+        if not _rewrite_trades(change):
+            row.update(status=SALE_WORKING, error="trade log could not be updated")
+        elif status == SALE_FILLED:
             logger.info(f"PENDING EXIT SETTLED: {sym} filled @ ${price:.2f}")
         elif status == SALE_PARTIAL:
             logger.error(f"PENDING EXIT PARTLY FILLED: {sym} sold {sold} share(s); the rest is still held")
             row["sold"] = sold
-        elif status == SALE_DEAD:
-            logger.warning(f"PENDING EXIT DID NOT FILL: {sym} — still held")
-        if status != "working":
-            def change(all_trades, sym=sym, oid=pe.get("order_id"), sold=row.get("sold")):
-                for x in reversed(all_trades):
-                    if x.get("symbol") == sym and (x.get("pending_exit") or {}).get("order_id") == oid:
-                        x.pop("pending_exit", None)
-                        if sold and x.get("status") == "OPEN":
-                            x["shares"] = max(0, int(x.get("shares", 0)) - sold)
-                        return
-            _rewrite_trades(change)
+        else:
+            logger.warning(f"PENDING EXIT {status.upper()}: {sym} — still held, back under normal management")
         out.append(row)
     return out
 
@@ -302,7 +354,7 @@ def main():
     pending = settle_pending_exits(broker)
     in_flight = {p["symbol"] for p in pending if p["status"] == "working" and p.get("symbol")}
     for p in pending:
-        if p["status"] in ("working", "partial"):
+        if p["status"] in ("working", "partial", "expired"):
             stop_failures.append({"symbol": p["symbol"], "status": f"exit_{p['status']}",
                                   "error": p.get("error") or f"sell order {p['order_id']} has not fully filled"})
 
@@ -341,10 +393,13 @@ def main():
                 stop_failures.append({"symbol": sym, "status": "exit_failed", "error": why})
             else:
                 logger.error(f"EXIT NOT CONFIRMED: {sym} — sell order {action['order_id']} is still working")
-                mark_pending_exit(sym, action["order_id"], action["trigger"], action["price"], action["pnl_pct"])
+                tracked = mark_pending_exit(sym, action["order_id"], action["trigger"],
+                                            action["price"], action["pnl_pct"])
                 in_flight.add(sym)
                 stop_failures.append({"symbol": sym, "status": "exit_unconfirmed",
-                                      "error": "sell order accepted but not yet filled"})
+                                      "error": "sell order accepted but not yet filled" + (
+                                          "" if tracked else "; AND it could not be recorded on the trade — "
+                                          "check this position by hand")})
             exits_triggered.append(action)
             continue  # Skip stop update for exited position
 

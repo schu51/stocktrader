@@ -204,7 +204,7 @@ def main():
         logger.info("Market closed — intraday exit monitor skipped")
         return
 
-    from exit_logic import split_positions
+    from exit_logic import confirm_sale, split_positions
     positions, unmanaged = split_positions(broker.get_positions() or [])
     logger.info(f"Evaluating {len(positions)} long stock positions")
     if unmanaged:
@@ -233,14 +233,20 @@ def main():
             result = broker.close_position(sym)
             action["executed"] = "error" not in result
             action["order_id"] = result.get("id")
-            if action["executed"]:
+            # An accepted sell is not a sale. The trade is recorded closed only
+            # once the order has filled; one that does not fill is cancelled.
+            action["confirmed"] = action["executed"] and confirm_sale(
+                broker, action["order_id"], wait_seconds=EXIT_CONFIRM_SECONDS)
+            if action["confirmed"]:
                 _log_exit(sym, action["price"], action["qty"], action["trigger"],
                           realized_pnl_pct=action["pnl_pct"])
             else:
                 # Still held, and its stops were just cancelled. The sweep below
                 # puts a stop back; the failed exit itself fails the run.
-                logger.error(f"EXIT FAILED: {sym} — {result.get('error')}")
-                stop_failures.append({"symbol": sym, "status": "exit_failed", "error": result.get("error")})
+                why = result.get("error") if not action["executed"] else "sell order accepted but not filled"
+                logger.error(f"EXIT FAILED: {sym} — {why}")
+                stop_failures.append({"symbol": sym, "error": why,
+                                      "status": "exit_unconfirmed" if action["executed"] else "exit_failed"})
             exits_triggered.append(action)
             continue  # Skip stop update for exited position
 
@@ -250,17 +256,6 @@ def main():
             stop_failures.append(stop_update)
         elif stop_update:
             stops_updated.append(stop_update)
-
-    # An accepted sell is not a sale. Confirm each exit filled; one that did not
-    # is still held with its stops cancelled, so it must not be skipped below.
-    from exit_logic import order_filled
-    for action in exits_triggered:
-        if action.get("executed"):
-            action["confirmed"] = order_filled(broker, action.get("order_id"), wait_seconds=EXIT_CONFIRM_SECONDS)
-            if not action["confirmed"]:
-                logger.error(f"EXIT NOT CONFIRMED: {action['symbol']} — sell order {action.get('order_id')} has not filled")
-                stop_failures.append({"symbol": action["symbol"], "status": "exit_unconfirmed",
-                                      "error": "sell order accepted but not filled"})
 
     # Blanket rule: no long position without a stop for all its shares. Catches a
     # buy that filled after the daily run finished, or only partly at the time.

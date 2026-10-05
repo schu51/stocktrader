@@ -100,6 +100,23 @@ def order_filled(broker, order_id: Optional[str], wait_seconds: float = 20, poll
         time.sleep(poll)
 
 
+def confirm_sale(broker, order_id: Optional[str], wait_seconds: float = 20) -> bool:
+    """
+    True only if the sell order filled. If it has not filled in time it is
+    cancelled, so it cannot fill later behind a record that says the position
+    is still held, and the answer is taken from the order's final status.
+    """
+    if order_filled(broker, order_id, wait_seconds):
+        return True
+    if not order_id:
+        return False
+    try:
+        broker.cancel_order(order_id)
+    except Exception:
+        pass
+    return order_filled(broker, order_id, wait_seconds=0)     # it may have filled before the cancel landed
+
+
 def split_positions(positions: list) -> Tuple[list, list]:
     """(long stock positions, everything else — shorts, options, other assets)."""
     longs = [p for p in positions or [] if is_long_equity(p)]

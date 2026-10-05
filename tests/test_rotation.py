@@ -81,12 +81,15 @@ class _Broker:
     def __init__(self, close=None, fill="filled"):
         self.orders = [{"id": "stopA", "symbol": "ANET", "side": "sell", "type": "stop", "qty": "13", "stop_price": "176.88"}]
         self.cancelled, self.placed, self.closed = [], [], []
-        self._close, self._fill = close or {"id": "sell1"}, fill
+        self._close, self._fill, self.clock = close or {"id": "sell1"}, fill, True
     def get_orders(self, status=None, limit=50, symbols=None):
         return [o for o in self.orders if o["id"] not in self.cancelled]
     def cancel_order(self, oid): self.cancelled.append(oid); return {"success": True}
     def close_position(self, sym): self.closed.append(sym); return self._close
-    def get_order(self, oid): return {"status": self._fill}
+    def get_order(self, oid):
+        status = self._fill.pop(0) if isinstance(self._fill, list) and len(self._fill) > 1 else self._fill
+        return {"status": status[0] if isinstance(status, list) else status}
+    def market_clock(self): return self.clock
     def get_positions(self):
         return [{"symbol": "ANET", "qty": 13.0, "avg_entry_price": 192.26, "current_price": 208.12, "unrealized_plpc": 0.0825}]
     def get_asset(self, sym): return {"status": "active", "tradable": True}
@@ -136,6 +139,26 @@ def test_a_rejected_or_unfilled_rotation_sell_frees_no_slot_and_the_stop_goes_ba
         assert logged == []                                              # not recorded as an exit
         assert [(o["symbol"], o["qty"], o["order_type"]) for o in broker.placed] == [("ANET", 13, "stop")]
         assert not (tmp_path / "rotation_log.json").exists()
+    assert broker.cancelled == ["stopA", "sell1"]            # the unfilled sell was cancelled, not left working
+
+
+def test_a_sell_that_fills_while_being_cancelled_still_counts_as_sold(monkeypatch, tmp_path):
+    from run_daily_analysis import DailyRunner
+    broker = _Broker(fill=["accepted", "filled"])
+    runner, logged = _runner(broker, monkeypatch, tmp_path)
+    out = DailyRunner._rotate_out(runner, LAG, ["TRGP"], execute=True, confirm_seconds=0)
+    assert out["sold"] == ["ANET"] and len(logged) == 1 and broker.placed == []
+
+
+def test_rotation_needs_the_market_confirmed_open_like_a_buy_does(monkeypatch, tmp_path):
+    from run_daily_analysis import DailyRunner
+    for clock, why in ((False, "market closed"), (None, "could not confirm the market is open")):
+        broker = _Broker()
+        broker.clock = clock
+        runner, _ = _runner(broker, monkeypatch, tmp_path)
+        out = DailyRunner._rotate_out(runner, LAG, ["TRGP"], execute=True, confirm_seconds=0)
+        assert out["sold"] == [] and out["skipped"] == why
+        assert broker.cancelled == [] and broker.closed == []       # stops untouched
 
 
 def test_rotation_does_nothing_when_open_orders_cannot_be_read(monkeypatch, tmp_path):
@@ -163,8 +186,9 @@ def test_position_cap_is_counted_as_orders_go_out(monkeypatch):
     engine = SimpleNamespace(
         config=SimpleNamespace(portfolio_constraints=SimpleNamespace(max_positions=20)),
         risk_manager=SimpleNamespace(pre_trade_risk_check=lambda **kw: {"approved": True}))
+    # _position_count is deliberately absent: the gate must fall back to the portfolio, never to "no cap"
     runner = SimpleNamespace(broker=broker, engine=engine, portfolio=SimpleNamespace(num_positions=18),
-                             _position_count=18, _log_trade=lambda **kw: None, _active_weight_version=lambda: 1)
+                             _log_trade=lambda **kw: None, _active_weight_version=lambda: 1)
     opps = [{"symbol": s, "confidence": 0.85, "limit_price": 100.0, "shares": 10, "stop_loss": 92.0}
             for s in ("AAA", "BBB", "CCC", "DDD")]
     out = rda.DailyRunner._execute_opportunities(runner, opps, True, 0.65)

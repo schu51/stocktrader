@@ -1823,7 +1823,9 @@ class DailyRunner:
             # took the account from 16 to 22 positions against a cap of 20.
             cap = self.engine.config.portfolio_constraints.max_positions
             count = getattr(self, "_position_count", None)
-            if count is not None and count + submitted >= cap:
+            if count is None:      # not set by run(): fall back to the portfolio, never to "no cap"
+                count = (portfolio or self.portfolio).num_positions
+            if count + submitted >= cap:
                 reason = f"position cap reached ({count + submitted}/{cap})"
                 logger.info(f"Skipping {symbol}: {reason}")
                 skipped += 1
@@ -1997,8 +1999,19 @@ class DailyRunner:
         out = {"sold": [], "failed": [], "planned": [l["symbol"] for l in laggards]}
         if not laggards or not execute or not self.broker:
             return out
-        from exit_logic import order_filled
+        from exit_logic import confirm_sale
         from stop_placement import place_missing_stops, stop_coverage
+        # Same precondition as a buy (Gate 1 in _execute_opportunities): the
+        # market must be confirmed open. A sell sent while it is closed would
+        # sit queued after its stops were cancelled.
+        try:
+            is_open = self.broker.market_clock()
+        except Exception:
+            is_open = None
+        if is_open is not True:
+            out["skipped"] = "market closed" if is_open is False else "could not confirm the market is open"
+            logger.warning(f"Rotation skipped: {out['skipped']}")
+            return out
         log = []
         for lag in laggards:
             sym = lag["symbol"]
@@ -2012,9 +2025,11 @@ class DailyRunner:
                 result = self.broker.close_position(sym)
                 if "error" in result:
                     raise RuntimeError(result.get("error"))
-                # An accepted sell is not a sale: only a filled one frees the slot
-                if not order_filled(self.broker, result.get("id"), wait_seconds=confirm_seconds):
-                    raise RuntimeError("sell order accepted but not filled")
+                # An accepted sell is not a sale: only a filled one frees the slot.
+                # One that does not fill is cancelled, so it cannot fill later
+                # behind a trade log that still shows the position open.
+                if not confirm_sale(self.broker, result.get("id"), wait_seconds=confirm_seconds):
+                    raise RuntimeError("sell order accepted but not filled; cancelled")
             except Exception as e:
                 logger.error(f"ROTATION FAILED: {sym} — {e}")
                 out["failed"].append({"symbol": sym, "error": str(e)})
@@ -2025,10 +2040,14 @@ class DailyRunner:
                 continue
             logger.info(f"ROTATED OUT: {sym} — RS rank {lag['rs_rank']} after {lag['hold_days']}d "
                         f"({lag.get('pnl_pct')}%) to make room for {', '.join(replacements) or 'the position cap'}")
-            if pos is not None:
-                self._log_trade("EXIT", sym, pos.shares, pos.current_price,
-                                exit_reason=rotation.EXIT_REASON, realized_pnl_pct=pos.unrealized_pnl_pct)
-            out["sold"].append(sym)
+            out["sold"].append(sym)            # the sale is real whether or not the bookkeeping below works
+            try:
+                if pos is not None:
+                    self._log_trade("EXIT", sym, pos.shares, pos.current_price,
+                                    exit_reason=rotation.EXIT_REASON, realized_pnl_pct=pos.unrealized_pnl_pct)
+            except Exception as e:
+                logger.error(f"Rotation of {sym} filled but could not be written to the trade log: {e}")
+                out["failed"].append({"symbol": sym, "error": f"sold, but trade log not updated: {e}"})
             log.append({"date": date.today().isoformat(), "symbol": sym, "rs_rank": lag["rs_rank"],
                         "hold_days": lag["hold_days"], "pnl_pct": lag.get("pnl_pct"),
                         "price": getattr(pos, "current_price", None), "replacements": replacements,

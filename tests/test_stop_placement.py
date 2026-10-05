@@ -426,8 +426,12 @@ def test_an_exit_that_is_accepted_but_never_fills_is_not_treated_as_sold(monkeyp
     broker.get_order = lambda oid: {"status": "accepted"}
     intraday = _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0})
     monkeypatch.setattr(intraday, "EXIT_CONFIRM_SECONDS", 0)
+    closed_in_log = []
+    monkeypatch.setattr(intraday, "_log_exit", lambda *a, **k: closed_in_log.append(a))
     with pytest.raises(SystemExit):
         intraday.main()
+    assert closed_in_log == []                                                   # not recorded closed before it is
+    assert broker.cancelled == ["old", "sell1"]                                  # the unfilled sell is cancelled
     assert [(o["symbol"], o["qty"]) for o in broker.placed] == [("VRT", 5)]      # not skipped: stop goes back on
     out = json.loads((tmp_path / "intraday_exit.json").read_text())
     assert out["exits_triggered"][0]["confirmed"] is False

@@ -404,7 +404,7 @@ class AlpacaBroker:
     
     def get_orders(self, 
                    status: str = "open",
-                   limit: int = 50,
+                   limit: int = 500,     # Alpaca's maximum. At 50, an account with more than 50 open orders hid stops from its readers
                    symbols: List[str] = None) -> List[Dict]:
         """
         Get orders.

@@ -183,10 +183,9 @@ def test_rotation_does_nothing_when_open_orders_cannot_be_read(monkeypatch, tmp_
     assert out["sold"] == [] and broker.cancelled == [] and broker.closed == []
 
 
-# ── position cap ─────────────────────────────────────────────────────────────
+# ── cash is the limit; a position cap is optional ───────────────────────────
 
-def test_position_cap_is_counted_as_orders_go_out(monkeypatch):
-    # 2026-10-05: six buys in one run took the account from 16 positions to 22 against a cap of 20
+def _exec_runner(monkeypatch, cap, cash, total=100_000.0, **attrs):
     import run_daily_analysis as rda
 
     class Executor:
@@ -197,15 +196,103 @@ def test_position_cap_is_counted_as_orders_go_out(monkeypatch):
     monkeypatch.setattr(rda, "ALPACA_AVAILABLE", True)
     broker = SimpleNamespace(is_market_open=lambda: True, get_latest_quote=lambda s: {})
     engine = SimpleNamespace(
-        config=SimpleNamespace(portfolio_constraints=SimpleNamespace(max_positions=20)),
+        config=SimpleNamespace(portfolio_constraints=SimpleNamespace(max_positions=cap, min_cash_allocation=0.05)),
         risk_manager=SimpleNamespace(pre_trade_risk_check=lambda **kw: {"approved": True}))
-    # _position_count is deliberately absent: the gate must fall back to the portfolio, never to "no cap"
-    runner = SimpleNamespace(broker=broker, engine=engine, portfolio=SimpleNamespace(num_positions=18),
-                             _log_trade=lambda **kw: None, _active_weight_version=lambda: 1)
-    opps = [{"symbol": s, "confidence": 0.85, "limit_price": 100.0, "shares": 10, "stop_loss": 92.0}
-            for s in ("AAA", "BBB", "CCC", "DDD")]
-    out = rda.DailyRunner._execute_opportunities(runner, opps, True, 0.65)
+    # _position_count / _spendable_cash are absent unless given: the gates must fall
+    # back to the portfolio, never to "no cap" or "no limit"
+    return rda, SimpleNamespace(broker=broker, engine=engine,
+                                portfolio=SimpleNamespace(num_positions=18, cash=cash, total_value=total),
+                                _log_trade=lambda **kw: None, _active_weight_version=lambda: 1, **attrs)
+
+
+def _opps(n, cost=1000.0):
+    return [{"symbol": s, "confidence": 0.85, "limit_price": cost / 10, "shares": 10, "stop_loss": 92.0}
+            for s in ("AAA", "BBB", "CCC", "DDD", "EEE", "FFF")[:n]]
+
+
+def test_there_is_no_position_cap_by_default():
+    from config import PortfolioConstraints
+    assert PortfolioConstraints().max_positions is None
+
+
+def test_without_a_cap_buys_are_limited_only_by_cash_counted_as_orders_go_out(monkeypatch):
+    # $8,500 cash on a $100,000 account, 5% reserve: $3,500 to spend, so three $1,000 buys and no fourth
+    rda, runner = _exec_runner(monkeypatch, cap=None, cash=8_500.0)
+    out = rda.DailyRunner._execute_opportunities(runner, _opps(6), True, 0.65)
+    assert out["submitted"] == 3
+    assert [d["status"] for d in out["details"]] == ["submitted"] * 3 + ["skipped"] * 3
+    assert "not enough cash: needs $1,000, $500 left after the cash reserve" in out["details"][3]["reason"]
+
+
+def test_with_plenty_of_cash_every_signal_is_bought_however_many_positions_are_held(monkeypatch):
+    rda, runner = _exec_runner(monkeypatch, cap=None, cash=60_000.0)
+    runner.portfolio.num_positions = 40
+    out = rda.DailyRunner._execute_opportunities(runner, _opps(6), True, 0.65)
+    assert out["submitted"] == 6
+
+
+def test_cash_from_a_rotation_can_be_spent_only_if_run_counted_it(monkeypatch):
+    rda, runner = _exec_runner(monkeypatch, cap=None, cash=5_000.0, _spendable_cash=2_500.0)   # run() set it after a sale
+    out = rda.DailyRunner._execute_opportunities(runner, _opps(4), True, 0.65)
     assert out["submitted"] == 2
-    assert [(d["symbol"], d["status"]) for d in out["details"]] == \
-        [("AAA", "submitted"), ("BBB", "submitted"), ("CCC", "skipped"), ("DDD", "skipped")]
+
+
+def test_a_configured_position_cap_is_counted_as_orders_go_out(monkeypatch):
+    # 2026-10-05: six buys in one run took the account from 16 positions to 22 against a cap of 20
+    rda, runner = _exec_runner(monkeypatch, cap=20, cash=60_000.0)
+    out = rda.DailyRunner._execute_opportunities(runner, _opps(4), True, 0.65)
+    assert out["submitted"] == 2
     assert "position cap reached (20/20)" in out["details"][2]["reason"]
+
+
+def test_laggards_are_sold_to_cover_a_cash_shortfall_weakest_first_no_more_than_needed():
+    import rotation
+    lag = [{"symbol": "HOOD", "market_value": 2700.0}, {"symbol": "ANET", "market_value": 2700.0},
+           {"symbol": "NVDA", "market_value": 4200.0}]
+    assert rotation.sells_for_cash(lag, shortfall=0) == 0             # today's buys are already funded
+    assert rotation.sells_for_cash(lag, shortfall=-5000) == 0
+    assert rotation.sells_for_cash(lag, shortfall=2000) == 1
+    assert rotation.sells_for_cash(lag, shortfall=4000) == 2
+    assert rotation.sells_for_cash(lag, shortfall=50_000) == 2        # daily limit
+    assert rotation.sells_for_cash([], shortfall=4000) == 0
+    assert rotation.sells_wanted(n_laggards=3, held=40, cap=None, n_buys=5) == 0     # no cap: count never forces a sale
+    assert rotation.planning_count(held=40, cap=None, n_laggards=3) == 40
+
+
+def test_buys_are_sized_with_laggard_cash_only_when_the_account_is_short():
+    import rotation
+    lag = [{"symbol": "HOOD", "market_value": 2700.0}, {"symbol": "ANET", "market_value": 2700.0},
+           {"symbol": "NVDA", "market_value": 4200.0}]
+    assert rotation.planning_proceeds(lag, spendable=30_000.0, total_value=115_000.0) == 0.0      # cash to spare
+    assert rotation.planning_proceeds(lag, spendable=1_000.0, total_value=115_000.0) == 5400.0    # two weakest
+    assert rotation.planning_proceeds([], spendable=1_000.0, total_value=115_000.0) == 0.0
+
+
+def _portfolio(n_positions):
+    from datetime import datetime
+    from models import PortfolioState
+    return PortfolioState(timestamp=datetime(2026, 10, 6), total_value=115_000.0, cash=40_000.0, invested=75_000.0,
+                          positions={}, num_positions=n_positions, cash_allocation=0.35,
+                          available_cash=38_000.0, buying_power=40_000.0, total_unrealized_pnl=0.0)
+
+
+def test_sizing_and_risk_check_allow_a_buy_at_any_position_count_unless_a_cap_is_configured():
+    from dataclasses import replace
+    from config import ConvictionTier, DecisionConfig
+    from position_sizing import PositionSizer
+    from risk_manager import RiskManager
+    uncapped = DecisionConfig()
+    assert uncapped.portfolio_constraints.max_positions is None
+    capped = replace(uncapped, portfolio_constraints=replace(uncapped.portfolio_constraints, max_positions=20))
+
+    def run(config, held):
+        size = PositionSizer(config).calculate_position_size("AME", _portfolio(held), ConvictionTier.HIGH,
+                                                             current_price=250.0)
+        check = RiskManager(config).pre_trade_risk_check("AME", "BUY", 10, 250.0, _portfolio(held))
+        limit = [c for c in check["checks"] if c["check"] == "POSITION_LIMIT"][0]["status"]
+        return size, limit
+
+    size, limit = run(uncapped, held=45)
+    assert limit == "PASSED" and not any("Max positions" in c for c in size.get("constraints_applied", []))
+    size, limit = run(capped, held=20)
+    assert limit == "FAILED" and any("Max positions" in c for c in size.get("constraints_applied", []))

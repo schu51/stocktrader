@@ -300,7 +300,8 @@ class PositionSizer:
             )
         
         # 3. Check if adding would exceed position limit
-        if portfolio.num_positions >= self.constraints.max_positions:
+        cap = self.constraints.max_positions          # None: no cap on the number of positions
+        if cap is not None and portfolio.num_positions >= cap:
             if not portfolio.has_position(symbol):
                 size = 0
                 constraints_applied.append(
@@ -480,7 +481,8 @@ class PositionSizer:
             "invested": portfolio.invested,
             "num_positions": portfolio.num_positions,
             "max_positions": self.constraints.max_positions,
-            "positions_available": self.constraints.max_positions - portfolio.num_positions,
+            "positions_available": (None if self.constraints.max_positions is None
+                                    else self.constraints.max_positions - portfolio.num_positions),
             "cash_allocation": portfolio.cash_allocation,
             "min_cash_required": self.constraints.min_cash_allocation,
             "available_for_new_positions": 0,

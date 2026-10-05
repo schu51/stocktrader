@@ -324,7 +324,7 @@ class Backtest:
             px = self.open[sym].iloc[i]
             if sym in self.positions or np.isnan(px):
                 continue
-            if len(self.positions) >= max_positions:
+            if max_positions is not None and len(self.positions) >= max_positions:
                 self.counters["unfilled_at_cap"] += 1
                 continue
             fill = float(px) * (1 + self.slip)

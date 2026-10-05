@@ -191,7 +191,7 @@ DEFAULT_UNIVERSE = [
 
 from enum import Enum
 from dataclasses import dataclass, field
-from typing import Dict
+from typing import Dict, Optional
 
 
 class Signal(Enum):
@@ -282,7 +282,11 @@ class PositionSizingConfig:
 
 @dataclass
 class PortfolioConstraints:
-    max_positions:         int   = 20
+    # No limit on the number of positions: cash is the limit (min_cash_allocation
+    # below, enforced per order in run_daily_analysis). Was 20 until 2026-10-05,
+    # which with ~3% positions kept about 40% of the account in cash. Set a
+    # number to bring a cap back; every check treats None as "no cap".
+    max_positions:         Optional[int] = None
     max_single_position:   float = 0.08
     min_cash_allocation:   float = 0.05
     target_cash_allocation: float = 0.10

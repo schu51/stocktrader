@@ -18,8 +18,9 @@ Reference models this follows:
     churned. Here: enter at 70, leave below 50.
 
 A laggard is only sold when that does something:
-  - a buy signal needs its slot (the position cap is full), or
-  - the account holds more positions than the cap, to get back to it.
+  - today's buy signals need more cash than the account can spend while
+    keeping its cash reserve — the normal case, since cash is the limit; or
+  - a position cap is configured (it is not by default) and is full or exceeded.
 At most MAX_ROTATIONS_PER_DAY a day. Unknown is never "weak": a holding with
 no rank today, no entry date, or on a day the screener's data is incomplete
 is left alone.
@@ -44,6 +45,7 @@ ROTATION_LOG = ROOT / "docs" / "data" / "rotation_log.json"
 MIN_HOLD_DAYS = 20            # calendar days, the same patience the thesis-failed exit uses
 ROTATE_BELOW_RANK = 50        # buffer under the entry bar (RS rank 70)
 MAX_ROTATIONS_PER_DAY = 2
+ONE_POSITION = 0.05           # share of the account a full-size position takes (sizing target, high conviction)
 MIN_RANK_COVERAGE = 0.80      # below this the screener's universe is suspect (see screener.MIN_DATA_COVERAGE)
 EXIT_REASON = "ROTATED_OUT"
 
@@ -95,22 +97,59 @@ def find_laggards(holdings: Dict[str, Dict], trades: Iterable[Dict], ranks: Opti
         if sym in skip or rank is None or days is None:
             continue
         if days >= MIN_HOLD_DAYS and rank < ROTATE_BELOW_RANK:
-            out.append({"symbol": sym, "rs_rank": rank, "hold_days": days, "pnl_pct": (h or {}).get("pnl_pct")})
+            out.append({"symbol": sym, "rs_rank": rank, "hold_days": days, "pnl_pct": (h or {}).get("pnl_pct"),
+                        "market_value": (h or {}).get("market_value")})
     return sorted(out, key=lambda x: (x["rs_rank"], x["symbol"]))
 
 
-def planning_count(held: int, cap: int, n_laggards: int) -> int:
+def _value(laggard: Dict) -> float:
+    try:
+        return max(0.0, float(laggard.get("market_value") or 0))
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def planning_proceeds(laggards: List[Dict], spendable: float, total_value: float) -> float:
     """
-    The position count buys should be sized against. When the cap is full but
-    rotation can free a slot, the engine must see that slot or it sizes every
-    buy at zero and there is never a replacement to rotate for.
+    Cash to add when sizing today's buys: what selling today's laggards would
+    raise — but only when the account cannot otherwise fund one full position
+    (ONE_POSITION of its value). With cash to spare nothing is added, so sizing
+    is untouched. Without this, a cash-short engine sizes every buy at zero and
+    there is never a replacement to rotate for.
     """
+    if total_value <= 0 or spendable >= ONE_POSITION * total_value:
+        return 0.0
+    return sum(_value(l) for l in laggards[:MAX_ROTATIONS_PER_DAY])
+
+
+def sells_for_cash(laggards: List[Dict], shortfall: float) -> int:
+    """How many laggards (weakest first) must be sold to cover a cash shortfall. 0 if there is none."""
+    if shortfall <= 0:
+        return 0
+    raised = 0.0
+    for n, lag in enumerate(laggards[:MAX_ROTATIONS_PER_DAY], start=1):
+        raised += _value(lag)
+        if raised >= shortfall:
+            return n
+    return min(len(laggards), MAX_ROTATIONS_PER_DAY)
+
+
+def planning_count(held: int, cap: Optional[int], n_laggards: int) -> int:
+    """
+    The position count buys should be sized against, when a position cap is
+    configured. When the cap is full but rotation can free a slot, the engine
+    must see that slot or it sizes every buy at zero.
+    """
+    if cap is None:
+        return held
     room = min(n_laggards, MAX_ROTATIONS_PER_DAY)
     return held - room if held >= cap and held - room < cap else held
 
 
-def sells_wanted(n_laggards: int, held: int, cap: int, n_buys: int) -> int:
-    """How many laggards to sell: enough to get back under the cap and seat today's buys, no more."""
+def sells_wanted(n_laggards: int, held: int, cap: Optional[int], n_buys: int) -> int:
+    """With a position cap configured: laggards to sell to get back under it and seat today's buys."""
+    if cap is None:
+        return 0
     over = max(0, held - cap)
     free = max(0, cap - held)
     return max(0, min(n_laggards, MAX_ROTATIONS_PER_DAY, over + max(0, n_buys - free)))

@@ -329,7 +329,8 @@ class RiskManager:
                 })
             
             # Check 2: Position limit
-            if portfolio.num_positions >= self.constraints.max_positions:
+            cap = self.constraints.max_positions      # None: no cap on the number of positions
+            if cap is not None and portfolio.num_positions >= cap:
                 if not portfolio.has_position(symbol):
                     result["checks"].append({
                         "check": "POSITION_LIMIT",

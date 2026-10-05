@@ -492,12 +492,19 @@ class DailyRunner:
             # Get current sector allocations for concentration check
             sector_allocations = self._get_sector_allocations()
 
-            # Rotation (rotation.py): holdings that have stopped keeping pace. If the
-            # cap is full and one can make room, size today's buys for that slot.
+            # Rotation (rotation.py): holdings that have stopped keeping pace. Cash is
+            # the limit on new positions; when it is short and a laggard could be
+            # sold to fund a buy, size today's buys as if that cash were there.
             import rotation
-            cap = self.engine.config.portfolio_constraints.max_positions
+            constraints = self.engine.config.portfolio_constraints
+            cap = constraints.max_positions          # None unless a position cap is configured
             held_count = self.portfolio.num_positions
+            cash_start = self.portfolio.cash
+            reserve = self.portfolio.total_value * constraints.min_cash_allocation
             laggards = self._find_laggards(exit_results) if positions_verified else []
+            planned = rotation.planning_proceeds(laggards, cash_start - reserve, self.portfolio.total_value)
+            self.portfolio.cash = cash_start + planned
+            self.portfolio.available_cash = max(0.0, self.portfolio.cash) * 0.95
             self.portfolio.num_positions = rotation.planning_count(held_count, cap, len(laggards))
 
             for candidate in candidates:
@@ -615,18 +622,26 @@ class DailyRunner:
             # 3. Execute trades (or dry-run)
             # Fail closed: without a confirmed position list the engine cannot see
             # what is already held (duplicate buys, no sector or position caps).
-            # 2b. Rotate laggards out, to get back under the cap and to seat today's buys
+            # 2b. Rotate laggards out when today's buys need more cash than the
+            # account can spend (or a configured position cap is full)
             buyable = [o for o in opportunities if o.get("confidence", 0) >= min_confidence
                        and o.get("limit_price") and (o.get("shares") or 0) > 0]
-            n_rotate = rotation.sells_wanted(len(laggards), held_count, cap, len(buyable))
+            buy_cost = sum(o["shares"] * o["limit_price"] for o in buyable)
+            n_rotate = max(rotation.sells_for_cash(laggards, buy_cost - (cash_start - reserve)),
+                           rotation.sells_wanted(len(laggards), held_count, cap, len(buyable)))
             results["rotation"] = self._rotate_out(laggards[:n_rotate], [o["symbol"] for o in buyable], execute)
             results["rotation"]["laggards"] = laggards
             if results["rotation"]["failed"]:
                 results["alerts"].append(
                     "Rotation sell failed: " + ", ".join(f["symbol"] for f in results["rotation"]["failed"]))
-            # Back to the real count: only slots actually freed may be filled
-            self.portfolio.num_positions = held_count - len(results["rotation"]["sold"])
+            # Back to the real figures: only cash from sells that actually filled may be spent
+            sold = set(results["rotation"]["sold"])
+            proceeds = sum(rotation._value(l) for l in laggards if l["symbol"] in sold)
+            self.portfolio.cash = cash_start + proceeds
+            self.portfolio.available_cash = max(0.0, self.portfolio.cash) * 0.95
+            self.portfolio.num_positions = held_count - len(sold)
             self._position_count = self.portfolio.num_positions
+            self._spendable_cash = self.portfolio.cash - reserve
 
             if execute and not positions_verified:
                 msg = "New entries skipped: account and positions could not be verified with the broker"
@@ -1800,6 +1815,7 @@ class DailyRunner:
         execution_results = []
         submitted = 0
         skipped = 0
+        spent = 0.0      # cost of the orders sent so far in this run
 
         for opp in opportunities:
             symbol = opp["symbol"]
@@ -1821,11 +1837,11 @@ class DailyRunner:
             # Gate 2b: position cap, counted as orders go out. The size was worked
             # out against the count at the start of the run; six buys in one run
             # took the account from 16 to 22 positions against a cap of 20.
-            cap = self.engine.config.portfolio_constraints.max_positions
+            cap = self.engine.config.portfolio_constraints.max_positions   # None: no position cap
             count = getattr(self, "_position_count", None)
             if count is None:      # not set by run(): fall back to the portfolio, never to "no cap"
                 count = (portfolio or self.portfolio).num_positions
-            if count + submitted >= cap:
+            if cap is not None and count + submitted >= cap:
                 reason = f"position cap reached ({count + submitted}/{cap})"
                 logger.info(f"Skipping {symbol}: {reason}")
                 skipped += 1
@@ -1835,7 +1851,8 @@ class DailyRunner:
             # Gate 3: valid order parameters
             if not limit_price or shares <= 0:
                 if limit_price and shares == 0:
-                    at_cap = self.portfolio.num_positions >= self.engine.config.portfolio_constraints.max_positions
+                    at_cap = (self.engine.config.portfolio_constraints.max_positions is not None and
+                              self.portfolio.num_positions >= self.engine.config.portfolio_constraints.max_positions)
                     reason = (
                         f"position size calculated as 0 — portfolio at max capacity "
                         f"({self.portfolio.num_positions}/{self.engine.config.portfolio_constraints.max_positions} positions)"
@@ -1877,6 +1894,23 @@ class DailyRunner:
                 except Exception:
                     pass  # keep yfinance close as fallback
 
+            # Gate 4b: cash, counted as orders go out. This is the limit on how many
+            # positions the account holds. Each buy was sized against the cash at
+            # the start of the run, so without this several buys could each fit
+            # alone and together spend the reserve.
+            spendable = getattr(self, "_spendable_cash", None)
+            if spendable is None:   # not set by run(): work it out from the portfolio, never "no limit"
+                p = portfolio or self.portfolio
+                spendable = p.cash - p.total_value * self.engine.config.portfolio_constraints.min_cash_allocation
+            cost = shares * limit_price
+            if cost > spendable - spent:
+                reason = (f"not enough cash: needs ${cost:,.0f}, ${max(0.0, spendable - spent):,.0f} left "
+                          f"after the cash reserve")
+                logger.info(f"Skipping {symbol}: {reason}")
+                skipped += 1
+                execution_results.append({"symbol": symbol, "status": "skipped", "reason": reason})
+                continue
+
             # Gate 5: pre-trade risk check
             portfolio_for_check = portfolio or self.portfolio
             try:
@@ -1917,6 +1951,7 @@ class DailyRunner:
 
                 if status == "submitted":
                     submitted += 1
+                    spent += cost
                     logger.info(
                         f"ORDER SUBMITTED: BUY {shares} {symbol} "
                         f"@ ${limit_price:.2f} | stop=${opp.get('stop_loss', 0):.2f} | "
@@ -1980,7 +2015,7 @@ class DailyRunner:
                 return []
             trades = json.loads((docs / "trades.json").read_text())
             exited = {e.get("symbol") for e in (exit_results or {}).get("exits_triggered", [])}
-            holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2)}
+            holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2), "market_value": pos.market_value}
                         for sym, pos in (self.portfolio.positions or {}).items()}
             return rotation.find_laggards(holdings, trades, ranks, date.today(),
                                           exclude=exited | set(getattr(self, "_untradable", {})))

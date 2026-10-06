@@ -194,3 +194,32 @@ def test_ma50_room_signal():
     args = lambda c: (c, c + 1, c - 1, np.full(len(c), 1e6))
     assert compute_signals(*args(just_above))["ma50_room"] is False
     assert compute_signals(*args(well_above))["ma50_room"] is True
+
+
+def test_trend_lines_sma_matches_the_live_rule_and_filters_track_a_flat_series():
+    from backtest import trend_line
+    closes = np.linspace(100, 150, 200)
+    sma = trend_line(closes, "sma50")
+    assert np.isnan(sma[48]) and abs(sma[-1] - closes[-50:].mean()) < 1e-9
+    flat = np.full(200, 80.0)
+    for kind in ("ema50", "gauss50", "gauss100"):
+        assert abs(trend_line(flat, kind)[-1] - 80.0) < 1e-9
+
+
+def test_gauss100_lags_about_like_sma50_and_gauss50_about_half_as_much():
+    # On a steady ramp a filter sits below price by (lag x slope)
+    from backtest import trend_line
+    closes = np.arange(300, dtype=float)                   # slope 1 per session
+    lag = {k: closes[-1] - trend_line(closes, k)[-1] for k in ("sma50", "ema50", "gauss50", "gauss100")}
+    assert abs(lag["sma50"] - 24.5) < 0.01
+    assert 22 < lag["ema50"] < 27 and 22 < lag["gauss100"] < 29
+    assert 10 < lag["gauss50"] < 14
+
+
+def test_gaussian_line_is_smoother_than_the_simple_average_at_the_same_lag():
+    from backtest import trend_line
+    rng = np.random.default_rng(7)
+    closes = 100 + np.cumsum(rng.normal(0, 1.5, 250))
+    rough = lambda k: np.nanstd(np.diff(trend_line(closes, k), n=2))      # how much the line wiggles
+    assert rough("gauss100") < rough("sma50")
+

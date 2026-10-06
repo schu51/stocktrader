@@ -37,26 +37,52 @@ class RiskManager:
         self.constraints = self.config.portfolio_constraints
         
         # Track portfolio high watermark for drawdown — seeded from history
-        self.high_watermark: float = self._load_historical_peak()
+        self._values: List[Tuple[date, float]] = []     # dated account values the peak is taken from
         self.peak_date: Optional[date] = None
+        self.high_watermark: float = self._load_historical_peak()
         
         # Daily/weekly tracking
         self.daily_start_value: float = 0
         self.weekly_start_value: float = 0
         self.last_reset_date: Optional[date] = None
     
-    def _load_historical_peak(self) -> float:
-        """Seed high watermark from history.json so drawdown survives restarts."""
+    def _load_historical_peak(self, history_path: Path = None, today: date = None) -> float:
+        """
+        Seed the peak from history.json so drawdown survives restarts: the highest
+        recorded account value inside the lookback window and on or after
+        drawdown_peak_since (see RiskConfig).
+        """
         try:
-            history_path = Path(__file__).parent / 'docs' / 'data' / 'history.json'
+            history_path = history_path or Path(__file__).parent / 'docs' / 'data' / 'history.json'
             if not history_path.exists():
                 return 0.0
             data = json.loads(history_path.read_text())
-            trades = data if isinstance(data, list) else data.get('trades', [])
-            pvs = [t.get('portfolio_value', 0) for t in trades if t.get('portfolio_value', 0) > 0]
-            return max(pvs) if pvs else 0.0
+            rows = data if isinstance(data, list) else data.get('trades', [])
+            since = getattr(self.risk_config, "drawdown_peak_since", None)
+            values = []
+            for r in rows:
+                pv = r.get('portfolio_value', 0)
+                try:
+                    day = date.fromisoformat(str(r.get('date'))[:10])
+                except (TypeError, ValueError):
+                    continue
+                if pv and pv > 0 and (not since or day.isoformat() >= since):
+                    values.append((day, float(pv)))
+            self._values = values
+            return self._window_peak(today or date.today())
         except Exception:
             return 0.0
+
+    def _window_peak(self, today: date) -> float:
+        """Highest dated value inside the lookback window; also sets peak_date and prunes older values."""
+        lookback = getattr(self.risk_config, "drawdown_lookback_days", None)
+        if lookback:
+            cutoff = today - timedelta(days=lookback)
+            self._values = [(d, v) for d, v in self._values if d >= cutoff]
+        if not self._values:
+            return 0.0
+        self.peak_date, peak = max(self._values, key=lambda x: x[1])
+        return peak
 
     # =========================================================================
     # STOP-LOSS MANAGEMENT
@@ -203,10 +229,46 @@ class RiskManager:
     def update_watermark(self, portfolio_value: float, as_of_date: date = None):
         """Update high watermark for drawdown tracking."""
         as_of_date = as_of_date or date.today()
-        
-        if portfolio_value > self.high_watermark:
+
+        if getattr(self.risk_config, "drawdown_lookback_days", None):
+            # Rolling peak: the highest value in the lookback window, so it can come down
+            self._values.append((as_of_date, float(portfolio_value)))
+            self.high_watermark = self._window_peak(as_of_date)
+        elif portfolio_value > self.high_watermark:
             self.high_watermark = portfolio_value
             self.peak_date = as_of_date
+
+    def drawdown_throttle(self, current_value: float, market_healthy: Optional[bool]) -> Tuple[float, str]:
+        """
+        Size multiplier for a NEW position given the account's drawdown, and why.
+
+          under drawdown_caution           1.0
+          caution to the limit             drawdown_caution_size (half)
+          past max_portfolio_drawdown      drawdown_limit_size (a quarter), and
+                                           only while the market is healthy —
+                                           SPY above its 50-day average. Unknown
+                                           counts as not healthy.
+
+        0.0 means no new position now. In "halt" mode it is 0.0 past the limit
+        and 1.0 before it, which is the old all-or-nothing rule.
+        """
+        cfg = self.risk_config
+        if self.high_watermark <= 0 or current_value <= 0:
+            return 1.0, ""
+        dd = 1 - current_value / self.high_watermark
+        limit = cfg.max_portfolio_drawdown
+        if getattr(cfg, "drawdown_mode", "halt") != "throttle":
+            return (0.0, f"account is {dd:.1%} below its peak (limit {limit:.0%}): buying halted") \
+                if dd >= limit else (1.0, "")
+        if dd < cfg.drawdown_caution:
+            return 1.0, ""
+        if dd < limit:
+            return cfg.drawdown_caution_size, f"account is {dd:.1%} below its peak: new positions at {cfg.drawdown_caution_size:.0%} size"
+        if market_healthy is True:
+            return cfg.drawdown_limit_size, (f"account is {dd:.1%} below its peak (limit {limit:.0%}): "
+                                             f"new positions at {cfg.drawdown_limit_size:.0%} size")
+        return 0.0, (f"account is {dd:.1%} below its peak (limit {limit:.0%}) and the market is "
+                     f"{'not above its 50-day average' if market_healthy is False else 'of unknown health'}: no new positions")
     
     def calculate_drawdown(self, current_value: float) -> Dict:
         """Calculate current drawdown from high watermark."""
@@ -402,7 +464,18 @@ class RiskManager:
             
             # Check 6: Drawdown status
             drawdown = self.calculate_drawdown(portfolio.total_value)
-            if drawdown.get("status") == "CRITICAL":
+            throttled = getattr(self.risk_config, "drawdown_mode", "halt") == "throttle"
+            if drawdown.get("status") == "CRITICAL" and throttled:
+                # Not a block here: drawdown_throttle() has already cut the size of
+                # this order, or zeroed it if the market is not healthy.
+                result["checks"].append({
+                    "check": "DRAWDOWN",
+                    "status": "WARNING",
+                    "message": f"Portfolio drawdown {drawdown['drawdown_pct']:.1f}% is past the "
+                               f"{drawdown['max_allowed_pct']:.1f}% limit - new positions are throttled"
+                })
+                result["warnings"].append("Drawdown past the limit: position sizes throttled")
+            elif drawdown.get("status") == "CRITICAL":
                 result["checks"].append({
                     "check": "DRAWDOWN",
                     "status": "FAILED",

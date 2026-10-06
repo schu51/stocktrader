@@ -491,6 +491,9 @@ class DailyRunner:
 
             # Get current sector allocations for concentration check
             sector_allocations = self._get_sector_allocations()
+            # Market health for the drawdown throttle: SPY above its 50-day average,
+            # from today's screen. None (unknown) if there is no screen from today.
+            self.market_above_50ma = self._market_above_50ma()
 
             # Rotation (rotation.py): holdings that have stopped keeping pace. Cash is
             # the limit on new positions; when it is short and a laggard could be
@@ -1170,6 +1173,19 @@ class DailyRunner:
             cash_pct = self.portfolio.available_cash / self.portfolio.total_value
             if cash_pct > 0.15 and score >= 75 and multiplier >= 1.0:
                 multiplier = min(multiplier * 1.20, 2.0)  # Up to 20% boost to deploy cash
+
+        # Drawdown throttle (risk_manager.drawdown_throttle): smaller new positions
+        # as the account falls from its peak; none past the limit unless the
+        # market is healthy.
+        throttle, why = self.engine.risk_manager.drawdown_throttle(
+            self.portfolio.total_value, getattr(self, "market_above_50ma", None))
+        if throttle < 1.0:
+            decision_dict["drawdown_throttle"] = why
+            if throttle <= 0:
+                decision_dict["shares"] = 0
+                decision_dict["position_value"] = 0.0
+                return decision_dict
+            multiplier *= throttle
 
         if multiplier != 1.0 and shares > 0:
             new_shares = max(1, round(shares * multiplier))
@@ -1857,7 +1873,8 @@ class DailyRunner:
                         f"position size calculated as 0 — portfolio at max capacity "
                         f"({self.portfolio.num_positions}/{self.engine.config.portfolio_constraints.max_positions} positions)"
                         if at_cap else
-                        "position size calculated as 0 — insufficient cash or constraints"
+                        opp.get("drawdown_throttle")
+                        or "position size calculated as 0 — insufficient cash or constraints"
                     )
                 else:
                     reason = "invalid limit_price or shares"
@@ -2003,6 +2020,17 @@ class DailyRunner:
             "total_attempted": len(opportunities),
             "details": execution_results
         }
+
+    def _market_above_50ma(self) -> Optional[bool]:
+        """True/False from today's screener snapshot; None if it is missing, stale or unreadable."""
+        try:
+            data = json.loads((Path(__file__).parent / "docs" / "data" / "screener.json").read_text())
+            if (data.get("generated_at") or "")[:10] != datetime.now().strftime("%Y-%m-%d"):
+                return None
+            regime = data.get("market_regime") or {}
+            return bool(float(regime["spy_price"]) > float(regime["spy_50ma"]))
+        except Exception:
+            return None
 
     def _find_laggards(self, exit_results: Dict) -> List[Dict]:
         """Holdings eligible for rotation today, weakest first. Empty whenever the inputs cannot be trusted."""

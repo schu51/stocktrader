@@ -90,6 +90,48 @@ def evaluate_exit(pos: Dict, bar: Dict, sma50: Optional[float]) -> Tuple[Optiona
     return None, ""
 
 
+GAUSS_POLES = 4
+
+
+def trend_line(closes: np.ndarray, kind: str = "sma50") -> np.ndarray:
+    """
+    The line a close is tested against for the trend-broken exit, one value per
+    session (NaN until there is enough history).
+
+      sma50      50-day simple average — the live rule
+      ema50      50-day exponential average (same average lag as sma50, ~25 sessions)
+      gaussN     Ehlers 4-pole Gaussian filter of period N. gauss100 has about
+                 the same lag as sma50 but is much smoother; gauss50 has about
+                 half the lag, so it follows price more closely.
+    """
+    x = np.asarray(closes, dtype=float)
+    out = np.full(len(x), np.nan)
+    if kind == "sma50":
+        if len(x) >= 50:
+            c = np.cumsum(np.insert(x, 0, 0.0))
+            out[49:] = (c[50:] - c[:-50]) / 50
+        return out
+    if kind == "ema50":
+        alpha, passes, warm = 2.0 / 51.0, 1, 50
+    elif kind.startswith("gauss"):
+        period = int(kind[5:])
+        beta = (1 - np.cos(2 * np.pi / period)) / (2 ** (1.0 / GAUSS_POLES) - 1)
+        alpha, passes, warm = -beta + np.sqrt(beta * beta + 2 * beta), GAUSS_POLES, period
+    else:
+        raise ValueError(f"unknown trend line: {kind}")
+    y = x.copy()
+    for _ in range(passes):           # a multi-pole Gaussian is the same one-pole filter applied in series
+        f = np.empty(len(y))
+        acc = y[0] if len(y) else 0.0
+        for k, v in enumerate(y):
+            acc = alpha * v + (1 - alpha) * acc
+            f[k] = acc
+        y = f
+    warm = min(warm, LOOKBACK - 60)   # the window holds one year of bars
+    out[warm - 1:] = y[warm - 1:]
+    return out
+
+
 def next_stop(pos: Dict, close: float) -> float:
     """Stop for the next session: the live tier for this gain, never lower than the current stop."""
     pnl_pct = (close / pos["avg_cost"] - 1) * 100
@@ -206,7 +248,8 @@ class Backtest:
                  start: str, end: Optional[str] = None, capital: float = 100_000.0,
                  w_rs: float = 0.60, w_thesis: float = 0.40, slippage_bps: float = 10.0,
                  quiet: bool = True, entry_trigger: str = "none", atr_stop: float = 0.0,
-                 min_adx: float = 0.0, min_above_50ma: float = 0.0):
+                 min_adx: float = 0.0, min_above_50ma: float = 0.0, min_spy_above_50ma: float = 0.0,
+                 exit_line: str = "sma50", exit_confirm: int = 1, drawdown_mode: str = "live"):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -217,6 +260,10 @@ class Backtest:
         # Experimental variants (all off = the live rules)
         self.entry_trigger, self.atr_stop, self.min_adx = entry_trigger, atr_stop, min_adx
         self.min_above_50ma = min_above_50ma
+        self.min_spy_above_50ma = min_spy_above_50ma
+        # Trend-broken exit: which line the close is tested against, and how many
+        # consecutive closes below it are needed (live rule: sma50, 1)
+        self.exit_line, self.exit_confirm = exit_line, max(1, int(exit_confirm))
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -230,7 +277,7 @@ class Backtest:
         self.equity: Dict[pd.Timestamp, float] = {}
         self.cash_share: List[float] = []
         self.counters = {"candidates": 0, "gate_rsi": 0, "gate_bb": 0, "gate_sector": 0,
-                         "gate_trigger": 0, "gate_adx": 0, "gate_50ma_room": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
+                         "gate_trigger": 0, "gate_adx": 0, "gate_50ma_room": 0, "days_market_weak": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
                          "unfilled_no_cash": 0, "unfilled_at_cap": 0}
 
         if quiet:
@@ -245,6 +292,26 @@ class Backtest:
         # history; the simulated account starts its own.
         self.engine.risk_manager.high_watermark = capital
         self.engine.risk_manager.daily_start_value = capital
+        # Drawdown rule under test. A private copy of the risk settings, so
+        # nothing outside this run is changed.
+        #   live      whatever config.py says (the throttle), on this run's own history
+        #   throttle  the throttle, explicitly
+        #   halt      the rule until 2026-10-06: no buys once 15% below the all-time
+        #             high. With no buys the account goes to cash and never
+        #             climbs back, so the stop was permanent.
+        #   off       no drawdown rule at all (to compare entry and exit rules alone)
+        from dataclasses import replace
+        rm = self.engine.risk_manager
+        if drawdown_mode == "halt":
+            rm.risk_config = replace(rm.risk_config, drawdown_mode="halt", drawdown_lookback_days=None,
+                                     drawdown_peak_since=None)
+        elif drawdown_mode == "off":
+            rm.risk_config = replace(rm.risk_config, drawdown_mode="halt", drawdown_lookback_days=None,
+                                     drawdown_peak_since=None, max_portfolio_drawdown=10.0)
+        else:
+            rm.risk_config = replace(rm.risk_config, drawdown_peak_since=None,
+                                     **({"drawdown_mode": "throttle"} if drawdown_mode == "throttle" else {}))
+        rm._values, rm.high_watermark = [], capital
         self.sym_to_config_sector = {s: sec for sec, syms in SECTOR_MAP.items() for s in syms}
 
     # -- portfolio views ------------------------------------------------------
@@ -350,8 +417,17 @@ class Backtest:
                           self.low[sym].iloc[i], self.close[sym].iloc[i])
             if np.isnan(c):
                 continue
-            history = self.close[sym].iloc[max(0, i - 49):i + 1].dropna().values
-            sma50 = float(history.mean()) if len(history) >= 50 else None
+            if self.exit_line == "sma50" and self.exit_confirm == 1:      # the live rule, unchanged
+                history = self.close[sym].iloc[max(0, i - 49):i + 1].dropna().values
+                sma50 = float(history.mean()) if len(history) >= 50 else None
+            else:
+                history = self.close[sym].iloc[max(0, i - LOOKBACK + 1):i + 1].dropna().values
+                line = trend_line(history, self.exit_line)
+                n = self.exit_confirm
+                sma50 = None
+                if len(history) >= n and not np.isnan(line[-n:]).any():
+                    # With confirmation, the exit needs every one of the last n closes below the line
+                    sma50 = float(line[-1]) if (history[-n:] < line[-n:]).all() else None
             price, reason = evaluate_exit(pos, {"open": o, "high": h, "low": l, "close": c}, sma50)
             if price is None:
                 pos["last_price"] = float(c)
@@ -376,13 +452,18 @@ class Backtest:
         lo = i - LOOKBACK + 1
         closes, volumes = self.close.iloc[lo:i + 1], self.volume.iloc[lo:i + 1]
         spy = closes[BENCHMARK].dropna().values
+        if self.min_spy_above_50ma and len(spy) >= 50 and spy[-1] / spy[-50:].mean() - 1 < self.min_spy_above_50ma:
+            # Experimental: no new entries while the index is not clearly above its own 50-day average
+            self.counters["days_market_weak"] += 1
+            return
         candidates = screen_asof(self.universe, closes, volumes, spy, self.w_rs, self.w_thesis)
         self.counters["candidates"] += len(candidates)
 
         portfolio = self._portfolio_state(i, total_value)
         allocations = self._sector_allocations(total_value)
         runner = self.runner_cls
-        stub = SimpleNamespace(engine=self.engine, portfolio=portfolio)
+        stub = SimpleNamespace(engine=self.engine, portfolio=portfolio,
+                               market_above_50ma=bool(len(spy) >= 50 and spy[-1] > spy[-50:].mean()))
         stub._extract_trend_score = lambda reasons: runner._extract_trend_score(stub, reasons)
 
         opportunities = []
@@ -457,7 +538,7 @@ class Backtest:
             self.cash_share.append(self.cash / equity if equity > 0 else 0.0)
 
             risk.daily_start_value = equity_prev
-            risk.high_watermark = max(risk.high_watermark, equity)
+            risk.update_watermark(equity, self.dates[i].date())
             if i < self.last:
                 self._decide(i, equity)
             equity_prev = equity
@@ -589,6 +670,15 @@ def main() -> int:
     parser.add_argument("--min-adx", type=float, default=0.0, help="experimental: require ADX(14) at least this")
     parser.add_argument("--min-above-50ma", type=float, default=0.0,
                         help="experimental: require the close to be at least this fraction above its 50-day average")
+    parser.add_argument("--min-spy-above-50ma", type=float, default=0.0,
+                        help="experimental: no new entries unless SPY closes at least this fraction above its 50-day average")
+    parser.add_argument("--exit-line", choices=["sma50", "ema50", "gauss50", "gauss100"], default="sma50",
+                        help="experimental: line the close is tested against for the trend-broken exit")
+    parser.add_argument("--exit-confirm", type=int, default=1,
+                        help="experimental: consecutive closes below the exit line needed to sell")
+    parser.add_argument("--drawdown-mode", choices=["live", "throttle", "halt", "off"], default="live",
+                        help="drawdown rule: live config (default), throttle, the old permanent halt, or none")
+    parser.add_argument("--no-drawdown-halt", action="store_true", help="same as --drawdown-mode off")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -602,7 +692,10 @@ def main() -> int:
 
     bt = Backtest(universe, prices, args.start, args.end, args.capital,
                   args.w_rs, args.w_thesis, args.slippage_bps, entry_trigger=args.entry_trigger,
-                  atr_stop=args.atr_stop, min_adx=args.min_adx, min_above_50ma=args.min_above_50ma)
+                  atr_stop=args.atr_stop, min_adx=args.min_adx, min_above_50ma=args.min_above_50ma,
+                  min_spy_above_50ma=args.min_spy_above_50ma,
+                  exit_line=args.exit_line, exit_confirm=args.exit_confirm,
+                  drawdown_mode="off" if args.no_drawdown_halt else args.drawdown_mode)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

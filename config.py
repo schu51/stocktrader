@@ -297,6 +297,25 @@ class PortfolioConstraints:
 class RiskConfig:
     max_risk_per_trade:          float = 0.02
     max_portfolio_drawdown:      float = 0.15
+    # What happens as the account falls from its peak.
+    #   "throttle"  new positions shrink as the drawdown deepens and, past the
+    #               limit, are only opened while the market is healthy. Buying
+    #               never stops for good, so the account can recover.
+    #   "halt"      the old rule: no new buys at all past the limit. With no buys
+    #               the account goes to cash and cannot climb back, so the stop
+    #               was permanent (a three-year backtest stopped trading in April
+    #               2025 and sat in cash for the remaining fifteen months).
+    drawdown_mode:               str   = "throttle"
+    drawdown_caution:            float = 0.10   # from here, new positions at drawdown_caution_size
+    drawdown_caution_size:       float = 0.50
+    drawdown_limit_size:         float = 0.25   # past max_portfolio_drawdown, and only in a healthy market
+    # The peak is the highest account value in this many days, not of all time,
+    # so one old high cannot hold the account down indefinitely.
+    drawdown_lookback_days:      Optional[int] = 365
+    # Ignore recorded values before this date. The history up to the October
+    # 2026 repair has one-day jumps of 9-16% that are probably recording errors;
+    # the old peak ($126,521 on 2026-06-30) is one of them.
+    drawdown_peak_since:         Optional[str] = "2026-10-05"
     max_daily_loss:              float = 0.03
     reduce_into_earnings:        bool  = True
     earnings_position_reduction: float = 0.50

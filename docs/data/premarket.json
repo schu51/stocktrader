@@ -1,54 +1,142 @@
 {
-  "generated_at": "2026-10-05T06:00:53.556609-07:00",
+  "generated_at": "2026-10-06T06:00:52.837526-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 32,
-    "mixed": 9,
-    "weak": 34
+    "strong": 36,
+    "mixed": 11,
+    "weak": 28
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-10-05T09:00:59-04:00",
-  "premarket_quotes": 75,
-  "no_premarket_quote": [],
+  "premarket_as_of": "2026-10-06T09:00:57-04:00",
+  "premarket_quotes": 74,
+  "no_premarket_quote": [
+    "PCOR"
+  ],
   "gap_alerts": [
     {
-      "ticker": "VST",
-      "prev_close": 140.02,
-      "current": 144.73,
-      "pct_chg": 3.36,
-      "ma50": 143.12,
+      "ticker": "RXRX",
+      "prev_close": 4.78,
+      "current": 4.78,
+      "pct_chg": -0.01,
+      "ma50": 3.45,
       "reasons": [
-        "gap UP 3.4% above 50MA \u2014 momentum alert",
-        "volume spike 2.6x avg (prior session)"
+        "volume spike 3.1x avg (prior session)"
       ]
     },
     {
       "ticker": "NU",
-      "prev_close": 13.43,
-      "current": 15.15,
-      "pct_chg": 12.81,
-      "ma50": 14.25,
+      "prev_close": 15.18,
+      "current": 15.31,
+      "pct_chg": 0.86,
+      "ma50": 14.27,
       "reasons": [
-        "gap UP 12.8% above 50MA \u2014 momentum alert"
+        "volume spike 2.4x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "SHOP",
+      "prev_close": 160.11,
+      "current": 165.91,
+      "pct_chg": 3.62,
+      "ma50": 141.67,
+      "reasons": [
+        "gap UP 3.6% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "ZS",
+      "prev_close": 201.8,
+      "current": 209.5,
+      "pct_chg": 3.82,
+      "ma50": 180.28,
+      "reasons": [
+        "gap UP 3.8% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "VST",
+      "prev_close": 144.89,
+      "current": 151.3,
+      "pct_chg": 4.42,
+      "ma50": 142.76,
+      "reasons": [
+        "gap UP 4.4% above 50MA \u2014 momentum alert",
+        "volume spike 2.1x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "CEG",
+      "prev_close": 267.62,
+      "current": 290.95,
+      "pct_chg": 8.72,
+      "ma50": 271.21,
+      "reasons": [
+        "gap UP 8.7% above 50MA \u2014 momentum alert"
       ]
     }
   ],
   "avoids": [],
   "gap_up_priority": [
+    "SHOP",
+    "ZS",
     "VST",
-    "NU"
+    "CEG"
   ],
   "top_candidates": [
     {
       "ticker": "OKTA",
-      "price": 211.49,
-      "ma50": 164.75,
-      "ret_5d": 8.4,
-      "ret_20d": 24.1,
-      "score": 0.2108,
+      "price": 218.29,
+      "ma50": 166.35,
+      "ret_5d": 8.0,
+      "ret_20d": 28.0,
+      "score": 0.2278,
       "gap_up": false,
-      "thesis_grade": "B",
-      "thesis_score": 57.0
+      "thesis_grade": "C",
+      "thesis_score": 52.0
+    },
+    {
+      "ticker": "AMD",
+      "price": 631.75,
+      "ma50": 515.73,
+      "ret_5d": 3.9,
+      "ret_20d": 32.3,
+      "score": 0.1986,
+      "gap_up": false,
+      "thesis_grade": "C",
+      "thesis_score": 51.0
+    },
+    {
+      "ticker": "CRWD",
+      "price": 272.67,
+      "ma50": 221.59,
+      "ret_5d": 5.2,
+      "ret_20d": 28.0,
+      "score": 0.1916,
+      "gap_up": false,
+      "thesis_grade": "D",
+      "thesis_score": 37.0
+    },
+    {
+      "ticker": "S",
+      "price": 25.43,
+      "ma50": 21.66,
+      "ret_5d": 11.8,
+      "ret_20d": 27.9,
+      "score": 0.1889,
+      "gap_up": false,
+      "thesis_grade": "D",
+      "thesis_score": 31.0
+    },
+    {
+      "ticker": "MRVL",
+      "price": 271.25,
+      "ma50": 228.27,
+      "ret_5d": 7.7,
+      "ret_20d": 21.3,
+      "score": 0.1624,
+      "gap_up": false,
+      "thesis_grade": "C",
+      "thesis_score": 51.0
     }
   ]
 }

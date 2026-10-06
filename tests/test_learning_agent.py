@@ -302,3 +302,22 @@ def test_new_version_never_reuses_a_retired_number(tmp_path):
     assert report["status"] == "applied"
     assert report["active_version"] == 3
     assert la.load_weights(wf)["active"]["version"] == 3
+
+
+def test_weights_set_by_an_owner_decision_are_left_alone_until_the_review_date(tmp_path):
+    # 2026-10-06: 80/20 adopted on the three-year backtest; the live trades from the summer point the other way
+    import json
+    from datetime import date
+    import learning_agent as la
+    path = tmp_path / "weights.json"
+    held = la.default_weights()
+    held["active"].update(version=3, w_rs=0.8, w_thesis=0.2)
+    held["hold_until"] = "2026-12-05"
+    path.write_text(json.dumps(held))
+    trades = [{"status": "CLOSED", "weight_version": 1, "rs_rank": 70 + i % 30, "thesis_score": 30 + (i * 7) % 50,
+               "pnl_pct": float((i * 7) % 50) - 20, "symbol": f"S{i}"} for i in range(40)]
+    report = la.run(trades, weights_path=path, today=date(2026, 11, 14))
+    assert report["status"] == "held" and report["hold_until"] == "2026-12-05"
+    assert json.loads(path.read_text())["active"]["w_rs"] == 0.8          # untouched
+    after = la.run(trades, weights_path=path, today=date(2026, 12, 5))     # from the review date the agent is free again
+    assert after["status"] != "held"

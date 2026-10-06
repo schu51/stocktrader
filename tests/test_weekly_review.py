@@ -206,3 +206,14 @@ def test_review_reports_sentiment_evidence():
     assert "news_negative: **observing** — 25 days of evidence, flagged vs rest -1.30%" in body
     assert "news_veto: **trial** — 6 with news vs 7 without closed trades, difference +0.90% per trade" in body
     assert "technical only +0.40% over 10 days vs SPY, technical + news +0.70%" in body
+
+
+def test_review_reminds_of_a_decision_under_review_and_says_when_it_is_overdue():
+    from weekly_review import build_review
+    exps = {"experiments": {"ma50_room": {"kind": "entry_signal", "state": "adopted", "evidence": {"days": 3}}},
+            "review": {"due": "2026-12-05", "what": "6% room, ATR stop, 80/20 weights",
+                       "revert_if": "clearly worse than the rules before it"}}
+    _, body = build_review(_data(experiments=exps), date(2026, 11, 28))
+    assert "Decision review due 2026-12-05 (in 7 days)" in body and "6% room, ATR stop, 80/20 weights" in body
+    _, body = build_review(_data(experiments=exps), date(2026, 12, 12))
+    assert "7 days OVERDUE" in body

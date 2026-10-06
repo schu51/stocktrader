@@ -1,19 +1,19 @@
 {
   "active": {
-    "version": 1,
-    "w_rs": 0.6,
-    "w_thesis": 0.4,
+    "version": 3,
+    "w_rs": 0.8,
+    "w_thesis": 0.2,
     "state": "champion",
-    "applied_at": "2026-10-03T12:22:18.382627",
-    "derived_from_trades": 35
+    "applied_at": "2026-10-06T09:22:00.319292",
+    "derived_from_trades": 0
   },
   "champion": {
-    "version": 1,
-    "w_rs": 0.6,
-    "w_thesis": 0.4,
+    "version": 3,
+    "w_rs": 0.8,
+    "w_thesis": 0.2,
     "state": "champion",
-    "mean_pnl": -1.5197142857142856,
-    "n_trades": 35
+    "mean_pnl": null,
+    "n_trades": 0
   },
   "rejected": [
     {
@@ -45,6 +45,15 @@
       "w_thesis": 0.4,
       "applied_at": "2026-10-03T12:22:18.382627",
       "note": "manual revert from version 2 (10/90) after 3-year backtest"
+    },
+    {
+      "version": 3,
+      "w_rs": 0.8,
+      "w_thesis": 0.2,
+      "applied_at": "2026-10-06T09:22:00.319292",
+      "note": "owner decision 2026-10-06: three-year backtest 80/20 +191% vs 60/40 +138% (research/backtest_summary_v3_rs80.json)"
     }
-  ]
+  ],
+  "hold_until": "2026-12-05",
+  "hold_reason": "adopted on backtest evidence; the learning agent leaves the weights alone until the 2026-12-05 review"
 }

@@ -204,6 +204,12 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
         for c in changed:
             out.append(f"- Changed this week: {_md(c.get('experiment'), 30)} {_md(c.get('from'), 20)} to "
                        f"{_md(c.get('to'), 20)} ({_md(c.get('reason'))})")
+        review = registry.get("review") if isinstance(registry.get("review"), dict) else {}
+        if review.get("due"):
+            days = (date.fromisoformat(str(review["due"])[:10]) - today).days
+            when = f"in {days} days" if days > 0 else "TODAY" if days == 0 else f"{-days} days OVERDUE"
+            out.append(f"- **Decision review due {_md(review.get('due'), 12)} ({when})**: {_md(review.get('what'))}. "
+                       f"Revert if: {_md(review.get('revert_if'))}")
         out.append(f"- Buy signals logged so far: {int(_num(registry.get('signals_logged')))}")
         sent = registry.get("sentiment") if isinstance(registry.get("sentiment"), dict) else {}
         if sent.get("rows"):

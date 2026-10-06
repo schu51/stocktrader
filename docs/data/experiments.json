@@ -2,12 +2,12 @@
   "experiments": {
     "atr_stop": {
       "kind": "stop_arm",
-      "state": "trial",
+      "state": "adopted",
       "started": "2026-10-03",
       "params": {
         "multiple": 2.5
       },
-      "note": "backtest 139% vs 124% control, same drawdown",
+      "note": "every new position; backtest with ma50_room 163% vs 138%, drawdown -16.5% vs -20.4%",
       "evidence": {
         "n_atr": 0,
         "n_fixed": 0,
@@ -71,10 +71,10 @@
     },
     "ma50_room": {
       "kind": "entry_signal",
-      "state": "observing",
+      "state": "adopted",
       "started": "2026-10-04",
       "params": {},
-      "note": "backtest: with the ATR stop 161% vs 115% control; alone 111%",
+      "note": "entry gate: close at least 6% above the 50-day average; backtest halves the trend-break exits (890 to 461)",
       "evidence": {
         "days": 0,
         "mean": null,
@@ -156,6 +156,20 @@
       "from": "active",
       "to": "observing",
       "reason": "owner decision: as the only gate it blocked all 5 buy signals on its first live day; it stays measured as one indicator and may not gate"
+    },
+    {
+      "date": "2026-10-06",
+      "experiment": "atr_stop",
+      "from": "trial",
+      "to": "adopted",
+      "reason": "owner decision on the three-year backtest comparison (research/backtest_summary_v3_*.json); the live trial could not have confirmed an edge this size"
+    },
+    {
+      "date": "2026-10-06",
+      "experiment": "ma50_room",
+      "from": "observing",
+      "to": "adopted",
+      "reason": "owner decision on the three-year backtest comparison (research/backtest_summary_v3_*.json); the live trial could not have confirmed an edge this size"
     }
   ],
   "generated_at": "2026-10-04T08:25:54.400857",
@@ -173,5 +187,11 @@
   "news_ab": {
     "days": 0,
     "signals": 0
+  },
+  "review": {
+    "due": "2026-12-05",
+    "decided": "2026-10-06",
+    "what": "6% room above the 50-day average as an entry gate, the ATR stop on every new position, ranking weights 80% strength / 20% thesis",
+    "revert_if": "trades opened since 2026-10-06 are clearly worse than the rules before it (the experiments' own drop threshold: worse with t <= -1)"
   }
 }

@@ -11,9 +11,14 @@ TODAY = date(2026, 10, 3)
 
 
 def _registry(**states):
+    """
+    A registry for testing the mechanisms: the live defaults, but with the two
+    experiments adopted on 2026-10-06 put back to their trial states (no entry
+    gate, 50/50 stop split) unless the test asks otherwise.
+    """
     import experiments as ex
     reg = ex.default_registry(TODAY)
-    for name, state in states.items():
+    for name, state in {"atr_stop": "trial", "ma50_room": "observing", **states}.items():
         reg["experiments"][name]["state"] = state
     return reg
 
@@ -28,12 +33,31 @@ def _gated(**states):
 # ── defaults ─────────────────────────────────────────────────────────────────
 
 def test_default_registry_reflects_the_backtest_verdicts():
-    reg = _registry()
+    import experiments as ex
+    reg = ex.default_registry(TODAY)
     states = {k: v["state"] for k, v in reg["experiments"].items()}
-    assert states == {"atr_stop": "trial", "macd_cross": "observing", "ema21_reclaim": "observing",
-                      "breakout": "observing", "adx25": "observing", "ma50_room": "observing",
+    assert states == {"atr_stop": "adopted", "macd_cross": "observing", "ema21_reclaim": "observing",
+                      "breakout": "observing", "adx25": "observing", "ma50_room": "adopted",
                       "news_positive": "observing", "social_bullish": "observing",
                       "news_negative": "observing", "social_bearish": "observing", "news_veto": "trial"}
+
+
+def test_live_defaults_gate_on_room_above_the_50_day_average_and_give_every_buy_the_atr_stop():
+    # Adopted 2026-10-06 on the three-year backtest comparison
+    import experiments as ex
+    reg = ex.default_registry(TODAY)
+    assert ex.entry_gate({"ma50_room": False, "macd_cross": True}, reg) == "ma50_room"
+    assert ex.entry_gate({"macd_cross": False}, reg) == "ma50_room"            # unknown room: not bought
+    assert ex.entry_gate({"ma50_room": True, "macd_cross": False}, reg) is None
+    assert {ex.stop_arm(f"SYM{i}:2026-10-06", reg) for i in range(50)} == {"atr"}
+
+
+def test_an_adopted_gate_is_still_dropped_if_it_picks_worse_names():
+    # The safety check behind the 2026-12-05 review
+    import experiments as ex
+    reg = ex.default_registry(TODAY)
+    reg, changes = ex.evaluate(reg, {"ma50_room": _rows(60, -0.03, "ma50_room")}, [], TODAY)
+    assert reg["experiments"]["ma50_room"]["state"] == "dropped" and "worse" in changes[0]["reason"]
 
 
 def _seed(tmp_path, **states):
@@ -72,7 +96,7 @@ def test_missing_registry_is_an_error_unless_explicitly_created(tmp_path):
     path = tmp_path / "experiments.json"
     with pytest.raises(ex.RegistryError):
         ex.load_registry(path, TODAY)
-    assert ex.load_registry(path, TODAY, create=True)["experiments"]["atr_stop"]["state"] == "trial"
+    assert ex.load_registry(path, TODAY, create=True)["experiments"]["atr_stop"]["state"] == "adopted"
 
 
 def test_corrupt_registry_is_never_replaced_with_defaults(tmp_path):

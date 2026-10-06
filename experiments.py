@@ -94,7 +94,16 @@ HOOK_FAILED = "experiment_error"     # blocked_by value when the gate could not 
 
 
 def default_registry(today: date) -> Dict:
-    """Starting states, from the three-year backtest of 2026-10-03 (research/backtest_summary_exp_*.json)."""
+    """
+    Starting states. From the three-year backtests of 2026-10-03 and, for the
+    two adopted on 2026-10-06 (atr_stop and ma50_room), the sixteen-variant
+    comparison of that day (research/backtest_summary_v3_*.json): 6% room above
+    the 50-day average, the ATR stop and 80/20 ranking weights together returned
+    +216% against +138% for the rules without them. They were adopted on that
+    evidence instead of waiting for the live trials, which need an edge of 7-13%
+    per trade to pass and so could only ever have dropped them. Review date:
+    2026-12-05 (registry["review"]).
+    """
     started = today.isoformat()
 
     def exp(kind, state, note, **params):
@@ -106,7 +115,9 @@ def default_registry(today: date) -> Dict:
     macd["auto_promote"] = False
     return {
         "experiments": {
-            "atr_stop": exp("stop_arm", "trial", "backtest 139% vs 124% control, same drawdown", multiple=2.5),
+            "atr_stop": exp("stop_arm", "adopted",
+                            "every new position; backtest with ma50_room 163% vs 138%, drawdown -16.5% vs -20.4%",
+                            multiple=2.5),
             "macd_cross": macd,
             "ema21_reclaim": exp("entry_signal", "observing", "backtest 100% vs 124% control"),
             "breakout": exp("entry_signal", "observing", "backtest 47% vs 124% control; best per-trade quality"),
@@ -121,8 +132,9 @@ def default_registry(today: date) -> Dict:
                                   "StockTwits Bullish share <= 60%; confirmed if those stocks then lag"),
             "news_veto": exp("news_arm", "trial",
                              "A/B on real buys: half are skipped when news is negative or social is bearish"),
-            "ma50_room": exp("entry_signal", "observing",
-                             "backtest: with the ATR stop 161% vs 115% control; alone 111%"),
+            "ma50_room": exp("entry_signal", "adopted",
+                             "entry gate: close at least 6% above the 50-day average; "
+                             "backtest halves the trend-break exits (890 to 461)"),
         },
         "changes": [],
     }

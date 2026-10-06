@@ -25,7 +25,7 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -178,7 +178,7 @@ def _write_report(report: Dict, report_path: Path = REPORT_FILE):
         logger.warning(f"Could not write report: {e}")
 
 
-def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE, candidate_evidence=None) -> Dict:
+def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE, candidate_evidence=None, today=None) -> Dict:
     """
     Core agent logic: given the full trades list and a weights file path, run the
     gates and rollback, persist weights, return the report dict.
@@ -198,6 +198,15 @@ def run(trades: List[Dict], weights_path: Path = WEIGHTS_FILE, candidate_evidenc
         "generated_at": datetime.now().isoformat(),
         "trades_so_far": len(instrumented),
     }
+
+    # --- Hold: weights set by an owner decision are left alone until its review date ---
+    hold = str(weights.get("hold_until") or "")
+    if hold and (today or date.today()).isoformat() < hold:
+        report["status"] = "held"
+        report["hold_until"] = hold
+        report["active_version"] = weights["active"]["version"]
+        _write_report(report, report_path)
+        return report
 
     # --- Rollback check FIRST: judge any provisional on probation ---
     if weights["active"].get("state") == "provisional":

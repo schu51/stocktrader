@@ -3034,7 +3034,7 @@
   {
     "trade_id": "TRD-20261006140414-CAH",
     "symbol": "CAH",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-06",
     "entry_ts": "2026-10-06T14:04:14.514265",
     "entry_price": 240.27,
@@ -3066,12 +3066,13 @@
     "stop_arm": "atr",
     "stop_dist": 0.0603,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-10-06",
+    "exit_price": 232.22,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -19.03,
+    "pnl_pct": -0.44,
+    "hold_days": 0,
+    "exit_ts": "2026-10-06T15:15:48.391849"
   },
   {
     "trade_id": "TRD-20261006140415-HUM",

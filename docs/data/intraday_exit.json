@@ -1,7 +1,20 @@
 {
-  "generated_at": "2026-10-06T14:45:44.800703",
+  "generated_at": "2026-10-06T15:15:48.648275",
   "positions_checked": 29,
-  "exits_triggered": [],
+  "exits_triggered": [
+    {
+      "symbol": "CAH",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$232.22 is 0.1% below 50MA $232.35",
+      "qty": 18,
+      "price": 232.215,
+      "pnl_pct": -0.44,
+      "executed": true,
+      "order_id": "95ca2946-367c-4bc2-b0e3-08bbb68f227c",
+      "confirmed": true,
+      "sale": "filled"
+    }
+  ],
   "stops_updated": [],
   "stops_placed": [],
   "stop_failures": [],

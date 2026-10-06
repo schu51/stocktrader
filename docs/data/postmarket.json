@@ -1,15 +1,15 @@
 {
-  "date": "2026-10-05",
-  "generated_at": "2026-10-05T21:16:08.048469",
+  "date": "2026-10-06",
+  "generated_at": "2026-10-06T20:15:42.832369",
   "portfolio": {
-    "value": 115102.3,
-    "cash": 37434.43,
-    "total_unrealized": 6428.97,
-    "positions": 23,
-    "winners": 20,
-    "losers": 3,
+    "value": 116091.55,
+    "cash": 19616.94,
+    "total_unrealized": 7439.1,
+    "positions": 28,
+    "winners": 22,
+    "losers": 6,
     "risk_level": "LOW",
-    "risk_score": 24.8
+    "risk_score": 22.9
   },
   "execution": {
     "signals_generated": 6,
@@ -20,10 +20,54 @@
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 2,
+    "stops_updated": 5,
     "detail": []
   },
-  "closed_today": [],
+  "closed_today": [
+    {
+      "trade_id": "TRD-20261006140414-CAH",
+      "symbol": "CAH",
+      "status": "CLOSED",
+      "entry_date": "2026-10-06",
+      "entry_ts": "2026-10-06T14:04:14.514265",
+      "entry_price": 240.27,
+      "shares": 18,
+      "stop_loss": 221.05,
+      "trend_score": 78,
+      "confidence": 0.85,
+      "rs_rank": 82,
+      "thesis_score": 58.0,
+      "thesis_grade": "B",
+      "sector": "healthcare",
+      "weight_version": 1,
+      "order_id": "84ee9ebb-e5c0-4b76-9c74-8757afc49246",
+      "signals": {
+        "macd_cross": true,
+        "ema21_reclaim": true,
+        "breakout": false,
+        "adx25": false,
+        "ma50_room": false,
+        "adx": 20.5,
+        "atr_pct": 0.02412,
+        "news_positive": true,
+        "news_negative": false,
+        "social_bullish": null,
+        "social_bearish": null,
+        "news_score": 0.4,
+        "st_bull_ratio": 1.0
+      },
+      "stop_arm": "atr",
+      "stop_dist": 0.0603,
+      "news_arm": "control",
+      "exit_date": "2026-10-06",
+      "exit_price": 232.22,
+      "exit_reason": "PRICE_BELOW_50MA",
+      "pnl_usd": -19.03,
+      "pnl_pct": -0.44,
+      "hold_days": 0,
+      "exit_ts": "2026-10-06T15:15:48.391849"
+    }
+  ],
   "positions_at_risk": [
     {
       "symbol": "CTLP",

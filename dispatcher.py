@@ -120,17 +120,21 @@ def dispatch(due: list, since: datetime, ref: str,
 
 
 CATCHUP_SLOTS = 3    # a once-a-day job is still started up to 45 minutes after a missed trigger
+REPEAT_CATCHUP_SLOTS = 1   # a repeating job only from the slot just before this one
 
 
 def catch_up(now: datetime) -> list:
     """
-    Once-a-day workflows whose slot fell in the last CATCHUP_SLOTS slots, as
-    (workflow, start of the slot it was due in), oldest first.
+    Workflows a missed trigger skipped, as (workflow, start of the slot it was
+    due in), oldest first: once-a-day workflows from the last CATCHUP_SLOTS
+    slots, repeating ones from the last REPEAT_CATCHUP_SLOTS.
 
-    One trigger from cron-job.org can time out. Without this, a timeout at
-    10:00 would skip the whole day's trade run. Repeating jobs are left out:
-    they come round again on their own. Whether a job already ran is decided
-    by dispatch(), which checks for a run since the job's own slot.
+    One trigger from cron-job.org can time out or get a 500 from GitHub.
+    Without this, a failure at 10:00 would skip the whole day's trade run, and
+    a failure on an exit-check slot would leave an hour between checks.
+    Repeating jobs get the shorter window because they come round again on
+    their own. Whether a job already ran is decided by dispatch(), which
+    checks for a run since the job's own slot.
     """
     once_a_day = {workflow for workflow, _, _, _, every in TIMETABLE if every is None}
     local = now.astimezone(ET)
@@ -141,14 +145,16 @@ def catch_up(now: datetime) -> list:
         if earlier.date() != local.date():
             continue
         for workflow in due_workflows(earlier):
-            if workflow in once_a_day and workflow not in current and workflow not in seen:
+            if workflow not in once_a_day and k > REPEAT_CATCHUP_SLOTS:
+                continue
+            if workflow not in current and workflow not in seen:
                 seen.add(workflow)
                 missed.append((workflow, slot_start(earlier)))
     return missed
 
 
 def run_due(now: datetime, ref: str, already_started=already_started, start=start) -> int:
-    """Start this slot's workflows, then any once-a-day workflow a missed trigger skipped. Returns failures."""
+    """Start any workflow a missed trigger skipped, then this slot's workflows. Returns failures."""
     failed = 0
     for workflow, since in catch_up(now):
         failed += dispatch([workflow], since, ref, already_started=already_started, start=start)

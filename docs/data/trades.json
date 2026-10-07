@@ -2782,7 +2782,7 @@
   {
     "trade_id": "TRD-20261005142007-WAB",
     "symbol": "WAB",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-05",
     "entry_ts": "2026-10-05T14:20:07.274871",
     "entry_price": 304.49,
@@ -2814,12 +2814,13 @@
     "stop_arm": "atr",
     "stop_dist": 0.050325,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null
+    "exit_date": "2026-10-07",
+    "exit_price": 287.6,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -69.27,
+    "pnl_pct": -1.75,
+    "hold_days": 2,
+    "exit_ts": "2026-10-07T13:45:53.828643"
   },
   {
     "trade_id": "TRD-20261005142008-AME",

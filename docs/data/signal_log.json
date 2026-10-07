@@ -300,29 +300,6 @@
   },
   {
     "date": "2026-10-07",
-    "symbol": "APA",
-    "price": 44.099998474121094,
-    "signals": {
-      "macd_cross": false,
-      "ema21_reclaim": true,
-      "breakout": false,
-      "adx25": false,
-      "ma50_room": false,
-      "adx": 17.5,
-      "atr_pct": 0.03192,
-      "news_positive": true,
-      "news_negative": false,
-      "social_bullish": null,
-      "social_bearish": null,
-      "news_score": 0.8,
-      "st_bull_ratio": 1.0
-    },
-    "blocked_by": "ma50_room",
-    "news_arm": "news",
-    "news_veto": false
-  },
-  {
-    "date": "2026-10-07",
     "symbol": "ILMN",
     "price": 273.5400085449219,
     "signals": {
@@ -341,6 +318,75 @@
       "st_bull_ratio": 1.0
     },
     "blocked_by": null,
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-07",
+    "symbol": "APA",
+    "price": 44.5099983215332,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 17.7,
+      "atr_pct": 0.03137,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.8,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-07",
+    "symbol": "DVN",
+    "price": 48.430198669433594,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 11.4,
+      "atr_pct": 0.02902,
+      "news_positive": null,
+      "news_negative": null,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.5,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-07",
+    "symbol": "EOG",
+    "price": 145.16000366210938,
+    "signals": {
+      "macd_cross": true,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 12.5,
+      "atr_pct": 0.02136,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.633,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
     "news_arm": "control",
     "news_veto": false
   }

@@ -1,119 +1,84 @@
 {
-  "generated_at": "2026-10-07T06:00:52.986107-07:00",
+  "generated_at": "2026-10-08T06:00:43.552723-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 36,
+    "strong": 37,
     "mixed": 11,
-    "weak": 28
+    "weak": 27
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-10-07T09:00:53-04:00",
-  "premarket_quotes": 71,
+  "premarket_as_of": "2026-10-08T09:00:48-04:00",
+  "premarket_quotes": 73,
   "no_premarket_quote": [
-    "PCOR",
-    "DUOL",
-    "DXCM",
+    "NCNO",
     "PODD"
   ],
   "gap_alerts": [
     {
-      "ticker": "MSTR",
-      "prev_close": 164.55,
-      "current": 158.13,
-      "pct_chg": -3.9,
-      "ma50": 126.38,
-      "reasons": [
-        "gap down -3.9%"
-      ]
-    },
-    {
-      "ticker": "RBLX",
-      "prev_close": 45.56,
-      "current": 43.9,
-      "pct_chg": -3.64,
-      "ma50": 42.32,
-      "reasons": [
-        "gap down -3.6%"
-      ]
-    },
-    {
-      "ticker": "CEG",
-      "prev_close": 300.4,
-      "current": 289.7,
-      "pct_chg": -3.56,
-      "ma50": 271.82,
-      "reasons": [
-        "gap down -3.6%",
-        "volume spike 4.4x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "COIN",
-      "prev_close": 185.74,
-      "current": 180.04,
-      "pct_chg": -3.07,
-      "ma50": 173.8,
+      "ticker": "ARM",
+      "prev_close": 294.37,
+      "current": 285.3,
+      "pct_chg": -3.08,
+      "ma50": 268.36,
       "reasons": [
         "gap down -3.1%"
       ]
     },
     {
-      "ticker": "RXRX",
-      "prev_close": 4.63,
-      "current": 4.49,
-      "pct_chg": -2.99,
-      "ma50": 3.49,
+      "ticker": "CRWV",
+      "prev_close": 88.45,
+      "current": 86.75,
+      "pct_chg": -1.92,
+      "ma50": 87.85,
       "reasons": [
-        "volume spike 3.0x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "VST",
-      "prev_close": 160.5,
-      "current": 156.09,
-      "pct_chg": -2.75,
-      "ma50": 142.83,
-      "reasons": [
-        "volume spike 3.3x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "MRVL",
-      "prev_close": 287.01,
-      "current": 282.21,
-      "pct_chg": -1.67,
-      "ma50": 230.22,
-      "reasons": [
-        "volume spike 3.0x avg (prior session)"
+        "crossed BELOW 50MA (87.85)"
       ]
     },
     {
       "ticker": "AVGO",
-      "prev_close": 375.81,
-      "current": 371.15,
-      "pct_chg": -1.24,
-      "ma50": 372.16,
+      "prev_close": 376.51,
+      "current": 370.27,
+      "pct_chg": -1.66,
+      "ma50": 372.09,
       "reasons": [
-        "crossed BELOW 50MA (372.16)"
+        "crossed BELOW 50MA (372.09)"
+      ]
+    },
+    {
+      "ticker": "CEG",
+      "prev_close": 299.59,
+      "current": 297.3,
+      "pct_chg": -0.76,
+      "ma50": 272.63,
+      "reasons": [
+        "volume spike 2.1x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "APLD",
+      "prev_close": 23.81,
+      "current": 24.07,
+      "pct_chg": 1.09,
+      "ma50": 27.09,
+      "reasons": [
+        "volume spike 2.8x avg (prior session)"
       ]
     }
   ],
   "avoids": [
-    "MSTR",
-    "RBLX",
-    "CEG",
-    "COIN",
+    "ARM",
+    "CRWV",
     "AVGO"
   ],
   "gap_up_priority": [],
   "top_candidates": [
     {
       "ticker": "OKTA",
-      "price": 218.67,
-      "ma50": 167.97,
-      "ret_5d": 6.7,
-      "ret_20d": 30.5,
-      "score": 0.2316,
+      "price": 218.0,
+      "ma50": 169.61,
+      "ret_5d": 4.3,
+      "ret_20d": 26.2,
+      "score": 0.2055,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 57.0

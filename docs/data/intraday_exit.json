@@ -1,10 +1,32 @@
 {
-  "generated_at": "2026-10-08T16:45:46.852590",
-  "positions_checked": 25,
+  "generated_at": "2026-10-08T17:15:39.422605",
+  "positions_checked": 23,
   "exits_triggered": [],
-  "stops_updated": [],
+  "stops_updated": [
+    {
+      "symbol": "VLO",
+      "new_stop": 398.92,
+      "tier": "50%+ gain \u2192 10% trail",
+      "pnl_pct": 65.83
+    }
+  ],
   "stops_placed": [],
   "stop_failures": [],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "ARM",
+      "trigger": "BROKER_STOP",
+      "price": 273.66,
+      "pnl_pct": -8.04,
+      "exit_date": "2026-10-08"
+    },
+    {
+      "symbol": "BE",
+      "trigger": "BROKER_STOP",
+      "price": 265.5,
+      "pnl_pct": -8.05,
+      "exit_date": "2026-10-08"
+    }
+  ],
   "mode": "EXECUTE"
 }

@@ -2781,7 +2781,7 @@
   {
     "trade_id": "TRD-20260929190641-ARM",
     "symbol": "ARM",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-09-29",
     "entry_ts": "2026-09-29T19:06:41.331955",
     "entry_price": 297.58,
@@ -2795,14 +2795,15 @@
     "sector": "technology",
     "weight_version": 2,
     "order_id": "936a698a-93eb-4871-a454-346a8547d2cc",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-08",
+    "exit_price": 273.66,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": -191.38,
+    "pnl_pct": -8.04,
+    "hold_days": 9,
     "entry_limit": 320.0,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-08T16:53:39.533119"
   },
   {
     "trade_id": "TRD-20261001191502-SHOP",
@@ -2833,7 +2834,7 @@
   {
     "trade_id": "TRD-20261005142006-BE",
     "symbol": "BE",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-05",
     "entry_ts": "2026-10-05T14:20:06.351394",
     "entry_price": 288.75,
@@ -2865,14 +2866,15 @@
     "stop_arm": "fixed",
     "stop_dist": null,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-08",
+    "exit_price": 265.5,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": -464.94,
+    "pnl_pct": -8.05,
+    "hold_days": 3,
     "entry_limit": 298.19,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-08T17:01:30.317536"
   },
   {
     "trade_id": "TRD-20261005142007-WAB",

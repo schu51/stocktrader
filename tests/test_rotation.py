@@ -302,3 +302,47 @@ def test_sizing_and_risk_check_allow_a_buy_at_any_position_count_unless_a_cap_is
     assert limit == "PASSED" and not any("Max positions" in c for c in size.get("constraints_applied", []))
     size, limit = run(capped, held=20)
     assert limit == "FAILED" and any("Max positions" in c for c in size.get("constraints_applied", []))
+
+
+# ── stale exit: held two months for little gain ──────────────────────────────
+
+def _open_since(symbol, entry_date, **over):
+    return dict({"symbol": symbol, "status": "OPEN", "entry_date": entry_date}, **over)
+
+
+def test_stale_is_sixty_days_held_with_under_ten_percent():
+    import rotation
+    from datetime import date
+    today = date(2026, 10, 8)
+    trades = [_open_since("OLDFLAT", "2026-08-09"), _open_since("OLDGOOD", "2026-07-15"),
+              _open_since("NEWFLAT", "2026-08-10"), _open_since("OLDDOWN", "2026-06-01")]
+    holdings = {"OLDFLAT": {"pnl_pct": 9.9, "market_value": 3000}, "OLDGOOD": {"pnl_pct": 21.3},
+                "NEWFLAT": {"pnl_pct": 1.0}, "OLDDOWN": {"pnl_pct": -2.0, "market_value": 2000}}
+    stale = rotation.find_stale(holdings, trades, today, ranks={"OLDFLAT": 66})
+    assert [s["symbol"] for s in stale] == ["OLDDOWN", "OLDFLAT"]            # smallest gain first; 59 days is not 60
+    assert stale[1] == {"symbol": "OLDFLAT", "rs_rank": 66, "hold_days": 60, "pnl_pct": 9.9, "market_value": 3000}
+    assert (rotation.STALE_DAYS, rotation.STALE_GAIN_PCT) == (60, 10.0)      # the setting that was backtested
+
+
+def test_unknown_is_never_stale():
+    import rotation
+    from datetime import date
+    today = date(2026, 10, 8)
+    trades = [_open_since("PENDING", "2026-06-01", pending_exit={"order_id": "s1"}),
+              _open_since("NOGAIN", "2026-06-01"), _open_since("NANGAIN", "2026-06-01"),
+              _open_since("STUCK", "2026-06-01"), {"symbol": "NODATE", "status": "OPEN"}]
+    holdings = {"PENDING": {"pnl_pct": 1.0}, "NOGAIN": {"pnl_pct": None}, "NANGAIN": {"pnl_pct": float("nan")},
+                "STUCK": {"pnl_pct": 1.0}, "NODATE": {"pnl_pct": 1.0}, "NOTRADE": {"pnl_pct": 1.0}}
+    assert rotation.find_stale(holdings, trades, today, exclude={"STUCK"}) == []
+
+
+def test_stale_sale_is_recorded_as_stale(monkeypatch, tmp_path):
+    import rotation
+    from run_daily_analysis import DailyRunner
+    broker = _Broker()
+    runner, logged = _runner(broker, monkeypatch, tmp_path)
+    out = DailyRunner._rotate_out(runner, LAG, [], execute=True, confirm_seconds=0, reason=rotation.STALE_REASON)
+    assert out["sold"] == ["ANET"] and out["failed"] == []
+    assert broker.cancelled == ["stopA"] and broker.closed == ["ANET"]
+    assert logged[0][1]["exit_reason"] == "STALE"
+    assert json.loads((tmp_path / "rotation_log.json").read_text())[0]["reason"] == "STALE"

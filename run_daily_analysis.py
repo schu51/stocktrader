@@ -518,6 +518,22 @@ class DailyRunner:
             cash_start = self.portfolio.cash
             reserve = self.portfolio.total_value * constraints.min_cash_allocation
             laggards = self._find_laggards(exit_results) if positions_verified else []
+
+            # Stale exit (rotation.find_stale): held two months for little gain.
+            # Sold before today's buys are sized, whatever the cash position, so
+            # everything below works from what is actually left.
+            stale = self._find_stale(exit_results) if positions_verified else []
+            results["stale"] = self._rotate_out(stale[:rotation.MAX_STALE_PER_DAY], [], execute,
+                                                reason=rotation.STALE_REASON)
+            results["stale"]["candidates"] = stale
+            if results["stale"]["failed"]:
+                results["alerts"].append(
+                    "Stale exit failed: " + ", ".join(f["symbol"] for f in results["stale"]["failed"]))
+            stale_sold = set(results["stale"]["sold"])
+            cash_start += sum(rotation._value(s) for s in stale if s["symbol"] in stale_sold)
+            held_count -= len(stale_sold)
+            laggards = [l for l in laggards if l["symbol"] not in stale_sold]
+
             planned = rotation.planning_proceeds(laggards, cash_start - reserve, self.portfolio.total_value)
             self.portfolio.cash = cash_start + planned
             self.portfolio.available_cash = max(0.0, self.portfolio.cash) * 0.95
@@ -2064,14 +2080,38 @@ class DailyRunner:
             logger.warning(f"Rotation: could not evaluate holdings ({e}) — nothing rotated")
             return []
 
+    def _find_stale(self, exit_results: Dict) -> List[Dict]:
+        """Holdings the stale rule sells today, smallest gain first. Empty whenever the inputs cannot be trusted."""
+        import rotation
+        try:
+            docs = Path(__file__).parent / "docs" / "data"
+            trades = json.loads((docs / "trades.json").read_text())
+            try:
+                ranks = rotation.load_ranks(json.loads((docs / "screener.json").read_text()), date.today())
+            except Exception:
+                ranks = None
+            exited = {e.get("symbol") for e in (exit_results or {}).get("exits_triggered", [])}
+            holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2), "market_value": pos.market_value}
+                        for sym, pos in (self.portfolio.positions or {}).items()}
+            return rotation.find_stale(holdings, trades, date.today(),
+                                       exclude=exited | set(getattr(self, "_untradable", {})), ranks=ranks)
+        except Exception as e:
+            logger.warning(f"Stale exit: could not evaluate holdings ({e}) — nothing sold")
+            return []
+
     def _rotate_out(self, laggards: List[Dict], replacements: List[str], execute: bool,
-                    confirm_seconds: float = 20) -> Dict:
+                    confirm_seconds: float = 20, reason: str = None) -> Dict:
         """
         Sell the given laggards. A position's stops are cancelled before it is
         sold; if the sale is then rejected the stops are put straight back, so a
         failed rotation never leaves the position unprotected.
+
+        `reason` is the exit reason recorded (default: a rotation). The stale
+        exit uses the same path, so it is confirmed and recorded the same way.
         """
         import rotation
+        reason = reason or rotation.EXIT_REASON
+        label = "Stale exit" if reason == rotation.STALE_REASON else "Rotation"
         out = {"sold": [], "failed": [], "planned": [l["symbol"] for l in laggards]}
         if not laggards or not execute or not self.broker:
             return out
@@ -2087,7 +2127,7 @@ class DailyRunner:
             is_open = None
         if is_open is not True:
             out["skipped"] = "market closed" if is_open is False else "could not confirm the market is open"
-            logger.warning(f"Rotation skipped: {out['skipped']}")
+            logger.warning(f"{label} skipped: {out['skipped']}")
             return out
         log = []
         for lag in laggards:
@@ -2112,29 +2152,33 @@ class DailyRunner:
                     if sale != SALE_DEAD:
                         # Outcome unknown (still open, partly filled, unreadable): keep
                         # the trade open and let the intraday check settle it.
-                        mark_pending_exit(sym, result.get("id"), rotation.EXIT_REASON,
+                        mark_pending_exit(sym, result.get("id"), reason,
                                           getattr(pos, "current_price", 0), getattr(pos, "unrealized_pnl_pct", 0))
                     raise RuntimeError("sell did not fill; cancelled" if sale == SALE_DEAD
                                        else f"sell outcome not known ({sale}); tracked as a pending exit")
             except Exception as e:
-                logger.error(f"ROTATION FAILED: {sym} — {e}")
+                logger.error(f"{label.upper()} FAILED: {sym} — {e}")
                 out["failed"].append({"symbol": sym, "error": str(e)})
                 try:
                     place_missing_stops(self.broker)      # still held: make sure it has its stop
                 except Exception as e2:
-                    logger.error(f"Could not restore stops after failed rotation of {sym}: {e2}")
+                    logger.error(f"Could not restore stops after failed {label.lower()} of {sym}: {e2}")
                 continue
-            logger.info(f"ROTATED OUT: {sym} — RS rank {lag['rs_rank']} after {lag['hold_days']}d "
-                        f"({lag.get('pnl_pct')}%) to make room for {', '.join(replacements) or 'the position cap'}")
+            if reason == rotation.STALE_REASON:
+                logger.info(f"STALE EXIT: {sym} — {lag.get('pnl_pct')}% after {lag['hold_days']}d "
+                            f"(under {rotation.STALE_GAIN_PCT:g}% in {rotation.STALE_DAYS}d)")
+            else:
+                logger.info(f"ROTATED OUT: {sym} — RS rank {lag['rs_rank']} after {lag['hold_days']}d "
+                            f"({lag.get('pnl_pct')}%) to make room for {', '.join(replacements) or 'the position cap'}")
             out["sold"].append(sym)            # the sale is real whether or not the bookkeeping below works
             try:
                 if pos is not None:
                     self._log_trade("EXIT", sym, pos.shares, pos.current_price,
-                                    exit_reason=rotation.EXIT_REASON, realized_pnl_pct=pos.unrealized_pnl_pct)
+                                    exit_reason=reason, realized_pnl_pct=pos.unrealized_pnl_pct)
             except Exception as e:
-                logger.error(f"Rotation of {sym} filled but could not be written to the trade log: {e}")
+                logger.error(f"{label} of {sym} filled but could not be written to the trade log: {e}")
                 out["failed"].append({"symbol": sym, "error": f"sold, but trade log not updated: {e}"})
-            log.append({"date": date.today().isoformat(), "symbol": sym, "rs_rank": lag["rs_rank"],
+            log.append({"date": date.today().isoformat(), "symbol": sym, "reason": reason, "rs_rank": lag["rs_rank"],
                         "hold_days": lag["hold_days"], "pnl_pct": lag.get("pnl_pct"),
                         "price": getattr(pos, "current_price", None), "replacements": replacements,
                         "order_id": result.get("id")})

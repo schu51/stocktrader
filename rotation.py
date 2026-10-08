@@ -28,6 +28,16 @@ is left alone.
 Every rotation is appended to docs/data/rotation_log.json with the rank,
 days held and gain at the time, so what the sold names and their
 replacements did afterwards can be compared.
+
+Stale exit (since 2026-10-08)
+-----------------------------
+A second, simpler rule that needs no cash shortfall: a holding kept
+STALE_DAYS (60) with a gain under STALE_GAIN_PCT (10%) is sold. It has broken
+no rule, but it has had two months and done little. In the three-year
+backtest the 50 positions this sold at an average +7.4% finished at +7.0%
+when held instead, 24 days later; the account did no worse at any setting
+near this one (research/backtest_summary_stale_*.json). The size of the gain
+is not established. Review with the other rules on 2026-12-05.
 """
 
 import json
@@ -48,6 +58,11 @@ MAX_ROTATIONS_PER_DAY = 2
 ONE_POSITION = 0.05           # share of the account a full-size position takes (sizing target, high conviction)
 MIN_RANK_COVERAGE = 0.80      # below this the screener's universe is suspect (see screener.MIN_DATA_COVERAGE)
 EXIT_REASON = "ROTATED_OUT"
+
+STALE_DAYS = 60               # calendar days held
+STALE_GAIN_PCT = 10.0         # gain below this after STALE_DAYS is "not going anywhere"
+MAX_STALE_PER_DAY = 3         # not in the backtest: a brake in case a data fault makes many holdings look stale
+STALE_REASON = "STALE"
 
 
 def load_ranks(screener: Optional[Dict], today: date) -> Optional[Dict[str, int]]:
@@ -106,6 +121,27 @@ def find_laggards(holdings: Dict[str, Dict], trades: Iterable[Dict], ranks: Opti
             out.append({"symbol": sym, "rs_rank": rank, "hold_days": days, "pnl_pct": (h or {}).get("pnl_pct"),
                         "market_value": (h or {}).get("market_value")})
     return sorted(out, key=lambda x: (x["rs_rank"], x["symbol"]))
+
+
+def find_stale(holdings: Dict[str, Dict], trades: Iterable[Dict], today: date,
+               exclude: Iterable[str] = (), ranks: Optional[Dict[str, int]] = None) -> List[Dict]:
+    """
+    Holdings to sell under the stale rule, smallest gain first. Unknown is
+    never stale: no entry date, a sell already in flight, or no readable gain
+    leaves the holding alone. `ranks` only adds the RS rank to the record.
+    """
+    trades = list(trades or [])
+    skip = set(exclude or ())
+    out = []
+    for sym, h in (holdings or {}).items():
+        days = held_days(sym, trades, today)
+        pnl = (h or {}).get("pnl_pct")
+        if sym in skip or days is None or not isinstance(pnl, (int, float)) or isinstance(pnl, bool) or pnl != pnl:
+            continue
+        if days >= STALE_DAYS and pnl < STALE_GAIN_PCT:
+            out.append({"symbol": sym, "rs_rank": (ranks or {}).get(sym), "hold_days": days, "pnl_pct": pnl,
+                        "market_value": (h or {}).get("market_value")})
+    return sorted(out, key=lambda x: (x["pnl_pct"], x["symbol"]))
 
 
 def _value(laggard: Dict) -> float:

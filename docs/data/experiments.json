@@ -191,7 +191,7 @@
   "review": {
     "due": "2026-12-05",
     "decided": "2026-10-06",
-    "what": "6% room above the 50-day average as an entry gate, the ATR stop on every new position, ranking weights 80% strength / 20% thesis",
+    "what": "6% room above the 50-day average as an entry gate, the ATR stop on every new position, ranking weights 80% strength / 20% thesis; and, decided 2026-10-08, the stale exit (sell a holding kept 60 days with a gain under 10%)",
     "revert_if": "trades opened since 2026-10-06 are clearly worse than the rules before it (the experiments' own drop threshold: worse with t <= -1)"
   }
 }

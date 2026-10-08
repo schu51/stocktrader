@@ -242,6 +242,50 @@ def reconcile_phantom_trades(trades: list, held_symbols: set) -> int:
     return reconciled
 
 
+MAX_FILL_LOOKUPS = 60   # per run; the first run after this shipped has the whole log to confirm
+
+
+def confirm_entry_fills(trades: list, get_order, limit: int = MAX_FILL_LOOKUPS) -> int:
+    """
+    Replace the price a buy was *sent* at with the price it filled at. Edits
+    `trades` in place; returns how many were confirmed.
+
+    A buy is logged when its limit order is submitted, at the limit price. The
+    fill comes later and is usually lower, so entry_price overstated the cost
+    (WAB 2026-10-05: logged 304.49, filled near 293). The limit is kept as
+    entry_limit. On an open trade the share count is corrected too, once the
+    order has ended, in case it only partly filled.
+
+    A trade is confirmed once (entry_filled). An order that cannot be read, is
+    still working, or filled nothing is left for a later run.
+    """
+    confirmed = 0
+    lookups = 0
+    for t in reversed(trades):                      # newest first: they matter most
+        if lookups >= limit:
+            break
+        if (t.get("status") not in ("OPEN", "CLOSED") or not t.get("order_id")
+                or t.get("entry_filled")):
+            continue
+        lookups += 1
+        try:
+            order = get_order(t["order_id"]) or {}
+            status = order.get("status")
+            qty, price = float(order["filled_qty"]), float(order["filled_avg_price"])
+        except Exception:
+            continue
+        ended = status in ("filled",) + _ENDED_UNFILLED
+        if not ended or qty <= 0 or price <= 0:
+            continue
+        t.setdefault("entry_limit", t.get("entry_price"))
+        t["entry_price"] = round(price, 2)
+        if t["status"] == "OPEN":
+            t["shares"] = int(qty) if qty == int(qty) else qty
+        t["entry_filled"] = True
+        confirmed += 1
+    return confirmed
+
+
 BROKER_STOP, SOLD_AT_BROKER = "BROKER_STOP", "SOLD_AT_BROKER"
 _NEW_YORK = ZoneInfo("America/New_York")
 _STOP_ORDER_TYPES = ("stop", "stop_limit", "trailing_stop")
@@ -327,7 +371,10 @@ def settle_broker_exits(trades: list, held_symbols: set, filled_sells, buy_fill)
 
 
 def record_broker_exits(broker, trades: list, held_symbols: set) -> Tuple[list, list]:
-    """settle_broker_exits against the live account. Reads orders only; the caller saves `trades`."""
+    """
+    confirm_entry_fills, then settle_broker_exits, against the live account.
+    Reads orders only; the caller saves `trades`.
+    """
     sells_cache = {}
 
     def filled_sells(symbol):
@@ -348,6 +395,7 @@ def record_broker_exits(broker, trades: list, held_symbols: set) -> Tuple[list, 
         except Exception:
             return None
 
+    confirm_entry_fills(trades, broker.get_order)
     return settle_broker_exits(trades, held_symbols, filled_sells, buy_fill)
 
 

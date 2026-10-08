@@ -122,3 +122,57 @@ def test_record_broker_exits_reads_the_account(monkeypatch):
     trades = [_trade()]
     closed, unresolved = record_broker_exits(Down(), trades, set())
     assert closed == [] and unresolved == trades
+
+
+# ── entry price: the fill, not the limit the order was sent at ───────────────
+
+def _orders(**by_id):
+    return lambda oid: by_id[oid]
+
+
+def test_entry_price_becomes_the_fill_and_the_limit_is_kept():
+    from exit_logic import confirm_entry_fills
+    trades = [_trade("WAB", shares=13, entry_price=304.49, order_id="b1")]
+    n = confirm_entry_fills(trades, _orders(b1={"status": "filled", "filled_qty": "13", "filled_avg_price": "292.93"}))
+    t = trades[0]
+    assert n == 1 and (t["entry_price"], t["entry_limit"], t["shares"], t["entry_filled"]) == (292.93, 304.49, 13, True)
+    # a confirmed trade is not looked up again
+    assert confirm_entry_fills(trades, lambda oid: 1 / 0) == 0
+
+
+def test_partly_filled_buy_that_ended_corrects_the_open_share_count():
+    from exit_logic import confirm_entry_fills
+    trades = [_trade(shares=10, order_id="b1")]
+    confirm_entry_fills(trades, _orders(b1={"status": "expired", "filled_qty": "6", "filled_avg_price": "690.00"}))
+    assert (trades[0]["shares"], trades[0]["entry_price"]) == (6, 690.0)
+
+
+def test_working_unfilled_or_unreadable_orders_are_left_for_later():
+    from exit_logic import confirm_entry_fills
+    trades = [_trade(order_id="working"), _trade(order_id="dead"), _trade(order_id="broken"),
+              _trade(order_id=None), _trade(order_id="x", status="CANCELLED")]
+    n = confirm_entry_fills(trades, _orders(
+        working={"status": "partially_filled", "filled_qty": "2", "filled_avg_price": "690"},
+        dead={"status": "canceled", "filled_qty": "0", "filled_avg_price": None},
+        broken={"error": "not found"}))
+    assert n == 0
+    assert all(t["entry_price"] == 693.03 and "entry_filled" not in t for t in trades)
+
+
+def test_closed_trade_gets_its_entry_price_but_keeps_its_recorded_result():
+    from exit_logic import confirm_entry_fills
+    trades = [_trade("CAH", shares=18, entry_price=240.27, order_id="b1", status="CLOSED",
+                     pnl_pct=-0.44, pnl_usd=-19.03)]
+    confirm_entry_fills(trades, _orders(b1={"status": "filled", "filled_qty": "18", "filled_avg_price": "233.28"}))
+    t = trades[0]
+    assert (t["entry_price"], t["pnl_pct"], t["pnl_usd"], t["shares"]) == (233.28, -0.44, -19.03, 18)
+
+
+def test_lookups_are_capped_per_run_newest_first():
+    from exit_logic import confirm_entry_fills
+    trades = [_trade(f"S{i}", order_id=f"o{i}") for i in range(5)]
+    seen = []
+    def get(oid):
+        seen.append(oid)
+        return {"status": "filled", "filled_qty": "4", "filled_avg_price": "690"}
+    assert confirm_entry_fills(trades, get, limit=2) == 2 and seen == ["o4", "o3"]

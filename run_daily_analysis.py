@@ -449,6 +449,7 @@ class DailyRunner:
                     else:
                         # A stop that filled at the broker is a real exit, not an
                         # unfilled buy: record it before anything is written off.
+                        before = json.loads(json.dumps(trades))    # entry fills are confirmed in place
                         sold, unresolved = record_broker_exits(self.broker, trades, held)
                         for t in sold:
                             logger.info(f"Broker exit recorded: {t['symbol']} {t['exit_reason']} "
@@ -459,7 +460,7 @@ class DailyRunner:
                             results["alerts"].append(
                                 f"Trade log: {names} no longer held but no filled sale was found — left OPEN, check by hand")
                         n = reconcile_phantom_trades(trades, held | {t["symbol"] for t in unresolved})
-                        if n or sold:
+                        if n or sold or trades != before:
                             trades_file.write_text(json.dumps(trades, indent=2))
                         if n:
                             logger.info(f"Reconciled {n} phantom OPEN trade(s) — order(s) never filled")
@@ -1301,7 +1302,7 @@ class DailyRunner:
                     t["symbol"] == symbol
                     and t["status"] == "OPEN"
                     and t["entry_date"] == today
-                    and t.get("entry_price") == round(price, 2)
+                    and (t.get("entry_limit") or t.get("entry_price")) == round(price, 2)   # entry_price becomes the fill
                     for t in trades
                 )
                 if duplicate:

@@ -285,7 +285,12 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
 
     # ── Diamond watchlist ────────────────────────────────────────────────────
     out.append("")
-    out += diamond_section(data.get("diamonds"), data.get("diamond_history"), today)
+    try:
+        out += diamond_section(data.get("diamonds"), data.get("diamond_history"), today)
+    except Exception:
+        # A damaged watchlist file must not cost the week its whole review
+        out += ["## Diamond watchlist", "- The list could not be read."]
+        problems.append("Diamond watchlist: the file could not be read")
 
     # ── Macro theses ─────────────────────────────────────────────────────────
     out.append("\n## Macro theses")

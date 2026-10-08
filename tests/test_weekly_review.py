@@ -256,3 +256,14 @@ def test_diamond_section_escapes_company_names():
     doc["watchlist"][0]["name"] = "Evil | [link](http://x) Inc"
     text = "\n".join(diamond_section(doc, [], date(2026, 10, 10)))
     assert "[link](http://x)" not in text
+
+
+def test_a_malformed_diamond_file_cannot_stop_the_weekly_review():
+    from datetime import date
+    from weekly_review import build_review
+    bad = {"generated_at": "2026-10-10T07:31:00", "coverage": {"with_metrics": float("nan")},
+           "watchlist": [{"rank": float("inf"), "ticker": ["x"], "score": "oops", "market_value": None}]}
+    for doc, history in ((bad, [{"date": 5, "ticker": "AAA"}]), ({"watchlist": {"a": 1}}, "nope")):
+        title, body = build_review({"diamonds": doc, "diamond_history": history}, date(2026, 10, 10))
+        assert "## Diamond watchlist" in body and "## Macro theses" in body
+        assert "could not be read" in body

@@ -211,7 +211,7 @@ def test_fourth_quarter_reference_counts_companies_from_the_full_year_report():
             return [{"cik": c, "start": "2025-01-01", "end": "2025-12-31", "val": 100} for c in (1, 2, 3)]
         return []
 
-    _, coverage = load_financials(date(2026, 3, 1), fetch=fetch)
+    _, coverage = load_financials(date(2026, 3, 20), fetch=fetch)
     assert coverage == {"reference_quarter": "CY2025Q4", "companies_with_revenue": 3}
 
 
@@ -239,3 +239,46 @@ def test_dilution_is_measured_across_a_fourth_quarter():
     m = company_metrics(fin, date(2026, 3, 1))
     assert m["latest_quarter_end"] == "2025-12-31"
     assert m["shares"] == 103 and round(m["shares_growth"], 4) == round(103 / 98 - 1, 4)
+
+
+# ── fixes from the whole-branch review ───────────────────────────────────────
+
+def test_a_series_that_stops_before_the_latest_quarter_is_unknown_not_stale():
+    # Gross profit and share count missing for the two newest quarters: the
+    # eight older quarters are consecutive, but they are not the company's
+    # current figures and must not be used as if they were.
+    old = lambda vals: _rows(dict(list(_eight(vals).items())[2:]))
+    m = company_metrics(_fin(gross_profit=old([0, 0, 84, 80, 68, 65, 62, 59]),
+                             shares=old([0, 0, 104, 104, 100, 100, 100, 100]),
+                             rd=old([0, 0, 20, 20, 20, 20, 20, 20])), date(2026, 8, 15))
+    assert m["ttm_gross_margin"] is None and m["shares"] is None and m["shares_growth"] is None
+    assert m["rd_share"] is None
+    assert last_quarters(_eight([8, 7, 6, 5, 4, 3, 2, 1]), date(2026, 7, 15), must_end_at=date(2026, 3, 31)) is None
+
+
+def test_one_tag_is_used_for_a_companys_whole_series():
+    # The preferred tag is missing for one quarter and the year; the other tag
+    # reports different (total) figures. Mixing them would give 100, 60, 60, 180.
+    from diamond_data import load_financials
+    A, B = "RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"
+    quarters = {"CY2025Q1": ("2025-01-01", "2025-03-31"), "CY2025Q2": ("2025-04-01", "2025-06-30"),
+                "CY2025Q3": ("2025-07-01", "2025-09-30")}
+
+    def fetch(taxonomy, tag, unit, period, session=None):
+        if tag == B and period in quarters:
+            return [{"cik": 1, "start": quarters[period][0], "end": quarters[period][1], "val": 100}]
+        if tag == B and period == "CY2025":
+            return [{"cik": 1, "start": "2025-01-01", "end": "2025-12-31", "val": 400}]
+        if tag == A and period in ("CY2025Q2", "CY2025Q3"):
+            return [{"cik": 1, "start": quarters[period][0], "end": quarters[period][1], "val": 60}]
+        return []
+
+    fins, _ = load_financials(date(2026, 3, 1), fetch=fetch)
+    assert sorted(r["val"] for r in fins[1]["revenue"]) == [100, 100, 100, 400]      # all from the fuller tag
+    assert quarterly_series(fins[1]["revenue"])[date(2025, 12, 31)] == 100
+
+
+def test_a_fourth_quarter_reference_waits_for_annual_reports():
+    from diamond_data import periods_for
+    assert periods_for(date(2026, 2, 20))["reference"] == "CY2025Q3"     # 51 days after Dec 31: 10-Ks still arriving
+    assert periods_for(date(2026, 3, 16))["reference"] == "CY2025Q4"     # 75 days

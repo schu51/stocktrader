@@ -47,6 +47,8 @@ HISTORY_FILE = ROOT / "docs" / "data" / "diamond_history.json"
 
 MIN_COMPANIES_WITH_REVENUE = 2500   # fewer than this for the reference quarter: the SEC data is incomplete
 MAX_MISSING_PRICE_SHARE = 0.20
+MIN_LISTED = 3000                   # NYSE and Nasdaq common stocks number about 6,000
+MIN_WITH_METRICS = 1500             # about 2,000 to 2,500 have eight usable quarters
 HISTORY_WEEKS = 104
 TOP = 40
 
@@ -57,17 +59,23 @@ class CoverageError(Exception):
 
 def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listings: Dict[int, dict],
                     prices: Callable[[List[str]], Dict[str, dict]], sic: Callable[[int], Optional[int]],
-                    top: int = TOP) -> dict:
-    """The diamonds.json document. Raises CoverageError rather than return a list from partial data."""
+                    top: int = TOP, data_cutoff: Optional[date] = None) -> dict:
+    """
+    The diamonds.json document. Raises CoverageError rather than return a list
+    from partial data. `data_cutoff` (historical runs) is the last quarter end
+    a company may be judged on; prices are still taken at `cutoff`.
+    """
     reporting = coverage.get("companies_with_revenue") or 0
     if reporting < MIN_COMPANIES_WITH_REVENUE:
         raise CoverageError(f"only {reporting} companies report revenue for {coverage.get('reference_quarter')} "
                             f"(need {MIN_COMPANIES_WITH_REVENUE}): the SEC data looks incomplete")
+    if len(listings) < MIN_LISTED:
+        raise CoverageError(f"only {len(listings)} companies listed (need {MIN_LISTED}): the SEC ticker file looks incomplete")
 
     gate_counts, with_metrics, passed = Counter(), 0, []
     for cik, listing in listings.items():
         try:
-            m = company_metrics(fins.get(cik), cutoff)
+            m = company_metrics(fins.get(cik), data_cutoff or cutoff)
         except Exception as exc:                       # one company's odd data must not stop the list
             logger.warning(f"{listing['ticker']}: metrics failed ({exc})")
             m = None
@@ -78,6 +86,12 @@ def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listing
         gate_counts.update(failed)
         if not failed:
             passed.append((cik, listing, m))
+
+    if with_metrics < MIN_WITH_METRICS:
+        # A whole figure missing from the SEC data (every operating-income frame
+        # empty, say) shows up here, not in the revenue count above
+        raise CoverageError(f"only {with_metrics} companies have eight quarters of figures "
+                            f"(need {MIN_WITH_METRICS}): the SEC data looks incomplete")
 
     tickers = [listing["ticker"] for _, listing, _ in passed]
     quotes = prices(tickers) if tickers else {}
@@ -103,6 +117,10 @@ def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listing
             continue
         rows.append({"ticker": listing["ticker"], "name": listing["name"], "cik": cik, "sic": code,
                      "score": score(m), **s, **m})
+    if not rows:
+        # Every past quarter checked produced 15 to 30 names. None at all means
+        # something upstream is wrong, and must not replace last week's list.
+        raise CoverageError("the list came out empty: not written over last week's")
     rows.sort(key=lambda r: (-r["score"]["total"], r["ticker"]))
     rows = rows[:top]
     for rank, row in enumerate(rows, start=1):
@@ -111,6 +129,7 @@ def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listing
     return {
         "generated_at": datetime.now().isoformat(),
         "cutoff": cutoff.isoformat(),
+        "data_through": (data_cutoff or cutoff).isoformat(),
         "reference_quarter": coverage.get("reference_quarter"),
         "coverage": {"companies_with_data": len(fins), "companies_with_revenue": reporting,
                      "listed": len(listings), "with_metrics": with_metrics,
@@ -191,6 +210,28 @@ def forward_returns(tickers: List[str], start: date, months: int = 12, download=
     return out
 
 
+def unsplit(quote: dict, cutoff: date, splits) -> dict:
+    """
+    Prices and volumes as they were on `cutoff`. Yahoo's history is adjusted for
+    every later stock split (NVDA on 2023-05-30 reads 40, not 401), while the
+    share count in a filing is as reported then; multiplying the two would
+    understate the market value tenfold. `splits` is [(date, ratio), ...];
+    None (unknown) leaves the quote as it is.
+    """
+    if not splits:
+        return quote
+    factor = 1.0
+    for day, ratio in splits:
+        try:
+            if date.fromisoformat(str(day)[:10]) > cutoff and float(ratio) > 0:
+                factor *= float(ratio)
+        except (TypeError, ValueError):
+            continue
+    if factor == 1.0:
+        return quote
+    return {"closes": [c * factor for c in quote["closes"]], "volumes": [v / factor for v in quote["volumes"]]}
+
+
 def explain(ticker: str, cutoff: date, fins: Dict[int, dict], listings: Dict[int, dict]) -> str:
     """Why one company is, or is not, a candidate: its gate failures and score."""
     cik = next((c for c, v in listings.items() if v["ticker"] == ticker.upper()), None)
@@ -236,6 +277,9 @@ def main(argv=None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
 
     cutoff = as_of_cutoff(args.as_of) if args.as_of else date.today()
+    # A historical run prices the list 60 days after the quarter, when its
+    # filings were public, but may only see quarters that had ended by then.
+    data_cutoff = cutoff - timedelta(days=FILING_LAG_DAYS) if args.as_of else None
     if args.no_size_cap:
         import diamond_universe
         diamond_universe.MAX_MARKET_VALUE = float("inf")
@@ -243,8 +287,7 @@ def main(argv=None) -> int:
     def prices(tickers):
         if not args.as_of:
             return fetch_prices(tickers)
-        # The market value on that date needs the price as it was then, so no
-        # adjustment for later splits: share counts in the filings are as reported then.
+        # The market value on that date needs the price as it was then (see unsplit)
         import yfinance as yf
         raw = yf.download(sorted(set(tickers)), start=(cutoff - timedelta(days=200)).isoformat(),
                           end=(cutoff + timedelta(days=1)).isoformat(), auto_adjust=False, progress=False, threads=True)
@@ -253,8 +296,14 @@ def main(argv=None) -> int:
             try:
                 closes = raw["Close"][t].dropna()
                 if len(closes):
-                    out[t] = {"closes": [float(x) for x in closes.values],
-                              "volumes": [float(x) for x in raw["Volume"][t].reindex(closes.index).values]}
+                    quote = {"closes": [float(x) for x in closes.values],
+                             "volumes": [float(x) for x in raw["Volume"][t].reindex(closes.index).values]}
+                    try:
+                        history = yf.Ticker(t).splits
+                        splits = [(str(day)[:10], float(ratio)) for day, ratio in history.items()]
+                    except Exception:
+                        splits = None
+                    out[t] = unsplit(quote, cutoff, splits)
             except Exception:
                 continue
         return out
@@ -263,7 +312,8 @@ def main(argv=None) -> int:
         listings = listed_companies(fetch_listings())
         sic_cache: Dict[int, Optional[int]] = {}
         doc = build_watchlist(cutoff, fins, coverage, listings, prices,
-                              lambda cik: sic_cache.setdefault(cik, fetch_sic(cik)), top=args.top)
+                              lambda cik: sic_cache.setdefault(cik, fetch_sic(cik)), top=args.top,
+                              data_cutoff=data_cutoff)
     except Exception as exc:
         # CoverageError, a frame that would not load, the ticker file missing:
         # in every case last week's list is better than a partial one.
@@ -273,7 +323,7 @@ def main(argv=None) -> int:
 
     print_list(doc)
     for ticker in args.find:
-        print(explain(ticker, cutoff, fins, listings))
+        print(explain(ticker, data_cutoff or cutoff, fins, listings))
     if args.as_of:
         picks = [r["ticker"] for r in doc["watchlist"]]
         returns = forward_returns(picks + [BENCHMARK], cutoff)
@@ -283,7 +333,8 @@ def main(argv=None) -> int:
                   f"average {sum(got) / len(got):+.0%} | median {got[len(got) // 2]:+.0%} | "
                   f"best {got[-1]:+.0%} | worst {got[0]:+.0%} | {BENCHMARK} {returns.get(BENCHMARK, float('nan')):+.0%}")
         print("Limits: today's ticker list (companies since delisted or acquired are missing, which flatters "
-              "the result), and the SEC figures include later restatements.")
+              "the result); the SEC figures include later restatements; and a few smaller companies' "
+              "annual reports arrive after the 60 days assumed here.")
         return 0
     if args.dry_run:
         return 0

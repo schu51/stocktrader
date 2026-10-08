@@ -35,6 +35,14 @@ LISTINGS = {1: {"ticker": "AAA", "name": "A Inc", "exchange": "Nasdaq"},
 COVERAGE = {"reference_quarter": "CY2026Q2", "companies_with_revenue": 3000}
 
 
+@pytest.fixture(autouse=True)
+def _small_market(monkeypatch):
+    """The fixtures are five companies; the real floors are for a market of thousands."""
+    import diamond_run
+    monkeypatch.setattr(diamond_run, "MIN_LISTED", 1)
+    monkeypatch.setattr(diamond_run, "MIN_WITH_METRICS", 1)
+
+
 def _prices(tickers):
     out = {t: {"closes": [20.0] * 60, "volumes": [400_000.0] * 60} for t in tickers}
     if "TINY" in out:
@@ -132,3 +140,41 @@ def test_explain_reports_why_a_company_is_or_is_not_listed():
     text = explain("CCC", CUTOFF, FINS, LISTINGS)
     assert "CCC" in text and "turning" in text
     assert "no listing" in explain("NOPE", CUTOFF, FINS, LISTINGS)
+
+
+# ── fixes from the whole-branch review ───────────────────────────────────────
+
+def test_an_implausibly_small_result_stops_the_run(monkeypatch):
+    import diamond_run
+    monkeypatch.setattr(diamond_run, "MIN_LISTED", 3000)
+    with pytest.raises(CoverageError, match="listed"):
+        build_watchlist(CUTOFF, FINS, COVERAGE, LISTINGS, _prices, _sic)
+    monkeypatch.setattr(diamond_run, "MIN_LISTED", 1)
+    monkeypatch.setattr(diamond_run, "MIN_WITH_METRICS", 1500)
+    with pytest.raises(CoverageError, match="eight quarters"):
+        build_watchlist(CUTOFF, FINS, COVERAGE, LISTINGS, _prices, _sic)
+
+
+def test_an_empty_list_is_never_written_over_last_weeks(monkeypatch):
+    with pytest.raises(CoverageError, match="empty"):
+        build_watchlist(CUTOFF, {3: FINS[3]}, COVERAGE, {3: LISTINGS[3]}, _prices, _sic)
+
+
+def test_as_of_judges_companies_only_on_quarters_ended_by_that_quarter():
+    # Priced on 5 July, the June quarter exists in the SEC data, but a run "as
+    # of Q1" may only see quarters ended by 31 March, and by then these
+    # companies have seven quarters, not eight.
+    seen = build_watchlist(date(2026, 7, 5), FINS, COVERAGE, LISTINGS, _prices, _sic)
+    assert {r["latest_quarter_end"] for r in seen["watchlist"]} == {"2026-06-30"}
+    assert seen["data_through"] == "2026-07-05"
+    with pytest.raises(CoverageError, match="eight quarters"):
+        build_watchlist(date(2026, 7, 5), FINS, COVERAGE, LISTINGS, _prices, _sic, data_cutoff=date(2026, 3, 31))
+
+
+def test_as_of_prices_undo_later_stock_splits():
+    from diamond_run import unsplit
+    quote = {"closes": [40.0, 41.0], "volumes": [1000.0, 2000.0]}
+    splits = [("2022-01-10", 2.0), ("2024-06-10", 10.0), ("2025-01-02", 2.0)]
+    assert unsplit(quote, date(2023, 5, 30), splits) == {"closes": [800.0, 820.0], "volumes": [50.0, 100.0]}
+    assert unsplit(quote, date(2025, 6, 1), splits) == quote            # no split after the date
+    assert unsplit(quote, date(2023, 5, 30), None) == quote             # splits unknown: left as they are

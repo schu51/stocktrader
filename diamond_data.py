@@ -94,10 +94,16 @@ def level_series(rows: List[dict]) -> Dict[date, float]:
     return series
 
 
-def last_quarters(series: Dict[date, float], cutoff: date, n: int = 8) -> Optional[List[float]]:
-    """The n latest consecutive quarters ending on or before cutoff, newest first. None if there is a gap."""
+def last_quarters(series: Dict[date, float], cutoff: date, n: int = 8,
+                  must_end_at: Optional[date] = None) -> Optional[List[float]]:
+    """
+    The n latest consecutive quarters ending on or before cutoff, newest first.
+    None if there is a gap, or if `must_end_at` is given and the newest of them
+    ends on another date: a series that stopped two quarters ago still has
+    eight consecutive quarters, but they are not the company's current figures.
+    """
     ends = sorted((e for e in series if e <= cutoff), reverse=True)[:n]
-    if len(ends) < n:
+    if len(ends) < n or (must_end_at is not None and ends[0] != must_end_at):
         return None
     for newer, older in zip(ends, ends[1:]):
         if not QUARTER_GAP_DAYS[0] <= (newer - older).days <= QUARTER_GAP_DAYS[1]:
@@ -135,23 +141,23 @@ def company_metrics(fin: dict, cutoff: date) -> Optional[dict]:
     latest_end = max(e for e in revenue_series if e <= cutoff)
     if (cutoff - latest_end).days > STALE_DAYS:
         return None
-    op = last_quarters(op_series, latest_end)
-    if op is None or max(e for e in op_series if e <= latest_end) != latest_end:
+    op = last_quarters(op_series, latest_end, must_end_at=latest_end)
+    if op is None:
         return None
 
     ttm_rev, prior_rev = sum(revenue[:4]), sum(revenue[4:])
     ttm_op, prior_op = sum(op[:4]), sum(op[4:])
     margins = [o / r for o, r in zip(op[:4], revenue[:4])]
 
-    gross = last_quarters(quarterly_series(fin.get("gross_profit")), latest_end)
+    gross = last_quarters(quarterly_series(fin.get("gross_profit")), latest_end, must_end_at=latest_end)
     if gross is None:
-        cost = last_quarters(quarterly_series(fin.get("cost_of_revenue")), latest_end)
+        cost = last_quarters(quarterly_series(fin.get("cost_of_revenue")), latest_end, must_end_at=latest_end)
         gross = [r - c for r, c in zip(revenue, cost)] if cost else None
     gm = sum(gross[:4]) / ttm_rev if gross else None
     prior_gm = sum(gross[4:]) / prior_rev if gross else None
 
-    shares = last_quarters(level_series(fin.get("shares")), latest_end)
-    rd = last_quarters(quarterly_series(fin.get("rd")), latest_end, n=4)
+    shares = last_quarters(level_series(fin.get("shares")), latest_end, must_end_at=latest_end)
+    rd = last_quarters(quarterly_series(fin.get("rd")), latest_end, n=4, must_end_at=latest_end)
 
     year_ago = latest_end - timedelta(days=365)
     cash = instant_at(fin.get("cash"), latest_end)
@@ -248,6 +254,7 @@ def _quarter_name(year: int, quarter: int) -> str:
 
 QUARTERS_BACK = 14             # eight quarters ending up to two quarters ago, plus the year that derives the oldest Q4
 FILING_DAYS = 45               # a quarterly report is due within 45 days of the quarter's end
+ANNUAL_FILING_DAYS = 75        # an annual report within 60 to 90; by 75 most have arrived
 
 
 def _quarter_end(year: int, quarter: int) -> date:
@@ -271,7 +278,7 @@ def periods_for(cutoff: date) -> Dict[str, object]:
     # latest quarter may be any of them) and at the same three a year before
     instants = [names[i] + "I" for i in (0, 1, 2, 4, 5, 6)]
     reference = next(_quarter_name(y, q) for y, q in quarters
-                     if (cutoff - _quarter_end(y, q)).days >= FILING_DAYS)
+                     if (cutoff - _quarter_end(y, q)).days >= (ANNUAL_FILING_DAYS if q == 4 else FILING_DAYS))
     return {"quarters": names, "years": [f"CY{y}" for y in years], "instants": instants, "reference": reference}
 
 
@@ -290,18 +297,23 @@ def load_financials(cutoff: date, fetch=fetch_frame) -> Tuple[Dict[int, dict], d
     fins: Dict[int, dict] = {}
     for name, spec in FIGURES.items():
         wanted = periods["instants"] if spec["kind"] == "instant" else periods["quarters"] + periods["years"]
-        for period in wanted:
-            taken = set()                             # companies already given this period by an earlier tag
-            for tag in spec["tags"]:
-                got = set()
+        # One tag per company for the whole series. Taking whichever tag has a
+        # period would splice two definitions together (one tag's revenue for
+        # some quarters, another's for the rest) into a series that looks valid.
+        by_tag: List[Dict[int, List[dict]]] = []
+        for tag in spec["tags"]:
+            rows_by_company: Dict[int, List[dict]] = {}
+            for period in wanted:
                 for row in fetch(spec["taxonomy"], tag, spec["unit"], period):
                     cik = row.get("cik")
-                    if not isinstance(cik, int) or cik in taken:
+                    if not isinstance(cik, int):
                         continue
-                    fins.setdefault(cik, {k: [] for k in FIGURES})[name].append(
-                        {k: row[k] for k in ("start", "end", "val") if k in row})
-                    got.add(cik)
-                taken |= got
-            if name == "revenue" and period in reference_periods:
-                reporting |= taken
+                    rows_by_company.setdefault(cik, []).append({k: row[k] for k in ("start", "end", "val") if k in row})
+                    if name == "revenue" and period in reference_periods:
+                        reporting.add(cik)
+            by_tag.append(rows_by_company)
+        for cik in set().union(*by_tag):
+            # The tag with the most periods for this company; the earlier tag on a tie
+            best = max(by_tag, key=lambda rows: len(rows.get(cik, ())))
+            fins.setdefault(cik, {k: [] for k in FIGURES})[name] = best[cik]
     return fins, {"reference_quarter": reference, "companies_with_revenue": len(reporting)}

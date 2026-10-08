@@ -44,7 +44,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import (find_untradable, is_long_equity, reconcile_phantom_trades,
+from exit_logic import (find_untradable, is_long_equity, reconcile_phantom_trades, record_broker_exits,
                         safe_to_reconcile, split_positions)
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
@@ -447,9 +447,21 @@ class DailyRunner:
                         logger.error(f"Trade log reconciliation skipped: {why}")
                         results["alerts"].append(f"Trade log reconciliation skipped: {why}")
                     else:
-                        n = reconcile_phantom_trades(trades, held)
-                        if n:
+                        # A stop that filled at the broker is a real exit, not an
+                        # unfilled buy: record it before anything is written off.
+                        sold, unresolved = record_broker_exits(self.broker, trades, held)
+                        for t in sold:
+                            logger.info(f"Broker exit recorded: {t['symbol']} {t['exit_reason']} "
+                                        f"@ ${t['exit_price']} ({t['pnl_pct']:+.1f}%)")
+                        if unresolved:
+                            names = ", ".join(sorted({t["symbol"] for t in unresolved}))
+                            logger.error(f"No longer held and no sale found: {names}")
+                            results["alerts"].append(
+                                f"Trade log: {names} no longer held but no filled sale was found — left OPEN, check by hand")
+                        n = reconcile_phantom_trades(trades, held | {t["symbol"] for t in unresolved})
+                        if n or sold:
                             trades_file.write_text(json.dumps(trades, indent=2))
+                        if n:
                             logger.info(f"Reconciled {n} phantom OPEN trade(s) — order(s) never filled")
             except Exception as e:
                 logger.warning(f"Trade log reconciliation failed: {e}")

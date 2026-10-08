@@ -16,7 +16,10 @@ Exit triggers:
 """
 
 import logging
+import re
+from datetime import date, datetime, timezone
 from typing import Optional, Tuple
+from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
 
@@ -237,6 +240,115 @@ def reconcile_phantom_trades(trades: list, held_symbols: set) -> int:
             t["exit_reason"] = "ORDER_NOT_FILLED"
             reconciled += 1
     return reconciled
+
+
+BROKER_STOP, SOLD_AT_BROKER = "BROKER_STOP", "SOLD_AT_BROKER"
+_NEW_YORK = ZoneInfo("America/New_York")
+_STOP_ORDER_TYPES = ("stop", "stop_limit", "trailing_stop")
+
+
+def _order_time(value) -> Optional[datetime]:
+    """An Alpaca timestamp (2026-10-07T15:02:11.123456789Z) or a trade-log one, as naive UTC."""
+    if not value:
+        return None
+    try:
+        text = re.sub(r"(\.\d{6})\d+", r"\1", str(value)).replace("Z", "+00:00")
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    # Trade-log timestamps carry no zone; they are written on the Actions runner, which is UTC
+    return parsed.astimezone(timezone.utc).replace(tzinfo=None) if parsed.tzinfo else parsed
+
+
+def settle_broker_exits(trades: list, held_symbols: set, filled_sells, buy_fill) -> Tuple[list, list]:
+    """
+    Close OPEN trades that the broker sold without the bot: a stop order that
+    filled, or a sale made by hand. Edits `trades` in place.
+
+    A stop sits at the broker and fills on its own, so nothing tells
+    trades.json. The position just disappears, and reconcile_phantom_trades
+    would then write the trade off as a buy that never filled — a real loss
+    recorded as no trade at all.
+
+      filled_sells(symbol)  the symbol's filled sell orders, or None if they could not be read
+      buy_fill(order_id)    (filled quantity, average fill price) of the buy, or None if unknown
+
+    Returns (closed, unresolved). `unresolved` are trades whose sale could not
+    be found or read although the buy filled, or cannot be shown not to have;
+    they stay OPEN and must not be cancelled as unfilled.
+    """
+    closed, unresolved = [], []
+    for t in trades:
+        sym = t.get("symbol")
+        if t.get("status") != "OPEN" or sym in held_symbols or t.get("pending_exit"):
+            continue
+        bought = buy_fill(t["order_id"]) if t.get("order_id") else None
+        if bought is not None and bought[0] <= 0:
+            continue                                # the buy never filled: reconcile_phantom_trades' case
+        sells = filled_sells(sym)
+        entered = _order_time(t.get("entry_ts") or t.get("entry_date"))
+        since = []
+        for o in sells or []:
+            at = _order_time(o.get("filled_at"))
+            try:
+                qty, price = float(o["filled_qty"]), float(o["filled_avg_price"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            if at and qty > 0 and (entered is None or at >= entered):
+                since.append((at, qty, price, o.get("type")))
+        shares = float(t.get("shares") or 0)
+        sold = sum(q for _, q, _, _ in since)
+        if sells is None or not since or sold < shares:
+            if sells is None or t.get("order_id"):    # could not look, or it was bought (or may have been) and is gone
+                unresolved.append(t)
+            continue
+
+        exit_price = sum(q * p for _, q, p, _ in since) / sold
+        last_at = max(at for at, _, _, _ in since)
+        biggest = max(since, key=lambda row: row[1])
+        basis = bought[1] if bought and bought[1] else float(t.get("entry_price") or 0)
+        exit_day = last_at.replace(tzinfo=timezone.utc).astimezone(_NEW_YORK).date()
+        try:
+            hold = (exit_day - date.fromisoformat(t["entry_date"])).days
+        except (KeyError, TypeError, ValueError):
+            hold = 0
+        t.update({
+            "status":      "CLOSED",
+            "exit_date":   exit_day.isoformat(),
+            "exit_ts":     last_at.isoformat(),
+            "exit_price":  round(exit_price, 2),
+            "exit_reason": BROKER_STOP if biggest[3] in _STOP_ORDER_TYPES else SOLD_AT_BROKER,
+            "pnl_pct":     round((exit_price - basis) / basis * 100, 2) if basis else 0,
+            "pnl_usd":     round((exit_price - basis) * shares, 2) if basis else 0,
+            "hold_days":   hold,
+        })
+        closed.append(t)
+    return closed, unresolved
+
+
+def record_broker_exits(broker, trades: list, held_symbols: set) -> Tuple[list, list]:
+    """settle_broker_exits against the live account. Reads orders only; the caller saves `trades`."""
+    sells_cache = {}
+
+    def filled_sells(symbol):
+        if symbol not in sells_cache:
+            try:
+                orders = broker.get_orders(status="closed", symbols=[symbol])
+                ok = getattr(broker, "last_orders_ok", False) is True
+            except Exception:
+                orders, ok = [], False
+            sells_cache[symbol] = [o for o in orders if o.get("side") == "sell"
+                                   and o.get("status") == "filled"] if ok else None
+        return sells_cache[symbol]
+
+    def buy_fill(order_id):
+        try:
+            order = broker.get_order(order_id) or {}
+            return float(order["filled_qty"]), float(order.get("filled_avg_price") or 0)
+        except Exception:
+            return None
+
+    return settle_broker_exits(trades, held_symbols, filled_sells, buy_fill)
 
 
 def fetch_sma50(symbol: str) -> Optional[float]:

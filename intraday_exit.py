@@ -166,6 +166,30 @@ def settle_pending_exits(broker) -> List[Dict]:
     return out
 
 
+def record_broker_stops(broker, held_symbols: set) -> List[Dict]:
+    """
+    Close trades whose shares a broker-side order sold (exit_logic.settle_broker_exits).
+    Returns one row per trade closed. Trades it cannot explain are left OPEN
+    and logged; the daily run raises the alert for those.
+    """
+    from exit_logic import record_broker_exits
+    found = {}
+
+    def change(trades):
+        found["closed"], found["unresolved"] = record_broker_exits(broker, trades, held_symbols)
+
+    if not _rewrite_trades(change):
+        return []
+    for t in found.get("closed", []):
+        logger.warning(f"BROKER EXIT RECORDED: {t['symbol']} {t['exit_reason']} "
+                       f"@ ${t['exit_price']} | P&L: {t['pnl_pct']:+.1f}%")
+    if found.get("unresolved"):
+        logger.error("No longer held and no sale found: "
+                     + ", ".join(sorted({t["symbol"] for t in found["unresolved"]})))
+    return [{"symbol": t["symbol"], "trigger": t["exit_reason"], "price": t["exit_price"],
+             "pnl_pct": t["pnl_pct"], "exit_date": t["exit_date"]} for t in found.get("closed", [])]
+
+
 def _cancel_open_stops(broker, symbol: str):
     """Cancel any existing stop sell orders for a symbol."""
     try:
@@ -336,7 +360,9 @@ def main():
         return
 
     from exit_logic import SALE_DEAD, SALE_FILLED, sale_status, split_positions
-    positions, unmanaged = split_positions(broker.get_positions() or [])
+    held_now = broker.get_positions() or []
+    positions_ok = getattr(broker, "last_positions_ok", False) is True
+    positions, unmanaged = split_positions(held_now)
     logger.info(f"Evaluating {len(positions)} long stock positions")
     if unmanaged:
         logger.info(f"Leaving {len(unmanaged)} short/option position(s) alone: "
@@ -357,6 +383,9 @@ def main():
         if p["status"] in ("working", "partial", "expired"):
             stop_failures.append({"symbol": p["symbol"], "status": f"exit_{p['status']}",
                                   "error": p.get("error") or f"sell order {p['order_id']} has not fully filled"})
+
+    # Stops that filled at the broker since the last run: nothing else records them
+    broker_exits = record_broker_stops(broker, {p["symbol"] for p in held_now}) if positions_ok else []
 
     for pos in positions:
         sym = pos["symbol"]
@@ -434,6 +463,7 @@ def main():
         "stops_updated":     stops_updated,
         "stops_placed":      stops_placed,
         "stop_failures":     stop_failures,
+        "broker_exits":      broker_exits,
         "mode":              "EXECUTE",
     }
     out_path = DOCS_DATA / "intraday_exit.json"

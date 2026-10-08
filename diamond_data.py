@@ -19,8 +19,9 @@ Unknown is never zero. A figure that cannot be established is None, and a
 company without the figures the gates need gets no metrics at all.
 """
 
+import time
 from datetime import date, timedelta
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 QUARTER_DAYS = (80, 100)       # a fiscal quarter, allowing 12- and 14-week quarters
 YEAR_DAYS = (350, 380)         # a fiscal year, allowing 52- and 53-week years
@@ -158,3 +159,125 @@ def company_metrics(fin: dict, cutoff: date) -> Optional[dict]:
         "prepaid_growth": _growth(instant_at(fin.get("prepaid"), latest_end), instant_at(fin.get("prepaid"), year_ago)),
         "rd_share": sum(rd) / ttm_rev if rd else None,
     }
+
+
+FRAMES_URL = "https://data.sec.gov/api/xbrl/frames"
+REQUEST_PAUSE = 0.2            # five requests a second; the SEC allows ten
+FETCH_ATTEMPTS = 3
+
+# Figure -> where to find it. Tags are tried in order; the first that has a
+# company's figure for a period is used for that company.
+FIGURES = {
+    "revenue":   {"taxonomy": "us-gaap", "unit": "USD", "kind": "duration",
+                  "tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"]},
+    "op_income": {"taxonomy": "us-gaap", "unit": "USD", "kind": "duration", "tags": ["OperatingIncomeLoss"]},
+    "gross_profit": {"taxonomy": "us-gaap", "unit": "USD", "kind": "duration", "tags": ["GrossProfit"]},
+    "cost_of_revenue": {"taxonomy": "us-gaap", "unit": "USD", "kind": "duration", "tags": ["CostOfRevenue"]},
+    "rd":        {"taxonomy": "us-gaap", "unit": "USD", "kind": "duration", "tags": ["ResearchAndDevelopmentExpense"]},
+    # Weighted average, not the cover-page count: it is reported for the same
+    # period as the income statement, by nearly every company, in one figure.
+    "shares":    {"taxonomy": "us-gaap", "unit": "shares", "kind": "duration",
+                  "tags": ["WeightedAverageNumberOfSharesOutstandingBasic"]},
+    "cash":      {"taxonomy": "us-gaap", "unit": "USD", "kind": "instant",
+                  "tags": ["CashAndCashEquivalentsAtCarryingValue"]},
+    "investments": {"taxonomy": "us-gaap", "unit": "USD", "kind": "instant",
+                    "tags": ["ShortTermInvestments", "MarketableSecuritiesCurrent",
+                             "AvailableForSaleSecuritiesDebtSecuritiesCurrent"]},
+    "backlog":   {"taxonomy": "us-gaap", "unit": "USD", "kind": "instant",
+                  "tags": ["RevenueRemainingPerformanceObligation"]},
+    "prepaid":   {"taxonomy": "us-gaap", "unit": "USD", "kind": "instant",
+                  "tags": ["ContractWithCustomerLiability", "ContractWithCustomerLiabilityCurrent",
+                           "DeferredRevenueCurrent"]},
+}
+
+
+class FrameError(Exception):
+    """A frame could not be fetched, so the data would be partial."""
+
+
+def fetch_frame(taxonomy: str, tag: str, unit: str, period: str, session=None, pause: float = REQUEST_PAUSE) -> List[dict]:
+    """One figure for every company for one period. [] if the SEC has none (404); FrameError otherwise."""
+    import requests
+    from config import SEC_EDGAR_USER_AGENT
+    session = session or requests
+    url = f"{FRAMES_URL}/{taxonomy}/{tag}/{unit}/{period}.json"
+    last = None
+    for attempt in range(FETCH_ATTEMPTS):
+        try:
+            resp = session.get(url, headers={"User-Agent": SEC_EDGAR_USER_AGENT}, timeout=40)
+            time.sleep(pause)
+            if resp.status_code == 404:
+                return []
+            if resp.status_code == 200:
+                data = resp.json().get("data")
+                if isinstance(data, list):
+                    return data
+                last = "no data list in the response"
+            else:
+                last = f"HTTP {resp.status_code}"
+        except Exception as exc:                      # network error, bad JSON
+            last = str(exc)
+        time.sleep(pause * 5 * (attempt + 1))
+    raise FrameError(f"{tag} {period}: {last}")
+
+
+def _quarter_name(year: int, quarter: int) -> str:
+    return f"CY{year}Q{quarter}"
+
+
+QUARTERS_BACK = 14             # eight quarters ending up to two quarters ago, plus the year that derives the oldest Q4
+FILING_DAYS = 45               # a quarterly report is due within 45 days of the quarter's end
+
+
+def _quarter_end(year: int, quarter: int) -> date:
+    return date(year + (quarter == 4), quarter % 4 * 3 + 1, 1) - timedelta(days=1)
+
+
+def periods_for(cutoff: date) -> Dict[str, object]:
+    """
+    Frame periods needed to give every company eight quarters ending by
+    `cutoff`, and the reference quarter: the latest calendar quarter that
+    companies have had time to file for, used to judge whether the data is whole.
+    """
+    year, quarter = cutoff.year, (cutoff.month - 1) // 3 + 1
+    quarters = []
+    for _ in range(QUARTERS_BACK):
+        quarters.append((year, quarter))
+        year, quarter = (year, quarter - 1) if quarter > 1 else (year - 1, 4)
+    names = [_quarter_name(y, q) for y, q in quarters]
+    years = sorted({y for y, _ in quarters}, reverse=True)
+    # Point-in-time figures at the three latest quarter ends (a company's own
+    # latest quarter may be any of them) and at the same three a year before
+    instants = [names[i] + "I" for i in (0, 1, 2, 4, 5, 6)]
+    reference = next(_quarter_name(y, q) for y, q in quarters
+                     if (cutoff - _quarter_end(y, q)).days >= FILING_DAYS)
+    return {"quarters": names, "years": [f"CY{y}" for y in years], "instants": instants, "reference": reference}
+
+
+def load_financials(cutoff: date, fetch=fetch_frame) -> Tuple[Dict[int, dict], dict]:
+    """
+    {cik: figures} for every company the SEC has data for, and a coverage
+    note: how many companies report revenue for the reference quarter (see
+    periods_for) tells the caller whether the data is whole.
+    """
+    periods = periods_for(cutoff)
+    reference = periods["reference"]
+    reference_count = 0
+    fins: Dict[int, dict] = {}
+    for name, spec in FIGURES.items():
+        wanted = periods["instants"] if spec["kind"] == "instant" else periods["quarters"] + periods["years"]
+        for period in wanted:
+            taken = set()                             # companies already given this period by an earlier tag
+            for tag in spec["tags"]:
+                got = set()
+                for row in fetch(spec["taxonomy"], tag, spec["unit"], period):
+                    cik = row.get("cik")
+                    if not isinstance(cik, int) or cik in taken:
+                        continue
+                    fins.setdefault(cik, {k: [] for k in FIGURES})[name].append(
+                        {k: row[k] for k in ("start", "end", "val") if k in row})
+                    got.add(cik)
+                taken |= got
+            if name == "revenue" and period == reference:
+                reference_count = len(taken)
+    return fins, {"reference_quarter": reference, "companies_with_revenue": reference_count}

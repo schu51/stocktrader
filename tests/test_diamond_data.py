@@ -128,3 +128,70 @@ def test_unknown_inputs_give_none_never_an_exception():
 
 def test_stale_company_is_dropped():
     assert company_metrics(_fin(), date(2027, 1, 15)) is None    # latest quarter is more than 160 days old
+
+
+def test_periods_reach_back_far_enough_to_derive_the_oldest_fourth_quarter():
+    from diamond_data import periods_for
+    p = periods_for(date(2026, 8, 15))
+    assert p["quarters"][0] == "CY2026Q3" and p["quarters"][-1] == "CY2023Q2" and len(p["quarters"]) == 14
+    assert p["years"] == ["CY2026", "CY2025", "CY2024", "CY2023"]
+    # point-in-time figures for the three latest quarter ends, and the same three a year before
+    assert p["instants"] == ["CY2026Q3I", "CY2026Q2I", "CY2026Q1I", "CY2025Q3I", "CY2025Q2I", "CY2025Q1I"]
+
+
+def test_reference_quarter_is_the_latest_one_companies_have_had_time_to_file():
+    from diamond_data import periods_for
+    assert periods_for(date(2026, 8, 15))["reference"] == "CY2026Q2"     # 46 days after June 30
+    assert periods_for(date(2026, 10, 8))["reference"] == "CY2026Q2"     # Q3 ended eight days ago
+    assert periods_for(date(2026, 8, 10))["reference"] == "CY2026Q1"     # 41 days: filings still arriving
+    assert periods_for(date(2023, 5, 30))["reference"] == "CY2023Q1"     # an --as-of cutoff, 60 days after
+
+
+def test_load_financials_pools_tags_by_company_and_reports_coverage():
+    from diamond_data import load_financials
+    calls = []
+
+    def fetch(taxonomy, tag, unit, period, session=None):
+        calls.append((tag, period))
+        if tag == "RevenueFromContractWithCustomerExcludingAssessedTax" and period == "CY2026Q2":
+            return [{"cik": 1, "start": "2026-04-01", "end": "2026-06-30", "val": 130}]
+        if tag == "Revenues" and period == "CY2026Q2":
+            return [{"cik": 2, "start": "2026-04-01", "end": "2026-06-30", "val": 70},
+                    {"cik": 1, "start": "2026-04-01", "end": "2026-06-30", "val": 999}]   # second tag for cik 1
+        if tag == "CashAndCashEquivalentsAtCarryingValue" and period == "CY2026Q2I":
+            return [{"cik": 1, "end": "2026-06-30", "val": 300}]
+        return []
+
+    fins, coverage = load_financials(date(2026, 8, 15), fetch=fetch)
+    assert [r["val"] for r in fins[1]["revenue"]] == [130]            # first tag wins for a company
+    assert [r["val"] for r in fins[2]["revenue"]] == [70]
+    assert fins[1]["cash"] == [{"end": "2026-06-30", "val": 300}]
+    assert coverage == {"reference_quarter": "CY2026Q2", "companies_with_revenue": 2}
+    assert ("OperatingIncomeLoss", "CY2025") in calls                  # full years are fetched for Q4
+
+
+def test_fetch_frame_treats_404_as_empty_and_anything_else_as_failure():
+    import pytest
+    from diamond_data import FrameError, fetch_frame
+
+    class Resp:
+        def __init__(self, status, payload=None):
+            self.status_code, self._payload = status, payload
+        def json(self):
+            return self._payload
+
+    class Session:
+        def __init__(self, *responses):
+            self.responses, self.headers_seen = list(responses), []
+        def get(self, url, headers=None, timeout=None):
+            self.headers_seen.append(headers)
+            return self.responses.pop(0)
+
+    ok = Session(Resp(200, {"data": [{"cik": 1, "val": 5}]}))
+    assert fetch_frame("us-gaap", "Revenues", "USD", "CY2026Q2", session=ok, pause=0) == [{"cik": 1, "val": 5}]
+    assert "User-Agent" in ok.headers_seen[0]
+    assert fetch_frame("us-gaap", "Revenues", "USD", "CY2026Q3", session=Session(Resp(404)), pause=0) == []
+    with pytest.raises(FrameError):
+        fetch_frame("us-gaap", "Revenues", "USD", "CY2026Q2", session=Session(Resp(403), Resp(403), Resp(403)), pause=0)
+    retried = Session(Resp(500), Resp(200, {"data": []}))
+    assert fetch_frame("us-gaap", "Revenues", "USD", "CY2026Q2", session=retried, pause=0) == []

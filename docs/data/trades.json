@@ -3187,7 +3187,7 @@
   {
     "trade_id": "TRD-20261006140415-HUM",
     "symbol": "HUM",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-06",
     "entry_ts": "2026-10-06T14:04:15.694235",
     "entry_price": 400.29,
@@ -3219,14 +3219,15 @@
     "stop_arm": "fixed",
     "stop_dist": null,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-08",
+    "exit_price": 385.25,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -150.51,
+    "pnl_pct": -3.76,
+    "hold_days": 2,
     "entry_limit": 400.3,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-08T14:15:45.397478"
   },
   {
     "trade_id": "TRD-20261006140416-TRGP",
@@ -3369,7 +3370,7 @@
     "status": "OPEN",
     "entry_date": "2026-10-08",
     "entry_ts": "2026-10-08T14:03:00.317876",
-    "entry_price": 735.0,
+    "entry_price": 694.23,
     "shares": 5,
     "stop_loss": 676.2,
     "trend_score": 77,
@@ -3403,7 +3404,9 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 735.0,
+    "entry_filled": true
   },
   {
     "trade_id": "TRD-20261008140301-APA",
@@ -3445,7 +3448,9 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 45.55,
+    "entry_filled": true
   },
   {
     "trade_id": "TRD-20261008140302-MRNA",
@@ -3453,7 +3458,7 @@
     "status": "OPEN",
     "entry_date": "2026-10-08",
     "entry_ts": "2026-10-08T14:03:02.183822",
-    "entry_price": 196.88,
+    "entry_price": 196.47,
     "shares": 13,
     "stop_loss": 181.12,
     "trend_score": 69,
@@ -3487,6 +3492,8 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 196.88,
+    "entry_filled": true
   }
 ]

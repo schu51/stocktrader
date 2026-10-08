@@ -90,6 +90,19 @@ def evaluate_exit(pos: Dict, bar: Dict, sma50: Optional[float]) -> Tuple[Optiona
     return None, ""
 
 
+def is_stale(pos: Dict, close: float, today, stale_days: int, stale_gain: float) -> bool:
+    """
+    Experimental: a holding that has had its time and not done much. Held at
+    least `stale_days` calendar days with a gain below `stale_gain` percent.
+    It has broken no rule (it is above its stop and its 50-day line); the
+    question is whether its cash would do better in a fresh candidate.
+    """
+    if not stale_days:
+        return False
+    held = (today - pos["entry_date"]).days
+    return held >= stale_days and (close / pos["avg_cost"] - 1) * 100 < stale_gain
+
+
 GAUSS_POLES = 4
 
 
@@ -249,7 +262,8 @@ class Backtest:
                  w_rs: float = 0.60, w_thesis: float = 0.40, slippage_bps: float = 10.0,
                  quiet: bool = True, entry_trigger: str = "none", atr_stop: float = 0.0,
                  min_adx: float = 0.0, min_above_50ma: float = 0.0, min_spy_above_50ma: float = 0.0,
-                 exit_line: str = "sma50", exit_confirm: int = 1, drawdown_mode: str = "live"):
+                 exit_line: str = "sma50", exit_confirm: int = 1, drawdown_mode: str = "live",
+                 stale_days: int = 0, stale_gain: float = 5.0, stale_needs_cash: bool = False):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -264,6 +278,10 @@ class Backtest:
         # Trend-broken exit: which line the close is tested against, and how many
         # consecutive closes below it are needed (live rule: sma50, 1)
         self.exit_line, self.exit_confirm = exit_line, max(1, int(exit_confirm))
+        # Stale exit (experimental, off by default): see is_stale. With
+        # stale_needs_cash it only fires on a day a buy went unfilled for lack of cash.
+        self.stale_days, self.stale_gain, self.stale_needs_cash = int(stale_days), stale_gain, stale_needs_cash
+        self.cash_short_today = False
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -386,6 +404,7 @@ class Backtest:
     def _fill_pending(self, i: int, equity_prev: float):
         max_positions = self.engine.config.portfolio_constraints.max_positions
         min_cash = self.engine.config.portfolio_constraints.min_cash_allocation * equity_prev
+        self.cash_short_today = False
         for order in self.pending:
             sym = order["symbol"]
             px = self.open[sym].iloc[i]
@@ -398,6 +417,7 @@ class Backtest:
             shares = min(order["shares"], int((self.cash - min_cash) // fill))
             if shares < 1:
                 self.counters["unfilled_no_cash"] += 1
+                self.cash_short_today = True
                 continue
             self.cash -= shares * fill
             stop_dist = order.get("stop_dist")
@@ -429,6 +449,9 @@ class Backtest:
                     # With confirmation, the exit needs every one of the last n closes below the line
                     sma50 = float(line[-1]) if (history[-n:] < line[-n:]).all() else None
             price, reason = evaluate_exit(pos, {"open": o, "high": h, "low": l, "close": c}, sma50)
+            if price is None and (self.cash_short_today or not self.stale_needs_cash) \
+                    and is_stale(pos, float(c), self.dates[i].date(), self.stale_days, self.stale_gain):
+                price, reason = float(c), "STALE"
             if price is None:
                 pos["last_price"] = float(c)
                 pos["stop"] = next_stop(pos, float(c))
@@ -679,6 +702,11 @@ def main() -> int:
     parser.add_argument("--drawdown-mode", choices=["live", "throttle", "halt", "off"], default="live",
                         help="drawdown rule: live config (default), throttle, the old permanent halt, or none")
     parser.add_argument("--no-drawdown-halt", action="store_true", help="same as --drawdown-mode off")
+    parser.add_argument("--stale-days", type=int, default=0,
+                        help="experimental: sell a holding held this many days with a gain under --stale-gain")
+    parser.add_argument("--stale-gain", type=float, default=5.0, help="percent gain below which a holding is stale")
+    parser.add_argument("--stale-needs-cash", action="store_true",
+                        help="stale exit only on a day a buy went unfilled for lack of cash")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -695,7 +723,8 @@ def main() -> int:
                   atr_stop=args.atr_stop, min_adx=args.min_adx, min_above_50ma=args.min_above_50ma,
                   min_spy_above_50ma=args.min_spy_above_50ma,
                   exit_line=args.exit_line, exit_confirm=args.exit_confirm,
-                  drawdown_mode="off" if args.no_drawdown_halt else args.drawdown_mode)
+                  drawdown_mode="off" if args.no_drawdown_halt else args.drawdown_mode,
+                  stale_days=args.stale_days, stale_gain=args.stale_gain, stale_needs_cash=args.stale_needs_cash)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

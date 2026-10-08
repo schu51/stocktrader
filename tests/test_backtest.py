@@ -223,3 +223,13 @@ def test_gaussian_line_is_smoother_than_the_simple_average_at_the_same_lag():
     rough = lambda k: np.nanstd(np.diff(trend_line(closes, k), n=2))      # how much the line wiggles
     assert rough("gauss100") < rough("sma50")
 
+
+
+def test_stale_holding_is_one_held_long_enough_with_little_gain():
+    from datetime import date
+    from backtest import is_stale
+    pos = {"entry_date": date(2026, 1, 5), "avg_cost": 100.0}
+    assert is_stale(pos, 104.0, date(2026, 3, 6), 60, 5.0)            # 60 days, +4%
+    assert not is_stale(pos, 106.0, date(2026, 3, 6), 60, 5.0)        # doing fine
+    assert not is_stale(pos, 104.0, date(2026, 3, 5), 60, 5.0)        # not long enough yet
+    assert not is_stale(pos, 90.0, date(2026, 6, 1), 0, 5.0)          # rule off

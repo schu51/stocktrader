@@ -1,6 +1,6 @@
 # Diamond screen, stage 1: universe, inflection screen, watchlist
 
-Date: 2026-10-08. Status: awaiting owner review.
+Date: 2026-10-08. Status: accepted by the owner 2026-10-08; plan in `docs/superpowers/plans/2026-10-08-diamond-screen-stage1.md`.
 
 ## Why
 
@@ -42,19 +42,29 @@ financial inflection, with every number behind each rank visible.
   listings only.
 - **Common shares only:** drop tickers that are warrants, units, rights or
   preferred shares (suffix patterns), and keep one ticker per company (CIK).
-- **Size:** market value $300M to $10B. Market value = shares outstanding
-  (SEC `dei:EntityCommonStockSharesOutstanding`, latest) x last close.
+- **Size:** market value $300M to $10B. Market value = shares (the latest
+  quarter's weighted average, see the table below) x last close.
 - **Tradable:** median daily dollar volume over 60 sessions of at least $5M,
   and price at least $5.
 - **Excluded industries:** SIC 6000-6799 (banks, insurers, property trusts,
   investment vehicles). "Losses turning to profit" does not mean the same
   thing for them. SIC comes from the SEC submissions endpoint, fetched only
-  for companies that pass size and volume, and cached in
-  `docs/data/diamond_universe.json` (refreshed when older than 30 days).
+  for companies that pass size and volume.
 - Companies with no revenue drop out in the screen, not here.
 
 Prices and volume come from yfinance in one bulk download, as the backtest
 already does.
+
+Amended 2026-10-08 while planning, after checking the live data:
+
+- **Order.** The financial gates run first and these filters second, so
+  prices and industry codes are fetched for the few hundred companies that
+  pass the gates, not for every listing. The SIC cache file is therefore not
+  needed and is dropped.
+- **Shares.** The cover-page share count is dated differently by every
+  company and is missing from the bulk data for many (Palantir among them).
+  The quarter's weighted-average share count is used instead: it covers
+  about 4,300 companies and is dated like the income statement.
 
 ### 2. Financial data (`diamond_data.py`)
 
@@ -69,7 +79,7 @@ User-Agent (see Open items).
 | Gross profit | `GrossProfit`, else revenue minus `CostOfRevenue` | per quarter |
 | R&D | `ResearchAndDevelopmentExpense` | per quarter, shown only |
 | Cash | `CashAndCashEquivalentsAtCarryingValue` + `ShortTermInvestments` | point in time |
-| Shares | `dei:EntityCommonStockSharesOutstanding` | point in time |
+| Shares | `WeightedAverageNumberOfSharesOutstandingBasic` | per quarter |
 | Backlog | `RevenueRemainingPerformanceObligation` | point in time |
 | Prepaid revenue | `ContractWithCustomerLiability`, `ContractWithCustomerLiabilityCurrent`, `DeferredRevenueCurrent` | point in time |
 
@@ -193,9 +203,9 @@ throughout this repo):
 
 ## Open items for the owner
 
-1. **SEC contact email.** The SEC requires a real contact address in the
-   User-Agent. The repo currently sends a placeholder. It should be set as
-   the `SEC_EDGAR_USER_AGENT` repository variable.
+1. **SEC contact email.** Resolved 2026-10-08: the owner's address, set in
+   the workflow's environment. It is already public in this repository's
+   other workflow files, so nothing new is exposed.
 2. **Starting thresholds.** The gates above are a first guess at "trending
    from negative to positive". The Palantir check is the test of whether
    they are right.

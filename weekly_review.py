@@ -52,6 +52,7 @@ def load_data(failed_runs_file: str = None) -> Dict:
         "weights": _load("weights.json"), "learning_report": _load("learning_report.json"),
         "candidate_outcomes": _load("candidate_outcomes.json"), "macro_brief": _load("macro_brief.json"),
         "screener": _load("screener.json"), "experiments": _load("experiments.json"), "failed_runs": failed,
+        "diamonds": _load("diamonds.json"), "diamond_history": _load("diamond_history.json"),
     }
 
 
@@ -80,6 +81,45 @@ def _num(value, default: float = 0.0) -> float:
 
 def _horizon(rows, horizon: int = 10) -> Dict:
     return next((r for r in rows or [] if isinstance(r, dict) and r.get("horizon") == horizon), {})
+
+
+DIAMOND_TOP = 15
+
+
+def diamond_section(doc: Optional[Dict], history: Optional[list], today: date) -> List[str]:
+    """The diamond watchlist (diamond_run.py): top names, and how each moved since the week before."""
+    out = ["## Diamond watchlist"]
+    rows = (doc or {}).get("watchlist") if isinstance(doc, dict) else None
+    if not rows:
+        return out + ["- There is no list yet."]
+    day = str(doc.get("generated_at") or "")[:10]
+    try:
+        age = (today - date.fromisoformat(day)).days
+    except ValueError:
+        age = None
+    if age is None or age > 8:
+        out.append(f"- **The list is {age if age is not None else 'an unknown number of'} days old**: "
+                   f"this week's screen did not produce one.")
+    cov = doc.get("coverage") if isinstance(doc.get("coverage"), dict) else {}
+    out.append(f"- {int(_num(cov.get('with_metrics'))):,} companies with eight quarters of figures; "
+               f"{int(_num(cov.get('passed_financial_gates'))):,} turning from loss to profit; no trades are placed from this list.")
+    earlier = sorted({h.get("date") for h in history or [] if isinstance(h, dict) and str(h.get("date")) < day})
+    before = {h["ticker"]: h["rank"] for h in history or []
+              if isinstance(h, dict) and earlier and h.get("date") == earlier[-1]}
+    out += ["", "| # | Ticker | Score | Since last week | Revenue | Margin change | Value | Company |",
+            "|---|---|---|---|---|---|---|---|"]
+    for r in rows[:DIAMOND_TOP]:
+        if not isinstance(r, dict):
+            continue
+        ticker, rank = _md(r.get("ticker"), 8), int(_num(r.get("rank")))
+        was = before.get(r.get("ticker"))
+        move = "new" if was is None else "same" if was == rank else f"up {was - rank}" if was > rank else f"down {rank - was}"
+        value = _num(r.get("market_value"))
+        size = f"${value / 1e9:.1f}B" if value >= 1e9 else f"${value / 1e6:.0f}M"
+        out.append(f"| {rank} | {ticker} | {_num((r.get('score') or {}).get('total')):.1f} | {move} | "
+                   f"{_num(r.get('revenue_growth')):+.0%} | {_num(r.get('margin_change')) * 100:+.0f} pts | "
+                   f"{size} | {_md(r.get('name'), 40)} |")
+    return out
 
 
 def build_review(data: Dict, today: date) -> Tuple[str, str]:
@@ -242,6 +282,10 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
             out.append(line)
     else:
         out.append("- No experiment registry found.")
+
+    # ── Diamond watchlist ────────────────────────────────────────────────────
+    out.append("")
+    out += diamond_section(data.get("diamonds"), data.get("diamond_history"), today)
 
     # ── Macro theses ─────────────────────────────────────────────────────────
     out.append("\n## Macro theses")

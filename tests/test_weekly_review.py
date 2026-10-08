@@ -217,3 +217,42 @@ def test_review_reminds_of_a_decision_under_review_and_says_when_it_is_overdue()
     assert "Decision review due 2026-12-05 (in 7 days)" in body and "6% room, ATR stop, 80/20 weights" in body
     _, body = build_review(_data(experiments=exps), date(2026, 12, 12))
     assert "7 days OVERDUE" in body
+
+
+def _diamond_doc(day="2026-10-10"):
+    row = lambda rank, t, total: {"rank": rank, "ticker": t, "name": f"{t} Inc", "score": {"total": total},
+                                  "market_value": 2.1e9, "revenue_growth": 0.31, "margin_change": 0.12,
+                                  "ttm_op_margin": 0.01}
+    return {"generated_at": f"{day}T07:31:00", "coverage": {"with_metrics": 3100, "passed_financial_gates": 140,
+                                                           "watchlist": 2},
+            "watchlist": [row(1, "AAA", 81.5), row(2, "BBB", 70.0)]}
+
+
+def test_diamond_section_lists_the_top_names_with_rank_change():
+    from datetime import date
+    from weekly_review import diamond_section
+    history = [{"date": "2026-10-03", "ticker": "AAA", "rank": 4, "total": 70.0},
+               {"date": "2026-10-10", "ticker": "AAA", "rank": 1, "total": 81.5},
+               {"date": "2026-10-10", "ticker": "BBB", "rank": 2, "total": 70.0}]
+    text = "\n".join(diamond_section(_diamond_doc(), history, date(2026, 10, 10)))
+    assert "## Diamond watchlist" in text
+    assert "| 1 | AAA | 81.5 | up 3 |" in text and "| 2 | BBB | 70.0 | new |" in text
+    assert "+31%" in text and "+12 pts" in text and "$2.1B" in text
+    assert "3,100" in text and "140" in text
+
+
+def test_diamond_section_without_a_list_or_with_an_old_one_says_so():
+    from datetime import date
+    from weekly_review import diamond_section
+    assert "no list" in "\n".join(diamond_section(None, None, date(2026, 10, 10)))
+    old = "\n".join(diamond_section(_diamond_doc("2026-09-26"), [], date(2026, 10, 10)))
+    assert "14 days old" in old
+
+
+def test_diamond_section_escapes_company_names():
+    from datetime import date
+    from weekly_review import diamond_section
+    doc = _diamond_doc()
+    doc["watchlist"][0]["name"] = "Evil | [link](http://x) Inc"
+    text = "\n".join(diamond_section(doc, [], date(2026, 10, 10)))
+    assert "[link](http://x)" not in text

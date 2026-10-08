@@ -144,6 +144,25 @@ def find_stale(holdings: Dict[str, Dict], trades: Iterable[Dict], today: date,
     return sorted(out, key=lambda x: (x["pnl_pct"], x["symbol"]))
 
 
+def stale_allowance(trades: Iterable[Dict], today: date) -> int:
+    """
+    How many more stale sales may be sent today. MAX_STALE_PER_DAY is a limit
+    on the day, not on one run: the daily job can run more than once (a manual
+    re-run, a catch-up), and each run would otherwise get a fresh allowance.
+    Counts stale exits already recorded today and stale sells still in flight.
+    """
+    day = today.isoformat()
+    used = 0
+    for t in trades or []:
+        pending = t.get("pending_exit") or {}
+        if t.get("exit_reason") == STALE_REASON and str(t.get("exit_date") or "")[:10] == day:
+            used += 1
+        elif t.get("status") == "OPEN" and pending.get("trigger") == STALE_REASON \
+                and str(pending.get("sent") or "")[:10] == day:
+            used += 1
+    return max(0, MAX_STALE_PER_DAY - used)
+
+
 def _value(laggard: Dict) -> float:
     try:
         return max(0.0, float(laggard.get("market_value") or 0))

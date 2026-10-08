@@ -346,3 +346,18 @@ def test_stale_sale_is_recorded_as_stale(monkeypatch, tmp_path):
     assert broker.cancelled == ["stopA"] and broker.closed == ["ANET"]
     assert logged[0][1]["exit_reason"] == "STALE"
     assert json.loads((tmp_path / "rotation_log.json").read_text())[0]["reason"] == "STALE"
+
+
+def test_stale_cap_is_per_day_across_runs():
+    import rotation
+    from datetime import date
+    today = date(2026, 10, 9)
+    done = {"symbol": "A", "status": "CLOSED", "exit_reason": "STALE", "exit_date": "2026-10-09"}
+    working = {"symbol": "B", "status": "OPEN",
+               "pending_exit": {"trigger": "STALE", "sent": "2026-10-09T10:02:11.5"}}
+    other = [{"symbol": "C", "status": "CLOSED", "exit_reason": "STALE", "exit_date": "2026-10-08"},
+             {"symbol": "D", "status": "CLOSED", "exit_reason": "PRICE_BELOW_50MA", "exit_date": "2026-10-09"},
+             {"symbol": "E", "status": "OPEN", "pending_exit": {"trigger": "ROTATED_OUT", "sent": "2026-10-09T10:02:00"}}]
+    assert rotation.stale_allowance(other, today) == rotation.MAX_STALE_PER_DAY == 3
+    assert rotation.stale_allowance(other + [done, working], today) == 1      # a second run gets what is left
+    assert rotation.stale_allowance([done] * 5, today) == 0

@@ -522,9 +522,8 @@ class DailyRunner:
             # Stale exit (rotation.find_stale): held two months for little gain.
             # Sold before today's buys are sized, whatever the cash position, so
             # everything below works from what is actually left.
-            stale = self._find_stale(exit_results) if positions_verified else []
-            results["stale"] = self._rotate_out(stale[:rotation.MAX_STALE_PER_DAY], [], execute,
-                                                reason=rotation.STALE_REASON)
+            stale, stale_left = self._find_stale(exit_results) if positions_verified else ([], 0)
+            results["stale"] = self._rotate_out(stale[:stale_left], [], execute, reason=rotation.STALE_REASON)
             results["stale"]["candidates"] = stale
             if results["stale"]["failed"]:
                 results["alerts"].append(
@@ -532,7 +531,10 @@ class DailyRunner:
             stale_sold = set(results["stale"]["sold"])
             cash_start += sum(rotation._value(s) for s in stale if s["symbol"] in stale_sold)
             held_count -= len(stale_sold)
-            laggards = [l for l in laggards if l["symbol"] not in stale_sold]
+            # Every stale sale that was sent, not only the ones that filled: one whose
+            # outcome is unknown may still be working, and rotation must not sell it again.
+            stale_sent = stale_sold | {f["symbol"] for f in results["stale"]["failed"]}
+            laggards = [l for l in laggards if l["symbol"] not in stale_sent]
 
             planned = rotation.planning_proceeds(laggards, cash_start - reserve, self.portfolio.total_value)
             self.portfolio.cash = cash_start + planned
@@ -2081,7 +2083,10 @@ class DailyRunner:
             return []
 
     def _find_stale(self, exit_results: Dict) -> List[Dict]:
-        """Holdings the stale rule sells today, smallest gain first. Empty whenever the inputs cannot be trusted."""
+        """
+        (holdings the stale rule sells today, smallest gain first; how many may
+        still be sent today). Empty and zero whenever the inputs cannot be trusted.
+        """
         import rotation
         try:
             docs = Path(__file__).parent / "docs" / "data"
@@ -2093,11 +2098,12 @@ class DailyRunner:
             exited = {e.get("symbol") for e in (exit_results or {}).get("exits_triggered", [])}
             holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2), "market_value": pos.market_value}
                         for sym, pos in (self.portfolio.positions or {}).items()}
-            return rotation.find_stale(holdings, trades, date.today(),
-                                       exclude=exited | set(getattr(self, "_untradable", {})), ranks=ranks)
+            stale = rotation.find_stale(holdings, trades, date.today(),
+                                        exclude=exited | set(getattr(self, "_untradable", {})), ranks=ranks)
+            return stale, rotation.stale_allowance(trades, date.today())
         except Exception as e:
             logger.warning(f"Stale exit: could not evaluate holdings ({e}) — nothing sold")
-            return []
+            return [], 0
 
     def _rotate_out(self, laggards: List[Dict], replacements: List[str], execute: bool,
                     confirm_seconds: float = 20, reason: str = None) -> Dict:

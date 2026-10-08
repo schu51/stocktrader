@@ -18,15 +18,19 @@ Usage:
     python diamond_run.py                # build this week's list
     python diamond_run.py --top 60
     python diamond_run.py --dry-run      # print the list, write nothing
+
+Checking the screen against the past (writes nothing):
+    python diamond_run.py --as-of 2023Q1 --no-size-cap --find PLTR
 """
 
 import argparse
+import calendar
 import json
 import logging
 import os
 import sys
 from collections import Counter
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Callable, Dict, List, Optional
 
@@ -148,6 +152,59 @@ def fetch_prices(tickers: List[str]) -> Dict[str, dict]:
     return out
 
 
+FILING_LAG_DAYS = 60          # by then nearly every company has filed for the quarter
+BENCHMARK = "IWM"             # Russell 2000 ETF
+
+
+def as_of_cutoff(text: str) -> date:
+    """'2023Q1' -> the date by which that quarter's filings are public."""
+    try:
+        year, quarter = int(text[:4]), int(text[5])
+        if text[4].upper() != "Q" or not 1 <= quarter <= 4 or len(text) != 6:
+            raise ValueError
+    except (ValueError, IndexError):
+        raise ValueError(f"--as-of wants a quarter such as 2023Q1, not {text!r}")
+    month = quarter * 3
+    return date(year, month, calendar.monthrange(year, month)[1]) + timedelta(days=FILING_LAG_DAYS)
+
+
+def _download_closes(tickers: List[str], start: date, end: date):
+    import yfinance as yf
+    raw = yf.download(sorted(set(tickers)), start=start.isoformat(), end=(end + timedelta(days=1)).isoformat(),
+                      auto_adjust=True, progress=False, threads=True)
+    return raw["Close"]
+
+
+def forward_returns(tickers: List[str], start: date, months: int = 12, download=None) -> Dict[str, float]:
+    """Total return over the window for each ticker with a close at both ends."""
+    import pandas as pd
+    end = (pd.Timestamp(start) + pd.DateOffset(months=months)).date()
+    closes = (download or _download_closes)(tickers, start, end)
+    out = {}
+    for t in tickers:
+        if t not in getattr(closes, "columns", []):
+            continue
+        series = closes[t].loc[pd.Timestamp(start):pd.Timestamp(end)]
+        if len(series) < 2 or series.iloc[[0, -1]].isna().any() or series.iloc[0] <= 0:
+            continue
+        out[t] = round(float(series.iloc[-1] / series.iloc[0] - 1), 4)
+    return out
+
+
+def explain(ticker: str, cutoff: date, fins: Dict[int, dict], listings: Dict[int, dict]) -> str:
+    """Why one company is, or is not, a candidate: its gate failures and score."""
+    cik = next((c for c, v in listings.items() if v["ticker"] == ticker.upper()), None)
+    if cik is None:
+        return f"{ticker}: no listing on NYSE or Nasdaq as common stock"
+    m = company_metrics(fins.get(cik), cutoff)
+    if m is None:
+        return f"{ticker}: eight consecutive quarters of revenue and operating income could not be established"
+    failed = gate_failures(m)
+    shown = {k: (round(v, 3) if isinstance(v, float) else v) for k, v in m.items()}
+    return (f"{ticker}: {'FAILS ' + ', '.join(failed) if failed else 'passes every gate'} | "
+            f"score {score(m)} | {shown}")
+
+
 def _write(path: Path, payload) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -172,15 +229,40 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Build the diamond watchlist (no trades)")
     parser.add_argument("--top", type=int, default=TOP)
     parser.add_argument("--dry-run", action="store_true", help="print the list, write nothing")
+    parser.add_argument("--as-of", help="run on the data filed by a past quarter, e.g. 2023Q1; writes nothing")
+    parser.add_argument("--no-size-cap", action="store_true", help="historical checks: lift the $10B ceiling")
+    parser.add_argument("--find", action="append", default=[], help="explain one ticker (repeatable)")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
 
-    cutoff = date.today()
+    cutoff = as_of_cutoff(args.as_of) if args.as_of else date.today()
+    if args.no_size_cap:
+        import diamond_universe
+        diamond_universe.MAX_MARKET_VALUE = float("inf")
+
+    def prices(tickers):
+        if not args.as_of:
+            return fetch_prices(tickers)
+        # The market value on that date needs the price as it was then, so no
+        # adjustment for later splits: share counts in the filings are as reported then.
+        import yfinance as yf
+        raw = yf.download(sorted(set(tickers)), start=(cutoff - timedelta(days=200)).isoformat(),
+                          end=(cutoff + timedelta(days=1)).isoformat(), auto_adjust=False, progress=False, threads=True)
+        out = {}
+        for t in tickers:
+            try:
+                closes = raw["Close"][t].dropna()
+                if len(closes):
+                    out[t] = {"closes": [float(x) for x in closes.values],
+                              "volumes": [float(x) for x in raw["Volume"][t].reindex(closes.index).values]}
+            except Exception:
+                continue
+        return out
     try:
         fins, coverage = load_financials(cutoff)
         listings = listed_companies(fetch_listings())
         sic_cache: Dict[int, Optional[int]] = {}
-        doc = build_watchlist(cutoff, fins, coverage, listings, fetch_prices,
+        doc = build_watchlist(cutoff, fins, coverage, listings, prices,
                               lambda cik: sic_cache.setdefault(cik, fetch_sic(cik)), top=args.top)
     except Exception as exc:
         # CoverageError, a frame that would not load, the ticker file missing:
@@ -190,6 +272,19 @@ def main(argv=None) -> int:
         return 1
 
     print_list(doc)
+    for ticker in args.find:
+        print(explain(ticker, cutoff, fins, listings))
+    if args.as_of:
+        picks = [r["ticker"] for r in doc["watchlist"]]
+        returns = forward_returns(picks + [BENCHMARK], cutoff)
+        got = sorted(returns[t] for t in picks if t in returns)
+        if got:
+            print(f"\n12 months after {cutoff}: {len(got)} of {len(picks)} priced | "
+                  f"average {sum(got) / len(got):+.0%} | median {got[len(got) // 2]:+.0%} | "
+                  f"best {got[-1]:+.0%} | worst {got[0]:+.0%} | {BENCHMARK} {returns.get(BENCHMARK, float('nan')):+.0%}")
+        print("Limits: today's ticker list (companies since delisted or acquired are missing, which flatters "
+              "the result), and the SEC figures include later restatements.")
+        return 0
     if args.dry_run:
         return 0
     try:

@@ -195,3 +195,47 @@ def test_fetch_frame_treats_404_as_empty_and_anything_else_as_failure():
         fetch_frame("us-gaap", "Revenues", "USD", "CY2026Q2", session=Session(Resp(403), Resp(403), Resp(403)), pause=0)
     retried = Session(Resp(500), Resp(200, {"data": []}))
     assert fetch_frame("us-gaap", "Revenues", "USD", "CY2026Q2", session=retried, pause=0) == []
+
+
+def test_fourth_quarter_reference_counts_companies_from_the_full_year_report():
+    # Almost nobody reports Q4 on its own, so the single-quarter figure for a Q4
+    # is always thin. The full-year report is what shows the data is whole.
+    from diamond_data import load_financials
+
+    def fetch(taxonomy, tag, unit, period, session=None):
+        if tag != "Revenues":
+            return []
+        if period == "CY2025Q4":
+            return [{"cik": 1, "start": "2025-10-01", "end": "2025-12-31", "val": 30}]
+        if period == "CY2025":
+            return [{"cik": c, "start": "2025-01-01", "end": "2025-12-31", "val": 100} for c in (1, 2, 3)]
+        return []
+
+    _, coverage = load_financials(date(2026, 3, 1), fetch=fetch)
+    assert coverage == {"reference_quarter": "CY2025Q4", "companies_with_revenue": 3}
+
+
+def test_share_count_for_a_fourth_quarter_is_the_years_average_not_a_subtraction():
+    # A share count is a level, not a flow: the year's figure minus three
+    # quarters is meaningless (and negative). The year's own average stands in.
+    from diamond_data import level_series
+    rows = [q("2025-01-01", "2025-03-31", 100), q("2025-04-01", "2025-06-30", 102),
+            q("2025-07-01", "2025-09-30", 104), q("2025-01-01", "2025-12-31", 103)]
+    s = level_series(rows)
+    assert s[date(2025, 12, 31)] == 103 and s[date(2025, 9, 30)] == 104
+    assert level_series(rows + [q("2025-10-01", "2025-12-31", 106)])[date(2025, 12, 31)] == 106
+
+
+def test_dilution_is_measured_across_a_fourth_quarter():
+    ends = [date(2025, 12, 31), date(2025, 9, 30), date(2025, 6, 30), date(2025, 3, 31),
+            date(2024, 12, 31), date(2024, 9, 30), date(2024, 6, 30), date(2024, 3, 31)]
+    series = lambda vals: _rows(dict(zip(ends, vals)))
+    shares = [r for r in series([0, 104, 102, 100, 0, 99, 98, 97]) if r["val"]]          # no Q4 rows...
+    shares += [q("2025-01-01", "2025-12-31", 103), q("2024-01-01", "2024-12-31", 98)]     # ...only the years
+    fin = _fin(revenue=series([130, 125, 120, 115, 100, 96, 92, 88]),
+               op_income=series([6, 2, -1, -3, -8, -10, -12, -14]),
+               gross_profit=series([91, 87, 84, 80, 68, 65, 62, 59]), rd=[], shares=shares,
+               cash=[{"end": "2025-12-31", "val": 300}], backlog=[])
+    m = company_metrics(fin, date(2026, 3, 1))
+    assert m["latest_quarter_end"] == "2025-12-31"
+    assert m["shares"] == 103 and round(m["shares_growth"], 4) == round(103 / 98 - 1, 4)

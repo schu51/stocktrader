@@ -108,3 +108,27 @@ def test_a_failed_run_leaves_last_weeks_file_alone(tmp_path, monkeypatch):
     assert diamond_run.main([]) == 1
     assert json.loads(out.read_text()) == {"generated_at": "last week"}
     assert not (tmp_path / "diamond_history.json").exists()
+
+
+def test_as_of_cutoff_is_sixty_days_after_the_quarter_ends():
+    from diamond_run import as_of_cutoff
+    assert as_of_cutoff("2023Q1") == date(2023, 5, 30)
+    assert as_of_cutoff("2022Q4") == date(2023, 3, 1)
+    with pytest.raises(ValueError):
+        as_of_cutoff("2023")
+
+
+def test_forward_returns_from_first_close_after_start_to_last_before_the_end():
+    import pandas as pd
+    from diamond_run import forward_returns
+    idx = pd.to_datetime(["2023-05-30", "2023-05-31", "2024-05-29", "2024-05-31"])
+    frame = pd.DataFrame({"AAA": [10.0, 11.0, 20.0, 99.0], "BBB": [5.0, 5.0, float("nan"), 4.0]}, index=idx)
+    r = forward_returns(["AAA", "BBB", "GONE"], date(2023, 5, 30), download=lambda tickers, start, end: frame)
+    assert r == {"AAA": 1.0}        # BBB has no close at the end of the window; GONE has no data
+
+
+def test_explain_reports_why_a_company_is_or_is_not_listed():
+    from diamond_run import explain
+    text = explain("CCC", CUTOFF, FINS, LISTINGS)
+    assert "CCC" in text and "turning" in text
+    assert "no listing" in explain("NOPE", CUTOFF, FINS, LISTINGS)

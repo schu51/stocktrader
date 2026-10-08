@@ -73,6 +73,27 @@ def quarterly_series(rows: List[dict]) -> Dict[date, float]:
     return series
 
 
+def level_series(rows: List[dict]) -> Dict[date, float]:
+    """
+    Quarter end -> value for a figure that is a level, not a flow (the average
+    share count). A year's figure minus three quarters means nothing for a
+    level, so where the fourth quarter was not reported on its own the year's
+    own figure stands in for it.
+    """
+    series: Dict[date, float] = {}
+    years = []
+    for start, end, val in _periods(rows):
+        days = (end - start).days + 1
+        if QUARTER_DAYS[0] <= days <= QUARTER_DAYS[1]:
+            series[end] = val
+        elif YEAR_DAYS[0] <= days <= YEAR_DAYS[1]:
+            years.append((end, val))
+    for y_end, y_val in years:
+        if not any(abs((end - y_end).days) <= 5 for end in series):
+            series[y_end] = y_val
+    return series
+
+
 def last_quarters(series: Dict[date, float], cutoff: date, n: int = 8) -> Optional[List[float]]:
     """The n latest consecutive quarters ending on or before cutoff, newest first. None if there is a gap."""
     ends = sorted((e for e in series if e <= cutoff), reverse=True)[:n]
@@ -129,7 +150,7 @@ def company_metrics(fin: dict, cutoff: date) -> Optional[dict]:
     gm = sum(gross[:4]) / ttm_rev if gross else None
     prior_gm = sum(gross[4:]) / prior_rev if gross else None
 
-    shares = last_quarters(quarterly_series(fin.get("shares")), latest_end)
+    shares = last_quarters(level_series(fin.get("shares")), latest_end)
     rd = last_quarters(quarterly_series(fin.get("rd")), latest_end, n=4)
 
     year_ago = latest_end - timedelta(days=365)
@@ -262,7 +283,10 @@ def load_financials(cutoff: date, fetch=fetch_frame) -> Tuple[Dict[int, dict], d
     """
     periods = periods_for(cutoff)
     reference = periods["reference"]
-    reference_count = 0
+    # Almost no company reports a fourth quarter on its own: for a Q4 reference
+    # the full-year report is what shows who has filed.
+    reference_periods = {reference, reference[:6]} if reference.endswith("Q4") else {reference}
+    reporting = set()
     fins: Dict[int, dict] = {}
     for name, spec in FIGURES.items():
         wanted = periods["instants"] if spec["kind"] == "instant" else periods["quarters"] + periods["years"]
@@ -278,6 +302,6 @@ def load_financials(cutoff: date, fetch=fetch_frame) -> Tuple[Dict[int, dict], d
                         {k: row[k] for k in ("start", "end", "val") if k in row})
                     got.add(cik)
                 taken |= got
-            if name == "revenue" and period == reference:
-                reference_count = len(taken)
-    return fins, {"reference_quarter": reference, "companies_with_revenue": reference_count}
+            if name == "revenue" and period in reference_periods:
+                reporting |= taken
+    return fins, {"reference_quarter": reference, "companies_with_revenue": len(reporting)}

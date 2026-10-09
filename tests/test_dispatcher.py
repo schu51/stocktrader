@@ -199,3 +199,9 @@ def test_run_due_on_a_normal_slot_starts_exactly_that_slot():
             already_started=lambda wf, since: wf in {"premarket.yml", "stop_placement.yml", "intraday_exit.yml"},
             start=lambda wf, ref: started.append(wf) or True)
     assert started == ["daily_trade.yml", "portfolio_sync.yml"]
+
+
+def test_diamond_screen_runs_saturday_before_the_rest_of_the_chain():
+    assert _due(2026, 10, 3, 7, 30) == ["diamond_screen.yml"]
+    assert "diamond_screen.yml" not in _due(2026, 10, 5, 7, 30)          # not on a weekday
+    assert ("diamond_screen.yml", "07:30") in _catch_up(2026, 10, 3, 8, 0)

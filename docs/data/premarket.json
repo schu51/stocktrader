@@ -1,84 +1,77 @@
 {
-  "generated_at": "2026-10-08T06:00:43.552723-07:00",
+  "generated_at": "2026-10-09T06:00:50.282387-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 37,
-    "mixed": 11,
-    "weak": 27
+    "strong": 36,
+    "mixed": 10,
+    "weak": 29
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-10-08T09:00:48-04:00",
-  "premarket_quotes": 73,
+  "premarket_as_of": "2026-10-09T09:00:55-04:00",
+  "premarket_quotes": 70,
   "no_premarket_quote": [
-    "NCNO",
+    "WDAY",
+    "PCOR",
+    "VEEV",
+    "DXCM",
     "PODD"
   ],
   "gap_alerts": [
     {
-      "ticker": "ARM",
-      "prev_close": 294.37,
-      "current": 285.3,
-      "pct_chg": -3.08,
-      "ma50": 268.36,
-      "reasons": [
-        "gap down -3.1%"
-      ]
-    },
-    {
-      "ticker": "CRWV",
-      "prev_close": 88.45,
-      "current": 86.75,
-      "pct_chg": -1.92,
-      "ma50": 87.85,
-      "reasons": [
-        "crossed BELOW 50MA (87.85)"
-      ]
-    },
-    {
-      "ticker": "AVGO",
-      "prev_close": 376.51,
-      "current": 370.27,
-      "pct_chg": -1.66,
-      "ma50": 372.09,
-      "reasons": [
-        "crossed BELOW 50MA (372.09)"
-      ]
-    },
-    {
-      "ticker": "CEG",
-      "prev_close": 299.59,
-      "current": 297.3,
-      "pct_chg": -0.76,
-      "ma50": 272.63,
-      "reasons": [
-        "volume spike 2.1x avg (prior session)"
-      ]
-    },
-    {
       "ticker": "APLD",
-      "prev_close": 23.81,
-      "current": 24.07,
-      "pct_chg": 1.09,
-      "ma50": 27.09,
+      "prev_close": 23.85,
+      "current": 23.9,
+      "pct_chg": 0.21,
+      "ma50": 27.1,
       "reasons": [
-        "volume spike 2.8x avg (prior session)"
+        "volume spike 2.9x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "RDDT",
+      "prev_close": 156.47,
+      "current": 161.5,
+      "pct_chg": 3.21,
+      "ma50": 154.41,
+      "reasons": [
+        "gap UP 3.2% above 50MA \u2014 momentum alert"
       ]
     }
   ],
-  "avoids": [
-    "ARM",
-    "CRWV",
-    "AVGO"
+  "avoids": [],
+  "gap_up_priority": [
+    "RDDT"
   ],
-  "gap_up_priority": [],
   "top_candidates": [
     {
       "ticker": "OKTA",
-      "price": 218.0,
-      "ma50": 169.61,
-      "ret_5d": 4.3,
-      "ret_20d": 26.2,
-      "score": 0.2055,
+      "price": 220.21,
+      "ma50": 171.28,
+      "ret_5d": 3.6,
+      "ret_20d": 28.7,
+      "score": 0.2111,
+      "gap_up": false,
+      "thesis_grade": "B",
+      "thesis_score": 57.0
+    },
+    {
+      "ticker": "ZS",
+      "price": 216.81,
+      "ma50": 184.08,
+      "ret_5d": 9.1,
+      "ret_20d": 32.6,
+      "score": 0.1962,
+      "gap_up": false,
+      "thesis_grade": "B",
+      "thesis_score": 58.0
+    },
+    {
+      "ticker": "FTNT",
+      "price": 189.1,
+      "ma50": 166.56,
+      "ret_5d": 5.8,
+      "ret_20d": 19.0,
+      "score": 0.1287,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 57.0

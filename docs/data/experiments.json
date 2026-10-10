@@ -9,12 +9,14 @@
       },
       "note": "every new position; backtest with ma50_room 163% vs 138%, drawdown -16.5% vs -20.4%",
       "evidence": {
-        "n_atr": 0,
-        "n_fixed": 0,
-        "difference": null,
-        "t": null
+        "n_atr": 4,
+        "n_fixed": 3,
+        "difference": 3.2641666666666667,
+        "t": 1.889048595633867,
+        "mean_atr": -2.5325,
+        "mean_fixed": -5.796666666666667
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "macd_cross": {
       "kind": "entry_signal",
@@ -27,7 +29,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04",
+      "last_evaluated": "2026-10-10",
       "auto_promote": false
     },
     "ema21_reclaim": {
@@ -41,7 +43,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "breakout": {
       "kind": "entry_signal",
@@ -54,7 +56,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "adx25": {
       "kind": "entry_signal",
@@ -67,7 +69,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "ma50_room": {
       "kind": "entry_signal",
@@ -80,7 +82,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "news_positive": {
       "kind": "entry_signal",
@@ -93,7 +95,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "social_bullish": {
       "kind": "entry_signal",
@@ -106,7 +108,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "news_negative": {
       "kind": "bearish_signal",
@@ -119,7 +121,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "social_bearish": {
       "kind": "bearish_signal",
@@ -132,7 +134,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     },
     "news_veto": {
       "kind": "news_arm",
@@ -141,12 +143,14 @@
       "params": {},
       "note": "A/B on real buys: half are skipped when news is negative or social is bearish",
       "evidence": {
-        "n_news": 0,
-        "n_control": 0,
-        "difference": null,
-        "t": null
+        "n_news": 3,
+        "n_control": 4,
+        "difference": -2.091666666666667,
+        "t": -0.955744860548453,
+        "mean_news": -5.126666666666667,
+        "mean_control": -3.035
       },
-      "last_evaluated": "2026-10-04"
+      "last_evaluated": "2026-10-10"
     }
   },
   "changes": [
@@ -172,11 +176,11 @@
       "reason": "owner decision on the three-year backtest comparison (research/backtest_summary_v3_*.json); the live trial could not have confirmed an edge this size"
     }
   ],
-  "generated_at": "2026-10-04T08:25:54.400857",
-  "signals_logged": 0,
+  "generated_at": "2026-10-10T12:15:44.977309",
+  "signals_logged": 27,
   "sentiment": {
-    "rows": 18,
-    "days": 1,
+    "rows": 309,
+    "days": 6,
     "horizon": 10,
     "weights": {
       "basis": "equal (not enough evidence yet)",

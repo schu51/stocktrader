@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T18:25:19.577396",
+  "generated_at": "2026-10-10T13:02:08.791463",
   "theses": [
     {
       "theme": "Oil-driven inflation forces the Fed to hike: sustained high crude favors oilfield services and midstream over the integrated majors",
@@ -30,7 +30,7 @@
       "conviction": 0.512,
       "status": "active",
       "created_at": "2026-10-03",
-      "last_validated": "2026-10-03"
+      "last_validated": "2026-10-10"
     },
     {
       "theme": "Higher-for-longer policy rates: asset-sensitive regional and mid-cap banks and non-bank lenders over the money-center banks",
@@ -59,7 +59,76 @@
       "conviction": 0.475,
       "status": "active",
       "created_at": "2026-10-03",
-      "last_validated": "2026-10-03"
+      "last_validated": "2026-10-10"
+    },
+    {
+      "theme": "AI/capex-driven demand keeps inflation sticky, so grid equipment makers and merchant power generators benefit more than the AI chip and hyperscaler leaders",
+      "causal_chain": "The FOMC raised the funds rate to 3.75-4.00% on 2026-09-16 and its statement describes capital investment as robust and productivity growth as strong. CNBC reports economists see expanded AI investment as a potential inflationary factor. If the Fed keeps tightening while AI and datacenter capex stays strong, the spending is physically constrained by electricity, transformers, switchgear and generation capacity. Those bottleneck suppliers can raise prices and lengthen backlogs, and they are less exposed than the chip and hyperscaler leaders if capex multiples compress under higher discount rates. Contracted or merchant power and electrical equipment earn pricing power from scarcity, not from cheap financing.",
+      "beneficiary_sectors": [
+        "industrials",
+        "utilities"
+      ],
+      "second_order": "Electrical and grid equipment manufacturers (transformers, switchgear, cooling and power distribution) and merchant or independent power generators with datacenter offtake. These sit one step behind the AI leaders and are still priced largely as cyclicals or regulated yield proxies.",
+      "consensus_names_excluded": [
+        "NVDA",
+        "MSFT",
+        "AMZN",
+        "GOOGL",
+        "META",
+        "AVGO"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.4,
+        "causal_directness": 0.5,
+        "non_consensus": 0.55,
+        "invalidation_clarity": 0.8
+      },
+      "invalidation_condition": "Thesis is invalid if, before the horizon date, two or more of the top hyperscalers cut their forward capex guidance, or the Fed reverses and cuts the funds rate below 3.75%. It is also invalid if the S&P 500 Industrials sector underperforms the S&P 500 by more than 8 percentage points over the period.",
+      "horizon": "2027-04-10",
+      "sources": [
+        "https://www.cnbc.com/2026/09/16/fed-rate-decision-september-2026.html",
+        "https://www.advisorperspectives.com/dshort/updates/2026/09/16/feds-interest-rate-decision-september-16-2026",
+        "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a1.htm"
+      ],
+      "id": "TH-2026-0003",
+      "conviction": 0.562,
+      "status": "active",
+      "created_at": "2026-10-10",
+      "last_validated": "2026-10-10"
+    },
+    {
+      "theme": "Robust capex plus sticky 3.4% inflation supports the electrification metals supply chain (copper and electrical inputs) as an underpriced input to the investment cycle",
+      "causal_chain": "BLS data cited by Citizens Bank show consumer prices up 3.4% year over year through July 2026, and the Fed hiked on 2026-09-16 while calling capital investment robust and activity solid. Strong capex in power, grid and datacenter build-outs consumes physical inputs such as copper and electrical steel. Inflation that stays above target, with a Fed that has to keep raising rates, tends to keep nominal commodity demand and pricing resilient where the demand is investment-driven rather than rate-sensitive housing. Miners and materials producers tied to electrification are therefore a second-order claim on the same capex wave. The market prices them mostly on China cyclicality, not on this US capex demand.",
+      "beneficiary_sectors": [
+        "basic_materials",
+        "industrials"
+      ],
+      "second_order": "Copper miners, aluminum and electrical-steel producers, and wire and cable suppliers. These supply the build-out and are not the AI leaders themselves.",
+      "consensus_names_excluded": [
+        "NVDA",
+        "MSFT",
+        "AMZN",
+        "GOOGL",
+        "META"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.3,
+        "causal_directness": 0.4,
+        "non_consensus": 0.55,
+        "invalidation_clarity": 0.75
+      },
+      "invalidation_condition": "Thesis is invalid if front-month COMEX copper falls more than 15% from its level at 2026-10-10 and holds below that level for 30 consecutive days before the horizon date. It is also invalid if year-over-year CPI falls below 2.5% in two consecutive prints, which would remove the sticky-inflation leg.",
+      "horizon": "2027-04-10",
+      "sources": [
+        "https://www.citizensbank.com/learning/fed-rate-hike-impacts.aspx",
+        "https://www.cnbc.com/2026/09/16/fed-rate-decision-september-2026.html",
+        "https://www.federalreserve.gov/monetarypolicy/fomcminutes20260916.htm"
+      ],
+      "id": "TH-2026-0004",
+      "conviction": 0.5,
+      "status": "active",
+      "created_at": "2026-10-10",
+      "last_validated": "2026-10-10"
     }
   ]
 }

@@ -1,9 +1,17 @@
 {
-  "generated_at": "2026-10-03T18:25:19.578015",
+  "generated_at": "2026-10-10T13:02:08.794868",
   "status": "generated",
   "admitted": 2,
   "rejected": [],
-  "active_total": 2,
+  "revalidation": {
+    "checked": 2,
+    "confirmed": [
+      "TH-2026-0001",
+      "TH-2026-0002"
+    ],
+    "invalidated": []
+  },
+  "active_total": 4,
   "active": [
     {
       "id": "TH-2026-0001",
@@ -20,6 +28,24 @@
       "conviction": 0.475,
       "beneficiary_sectors": [
         "financials"
+      ]
+    },
+    {
+      "id": "TH-2026-0003",
+      "theme": "AI/capex-driven demand keeps inflation sticky, so grid equipment makers and merchant power generators benefit more than the AI chip and hyperscaler leaders",
+      "conviction": 0.562,
+      "beneficiary_sectors": [
+        "industrials",
+        "utilities"
+      ]
+    },
+    {
+      "id": "TH-2026-0004",
+      "theme": "Robust capex plus sticky 3.4% inflation supports the electrification metals supply chain (copper and electrical inputs) as an underpriced input to the investment cycle",
+      "conviction": 0.5,
+      "beneficiary_sectors": [
+        "basic_materials",
+        "industrials"
       ]
     }
   ]

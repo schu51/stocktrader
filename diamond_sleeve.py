@@ -142,17 +142,20 @@ def broken(symbol: str, doc: Dict, history: List[Dict], today: date) -> Optional
 
 def plan(doc: Dict, history: List[Dict], held: Dict[str, float], other_holdings: Set[str], equity: float,
          cash: float, today: date, above_200: Callable[[str], Optional[bool]],
-         price_of: Callable[[str], Optional[float]]) -> Dict:
+         price_of: Callable[[str], Optional[float]], pending: Set[str] = frozenset()) -> Dict:
     """
     What the sleeve should do today. `held`: {symbol: market value} of its own
     positions. `other_holdings`: symbols the large-cap strategy holds. `cash`:
     what the account can actually spend. Sells are decided first, and a sold
-    holding's slot and budget are free for today's buys.
+    holding's slot and budget are free for today's buys. `pending`: holdings
+    whose buy has not filled yet; they keep their slot and cannot be sold.
     """
     budget = SLEEVE_SHARE * equity
     slot = round(budget / MAX_POSITIONS, 2)
     sells = []
     for symbol in sorted(held):
+        if symbol in pending:
+            continue                                 # no shares to sell; the slot stays taken
         reason = broken(symbol, doc, history, today)
         if reason:
             sells.append({"symbol": symbol, "reason": reason})
@@ -281,12 +284,26 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
     trades = _load(trades_file) if trades_file.exists() else []
     in_flight = {t["symbol"] for t in trades if t.get("status") == "OPEN" and t.get("sleeve") and t.get("pending_exit")}
     held = {s: float(by_symbol[s]["market_value"]) for s in sleeve if s in by_symbol}
+    pending = set()
+    # A buy logged but not yet filled has no position, and still holds its slot
+    # and its share of the budget: otherwise a second run the same day would
+    # buy it again, past eight positions and past 20%. If the order dies
+    # unfilled, the daily run's reconciliation cancels the trade and frees it.
+    for t in trades:
+        if t.get("status") == "OPEN" and t.get("sleeve") and t.get("symbol") not in by_symbol:
+            pending.add(t["symbol"])
+            try:
+                held[t["symbol"]] = held.get(t["symbol"], 0.0) + float(t.get("shares") or 0) * float(t.get("entry_price") or 0)
+            except (TypeError, ValueError):
+                held[t["symbol"]] = held.get(t["symbol"], 0.0)
     others = set(by_symbol) - sleeve
     out["equity"], out["holdings"] = equity, [
-        {"symbol": s, "market_value": round(v, 2), "pnl_pct": round(float(by_symbol[s]["unrealized_plpc"]) * 100, 2)}
+        {"symbol": s, "market_value": round(v, 2),
+         **({"pnl_pct": round(float(by_symbol[s]["unrealized_plpc"]) * 100, 2)} if s in by_symbol else {"pending": True})}
         for s, v in sorted(held.items())]
 
-    todo = plan(doc, history, held, others, equity, cash, today, above_200, lambda s: ask_price(broker, s))
+    todo = plan(doc, history, held, others, equity, cash, today, above_200, lambda s: ask_price(broker, s),
+                pending=pending)
     out.update(budget=todo["budget"], slot=todo["slot"], skipped=todo["skipped"],
                invested=round(sum(held.values()), 2), list_date=_list_day(doc))
     if not execute:

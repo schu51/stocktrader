@@ -253,3 +253,26 @@ def test_an_unfilled_buy_is_logged_and_left_for_the_intraday_check_to_protect(tm
     out = _run(broker, paths)
     assert [t["symbol"] for t in json.loads(paths["trades_file"].read_text())] == ["AAA", "BBB"]
     assert [o for o in broker.sent if o["side"] == "sell"] == [] and out["failures"] == []
+
+
+def test_a_buy_still_waiting_to_fill_counts_as_held_so_a_second_run_cannot_buy_it_again(tmp_path, monkeypatch):
+    # The first run's buys are logged but have not filled, so the account shows
+    # no position. A second run the same day (a re-run, a catch-up) must not
+    # read that as two empty slots and unspent budget.
+    broker = Broker(fills=False)
+    paths = _files(tmp_path, monkeypatch)
+    _run(broker, paths)
+    assert len([o for o in broker.sent if o["side"] == "buy"]) == 2
+    out = _run(broker, paths)
+    assert len([o for o in broker.sent if o["side"] == "buy"]) == 2          # nothing sent the second time
+    assert len(json.loads(paths["trades_file"].read_text())) == 2 and out["buys"] == []
+    assert out["invested"] == 5000.0                                         # the two pending buys count against the budget
+
+
+def test_pending_buys_fill_slots_and_a_thesis_break_does_not_try_to_sell_shares_not_yet_held(tmp_path, monkeypatch):
+    pending = [dict(SLEEVE_OPEN, symbol=f"P{i}", shares=50, entry_price=50.0) for i in range(8)]     # eight unfilled buys
+    broker = Broker()
+    paths = _files(tmp_path, monkeypatch, trades=pending)
+    out = _run(broker, paths)
+    assert broker.sent == [] and broker.closed == []                         # no slot left; nothing to sell yet
+    assert out["sells"] == [] and out["buys"] == [] and out["failures"] == []

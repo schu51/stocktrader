@@ -93,6 +93,7 @@ def closed_instrumented_trades(trades: List[Dict]) -> List[Dict]:
         and t.get("pnl_pct") is not None
         and t.get("rs_rank") is not None
         and t.get("thesis_score") is not None
+        and not t.get("sleeve")            # the diamond sleeve is a different strategy with its own record
     ]
 
 

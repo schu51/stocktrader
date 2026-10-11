@@ -363,6 +363,27 @@ def main():
     held_now = broker.get_positions() or []
     positions_ok = getattr(broker, "last_positions_ok", False) is True
     positions, unmanaged = split_positions(held_now)
+
+    # Holdings of the diamond sleeve are not this monitor's to sell or to trail.
+    # If the trade log cannot say which they are, nothing is sold on these rules:
+    # every position keeps the stop it has at the broker, and the run fails.
+    from exit_logic import read_sleeve_symbols, without_sleeve
+    sleeve = read_sleeve_symbols(TRADES_FILE)
+    if sleeve is None:
+        logger.error("Trade log unreadable — cannot tell which positions the diamond sleeve holds; no exits evaluated")
+        out_path = DOCS_DATA / "intraday_exit.json"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps({
+            "generated_at": datetime.now().isoformat(), "positions_checked": 0, "exits_triggered": [],
+            "stops_updated": [], "stops_placed": [], "broker_exits": [], "sleeve_positions": [], "mode": "EXECUTE",
+            "stop_failures": [{"status": "sleeve_unknown",
+                               "error": "trade log unreadable: cannot tell which positions the diamond sleeve holds"}],
+        }, indent=2))
+        sys.exit(1)
+    positions, sleeve_held = without_sleeve(positions, sleeve)
+    if sleeve_held:
+        logger.info(f"Leaving {len(sleeve_held)} diamond-sleeve position(s) to the sleeve: "
+                    f"{[p['symbol'] for p in sleeve_held]}")
     logger.info(f"Evaluating {len(positions)} long stock positions")
     if unmanaged:
         logger.info(f"Leaving {len(unmanaged)} short/option position(s) alone: "
@@ -464,6 +485,7 @@ def main():
         "stops_placed":      stops_placed,
         "stop_failures":     stop_failures,
         "broker_exits":      broker_exits,
+        "sleeve_positions":  [p["symbol"] for p in sleeve_held],
         "mode":              "EXECUTE",
     }
     out_path = DOCS_DATA / "intraday_exit.json"

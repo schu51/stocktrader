@@ -15,9 +15,11 @@ Exit triggers:
   HARD_LOSS_STOP    →  unrealized loss exceeds 15%
 """
 
+import json
 import logging
 import re
 from datetime import date, datetime, timezone
+from pathlib import Path
 from typing import Optional, Tuple
 from zoneinfo import ZoneInfo
 
@@ -119,6 +121,63 @@ def sale_status(broker, order_id: Optional[str], wait_seconds: float = 20, poll:
         if time.monotonic() >= deadline:
             return SALE_WORKING
         time.sleep(poll)
+
+
+# ── the diamond sleeve ───────────────────────────────────────────────────────
+# A second strategy shares this account: a handful of small and mid-sized
+# companies held for many months on a thesis (diamond_sleeve.py). Its holdings
+# are marked in the trade log, and every large-cap rule (the 50-day exit, the
+# trailing stop tiers, rotation, the stale exit, the position and sector caps)
+# must leave them alone: they would sell a diamond on its first ordinary dip.
+
+DIAMOND_SLEEVE = "diamond"
+SLEEVE_SHARE = 0.20            # of the account, set aside for the sleeve
+SLEEVE_STOP = 0.25             # its only price exit: a disaster stop this far below entry
+TRADES_PATH = Path(__file__).parent / "docs" / "data" / "trades.json"
+
+
+def sleeve_symbols(trades) -> set:
+    """Symbols the sleeve holds: open trade-log entries carrying a sleeve tag."""
+    return {t.get("symbol") for t in trades or []
+            if isinstance(t, dict) and t.get("status") == "OPEN" and t.get("sleeve") and t.get("symbol")}
+
+
+def read_sleeve_symbols(path=None) -> Optional[set]:
+    """
+    sleeve_symbols from the trade log on disk. None if the log exists but cannot
+    be read: that is "unknown", and a caller about to sell on the large-cap
+    rules must stop rather than treat every position as its own.
+    """
+    path = Path(path or TRADES_PATH)
+    if not path.exists():
+        return set()
+    try:
+        trades = json.loads(path.read_text())
+        return sleeve_symbols(trades) if isinstance(trades, list) else None
+    except Exception:
+        return None
+
+
+def without_sleeve(positions: list, sleeve: set) -> Tuple[list, list]:
+    """(positions the large-cap rules manage, positions that belong to the sleeve)."""
+    mine = [p for p in positions or [] if p.get("symbol") not in (sleeve or ())]
+    theirs = [p for p in positions or [] if p.get("symbol") in (sleeve or ())]
+    return mine, theirs
+
+
+def drop_sleeve_candidates(candidates: list, sleeve: set) -> Tuple[list, list]:
+    """
+    Buy candidates with the sleeve's holdings removed, and the symbols removed.
+    The broker keeps one position per symbol, so if both strategies bought the
+    same stock neither could tell its shares from the other's.
+    """
+    kept = [c for c in candidates or [] if c.get("symbol") not in (sleeve or ())]
+    return kept, [c.get("symbol") for c in candidates or [] if c.get("symbol") in (sleeve or ())]
+
+
+def sleeve_cash_reserved(total_value: float, sleeve_value: float) -> float:
+    """Cash that belongs to the sleeve: its share of the account, less what it has already invested."""
+    return max(0.0, SLEEVE_SHARE * float(total_value or 0) - float(sleeve_value or 0))
 
 
 def split_positions(positions: list) -> Tuple[list, list]:

@@ -44,8 +44,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import (find_untradable, is_long_equity, reconcile_phantom_trades, record_broker_exits,
-                        safe_to_reconcile, split_positions)
+from exit_logic import (drop_sleeve_candidates, find_untradable, is_long_equity, read_sleeve_symbols,
+                        reconcile_phantom_trades, record_broker_exits, safe_to_reconcile, sleeve_cash_reserved,
+                        split_positions, without_sleeve)
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
 
@@ -233,12 +234,21 @@ class DailyRunner:
         for sym, reason in self._untradable.items():
             logger.warning(f"{sym} is untradable ({reason}) — excluded from position and sector caps")
 
+        # Holdings of the diamond sleeve (diamond_sleeve.py) stay in `positions`
+        # for the same reason, and are likewise outside this strategy's position
+        # count, sector caps, rotation and stale exit. Its share of the cash is
+        # not this strategy's to spend.
+        self._sleeve = read_sleeve_symbols() or set()
+        sleeve_value = 0.0
+
         positions = {}
         total_unrealized = 0.0
         for p in raw:
             if not is_long_equity(p):
                 continue   # shorts and options are not holdings of the long engine
             mv  = float(p["market_value"])
+            if p["symbol"] in self._sleeve:
+                sleeve_value += mv
             pnl = float(p["unrealized_pl"])
             total_unrealized += pnl
             pos = Position(
@@ -257,6 +267,8 @@ class DailyRunner:
 
         cash = float(account.get("cash", self.portfolio.cash))
         bp   = float(account.get("buying_power", self.portfolio.buying_power))
+        self._sleeve_reserved = min(max(0.0, cash), sleeve_cash_reserved(total_value, sleeve_value))
+        cash -= self._sleeve_reserved
 
         # Use cash (not buying_power) so the model never trades on margin.
         # buying_power in Alpaca margin accounts is 2-3× cash; using it as the
@@ -269,7 +281,7 @@ class DailyRunner:
             cash=cash,
             invested=float(account.get("long_market_value", 0)),
             positions=positions,
-            num_positions=len([s for s in positions if s not in self._untradable]),
+            num_positions=len([s for s in positions if s not in self._untradable and s not in self._sleeve]),
             cash_allocation=cash / total_value if total_value > 0 else 0.0,
             available_cash=available,
             buying_power=bp,
@@ -540,6 +552,10 @@ class DailyRunner:
             self.portfolio.cash = cash_start + planned
             self.portfolio.available_cash = max(0.0, self.portfolio.cash) * 0.95
             self.portfolio.num_positions = rotation.planning_count(held_count, cap, len(laggards))
+
+            candidates, sleeve_skipped = drop_sleeve_candidates(candidates, getattr(self, "_sleeve", set()))
+            for sym in sleeve_skipped:
+                holds.append({"symbol": sym, "reason": "held by the diamond sleeve"})
 
             for candidate in candidates:
                 symbol = candidate["symbol"]
@@ -1129,7 +1145,7 @@ class DailyRunner:
             # a second positions call could fail and silently switch the cap off.
             positions = [{"symbol": sym, "market_value": pos.market_value}
                          for sym, pos in (self.portfolio.positions or {}).items()
-                         if sym not in getattr(self, "_untradable", {})]
+                         if sym not in getattr(self, "_untradable", {}) and sym not in getattr(self, "_sleeve", set())]
             total_value = self.portfolio.total_value or 1
             # Build symbol → sector lookup
             sym_to_sector = {}
@@ -1436,6 +1452,14 @@ class DailyRunner:
         # The long-stock exit rules must not touch shorts or options
         positions, unmanaged = split_positions(positions)
         result["unmanaged"] = [p["symbol"] for p in unmanaged]
+        # ...nor the diamond sleeve's holdings. If the trade log cannot say which
+        # those are, no exit is evaluated: every position keeps its broker stop.
+        sleeve = read_sleeve_symbols()
+        if sleeve is None:
+            result["error"] = "trade log unreadable: cannot tell which positions the diamond sleeve holds"
+            return result
+        positions, sleeve_held = without_sleeve(positions, sleeve)
+        result["sleeve"] = [p["symbol"] for p in sleeve_held]
         result["positions_checked"] = len(positions)
 
         if not positions:
@@ -2077,7 +2101,7 @@ class DailyRunner:
             holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2), "market_value": pos.market_value}
                         for sym, pos in (self.portfolio.positions or {}).items()}
             return rotation.find_laggards(holdings, trades, ranks, date.today(),
-                                          exclude=exited | set(getattr(self, "_untradable", {})))
+                                          exclude=exited | set(getattr(self, "_untradable", {})) | getattr(self, "_sleeve", set()))
         except Exception as e:
             logger.warning(f"Rotation: could not evaluate holdings ({e}) — nothing rotated")
             return []
@@ -2099,7 +2123,7 @@ class DailyRunner:
             holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2), "market_value": pos.market_value}
                         for sym, pos in (self.portfolio.positions or {}).items()}
             stale = rotation.find_stale(holdings, trades, date.today(),
-                                        exclude=exited | set(getattr(self, "_untradable", {})), ranks=ranks)
+                                        exclude=exited | set(getattr(self, "_untradable", {})) | getattr(self, "_sleeve", set()), ranks=ranks)
             return stale, rotation.stale_allowance(trades, date.today())
         except Exception as e:
             logger.warning(f"Stale exit: could not evaluate holdings ({e}) — nothing sold")

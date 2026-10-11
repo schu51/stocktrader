@@ -44,7 +44,7 @@ def load():
             j = r.get("judgment") or {}
             rows.append({"list": doc["cutoff"], "ticker": r["ticker"], "ret": ret(r["ticker"]), "index": index,
                          "numbers": (r.get("score") or {}).get("total"), "conviction": r.get("conviction"),
-                         "edge": j.get("edge"), "demand": j.get("demand"), "flags": len(j.get("red_flags") or []),
+                         "edge": j.get("edge"), "demand": j.get("demand"), "n_flags": len(j.get("red_flags") or []),
                          "confidence": j.get("confidence"), "probe": r.get("hindsight_probe"),
                          "value": r.get("market_value"), "model": doc.get("model")})
     return pd.DataFrame(rows)
@@ -96,4 +96,4 @@ if __name__ == "__main__":
     print("\nlowest and highest conviction, later list:")
     last = d[d.list == d.list.max()].dropna(subset=["conviction"]).sort_values("conviction")
     for _, r in pd.concat([last.head(5), last.tail(5)]).iterrows():
-        print(f"  {r.ticker:6} conviction {r.conviction:5.1f} edge {r.edge:.0f} demand {r.demand:.0f} flags {r.flags}  shares since {r.ret:+.0%}" if r.ret == r.ret else f"  {r.ticker}")
+        print(f"  {r.ticker:6} conviction {r.conviction:5.1f} edge {r.edge:.0f} demand {r.demand:.0f} flags {r.n_flags}  shares since {r.ret:+.0%}" if r.ret == r.ret else f"  {r.ticker}")

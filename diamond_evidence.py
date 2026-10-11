@@ -31,6 +31,7 @@ the pack empty, and the judge is told what is missing.
 import html
 import re
 import time
+import unicodedata
 from datetime import date, timedelta
 from typing import Callable, Dict, List, Optional
 
@@ -91,9 +92,23 @@ _MACHINE_ADDRESS = re.compile(
     re.I)
 
 
+def plain(text) -> str:
+    """
+    Text in one plain form: look-alike characters folded to ordinary ones
+    (NFKC), invisible formatting and control characters removed, whitespace
+    collapsed. The guard below checks this form and the model is shown this
+    form, so a phrase cannot reach one and be hidden from the other.
+    """
+    if not text:
+        return ""
+    folded = unicodedata.normalize("NFKC", str(text))
+    kept = "".join(" " if c.isspace() else c for c in folded if c.isspace() or unicodedata.category(c) not in ("Cf", "Cc", "Co", "Cs"))
+    return " ".join(kept.split())
+
+
 def addressed_to_a_machine(text) -> bool:
     """True if the text contains wording aimed at an automated reader rather than an investor."""
-    return bool(text) and bool(_MACHINE_ADDRESS.search(str(text)))
+    return bool(_MACHINE_ADDRESS.search(plain(text)))
 
 
 def recent_filings(submissions: Dict, today: date) -> Dict:
@@ -173,7 +188,7 @@ def build_pack(row: Dict, submissions: Dict, today: date, fetch_doc: Callable[[i
         if not filing:
             return ""
         try:
-            return strip_html(fetch_doc(cik, filing["accession"], filing["document"]))
+            return plain(strip_html(fetch_doc(cik, filing["accession"], filing["document"])))
         except Exception:
             return ""
 

@@ -301,7 +301,10 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
                 held[t["symbol"]] = held.get(t["symbol"], 0.0) + float(t.get("shares") or 0) * float(t.get("entry_price") or 0)
             except (TypeError, ValueError):
                 held[t["symbol"]] = held.get(t["symbol"], 0.0)
-    others = set(by_symbol) - sleeve
+    # The large-cap strategy's holdings, including a buy it has sent that has not
+    # filled yet: no position at the broker, but one symbol cannot be shared.
+    others = (set(by_symbol) - sleeve) | {t.get("symbol") for t in trades
+                                          if t.get("status") == "OPEN" and not t.get("sleeve") and t.get("symbol")}
     out["equity"], out["holdings"] = equity, [
         {"symbol": s, "market_value": round(v, 2),
          **({"pnl_pct": round(float(by_symbol[s]["unrealized_plpc"]) * 100, 2)} if s in by_symbol else {"pending": True})}

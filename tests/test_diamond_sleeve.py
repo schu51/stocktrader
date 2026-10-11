@@ -296,3 +296,13 @@ def test_a_do_not_buy_mark_cannot_shield_a_holding_from_being_sold():
     hist = _hist("2026-10-17", {"WEAK": 3, "GOOD": 1}) + _hist("2026-10-24", {"WEAK": 20, "GOOD": 1})
     assert "fell to 6" in broken("WEAK", doc, hist, TODAY)
     assert "addressed" in broken("GOOD", doc, hist, TODAY)
+
+
+def test_the_sleeve_does_not_buy_a_stock_the_large_cap_run_has_ordered_but_not_yet_received(tmp_path, monkeypatch):
+    # At 10:30 a large-cap buy sent at 10:00 may not have filled: no position,
+    # but the trade log has it. Both strategies in one symbol cannot be told apart.
+    broker = Broker()
+    paths = _files(tmp_path, monkeypatch, trades=[{"symbol": "AAA", "status": "OPEN", "entry_date": "2026-10-26", "order_id": "x"}])
+    out = _run(broker, paths)
+    assert [o["symbol"] for o in broker.sent if o["side"] == "buy"] == ["BBB"]
+    assert {s["symbol"]: s["reason"] for s in out["skipped"]}["AAA"] == "held by the large-cap strategy"

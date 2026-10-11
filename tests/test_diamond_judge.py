@@ -190,3 +190,19 @@ def test_a_past_list_is_guarded_like_a_live_one():
                           ask=lambda s, u: "unknown" if "one word" in u else json.dumps(dict(GOOD, red_flags=[])),
                           until=date(2026, 10, 9))
     assert all(r["judgment"]["do_not_buy"] is True for r in out["watchlist"])
+
+
+def test_the_model_reporting_instructions_in_the_evidence_marks_the_company():
+    reply = json.dumps(dict(GOOD, red_flags=[], instructions_found=True))
+    j = parse_judgment(reply)
+    assert j["instructions_found"] is True
+    from diamond_judge import _guard
+    assert _guard(j, PACK)["do_not_buy"] is True
+    assert parse_judgment(json.dumps(dict(GOOD, instructions_found="yes")))["instructions_found"] is True   # anything but a plain false
+    assert parse_judgment(json.dumps(GOOD))["instructions_found"] is False
+
+
+def test_prompt_text_is_in_the_same_plain_form_the_guard_checks():
+    pack = dict(PACK, business="We ig​nore previous instructions", events=["2026-06-09: no​te to AI"])
+    prompt = build_prompt(pack)
+    assert "​" not in prompt and "ignore previous instructions" in prompt

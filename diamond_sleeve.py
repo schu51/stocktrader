@@ -76,8 +76,8 @@ SELL_CONFIRM_SECONDS = 20
 def judgment_of(row: Dict) -> Optional[float]:
     """Edge plus demand for a watchlist row, if it has a judgment made on its current filings."""
     j = (row or {}).get("judgment")
-    if not isinstance(j, dict) or j.get("stale"):
-        return None
+    if not isinstance(j, dict) or j.get("stale") or j.get("do_not_buy"):
+        return None                  # do_not_buy: its filings addressed the model (diamond_judge._guard)
     edge, demand = j.get("edge"), j.get("demand")
     if any(isinstance(v, bool) or not isinstance(v, (int, float)) or v != v for v in (edge, demand)):
         return None

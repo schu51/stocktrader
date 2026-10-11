@@ -203,6 +203,28 @@ def needs_judging(ticker: str, basis: str, cache: Dict, today: date) -> bool:
         return True
 
 
+INJECTION_FLAG = "text addressed to an automated reader was found in its filings: score not to be traded on"
+
+
+def _guard(parsed: Optional[Dict], pack: Dict) -> Optional[Dict]:
+    """
+    The model's reply decides what the sleeve buys, and the reply is shaped by
+    filing text the company itself wrote. The text is fenced and the reply is
+    clamped, but a fence is not a guarantee. If the evidence contains wording
+    aimed at a model rather than an investor, the judgment is kept for the
+    record and marked not to be bought, whatever it says. (What a successful
+    attempt could gain is also bounded elsewhere: only companies that passed
+    the numbers screen can be judged, and one position is an eighth of 20%.)
+    """
+    from diamond_evidence import addressed_to_a_machine
+    if parsed is None:
+        return None
+    texts = [pack.get("business"), pack.get("mdna")] + [a.get("text") for a in pack.get("agreements") or []]
+    if pack.get("suspicious") or any(addressed_to_a_machine(t) for t in texts):
+        parsed = dict(parsed, do_not_buy=True, red_flags=([INJECTION_FLAG] + parsed.get("red_flags", []))[:MAX_FLAGS])
+    return parsed
+
+
 def judge_watchlist(doc: Dict, cache: Dict, today: date, make_pack: Callable[[Dict], Dict],
                     ask: Callable[[str, str], str], limit: int = MAX_CALLS) -> Tuple[Dict, Dict, Dict]:
     """
@@ -229,7 +251,7 @@ def judge_watchlist(doc: Dict, cache: Dict, today: date, make_pack: Callable[[Di
             judgment = dict(previous["judgment"], judged_at=previous["judged_at"])
         else:
             try:
-                parsed = parse_judgment(ask(SYSTEM_PROMPT, build_prompt(pack)))
+                parsed = _guard(parse_judgment(ask(SYSTEM_PROMPT, build_prompt(pack))), pack)
             except Exception as exc:
                 logger.error(f"{ticker}: judgment call failed ({exc})")
                 parsed = None
@@ -255,7 +277,7 @@ def judge_watchlist(doc: Dict, cache: Dict, today: date, make_pack: Callable[[Di
     # (diamond_sleeve.py). Only judgments made on current filings count.
     def alone(r):
         j = r.get("judgment") or {}
-        return None if j.get("stale") or not j else j["edge"] + j["demand"]
+        return None if j.get("stale") or j.get("do_not_buy") or not j else j["edge"] + j["demand"]
     for r in doc.get("watchlist") or []:
         r["judgment_rank"] = None
     current = sorted((r for r in doc.get("watchlist") or [] if alone(r) is not None),

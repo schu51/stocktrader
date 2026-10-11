@@ -276,3 +276,10 @@ def test_pending_buys_fill_slots_and_a_thesis_break_does_not_try_to_sell_shares_
     out = _run(broker, paths)
     assert broker.sent == [] and broker.closed == []                         # no slot left; nothing to sell yet
     assert out["sells"] == [] and out["buys"] == [] and out["failures"] == []
+
+
+def test_a_company_marked_not_to_be_bought_is_never_a_candidate():
+    rows = [_row("AAA", 9, 9, 1), _row("BBB", 6, 6, 2)]
+    rows[0]["judgment"]["do_not_buy"] = True
+    assert [r["ticker"] for r in buy_candidates(_doc(rows), HISTORY, TODAY)] == ["BBB"]
+    assert judgment_of(rows[0]) is None

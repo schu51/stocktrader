@@ -77,6 +77,25 @@ def section(text: str, heading: str, limit: int, fallback_at: float = 0.02) -> s
     return text[start:start + limit]
 
 
+# Phrases that address a reader who is a model, not an investor. A filing is
+# written by the company being judged; one that tries to instruct the judge is
+# trying to buy itself a score, and the sleeve trades on that score.
+_MACHINE_ADDRESS = re.compile(
+    r"ignore (all |any |the )?(previous|prior|above|earlier) (instructions|prompts?|text)"
+    r"|disregard (all |any |the )?(previous|prior|above|earlier)"
+    r"|(as|you are) an? (ai|artificial intelligence|large language model|language model|llm)\b"
+    r"|note to (the )?(ai|llm|model|automated|language model)"
+    r"|(system|developer) prompt"
+    r"|you (must|should|shall) (assign|give|rate|score|output|respond|reply)"
+    r"|(assign|give) (it |this company |us )?an? (edge|demand) (score )?of",
+    re.I)
+
+
+def addressed_to_a_machine(text) -> bool:
+    """True if the text contains wording aimed at an automated reader rather than an investor."""
+    return bool(text) and bool(_MACHINE_ADDRESS.search(str(text)))
+
+
 def recent_filings(submissions: Dict, today: date) -> Dict:
     """
     The latest 10-K and 10-Q, and the 8-Ks of the last EVENT_DAYS days, newest
@@ -178,6 +197,7 @@ def build_pack(row: Dict, submissions: Dict, today: date, fetch_doc: Callable[[i
         "business": business, "mdna": mdna,
         "events": eight_k_lines(filings["8-K"]), "agreements": agreements,
         "federal_awards": awards, "sentiment": sentiment,
+        "suspicious": any(addressed_to_a_machine(t) for t in [business, mdna] + [a["text"] for a in agreements]),
     }
 
 

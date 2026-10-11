@@ -90,13 +90,21 @@ def calculate_stop_for_position(pos: Dict, trade: Optional[Dict] = None) -> Tupl
     return calculate_stop_price(current, pnl_pct, avg_cost)
 
 
-def load_trades() -> List[Dict]:
-    """Trade log, or an empty list if it cannot be read (stops then use the default tiers)."""
-    try:
-        return json.loads((ROOT / "docs" / "data" / "trades.json").read_text())
-    except Exception as e:
-        logger.warning(f"Could not read trade log ({e}) — using default stop tiers")
+def load_trades() -> Optional[List[Dict]]:
+    """
+    The trade log; [] if there is none yet; None if it exists but cannot be
+    read. The log says which stop rule a position is under (ATR arm, diamond
+    sleeve), so without it a stop would be placed on a guess.
+    """
+    path = ROOT / "docs" / "data" / "trades.json"
+    if not path.exists():
         return []
+    try:
+        trades = json.loads(path.read_text())
+        return trades if isinstance(trades, list) else None
+    except Exception as e:
+        logger.error(f"Could not read trade log ({e})")
+        return None
 
 
 STOP_ORDER_TYPES = ("stop", "stop_limit", "trailing_stop")
@@ -168,6 +176,14 @@ def place_missing_stops(broker, trades: Optional[List[Dict]] = None, skip: Optio
     cover       = stop_coverage(open_orders)
     to_protect  = uncovered_positions(positions, open_orders, skip)
     trades      = load_trades() if trades is None else trades
+    if trades is None:
+        # Which rule a position is under is in the log. A diamond-sleeve holding
+        # given the large-cap bot's tight stop would be sold on an ordinary dip,
+        # so nothing is placed on a guess; stops already at the broker stand.
+        logger.error("Trade log unreadable — stop check did not run")
+        return {"generated_at": datetime.now().isoformat(), "positions_checked": 0, "already_protected": 0,
+                "stops_placed": 0, "stops_failed": 0, "untradable": 0, "results": [],
+                "error": "could not read the trade log; stop check did not run"}
 
     placed, failed, untradable, results = 0, 0, 0, []
 

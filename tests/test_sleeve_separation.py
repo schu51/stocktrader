@@ -135,3 +135,40 @@ def test_sleeve_trades_stay_out_of_the_large_cap_learning():
     from learning_agent import closed_instrumented_trades
     done = {"status": "CLOSED", "weight_version": 3, "pnl_pct": 5.0, "rs_rank": 90, "thesis_score": 50}
     assert closed_instrumented_trades([done, dict(done, sleeve="diamond")]) == [done]
+
+
+# ── when the trade log cannot be read, nothing may guess ─────────────────────
+
+def test_daily_run_does_not_count_its_positions_verified_when_the_sleeve_is_unknown(monkeypatch, tmp_path):
+    # An unreadable trade log read as "the sleeve holds nothing" would let
+    # rotation and the stale exit sell the sleeve's holdings as their own.
+    import exit_logic
+    from run_daily_analysis import DailyRunner
+    (tmp_path / "trades.json").write_text("{not json")
+    monkeypatch.setattr(exit_logic, "TRADES_PATH", tmp_path / "trades.json")
+    broker = _Broker([_long("STAA", 96, 30.0, 31.25)])
+    broker.get_account = lambda: {"portfolio_value": "100000", "cash": "40000", "buying_power": "80000"}
+    broker.last_positions_ok = True
+    stub = SimpleNamespace(broker=broker, portfolio=SimpleNamespace(total_value=100000.0, cash=0.0, buying_power=0.0))
+    DailyRunner._build_portfolio_state(stub)
+    assert stub._sleeve_known is False
+    assert DailyRunner._positions_verified(stub) is False          # gates rotation, the stale exit, reconciliation and buys
+    (tmp_path / "trades.json").write_text(json.dumps([SLEEVE_TRADE]))
+    DailyRunner._build_portfolio_state(stub)
+    assert stub._sleeve_known is True and DailyRunner._positions_verified(stub) is True
+
+
+def test_no_stop_is_placed_on_a_guess_when_the_trade_log_is_unreadable(monkeypatch, tmp_path):
+    # Without the log a sleeve holding would get the large-cap bot's tight stop
+    # and be sold on an ordinary dip. Nothing is placed; the run reports why.
+    import stop_placement
+    bad = tmp_path / "trades.json"; bad.write_text("{not json")
+    monkeypatch.setattr(stop_placement, "ROOT", tmp_path)
+    (tmp_path / "docs" / "data").mkdir(parents=True)
+    (tmp_path / "docs" / "data" / "trades.json").write_text("{not json")
+    assert stop_placement.load_trades() is None
+    broker = _Broker([_long("STAA", 96, 30.0, 29.0)])
+    out = stop_placement.place_missing_stops(broker)
+    assert broker.placed == [] and "trade log" in out["error"]
+    (tmp_path / "docs" / "data" / "trades.json").unlink()
+    assert stop_placement.load_trades() == []                       # no log at all is not "unreadable"

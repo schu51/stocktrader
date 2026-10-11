@@ -238,7 +238,12 @@ class DailyRunner:
         # for the same reason, and are likewise outside this strategy's position
         # count, sector caps, rotation and stale exit. Its share of the cash is
         # not this strategy's to spend.
-        self._sleeve = read_sleeve_symbols() or set()
+        # An unreadable trade log is "unknown", not "the sleeve holds nothing":
+        # _positions_verified then fails, which switches off rotation, the
+        # stale exit, reconciliation and buying for this run.
+        sleeve = read_sleeve_symbols()
+        self._sleeve_known = sleeve is not None
+        self._sleeve = sleeve or set()
         sleeve_value = 0.0
 
         positions = {}
@@ -296,7 +301,9 @@ class DailyRunner:
         """
         return (bool(self.broker)
                 and getattr(self.broker, "last_positions_ok", False) is True
-                and getattr(self, "_account_ok", False) is True)
+                and getattr(self, "_account_ok", False) is True
+                # ...and it is known which of them belong to the diamond sleeve
+                and getattr(self, "_sleeve_known", True) is True)
 
     def _initialize_portfolio(self, default_value: float) -> PortfolioState:
         """Load portfolio from Alpaca if available, otherwise use default value."""

@@ -1,7 +1,8 @@
 name: Diamond Screen
 
 # Weekly: small and mid-sized companies whose finances are turning from loss
-# to profit (diamond_run.py). Builds a watchlist only; nothing is traded.
+# to profit (diamond_run.py), then judged by Claude from their filings
+# (diamond_judge.py). Builds a watchlist only; nothing is traded.
 # Started by dispatcher.yml (Saturday, before the rest of the chain).
 
 on:
@@ -10,7 +11,7 @@ on:
 jobs:
   screen:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     permissions:
       contents: write
       issues: write          # to open a failure issue
@@ -31,12 +32,21 @@ jobs:
           SEC_EDGAR_USER_AGENT: "stocktrader diamond screen (aschumacherdesign@gmail.com)"
         run: python diamond_run.py
 
+      # Stage 2: Claude reads each listed company's filings and scores its edge
+      # and demand (diamond_judge.py). If this step fails the numbers-only list
+      # above is still committed, and the failure issue below is opened.
+      - name: Judge the watchlist
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SEC_EDGAR_USER_AGENT: "stocktrader diamond screen (aschumacherdesign@gmail.com)"
+        run: python diamond_judge.py
+
       - name: Commit the watchlist
         if: always()
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
-          git add docs/data/diamonds.json docs/data/diamond_history.json 2>/dev/null || true
+          git add docs/data/diamonds.json docs/data/diamond_history.json docs/data/diamond_judgments.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Diamond watchlist update [skip ci]"
           pushed=0
           for attempt in 1 2 3 4 5; do

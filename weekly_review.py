@@ -139,19 +139,46 @@ def diamond_section(doc: Optional[Dict], history: Optional[list], today: date) -
     earlier = sorted({h.get("date") for h in history or [] if isinstance(h, dict) and str(h.get("date")) < day})
     before = {h["ticker"]: h["rank"] for h in history or []
               if isinstance(h, dict) and earlier and h.get("date") == earlier[-1]}
-    out += ["", "| # | Ticker | Score | Since last week | Revenue | Margin change | Value | Company |",
+
+    def numbers(r):
+        value = _num(r.get("market_value"))
+        size = f"${value / 1e9:.1f}B" if value >= 1e9 else f"${value / 1e6:.0f}M"
+        return (f"{_num(r.get('revenue_growth')):+.0%} | {_num(r.get('margin_change')) * 100:+.0f} pts | "
+                f"{size} | {_md(r.get('name'), 40)} |")
+
+    rows = [r for r in rows if isinstance(r, dict)]
+    if not rows:
+        return ["## Diamond watchlist", "- There is no list yet."]
+    judged = [r for r in rows if isinstance(r.get("judgment"), dict) and r.get("conviction_rank") is not None]
+    if judged:
+        # Stage 2 (diamond_judge.py): ordered by conviction, the numbers and the reading of the filings together
+        judged.sort(key=lambda r: _num(r.get("conviction_rank")))
+        out += ["", "| # | Ticker | Edge | Demand | Conviction | Numbers rank | Revenue | Margin change | Value | Company |",
+                "|---|---|---|---|---|---|---|---|---|---|"]
+        for r in judged[:DIAMOND_TOP]:
+            j = r["judgment"]
+            out.append(f"| {int(_num(r.get('conviction_rank')))} | {_md(r.get('ticker'), 8)} | {_num(j.get('edge')):.0f} | "
+                       f"{_num(j.get('demand')):.0f} | {_num(r.get('conviction')):.0f} | {int(_num(r.get('rank')))} | {numbers(r)}")
+        out.append("")
+        for r in judged[:3]:
+            j = r["judgment"]
+            line = (f"- **{_md(r.get('ticker'), 8)}** (edge {_num(j.get('edge')):.0f}, demand {_num(j.get('demand')):.0f}): "
+                    f"{_md(j.get('thesis'), 500)} Breaks if: {_md(j.get('breaks_if'), 300)}")
+            flags = [_md(f, 160) for f in (j.get("red_flags") or []) if isinstance(f, str)]
+            out.append(line + (f" Flags: {'; '.join(flags)}." if flags else ""))
+        unjudged = len(rows) - len(judged)
+        if unjudged:
+            out.append(f"- {unjudged} listed compan{'y has' if unjudged == 1 else 'ies have'} no judgment yet.")
+        return out
+
+    out += ["- The list has not been judged yet: ranked on the numbers alone.",
+            "", "| # | Ticker | Score | Since last week | Revenue | Margin change | Value | Company |",
             "|---|---|---|---|---|---|---|---|"]
     for r in rows[:DIAMOND_TOP]:
-        if not isinstance(r, dict):
-            continue
         ticker, rank = _md(r.get("ticker"), 8), int(_num(r.get("rank")))
         was = before.get(r.get("ticker"))
         move = "new" if was is None else "same" if was == rank else f"up {was - rank}" if was > rank else f"down {rank - was}"
-        value = _num(r.get("market_value"))
-        size = f"${value / 1e9:.1f}B" if value >= 1e9 else f"${value / 1e6:.0f}M"
-        out.append(f"| {rank} | {ticker} | {_num((r.get('score') or {}).get('total')):.1f} | {move} | "
-                   f"{_num(r.get('revenue_growth')):+.0%} | {_num(r.get('margin_change')) * 100:+.0f} pts | "
-                   f"{size} | {_md(r.get('name'), 40)} |")
+        out.append(f"| {rank} | {ticker} | {_num((r.get('score') or {}).get('total')):.1f} | {move} | {numbers(r)}")
     return out
 
 

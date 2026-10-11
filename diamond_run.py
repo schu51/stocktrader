@@ -59,11 +59,12 @@ class CoverageError(Exception):
 
 def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listings: Dict[int, dict],
                     prices: Callable[[List[str]], Dict[str, dict]], sic: Callable[[int], Optional[int]],
-                    top: int = TOP, data_cutoff: Optional[date] = None) -> dict:
+                    top: int = TOP, data_cutoff: Optional[date] = None, history: Optional[list] = None) -> dict:
     """
     The diamonds.json document. Raises CoverageError rather than return a list
     from partial data. `data_cutoff` (historical runs) is the last quarter end
-    a company may be judged on; prices are still taken at `cutoff`.
+    a company may be judged on; prices are still taken at `cutoff`. `history`
+    (earlier weeks' lists) is what lets a name that has faded be dropped.
     """
     reporting = coverage.get("companies_with_revenue") or 0
     if reporting < MIN_COMPANIES_WITH_REVENUE:
@@ -109,15 +110,25 @@ def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listing
         if not failed:
             sized.append((cik, listing, m, s))
 
-    rows, excluded = [], 0
+    first_seen: Dict[str, str] = {}
+    for h in history or []:
+        if isinstance(h, dict) and isinstance(h.get("ticker"), str) and isinstance(h.get("date"), str):
+            first_seen[h["ticker"]] = min(h["date"], first_seen.get(h["ticker"], h["date"]))
+
+    rows, excluded, faded = [], 0, []
     for cik, listing, m, s in sized:
         code = sic(cik)
         if excluded_sic(code):
             excluded += 1
             continue
-        rows.append({"ticker": listing["ticker"], "name": listing["name"], "cik": cik, "sic": code,
-                     "score": score(m), **s, **m})
-    if not rows:
+        ticker = listing["ticker"]
+        quote = quotes.get(ticker) or {}
+        if never_broke_out(quote.get("dates") or [], quote.get("closes") or [], first_seen.get(ticker)) is True:
+            faded.append({"ticker": ticker, "first_listed": first_seen[ticker]})
+            continue
+        rows.append({"ticker": ticker, "name": listing["name"], "cik": cik, "sic": code,
+                     "first_listed": first_seen.get(ticker), "score": score(m), **s, **m})
+    if not rows and not faded:
         # Every past quarter checked produced 15 to 30 names. None at all means
         # something upstream is wrong, and must not replace last week's list.
         raise CoverageError("the list came out empty: not written over last week's")
@@ -134,9 +145,11 @@ def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listing
         "coverage": {"companies_with_data": len(fins), "companies_with_revenue": reporting,
                      "listed": len(listings), "with_metrics": with_metrics,
                      "passed_financial_gates": len(passed), "priced": len(tickers) - len(missing),
-                     "passed_size": len(sized), "excluded_industry": excluded, "watchlist": len(rows)},
+                     "passed_size": len(sized), "excluded_industry": excluded, "faded": len(faded),
+                     "watchlist": len(rows)},
         "gate_failures": {g: gate_counts.get(g, 0) for g in GATES},
         "size_failures": dict(size_counts),
+        "faded": faded,
         "watchlist": rows,
     }
 
@@ -145,18 +158,47 @@ def update_history(history: list, doc: dict) -> list:
     """One row per company per run date, so its trend can be read. A re-run on the same date replaces that date."""
     day = str(doc.get("generated_at") or "")[:10]
     kept = [h for h in (history or []) if isinstance(h, dict) and h.get("date") != day]
-    kept += [{"date": day, "ticker": r["ticker"], "rank": r["rank"], "total": r["score"]["total"]}
-             for r in doc.get("watchlist") or []]
+    for r in doc.get("watchlist") or []:
+        row = {"date": day, "ticker": r["ticker"], "rank": r["rank"], "total": r["score"]["total"]}
+        if r.get("conviction") is not None:
+            # Stage 2: recorded beside the numbers rank so the two can be compared later
+            row.update(conviction=r["conviction"], conviction_rank=r.get("conviction_rank"))
+        kept.append(row)
     dates = sorted({h["date"] for h in kept})[-HISTORY_WEEKS:]
     return sorted((h for h in kept if h["date"] in dates), key=lambda h: (h["date"], h["rank"]))
 
 
+WATCH_SESSIONS = 126          # six months on the list to make a new high...
+HIGH_SESSIONS = 126           # ...above the highest close of the six months before it was listed
+
+
+def never_broke_out(dates: List[str], closes: List[float], listed: Optional[str]) -> Optional[bool]:
+    """
+    True if the stock has had six months on the watchlist without one close
+    above its highest close of the six months before it was listed.
+
+    From the eight past quarters checked (2026-10-08): two thirds of listed
+    names made such a high within six months; the third that never did
+    averaged -15% over the following year and held most of the worst losers.
+    The market not believing a turnaround for six months is information.
+
+    None while it is too early to say, or the prices do not reach back far enough.
+    """
+    if not listed or not dates or len(dates) != len(closes):
+        return None
+    start = next((i for i, d in enumerate(dates) if d >= listed), None)
+    if start is None or start < HIGH_SESSIONS or len(closes) - start < WATCH_SESSIONS:
+        return None
+    prior_high = max(closes[start - HIGH_SESSIONS:start])
+    return not any(c > prior_high for c in closes[start:start + WATCH_SESSIONS])
+
+
 def fetch_prices(tickers: List[str]) -> Dict[str, dict]:
-    """Six months of daily closes and volumes for each ticker that has them."""
+    """Two years of daily closes and volumes, with their dates, for each ticker that has them."""
     import yfinance as yf
     if not tickers:
         return {}
-    raw = yf.download(sorted(set(tickers)), period="6mo", auto_adjust=True, progress=False, threads=True,
+    raw = yf.download(sorted(set(tickers)), period="2y", auto_adjust=True, progress=False, threads=True,
                       group_by="column")
     out = {}
     for t in tickers:
@@ -165,7 +207,8 @@ def fetch_prices(tickers: List[str]) -> Dict[str, dict]:
             volumes = raw["Volume"][t].reindex(closes.index) if len(tickers) > 1 \
                 else raw["Volume"].reindex(closes.index).squeeze()
             if len(closes):
-                out[t] = {"closes": [float(x) for x in closes.values], "volumes": [float(x) for x in volumes.values]}
+                out[t] = {"closes": [float(x) for x in closes.values], "volumes": [float(x) for x in volumes.values],
+                          "dates": [d.date().isoformat() for d in closes.index]}
         except Exception:
             continue
     return out
@@ -308,12 +351,16 @@ def main(argv=None) -> int:
                 continue
         return out
     try:
+        history = json.loads(HISTORY_FILE.read_text()) if HISTORY_FILE.exists() else []
+    except Exception:
+        history = []
+    try:
         fins, coverage = load_financials(cutoff)
         listings = listed_companies(fetch_listings())
         sic_cache: Dict[int, Optional[int]] = {}
         doc = build_watchlist(cutoff, fins, coverage, listings, prices,
                               lambda cik: sic_cache.setdefault(cik, fetch_sic(cik)), top=args.top,
-                              data_cutoff=data_cutoff)
+                              data_cutoff=data_cutoff, history=None if args.as_of else history)
     except Exception as exc:
         # CoverageError, a frame that would not load, the ticker file missing:
         # in every case last week's list is better than a partial one.
@@ -338,10 +385,6 @@ def main(argv=None) -> int:
         return 0
     if args.dry_run:
         return 0
-    try:
-        history = json.loads(HISTORY_FILE.read_text()) if HISTORY_FILE.exists() else []
-    except Exception:
-        history = []
     _write(OUT_FILE, doc)
     _write(HISTORY_FILE, update_history(history, doc))
     return 0

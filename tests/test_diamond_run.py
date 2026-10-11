@@ -178,3 +178,56 @@ def test_as_of_prices_undo_later_stock_splits():
     assert unsplit(quote, date(2023, 5, 30), splits) == {"closes": [800.0, 820.0], "volumes": [50.0, 100.0]}
     assert unsplit(quote, date(2025, 6, 1), splits) == quote            # no split after the date
     assert unsplit(quote, date(2023, 5, 30), None) == quote             # splits unknown: left as they are
+
+
+# ── stage 2: conviction in the history, and the faded-name rule ──────────────
+
+def test_history_records_conviction_beside_the_numbers_rank():
+    doc = {"generated_at": "2026-10-17T07:31:00", "watchlist": [
+        {"rank": 1, "ticker": "AAA", "score": {"total": 80.0}, "conviction": 41.0, "conviction_rank": 2},
+        {"rank": 2, "ticker": "BBB", "score": {"total": 70.0}, "conviction": None, "conviction_rank": None}]}
+    h = update_history([], doc)
+    assert h[0] == {"date": "2026-10-17", "ticker": "AAA", "rank": 1, "total": 80.0, "conviction": 41.0, "conviction_rank": 2}
+    assert h[1] == {"date": "2026-10-17", "ticker": "BBB", "rank": 2, "total": 70.0}
+
+
+def _dated(closes, end="2026-10-09"):
+    import pandas as pd
+    days = pd.bdate_range(end=end, periods=len(closes))
+    return [d.date().isoformat() for d in days], closes
+
+
+def test_a_name_that_never_made_a_new_high_in_six_months_has_faded():
+    from diamond_run import never_broke_out
+    flat = [10.0] * 126 + [9.0] * 130                    # listed at session 126, never above the prior high of 10
+    dates, closes = _dated(flat)
+    listed = dates[126]
+    assert never_broke_out(dates, closes, listed) is True
+    up = flat[:]; up[200] = 10.5                         # one close above the prior six-month high
+    assert never_broke_out(*_dated(up), listed) is False
+    late = flat[:]; late[254] = 12.0                     # broke out, but after the six months
+    assert never_broke_out(*_dated(late), listed) is True
+
+
+def test_too_early_or_too_little_history_is_unknown_not_faded():
+    from diamond_run import never_broke_out
+    dates, closes = _dated([10.0] * 126 + [9.0] * 100)   # only 100 sessions since listing
+    assert never_broke_out(dates, closes, dates[126]) is None
+    dates, closes = _dated([10.0] * 50 + [9.0] * 130)    # no six months of prices before listing
+    assert never_broke_out(dates, closes, dates[50]) is None
+    assert never_broke_out([], [], "2026-01-01") is None
+    assert never_broke_out(dates, closes, None) is None
+
+
+def test_faded_names_leave_the_watchlist_and_are_counted():
+    dates, closes = _dated([20.0] * 126 + [19.0] * 130)
+    def prices(tickers):
+        out = _prices(tickers)
+        out["BBB"] = {"closes": closes, "volumes": [400_000.0] * len(closes), "dates": dates}
+        return out
+    history = [{"date": dates[126], "ticker": "BBB", "rank": 5, "total": 50.0},
+               {"date": dates[200], "ticker": "BBB", "rank": 4, "total": 55.0}]
+    doc = build_watchlist(CUTOFF, FINS, COVERAGE, LISTINGS, prices, _sic, history=history)
+    assert [r["ticker"] for r in doc["watchlist"]] == ["AAA"]
+    assert doc["faded"] == [{"ticker": "BBB", "first_listed": dates[126]}] and doc["coverage"]["faded"] == 1
+    assert doc["watchlist"][0]["first_listed"] is None         # AAA is new this week

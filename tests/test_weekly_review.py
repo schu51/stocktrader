@@ -266,7 +266,7 @@ def test_a_malformed_diamond_file_cannot_stop_the_weekly_review():
     for doc, history in ((bad, [{"date": 5, "ticker": "AAA"}]), ({"watchlist": {"a": 1}}, "nope")):
         title, body = build_review({"diamonds": doc, "diamond_history": history}, date(2026, 10, 10))
         assert "## Diamond watchlist" in body and "## Macro theses" in body
-        assert "could not be read" in body
+        assert "could not be read" in body or "There is no list yet" in body
 
 
 def test_every_annotation_resolves_on_the_runners_python():
@@ -331,3 +331,26 @@ def test_tripwire_appears_in_the_review_and_in_needs_attention_when_tripped():
     assert "Entry-gate tripwire" in body and "83%" in body
     assert "Needs attention" in body and body.index("Entry-gate tripwire") > 0
     assert title.startswith("⚠️")
+
+
+def test_diamond_section_shows_the_judgment_and_orders_by_conviction():
+    from datetime import date
+    from weekly_review import diamond_section
+    doc = _diamond_doc()
+    doc["watchlist"][0].update(conviction=30.0, conviction_rank=2, judgment={
+        "edge": 2.0, "demand": 3.0, "thesis": "Margins followed the oil price.", "breaks_if": "n/a", "red_flags": ["commodity"]})
+    doc["watchlist"][1].update(conviction=82.0, conviction_rank=1, judgment={
+        "edge": 9.0, "demand": 8.0, "thesis": "Sole approved supplier | <b>backlog</b> doubled.",
+        "breaks_if": "The main customer dual-sources.", "red_flags": [], "customers": "Three carriers"})
+    text = "\n".join(diamond_section(doc, [], date(2026, 10, 10)))
+    assert text.index("| BBB |") < text.index("| AAA |")                       # conviction order, not numbers order
+    assert "| 9 | 8 | 82 |" in text and "| 2 | 3 | 30 |" in text
+    assert "**BBB**" in text and "Sole approved supplier" in text and "Breaks if: The main customer dual-sources." in text
+    assert "<b>" not in text and "supplier |" not in text                       # model text is escaped like any other
+
+
+def test_diamond_section_without_judgments_is_unchanged():
+    from datetime import date
+    from weekly_review import diamond_section
+    text = "\n".join(diamond_section(_diamond_doc(), [], date(2026, 10, 10)))
+    assert "| 1 | AAA | 81.5 | new |" in text and "not been judged" in text

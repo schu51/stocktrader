@@ -83,7 +83,40 @@ def _horizon(rows, horizon: int = 10) -> Dict:
     return next((r for r in rows or [] if isinstance(r, dict) and r.get("horizon") == horizon), {})
 
 
+GATE_LIVE = "2026-10-07"       # first trade run with the 6% room gate on every buy
+TRIPWIRE_TRADES = 30           # gated trades old enough to judge before the line means anything
+TRIPWIRE_RATE = 0.65           # three-year backtest: 59%. Above this, the backtest is not describing live trading
 DIAMOND_TOP = 15
+
+
+def gate_tripwire(trades, today: date) -> Tuple[str, Optional[str]]:
+    """
+    Do trades opened under the entry gate fail in their first month as often
+    as trades did before it? Agreed 2026-10-11 for the 2026-12-05 review.
+
+    Counted over gated trades opened at least FAIL_DAYS ago, open or closed.
+    Counting only closed trades would flatter nobody and frighten everybody:
+    losers close within days while winners stay open, so a young cohort's
+    closed trades are nearly all losses.
+    Returns (line for the review, problem line or None).
+    """
+    cutoff = (today - timedelta(days=FAIL_DAYS)).isoformat()
+    cohort = [t for t in trades or [] if isinstance(t, dict) and t.get("status") in ("OPEN", "CLOSED")
+              and GATE_LIVE <= str(t.get("entry_date") or "") <= cutoff]
+    failed = sum(1 for t in cohort if t.get("status") == "CLOSED" and t.get("hold_days") is not None
+                 and _num(t.get("hold_days")) <= FAIL_DAYS and _num(t.get("pnl_usd")) <= 0)
+    n = len(cohort)
+    head = f"- Entry-gate tripwire (trades opened since {GATE_LIVE}, at least {FAIL_DAYS} days old): "
+    if n == 0:
+        return head + f"0 of {TRIPWIRE_TRADES} trades old enough to judge yet.", None
+    rate = failed / n
+    line = head + f"**{rate:.0%}** failed in their first month ({failed} of {n}); line is {TRIPWIRE_RATE:.0%}, backtest 59%."
+    if n < TRIPWIRE_TRADES:
+        return line + f" Only {n} of {TRIPWIRE_TRADES} trades needed to judge.", None
+    if rate > TRIPWIRE_RATE:
+        return line + " **Tripped.**", (f"Entry-gate tripwire: {rate:.0%} of {n} gated trades failed in their first month "
+                                        f"(line {TRIPWIRE_RATE:.0%}): the backtest is not describing live trading")
+    return line, None
 
 
 def diamond_section(doc: Optional[Dict], history: Optional[list], today: date) -> List[str]:
@@ -177,6 +210,10 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
         if recent:
             line += f"; last 90 days {failed(recent) / len(recent):.0%} of {len(recent)}"
         out.append(line + ". Three-year backtest: 59%.")
+    wire, tripped = gate_tripwire(trades, today)
+    out.append(wire)
+    if tripped:
+        problems.append(tripped)
 
     # ── Learning agent ───────────────────────────────────────────────────────
     out.append("\n## Learning agent")

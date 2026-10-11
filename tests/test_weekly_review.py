@@ -280,3 +280,54 @@ def test_every_annotation_resolves_on_the_runners_python():
         for name, fn in inspect.getmembers(module, inspect.isfunction):
             if fn.__module__ == module.__name__:
                 typing.get_type_hints(fn)
+
+
+# ── tripwire: do trades opened under the entry gate fail as often as before? ──
+
+def _gated(n_failed, n_ok, n_young=0, n_old_rules=0):
+    t = []
+    for i in range(n_failed):       # opened under the gate, over 30 days ago, closed fast at a loss
+        t.append({"symbol": f"F{i}", "status": "CLOSED", "entry_date": "2026-10-08", "exit_date": "2026-10-12",
+                  "hold_days": 4, "pnl_usd": -50.0, "pnl_pct": -2.0})
+    for i in range(n_ok):           # ...still open, or closed later, or closed at a gain
+        t.append({"symbol": f"K{i}", "status": "OPEN", "entry_date": "2026-10-08"})
+    for i in range(n_young):        # opened under the gate less than 30 days ago: not yet counted
+        t.append({"symbol": f"Y{i}", "status": "CLOSED", "entry_date": "2026-11-20", "exit_date": "2026-11-21",
+                  "hold_days": 1, "pnl_usd": -50.0})
+    for i in range(n_old_rules):    # opened before the gate: a different cohort
+        t.append({"symbol": f"O{i}", "status": "CLOSED", "entry_date": "2026-10-05", "exit_date": "2026-10-06",
+                  "hold_days": 1, "pnl_usd": -50.0})
+    return t
+
+
+def test_tripwire_counts_only_gated_trades_old_enough_to_judge():
+    from datetime import date
+    from weekly_review import gate_tripwire
+    line, problem = gate_tripwire(_gated(6, 4, n_young=5, n_old_rules=9), date(2026, 12, 5))
+    assert "60%" in line and "10 of 30" in line and problem is None      # too few to judge yet
+
+
+def test_tripwire_trips_above_65_percent_once_30_trades_are_in():
+    from datetime import date
+    from weekly_review import gate_tripwire
+    line, problem = gate_tripwire(_gated(20, 10), date(2026, 12, 5))
+    assert "67%" in line and problem and "67%" in problem
+    line, problem = gate_tripwire(_gated(19, 11), date(2026, 12, 5))     # 63%: inside the line
+    assert "63%" in line and problem is None
+
+
+def test_tripwire_says_so_when_there_is_nothing_to_judge():
+    from datetime import date
+    from weekly_review import gate_tripwire
+    line, problem = gate_tripwire(_gated(0, 0, n_young=3), date(2026, 10, 12))
+    assert "0 of 30" in line and problem is None
+    assert gate_tripwire(None, date(2026, 10, 12))[1] is None
+
+
+def test_tripwire_appears_in_the_review_and_in_needs_attention_when_tripped():
+    from datetime import date
+    from weekly_review import build_review
+    title, body = build_review({"trades": _gated(25, 5)}, date(2026, 12, 5))
+    assert "Entry-gate tripwire" in body and "83%" in body
+    assert "Needs attention" in body and body.index("Entry-gate tripwire") > 0
+    assert title.startswith("⚠️")

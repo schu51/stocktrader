@@ -275,6 +275,31 @@ def unsplit(quote: dict, cutoff: date, splits) -> dict:
     return {"closes": [c * factor for c in quote["closes"]], "volumes": [v / factor for v in quote["volumes"]]}
 
 
+def as_of_prices(tickers: List[str], cutoff: date) -> Dict[str, dict]:
+    """Closes and volumes for the 200 days up to `cutoff`, as they were then (see unsplit)."""
+    import yfinance as yf
+    if not tickers:
+        return {}
+    raw = yf.download(sorted(set(tickers)), start=(cutoff - timedelta(days=200)).isoformat(),
+                      end=(cutoff + timedelta(days=1)).isoformat(), auto_adjust=False, progress=False, threads=True)
+    out = {}
+    for t in tickers:
+        try:
+            closes = raw["Close"][t].dropna()
+            if len(closes):
+                quote = {"closes": [float(x) for x in closes.values],
+                         "volumes": [float(x) for x in raw["Volume"][t].reindex(closes.index).values]}
+                try:
+                    history = yf.Ticker(t).splits
+                    splits = [(str(day)[:10], float(ratio)) for day, ratio in history.items()]
+                except Exception:
+                    splits = None
+                out[t] = unsplit(quote, cutoff, splits)
+        except Exception:
+            continue
+    return out
+
+
 def explain(ticker: str, cutoff: date, fins: Dict[int, dict], listings: Dict[int, dict]) -> str:
     """Why one company is, or is not, a candidate: its gate failures and score."""
     cik = next((c for c, v in listings.items() if v["ticker"] == ticker.upper()), None)
@@ -316,7 +341,10 @@ def main(argv=None) -> int:
     parser.add_argument("--as-of", help="run on the data filed by a past quarter, e.g. 2023Q1; writes nothing")
     parser.add_argument("--no-size-cap", action="store_true", help="historical checks: lift the $10B ceiling")
     parser.add_argument("--find", action="append", default=[], help="explain one ticker (repeatable)")
+    parser.add_argument("--out", help="with --as-of: save that past list to this file (never the live files)")
     args = parser.parse_args(argv)
+    if args.out and not args.as_of:
+        parser.error("--out saves a historical list and needs --as-of; the live list has its own file")
     logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
 
     cutoff = as_of_cutoff(args.as_of) if args.as_of else date.today()
@@ -328,28 +356,8 @@ def main(argv=None) -> int:
         diamond_universe.MAX_MARKET_VALUE = float("inf")
 
     def prices(tickers):
-        if not args.as_of:
-            return fetch_prices(tickers)
-        # The market value on that date needs the price as it was then (see unsplit)
-        import yfinance as yf
-        raw = yf.download(sorted(set(tickers)), start=(cutoff - timedelta(days=200)).isoformat(),
-                          end=(cutoff + timedelta(days=1)).isoformat(), auto_adjust=False, progress=False, threads=True)
-        out = {}
-        for t in tickers:
-            try:
-                closes = raw["Close"][t].dropna()
-                if len(closes):
-                    quote = {"closes": [float(x) for x in closes.values],
-                             "volumes": [float(x) for x in raw["Volume"][t].reindex(closes.index).values]}
-                    try:
-                        history = yf.Ticker(t).splits
-                        splits = [(str(day)[:10], float(ratio)) for day, ratio in history.items()]
-                    except Exception:
-                        splits = None
-                    out[t] = unsplit(quote, cutoff, splits)
-            except Exception:
-                continue
-        return out
+        return as_of_prices(tickers, cutoff) if args.as_of else fetch_prices(tickers)
+
     try:
         history = json.loads(HISTORY_FILE.read_text()) if HISTORY_FILE.exists() else []
     except Exception:
@@ -372,6 +380,8 @@ def main(argv=None) -> int:
     for ticker in args.find:
         print(explain(ticker, data_cutoff or cutoff, fins, listings))
     if args.as_of:
+        if args.out:
+            _write(Path(args.out), doc)
         picks = [r["ticker"] for r in doc["watchlist"]]
         returns = forward_returns(picks + [BENCHMARK], cutoff)
         got = sorted(returns[t] for t in picks if t in returns)

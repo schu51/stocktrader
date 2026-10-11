@@ -231,3 +231,19 @@ def test_faded_names_leave_the_watchlist_and_are_counted():
     assert [r["ticker"] for r in doc["watchlist"]] == ["AAA"]
     assert doc["faded"] == [{"ticker": "BBB", "first_listed": dates[126]}] and doc["coverage"]["faded"] == 1
     assert doc["watchlist"][0]["first_listed"] is None         # AAA is new this week
+
+
+def test_an_as_of_run_can_save_its_list_but_never_the_live_files(tmp_path, monkeypatch):
+    import diamond_run
+    live, hist, saved = tmp_path / "diamonds.json", tmp_path / "diamond_history.json", tmp_path / "past.json"
+    monkeypatch.setattr(diamond_run, "OUT_FILE", live)
+    monkeypatch.setattr(diamond_run, "HISTORY_FILE", hist)
+    monkeypatch.setattr(diamond_run, "load_financials", lambda cutoff: (FINS, COVERAGE))
+    monkeypatch.setattr(diamond_run, "fetch_listings", lambda: [[c, v["name"], v["ticker"], v["exchange"]] for c, v in LISTINGS.items()])
+    monkeypatch.setattr(diamond_run, "fetch_sic", _sic)
+    monkeypatch.setattr(diamond_run, "as_of_prices", lambda tickers, cutoff: _prices(tickers))
+    monkeypatch.setattr(diamond_run, "forward_returns", lambda tickers, start: {})
+    assert diamond_run.main(["--as-of", "2026Q2", "--out", str(saved)]) == 0
+    assert json.loads(saved.read_text())["cutoff"] == "2026-08-29" and not live.exists() and not hist.exists()
+    with pytest.raises(SystemExit):
+        diamond_run.main(["--out", str(saved)])                  # --out is only for historical runs

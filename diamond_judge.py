@@ -255,6 +255,51 @@ def judge_watchlist(doc: Dict, cache: Dict, today: date, make_pack: Callable[[Di
     return doc, cache, stats
 
 
+# ── the fast test: judge a past list on what was public then ─────────────────
+
+PROBE_PROMPT = ("Answer from memory only. Between {start} and {end}, did the share price of {ticker} ({name}) "
+                "end higher or lower than it began? Reply with exactly one word: higher, lower, or unknown. "
+                "Say unknown unless you actually know what happened in that period.")
+
+
+def parse_probe(reply) -> str:
+    word = str(reply or "").strip().strip(".").lower()
+    return word if word in ("higher", "lower") else "unknown"
+
+
+def judge_past_list(doc: Dict, make_pack: Callable[[Dict, date], Dict], ask: Callable[[str, str], str],
+                    until: date) -> Dict:
+    """
+    Judges every company on a list built by `diamond_run.py --as-of`, from the
+    filings that existed on the list's cutoff, so the scores can be compared
+    with what the shares did between then and `until`.
+
+    This is only a fair test if the model does not know what happened in that
+    period. Each company therefore also gets a probe: a separate question, with
+    no evidence attached, asking whether its shares rose or fell. If the probe
+    is right much more often than a coin, the model has seen the future and
+    the test is void. No cache: every company is judged afresh.
+    """
+    as_of = date.fromisoformat(str(doc["cutoff"])[:10])
+    for row in doc.get("watchlist") or []:
+        try:
+            parsed = parse_judgment(ask(SYSTEM_PROMPT, build_prompt(make_pack(row, as_of))))
+        except Exception as exc:
+            logger.error(f"{row.get('ticker')}: could not be judged ({exc})")
+            parsed = None
+        row["judgment"] = parsed
+        row["conviction"] = conviction((row.get("score") or {}).get("total"), parsed)
+        try:
+            row["hindsight_probe"] = parse_probe(ask(
+                "You answer in one word.", PROBE_PROMPT.format(start=as_of.isoformat(), end=until.isoformat(),
+                                                             ticker=clean_text(row.get("ticker"), 8),
+                                                             name=clean_text(row.get("name"), 80))))
+        except Exception:
+            row["hindsight_probe"] = "unknown"
+    doc["judged_as_of"], doc["probed_until"], doc["model"] = as_of.isoformat(), until.isoformat(), MODEL
+    return doc
+
+
 # ── network ──────────────────────────────────────────────────────────────────
 
 def ask_claude(system: str, user: str) -> str:
@@ -274,17 +319,22 @@ def ask_claude(system: str, user: str) -> str:
     return "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
 
 
-def live_pack(row: Dict, today: date) -> Dict:
-    """The evidence pack for a row, from the SEC, USAspending and the news scorer."""
+def live_pack(row: Dict, today: date, with_sentiment: bool = True) -> Dict:
+    """
+    The evidence pack for a row, from the SEC, USAspending and the news scorer.
+    For a past `today` the news scorer is left out: it only knows today's headlines.
+    """
     from diamond_evidence import build_pack, federal_awards, fetch_awards, fetch_document, fetch_submissions
     submissions = fetch_submissions(row["cik"])        # without this there is no pack: let it raise
     awards = federal_awards(row.get("name") or "", today, fetch_awards)
-    try:
-        from news_sentiment import sentiment_for
-        tone = sentiment_for(row["ticker"])
-        sentiment = {k: v for k, v in tone.items() if isinstance(v, (int, float, bool)) or v is None}
-    except Exception:
-        sentiment = None
+    sentiment = None
+    if with_sentiment:
+        try:
+            from news_sentiment import sentiment_for
+            tone = sentiment_for(row["ticker"])
+            sentiment = {k: v for k, v in tone.items() if isinstance(v, (int, float, bool)) or v is None}
+        except Exception:
+            sentiment = None
     return build_pack(row, submissions, today, fetch_document, awards=awards, sentiment=sentiment)
 
 
@@ -297,9 +347,20 @@ def _write(path: Path, payload) -> None:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Judge the diamond watchlist (no trades)")
     parser.add_argument("--dry-run", action="store_true", help="build the evidence packs and print their sizes; call nothing, write nothing")
+    parser.add_argument("--past-list", help="fast test: judge a list saved by `diamond_run.py --as-of ... --out`, in place")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
     today = date.today()
+
+    if args.past_list:
+        path = Path(args.past_list)
+        doc = judge_past_list(json.loads(path.read_text()),
+                              make_pack=lambda row, as_of: live_pack(row, as_of, with_sentiment=False),
+                              ask=ask_claude, until=today)
+        _write(path, doc)
+        judged = sum(1 for r in doc["watchlist"] if r.get("judgment"))
+        logger.info(f"Judged {judged} of {len(doc['watchlist'])} as of {doc['judged_as_of']}")
+        return 0 if judged else 1
 
     try:
         doc = json.loads(LIST_FILE.read_text())

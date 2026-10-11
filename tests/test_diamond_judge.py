@@ -101,3 +101,32 @@ def test_the_weekly_cap_limits_new_calls_and_an_unbuildable_pack_is_skipped():
     doc, cache, stats = judge_watchlist(_doc(), {}, date(2026, 10, 17), make_pack=make_pack,
                                         ask=lambda s, u: json.dumps(GOOD), limit=1)
     assert stats == {"judged": 1, "reused": 0, "failed": 0, "skipped": 2}
+
+
+def test_a_past_list_is_judged_without_cache_and_probed_for_hindsight(tmp_path):
+    from diamond_judge import judge_past_list
+    asked = []
+    def ask(system, user):
+        asked.append((system, user))
+        if "one word" in user:
+            return "Unknown." if "AAA" in user else "higher"
+        return json.dumps(GOOD)
+    packs = []
+    def make_pack(row, as_of):
+        packs.append((row["ticker"], as_of))
+        return dict(PACK, ticker=row["ticker"], basis="b")
+    doc = dict(_doc(), cutoff="2026-05-30")
+    out = judge_past_list(doc, make_pack=make_pack, ask=ask, until=date(2026, 10, 9))
+    assert packs == [("AAA", date(2026, 5, 30)), ("BBB", date(2026, 5, 30)), ("CCC", date(2026, 5, 30))]
+    by = {r["ticker"]: r for r in out["watchlist"]}
+    assert by["AAA"]["hindsight_probe"] == "unknown" and by["BBB"]["hindsight_probe"] == "higher"
+    assert by["AAA"]["judgment"]["edge"] == 8.0 and by["AAA"]["conviction"] is not None
+    probes = [u for _, u in asked if "one word" in u]
+    assert len(probes) == 3 and "2026-05-30" in probes[0] and "2026-10-09" in probes[0]
+    assert all("untrusted_data" not in u for u in probes)                 # the probe gets no evidence at all
+
+
+def test_probe_answers_are_reduced_to_three_words():
+    from diamond_judge import parse_probe
+    assert parse_probe("Higher") == "higher" and parse_probe(" lower.\n") == "lower"
+    assert parse_probe("I believe it went higher") == "unknown" and parse_probe("") == "unknown" and parse_probe(None) == "unknown"

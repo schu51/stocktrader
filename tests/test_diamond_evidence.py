@@ -85,3 +85,13 @@ def test_pack_survives_documents_that_cannot_be_fetched():
     pack = build_pack({"cik": 1, "ticker": "ACME", "name": "Acme"}, SUBMISSIONS, date(2026, 10, 10), fetch_doc)
     assert pack["business"] == "" and pack["mdna"] == "" and pack["agreements"] == []
     assert pack["basis"] == "0001-26-000004|0001-26-000008|3" and len(pack["events"]) == 3
+
+
+def test_as_of_a_past_date_no_later_filing_is_seen():
+    # The fast test judges a past list on what was public then: a report filed
+    # afterwards must not be read, or the judgment has seen the future.
+    f = recent_filings(SUBMISSIONS, date(2026, 5, 30))
+    assert f["10-K"]["accession"] == "0001-26-000004"              # filed 2026-03-03
+    assert f["10-Q"]["accession"] == "0001-25-000002"              # the August 10-Q did not exist yet
+    assert [e["date"] for e in f["8-K"]] == []                     # nothing in the 180 days before, none after
+    assert recent_filings(SUBMISSIONS, date(2026, 6, 10))["8-K"][0]["date"] == "2026-06-09"

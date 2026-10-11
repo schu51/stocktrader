@@ -78,7 +78,11 @@ def section(text: str, heading: str, limit: int, fallback_at: float = 0.02) -> s
 
 
 def recent_filings(submissions: Dict, today: date) -> Dict:
-    """The latest 10-K and 10-Q, and the 8-Ks of the last EVENT_DAYS days, newest first."""
+    """
+    The latest 10-K and 10-Q, and the 8-Ks of the last EVENT_DAYS days, newest
+    first, as they stood on `today`. Nothing filed after `today` is returned,
+    so a past date gives what was public then.
+    """
     out = {"10-K": None, "10-Q": None, "8-K": []}
     recent = ((submissions or {}).get("filings") or {}).get("recent") or {}
     forms = recent.get("form") or []
@@ -89,6 +93,8 @@ def recent_filings(submissions: Dict, today: date) -> Dict:
                    "document": recent["primaryDocument"][i], "items": (recent.get("items") or [""] * len(forms))[i] or ""}
         except (KeyError, IndexError):
             continue
+        if row["date"] > today.isoformat():
+            continue                    # filed after the date being judged from: not public then
         if form in ("10-K", "10-Q") and out[form] is None:
             out[form] = row
         elif form == "8-K" and row["date"] >= since:

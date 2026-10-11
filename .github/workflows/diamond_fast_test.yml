@@ -1,0 +1,66 @@
+name: Diamond Fast Test
+
+# One-off: has Claude judge two past watchlists (built by `diamond_run.py
+# --as-of`, saved under research/fast_test/) from the filings that existed
+# then, so the scores can be compared with what the shares did afterwards.
+# Started by pushing research/fast_test/REQUEST. Nothing is traded.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'research/fast_test/REQUEST'
+  workflow_dispatch:
+
+jobs:
+  judge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      issues: write          # to open a failure issue
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      SEC_EDGAR_USER_AGENT: "stocktrader diamond screen (aschumacherdesign@gmail.com)"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Judge the past lists
+        run: |
+          for f in research/fast_test/list_*.json; do
+            python diamond_judge.py --past-list "$f"
+          done
+
+      - name: Commit the judged lists
+        if: always()
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add research/fast_test/list_*.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Diamond fast test: judged lists [skip ci]"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create \
+            --title "🚨 ${GITHUB_WORKFLOW} run failed $(date -u +%Y-%m-%d)" \
+            --body "The ${GITHUB_WORKFLOW} workflow failed. Run log: ${RUN_URL}"

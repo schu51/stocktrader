@@ -130,3 +130,18 @@ def test_probe_answers_are_reduced_to_three_words():
     from diamond_judge import parse_probe
     assert parse_probe("Higher") == "higher" and parse_probe(" lower.\n") == "lower"
     assert parse_probe("I believe it went higher") == "unknown" and parse_probe("") == "unknown" and parse_probe(None) == "unknown"
+
+
+def test_each_judged_company_gets_a_rank_on_the_judgment_alone():
+    # The sleeve ranks on edge + demand, not on conviction: blending in the
+    # numbers score made the ordering worse in the fast test (2026-10-11).
+    def ask(system, user):
+        if "AAA" in user:
+            return json.dumps(dict(GOOD, edge=5, demand=5, red_flags=[]))       # judgment 10, best numbers score
+        if "BBB" in user:
+            return json.dumps(dict(GOOD, edge=7, demand=7, red_flags=[]))       # judgment 14
+        raise RuntimeError("down")
+    doc, _, _ = judge_watchlist(_doc(), {}, date(2026, 10, 17),
+                                make_pack=lambda row: dict(PACK, ticker=row["ticker"], basis="b"), ask=ask)
+    by = {r["ticker"]: r for r in doc["watchlist"]}
+    assert (by["BBB"]["judgment_rank"], by["AAA"]["judgment_rank"], by["CCC"]["judgment_rank"]) == (1, 2, None)

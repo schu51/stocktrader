@@ -163,6 +163,8 @@ def update_history(history: list, doc: dict) -> list:
         if r.get("conviction") is not None:
             # Stage 2: recorded beside the numbers rank so the two can be compared later
             row.update(conviction=r["conviction"], conviction_rank=r.get("conviction_rank"))
+        if r.get("judgment_rank") is not None:
+            row["judgment_rank"] = r["judgment_rank"]
         kept.append(row)
     dates = sorted({h["date"] for h in kept})[-HISTORY_WEEKS:]
     return sorted((h for h in kept if h["date"] in dates), key=lambda h: (h["date"], h["rank"]))

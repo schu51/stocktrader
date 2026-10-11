@@ -1,0 +1,82 @@
+name: Diamond Sleeve
+
+# Weekdays, after the large-cap trade run: buys and sells for the diamond
+# sleeve (diamond_sleeve.py). 20% of the paper account, up to eight long holds
+# from the top of the judged watchlist. Started by dispatcher.yml.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Print the plan only; send no orders'
+        type: boolean
+        default: false
+
+# Never alongside itself: two runs could each buy the same slot
+concurrency:
+  group: diamond-sleeve
+  cancel-in-progress: false
+
+jobs:
+  sleeve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      issues: write          # to open a failure issue
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Run the sleeve
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            python diamond_sleeve.py
+          else
+            python diamond_sleeve.py --execute
+          fi
+
+      - name: Commit the sleeve's record
+        if: always()
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add docs/data/diamond_sleeve.json docs/data/trades.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "Diamond sleeve [skip ci]"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      # Runs started by the dispatcher belong to the Actions bot, which emails no
+      # one. One issue per day; later failures the same day are added as comments.
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="🚨 ${GITHUB_WORKFLOW} failed $(date -u +%Y-%m-%d)"
+          existing=$(gh issue list --state open --search "\"${title}\" in:title" --json number --jq '.[0].number // empty' || true)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Failed again. Run log: ${RUN_URL}"
+          else
+            gh issue create --title "$title" --body "The ${GITHUB_WORKFLOW} workflow failed. Run log: ${RUN_URL}"
+          fi

@@ -45,6 +45,7 @@ TIMETABLE = [
     ("premarket.yml",      WEEKDAYS,   "09:00", "09:00", None),
     ("stop_placement.yml", WEEKDAYS,   "09:30", "09:30", None),  # at the open
     ("daily_trade.yml",    WEEKDAYS,   "10:00", "10:00", None),
+    ("diamond_sleeve.yml", WEEKDAYS,   "10:30", "10:30", None),  # after the large-cap run has spent its cash
     ("intraday_exit.yml",  WEEKDAYS,   "09:45", "15:45", 30),    # :15/:45, offset from sync
     ("postmarket.yml",     WEEKDAYS,   "16:15", "16:15", None),
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30

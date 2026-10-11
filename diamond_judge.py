@@ -250,6 +250,18 @@ def judge_watchlist(doc: Dict, cache: Dict, today: date, make_pack: Callable[[Di
         r["conviction_rank"] = None
     for position, r in enumerate(ranked, start=1):
         r["conviction_rank"] = position
+
+    # The judgment on its own, edge + demand: what the sleeve ranks on
+    # (diamond_sleeve.py). Only judgments made on current filings count.
+    def alone(r):
+        j = r.get("judgment") or {}
+        return None if j.get("stale") or not j else j["edge"] + j["demand"]
+    for r in doc.get("watchlist") or []:
+        r["judgment_rank"] = None
+    current = sorted((r for r in doc.get("watchlist") or [] if alone(r) is not None),
+                     key=lambda r: (-alone(r), -(r.get("conviction") or 0), r.get("ticker") or ""))
+    for position, r in enumerate(current, start=1):
+        r["judgment_rank"] = position
     doc["judged_at"] = today.isoformat()
     doc["judgment_counts"] = stats
     return doc, cache, stats

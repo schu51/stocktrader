@@ -53,6 +53,7 @@ def load_data(failed_runs_file: str = None) -> Dict:
         "candidate_outcomes": _load("candidate_outcomes.json"), "macro_brief": _load("macro_brief.json"),
         "screener": _load("screener.json"), "experiments": _load("experiments.json"), "failed_runs": failed,
         "diamonds": _load("diamonds.json"), "diamond_history": _load("diamond_history.json"),
+        "diamond_track": _load("diamond_track.json"),
     }
 
 
@@ -355,6 +356,15 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
         # A damaged watchlist file must not cost the week its whole review
         out += ["## Diamond watchlist", "- The list could not be read."]
         problems.append("Diamond watchlist: the file could not be read")
+    # Is the judgment worth acting on yet? (diamond_track.py; the owner asked to be told)
+    track = data.get("diamond_track") if isinstance(data.get("diamond_track"), dict) else {}
+    track_verdict = track.get("verdict") if isinstance(track.get("verdict"), dict) else {}
+    if track_verdict.get("text"):
+        out.append(f"- Judgment track record: {_md(track_verdict.get('text'), 600)}")
+        if track_verdict.get("status") == "ready":
+            problems.append("Diamond judgment: enough evidence to decide on the paper sleeve (see Diamond watchlist)")
+        elif track_verdict.get("status") == "not_supported":
+            problems.append("Diamond judgment: the evidence does not support acting on it (see Diamond watchlist)")
 
     # ── Macro theses ─────────────────────────────────────────────────────────
     out.append("\n## Macro theses")

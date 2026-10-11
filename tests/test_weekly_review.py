@@ -275,8 +275,9 @@ def test_every_annotation_resolves_on_the_runners_python():
     # passes here and breaks there. (It did: Optional, 2026-10-10.)
     import inspect
     import typing
-    import diamond_data, diamond_run, diamond_screen, diamond_universe, weekly_review
-    for module in (weekly_review, diamond_data, diamond_run, diamond_screen, diamond_universe):
+    import diamond_data, diamond_evidence, diamond_judge, diamond_run, diamond_screen, diamond_track, diamond_universe, weekly_review
+    for module in (weekly_review, diamond_data, diamond_run, diamond_screen, diamond_universe,
+                   diamond_evidence, diamond_judge, diamond_track):
         for name, fn in inspect.getmembers(module, inspect.isfunction):
             if fn.__module__ == module.__name__:
                 typing.get_type_hints(fn)
@@ -354,3 +355,21 @@ def test_diamond_section_without_judgments_is_unchanged():
     from weekly_review import diamond_section
     text = "\n".join(diamond_section(_diamond_doc(), [], date(2026, 10, 10)))
     assert "| 1 | AAA | 81.5 | new |" in text and "not been judged" in text
+
+
+def test_the_review_says_when_the_judgment_has_enough_evidence_to_act_on():
+    from datetime import date
+    from weekly_review import build_review
+    track = lambda status, text: {"verdict": {"status": status, "text": text}}
+    _, body = build_review({"diamonds": _diamond_doc(), "diamond_track": track("collecting", "Collecting: 2 of 8 weekly lists.")},
+                           date(2026, 10, 10))
+    assert "- Judgment track record: Collecting: 2 of 8 weekly lists." in body and "Diamond judgment" not in body.split("## Account")[0]
+    title, body = build_review({"diamonds": _diamond_doc(), "diamond_track": track("ready", "12 weekly lists; conviction beat both in 9 of 12.")},
+                               date(2026, 10, 10))
+    top = body.split("## Account")[0]
+    assert "Diamond judgment: enough evidence to decide on the paper sleeve" in top and title.startswith("⚠️")
+    _, body = build_review({"diamonds": _diamond_doc(), "diamond_track": track("not_supported", "12 lists; beat both in 3 of 12.")},
+                           date(2026, 10, 10))
+    assert "Diamond judgment: the evidence does not support acting on it" in body.split("## Account")[0]
+    _, body = build_review({"diamonds": _diamond_doc(), "diamond_track": "broken"}, date(2026, 10, 10))
+    assert "## Macro theses" in body

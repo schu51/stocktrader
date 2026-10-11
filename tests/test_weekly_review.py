@@ -267,3 +267,16 @@ def test_a_malformed_diamond_file_cannot_stop_the_weekly_review():
         title, body = build_review({"diamonds": doc, "diamond_history": history}, date(2026, 10, 10))
         assert "## Diamond watchlist" in body and "## Macro theses" in body
         assert "could not be read" in body
+
+
+def test_every_annotation_resolves_on_the_runners_python():
+    # GitHub's runner uses Python 3.12, which evaluates annotations when a
+    # function is defined; newer Pythons do not, so a missing typing import
+    # passes here and breaks there. (It did: Optional, 2026-10-10.)
+    import inspect
+    import typing
+    import diamond_data, diamond_run, diamond_screen, diamond_universe, weekly_review
+    for module in (weekly_review, diamond_data, diamond_run, diamond_screen, diamond_universe):
+        for name, fn in inspect.getmembers(module, inspect.isfunction):
+            if fn.__module__ == module.__name__:
+                typing.get_type_hints(fn)

@@ -27,3 +27,16 @@ jobs:
           gh run list --status failure --created ">=$SINCE" --limit 50 --json name,createdAt > failed_runs.json || echo "[]" > failed_runs.json
           python3 weekly_review.py --failed-runs failed_runs.json --body-file review.md --title-file title.txt
           gh issue create --title "$(cat title.txt)" --body-file review.md
+
+      # In-workflow alert: runs started by the dispatcher belong to the Actions
+      # bot, which neither emails anyone nor triggers a workflow_run listener.
+      # Without this the review failed silently on 2026-10-10.
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create \
+            --title "🚨 ${GITHUB_WORKFLOW} run failed $(date -u +%Y-%m-%d)" \
+            --body "The ${GITHUB_WORKFLOW} workflow failed. Run log: ${RUN_URL}"

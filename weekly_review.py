@@ -19,7 +19,7 @@ import json
 import sys
 from datetime import date, timedelta
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 ROOT = Path(__file__).parent.resolve()
 DOCS_DATA = ROOT / "docs" / "data"

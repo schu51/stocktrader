@@ -283,3 +283,16 @@ def test_a_company_marked_not_to_be_bought_is_never_a_candidate():
     rows[0]["judgment"]["do_not_buy"] = True
     assert [r["ticker"] for r in buy_candidates(_doc(rows), HISTORY, TODAY)] == ["BBB"]
     assert judgment_of(rows[0]) is None
+
+
+def test_a_do_not_buy_mark_cannot_shield_a_holding_from_being_sold():
+    # The mark takes a company out of the buy ranking. It must not also hide a
+    # failing judgment, or a company could keep itself in the sleeve by writing
+    # to the model. A holding whose filings address the model is sold: the
+    # judgment it was bought on can no longer be trusted.
+    weak = _row("WEAK", 3, 3, 20); weak["judgment"]["do_not_buy"] = True
+    good = _row("GOOD", 9, 9, 1); good["judgment"]["do_not_buy"] = True
+    doc = _doc([weak, good])
+    hist = _hist("2026-10-17", {"WEAK": 3, "GOOD": 1}) + _hist("2026-10-24", {"WEAK": 20, "GOOD": 1})
+    assert "fell to 6" in broken("WEAK", doc, hist, TODAY)
+    assert "addressed" in broken("GOOD", doc, hist, TODAY)

@@ -129,9 +129,14 @@ def broken(symbol: str, doc: Dict, history: List[Dict], today: date) -> Optional
         return None
     row = next((r for r in doc.get("watchlist") or [] if r.get("ticker") == symbol), None)
     if row is not None:
-        score = judgment_of(row)
+        j = row.get("judgment") if isinstance(row.get("judgment"), dict) else {}
+        # Read here without the do-not-buy mark: that mark keeps a company out
+        # of the buy ranking and must not also hide a failing judgment.
+        score = judgment_of(dict(row, judgment={k: v for k, v in j.items() if k != "do_not_buy"}))
         if score is not None and score < SELL_BELOW:
             return f"judgment fell to {score:g} of 20 on its latest filings"
+        if j.get("do_not_buy") and not j.get("stale"):
+            return "its filings addressed an automated reader: the judgment it was bought on cannot be trusted"
         return None
     previous = _previous_day(history, _list_day(doc))
     if previous is None:

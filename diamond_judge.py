@@ -219,7 +219,11 @@ def _guard(parsed: Optional[Dict], pack: Dict) -> Optional[Dict]:
     from diamond_evidence import addressed_to_a_machine
     if parsed is None:
         return None
-    texts = [pack.get("business"), pack.get("mdna")] + [a.get("text") for a in pack.get("agreements") or []]
+    # Everything build_prompt shows the model that did not come from a number
+    texts = [pack.get("name"), pack.get("industry"), pack.get("business"), pack.get("mdna")] \
+        + list(pack.get("events") or []) + [a.get("text") for a in pack.get("agreements") or []]
+    if parsed.get("do_not_buy"):
+        return parsed
     if pack.get("suspicious") or any(addressed_to_a_machine(t) for t in texts):
         parsed = dict(parsed, do_not_buy=True, red_flags=([INJECTION_FLAG] + parsed.get("red_flags", []))[:MAX_FLAGS])
     return parsed
@@ -248,7 +252,8 @@ def judge_watchlist(doc: Dict, cache: Dict, today: date, make_pack: Callable[[Di
             stats["skipped"] += 1
         elif not needs_judging(ticker, pack["basis"], cache, today):
             stats["reused"] += 1
-            judgment = dict(previous["judgment"], judged_at=previous["judged_at"])
+            # Reused, not re-asked, and still checked: the guard applies to every path to a rank
+            judgment = dict(_guard(previous["judgment"], pack), judged_at=previous["judged_at"])
         else:
             try:
                 parsed = _guard(parse_judgment(ask(SYSTEM_PROMPT, build_prompt(pack))), pack)
@@ -317,7 +322,8 @@ def judge_past_list(doc: Dict, make_pack: Callable[[Dict, date], Dict], ask: Cal
     as_of = date.fromisoformat(str(doc["cutoff"])[:10])
     for row in doc.get("watchlist") or []:
         try:
-            parsed = parse_judgment(ask(SYSTEM_PROMPT, build_prompt(make_pack(row, as_of))))
+            pack = make_pack(row, as_of)
+            parsed = _guard(parse_judgment(ask(SYSTEM_PROMPT, build_prompt(pack))), pack)
         except Exception as exc:
             logger.error(f"{row.get('ticker')}: could not be judged ({exc})")
             parsed = None

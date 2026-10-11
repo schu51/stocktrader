@@ -1,0 +1,38 @@
+name: Tests
+
+# Runs the test suite on the Python the bot itself runs on. The suite used to
+# run only on the owner's machine, on a newer Python: a mistake that Python
+# tolerates and 3.12 does not went live and broke the weekly review (2026-10-10).
+# Data commits by the bot carry [skip ci] and do not start this.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/data/**'
+      - 'research/**'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Every module compiles
+        run: python -m compileall -q . -x '(\.git|trading_data|node_modules)'
+
+      - name: Run the tests
+        run: python -m pytest tests -q

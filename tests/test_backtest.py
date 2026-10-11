@@ -233,3 +233,12 @@ def test_stale_holding_is_one_held_long_enough_with_little_gain():
     assert not is_stale(pos, 106.0, date(2026, 3, 6), 60, 5.0)        # doing fine
     assert not is_stale(pos, 104.0, date(2026, 3, 5), 60, 5.0)        # not long enough yet
     assert not is_stale(pos, 90.0, date(2026, 6, 1), 0, 5.0)          # rule off
+
+
+def test_risk_cap_shrinks_only_positions_whose_stop_would_cost_too_much():
+    from backtest import risk_capped_shares
+    # $100k account, 0.3% at risk = $300. A $100 stock with a 12% stop risks $12 a share: 25 shares.
+    assert risk_capped_shares(50, 100.0, 0.12, 100_000, 0.003) == 25
+    assert risk_capped_shares(50, 100.0, 0.05, 100_000, 0.003) == 50      # $5 a share: 60 allowed, 50 asked
+    assert risk_capped_shares(50, 100.0, None, 100_000, 0.003) == 50      # no stop distance known: unchanged
+    assert risk_capped_shares(50, 100.0, 0.12, 100_000, 0.0) == 50        # rule off

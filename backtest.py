@@ -90,6 +90,17 @@ def evaluate_exit(pos: Dict, bar: Dict, sma50: Optional[float]) -> Tuple[Optiona
     return None, ""
 
 
+def risk_capped_shares(shares: int, price: float, stop_dist: Optional[float], equity: float, risk: float) -> int:
+    """
+    Experimental: no position may lose more than `risk` (a share of the account)
+    if its stop is hit. A jumpy stock has a wide stop, so it gets fewer shares;
+    a calm one is left at its normal size. Never increases a position.
+    """
+    if not risk or not stop_dist or price <= 0:
+        return int(shares)
+    return max(0, min(int(shares), int(risk * equity / (price * stop_dist))))
+
+
 def is_stale(pos: Dict, close: float, today, stale_days: int, stale_gain: float) -> bool:
     """
     Experimental: a holding that has had its time and not done much. Held at
@@ -263,7 +274,8 @@ class Backtest:
                  quiet: bool = True, entry_trigger: str = "none", atr_stop: float = 0.0,
                  min_adx: float = 0.0, min_above_50ma: float = 0.0, min_spy_above_50ma: float = 0.0,
                  exit_line: str = "sma50", exit_confirm: int = 1, drawdown_mode: str = "live",
-                 stale_days: int = 0, stale_gain: float = 5.0, stale_needs_cash: bool = False):
+                 stale_days: int = 0, stale_gain: float = 5.0, stale_needs_cash: bool = False,
+                 risk_per_trade: float = 0.0, max_atr_pct: float = 0.0):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -282,6 +294,9 @@ class Backtest:
         # stale_needs_cash it only fires on a day a buy went unfilled for lack of cash.
         self.stale_days, self.stale_gain, self.stale_needs_cash = int(stale_days), stale_gain, stale_needs_cash
         self.cash_short_today = False
+        # Fast stop-outs (experimental, off by default): cap the dollars a stop
+        # can cost (risk_capped_shares), or pass on the most volatile candidates
+        self.risk_per_trade, self.max_atr_pct = risk_per_trade, max_atr_pct
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -295,7 +310,7 @@ class Backtest:
         self.equity: Dict[pd.Timestamp, float] = {}
         self.cash_share: List[float] = []
         self.counters = {"candidates": 0, "gate_rsi": 0, "gate_bb": 0, "gate_sector": 0,
-                         "gate_trigger": 0, "gate_adx": 0, "gate_50ma_room": 0, "days_market_weak": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
+                         "gate_trigger": 0, "gate_adx": 0, "gate_50ma_room": 0, "gate_volatile": 0, "days_market_weak": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
                          "unfilled_no_cash": 0, "unfilled_at_cap": 0}
 
         if quiet:
@@ -523,6 +538,9 @@ class Backtest:
             if self.min_adx and not adx(h, l, c) >= self.min_adx:
                 self.counters["gate_adx"] += 1
                 continue
+            if self.max_atr_pct and atr_pct(h, l, c) > self.max_atr_pct:
+                self.counters["gate_volatile"] += 1
+                continue
 
             decision = self.engine.evaluate_entry(
                 symbol=sym, portfolio=portfolio, research_score=None,
@@ -535,6 +553,8 @@ class Backtest:
                 continue
             self.counters["engine_buy"] += 1
             d["stop_dist"] = stop_distance(atr_pct(h, l, c), self.atr_stop) if self.atr_stop else None
+            d["shares"] = risk_capped_shares(d.get("shares") or 0, float(c[-1]), d["stop_dist"] or 0.08,
+                                             total_value, self.risk_per_trade)
             d["features"] = {"rs_rank": cand["rs_rank"], "thesis_score": cand["thesis_score"],
                              "trend_score": d.get("trend_score"), "confidence": d.get("confidence"),
                              "sector": cand["sector"]}
@@ -707,6 +727,10 @@ def main() -> int:
     parser.add_argument("--stale-gain", type=float, default=5.0, help="percent gain below which a holding is stale")
     parser.add_argument("--stale-needs-cash", action="store_true",
                         help="stale exit only on a day a buy went unfilled for lack of cash")
+    parser.add_argument("--risk-per-trade", type=float, default=0.0,
+                        help="experimental: cap what a stop-out can cost, as a share of the account (0.003 = 0.3%%)")
+    parser.add_argument("--max-atr-pct", type=float, default=0.0,
+                        help="experimental: skip candidates whose ATR(14) exceeds this share of price (0.04 = 4%%)")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -724,7 +748,8 @@ def main() -> int:
                   min_spy_above_50ma=args.min_spy_above_50ma,
                   exit_line=args.exit_line, exit_confirm=args.exit_confirm,
                   drawdown_mode="off" if args.no_drawdown_halt else args.drawdown_mode,
-                  stale_days=args.stale_days, stale_gain=args.stale_gain, stale_needs_cash=args.stale_needs_cash)
+                  stale_days=args.stale_days, stale_gain=args.stale_gain, stale_needs_cash=args.stale_needs_cash,
+                  risk_per_trade=args.risk_per_trade, max_atr_pct=args.max_atr_pct)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

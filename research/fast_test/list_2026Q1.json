@@ -72,7 +72,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 1
+      "rank": 1,
+      "judgment": {
+        "edge": 1.0,
+        "demand": 1.0,
+        "confidence": "high",
+        "thesis": "Gulfport is a natural gas-weighted E&P whose revenue and margin jump almost certainly come from higher gas prices, plus derivative and accounting effects, against a post-bankruptcy base. It is a price-taking commodity producer with no switching costs, proprietary product or contracted demand, so it is not a diamond.",
+        "breaks_if": "This thesis would be wrong only if production and margin growth continued with Henry Hub prices flat or falling, which would show real cost advantage. The 2026 guidance of 1.03-1.055 Bcfe/d, roughly flat on 2025's 1.04 Bcfe/d, points the other way.",
+        "customers": "not disclosed; gas, NGL and oil are sold at market-linked prices to marketers and utilities, with no named customers in the supplied text",
+        "red_flags": [
+          "Commodity gas producer; margins follow Henry Hub and NGL prices, not any product edge",
+          "Revenue +91% and operating margin swing from -35% to +49% look price-driven and may include derivative gains, off a depressed base",
+          "Emerged from Chapter 11 in 2021; still carries credit facility and 2029 notes",
+          "2026 production guidance roughly flat, so no volume inflection; capex of $400-430M is mostly maintenance-level",
+          "No backlog, prepaid revenue, named customers or contracts in the evidence; share count up 4% despite buybacks"
+        ]
+      },
+      "conviction": 14.0,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "GPRE",
@@ -113,7 +130,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 2
+      "rank": 2,
+      "judgment": {
+        "edge": 2.0,
+        "demand": 2.0,
+        "confidence": "medium",
+        "thesis": "Green Plains is a corn ethanol producer whose swing from a -41% to +20% operating margin looks like a commodity-margin recovery plus policy credits (production tax credits rose to $106M from $40M in one quarter), not a durable competitive advantage. Quarterly revenue actually fell (Q1 2026 $446M vs $602M) and no backlog, named customers or contracts are disclosed, so this is not a diamond.",
+        "breaks_if": "Operating margin falls back toward breakeven when ethanol crush spreads narrow or 45Z/LCFS credit value is cut, or the Summit Carbon pipeline slips past 2028, which would show profit came from price and subsidy rather than edge.",
+        "customers": "not disclosed; ethanol is sold through a third-party marketer, with distillers grains and corn oil sold into commodity feed and biofuel markets",
+        "red_flags": [
+          "Commodity ethanol producer; margins follow crush spreads and policy credits, not pricing power",
+          "Q1 2026 revenue down about 26% year on year, which conflicts with the +25% trailing growth and suggests asset sales and idled plants",
+          "Operating cash flow was -$39.5M in the quarter, with $65.6M of production tax credits booked as receivables rather than cash",
+          "Share count +7% year on year, diluted shares 84M against 69M outstanding, and about $460M of debt",
+          "Dextrose plant at Shenandoah idled since Q1 2025 and the Summit CCS pipeline unproven (2028); no backlog or named customers"
+        ]
+      },
+      "conviction": 17.4,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "CRDO",
@@ -154,7 +188,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.22216417728795343,
-      "rank": 3
+      "rank": 3,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 7.0,
+        "confidence": "medium",
+        "thesis": "Credo has proprietary SerDes/DSP IP and a Microsoft-linked AEC design, and the numbers show real AI-driven demand: revenue +226%, operating margin from -1% to +30%, gross margin 68%, and inventory plus capacity commitments building ahead of sales. It is not a clean diamond, because the edge rests on customer concentration and a cost/power advantage in a field with large competitors, and the $43B valuation already prices in much of the inflection.",
+        "breaks_if": "A top hyperscaler customer dual-sources away from Credo's AECs or DSPs, or gross margin falls below about 60% as Broadcom, Marvell or others compete, or the finished-goods inventory build proves to be unsold stock when AI capex slows.",
+        "customers": "Hyperscalers, cloud providers, OEMs, ODMs and optical module makers; 'over 20 blue chip clients', with Microsoft the only one named. Revenue concentration is not quantified in the supplied text but is likely high.",
+        "red_flags": [
+          "Finished goods inventory up from $52.7M to $169.1M in nine months, a sign of building ahead of demand or slowing sell-through",
+          "Backlog and deferred revenue not reported, so contracted demand cannot be verified",
+          "Likely heavy concentration in a few hyperscalers; the supplied text gives no percentages",
+          "Claimed edge is a cost and power advantage on an n-1 node against larger rivals, not a lock-in",
+          "Share count +8% and a $43B market value leave little margin for error; revenue is tied to AI capex cycles"
+        ]
+      },
+      "conviction": 43.7,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "MRVL",
@@ -195,7 +246,24 @@
       "backlog_growth": null,
       "prepaid_growth": 0.8144796380090498,
       "rd_share": 0.2532399384960828,
-      "rank": 4
+      "rank": 4,
+      "judgment": {
+        "edge": 6.5,
+        "demand": 6.5,
+        "confidence": "medium",
+        "thesis": "Marvell has real, sticky positions in custom AI ASICs and high-speed optical DSPs, and data center revenue grew to $6.1B (74% of sales) from $2.2B two years ago, with deferred revenue up 81% and a customer warrant that points to hyperscaler commitment. It is not a clean diamond, though: it is a large, richly valued company whose margin recovery is partly due to divestitures and a cyclical rebound from a weak FY2024, and it is now absorbing heavy acquisitions funded with debt and equity.",
+        "breaks_if": "Data center revenue growth stalls or falls below roughly 20% year on year, or a major hyperscaler custom-ASIC program is lost or moved in-house or to a rival such as Broadcom, so gross margin falls back below about 50%.",
+        "customers": "Hyperscale cloud and AI data center operators (about 74% of revenue) plus carrier, enterprise networking and consumer OEMs. Customers are not named in the supplied text, but a customer warrant implies concentration in a few hyperscalers.",
+        "red_flags": [
+          "Backlog not reported; the demand evidence rests on the deferred revenue jump and warrant, with no named customer wins or contract values",
+          "Q1 FY27 net income fell to $34.5M from $177.9M on a $331.8M contingent consideration charge and other expense, so GAAP earnings quality is weak",
+          "Heavy M&A (Celestial AI, XConn) with goodwill at $13.9B, new $1B debt, $2B convertible preferred issued and about $2.1B of stock issued for acquisitions, which ",
+          "Growth decelerated to +22% in the latest quarter from +58% two quarters earlier, and the FY2024 base was depressed, so part of the growth is a recovery",
+          "Market value of $176.5B already prices in AI-driven growth; the fabless model faces custom-silicon competition from Broadcom and in-house designs"
+        ]
+      },
+      "conviction": 43.3,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "ALAB",
@@ -236,7 +304,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.364551587507639,
-      "rank": 5
+      "rank": 5,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 7.0,
+        "confidence": "medium",
+        "thesis": "Astera is no mere turnaround: revenue is roughly doubling at a 76% gross margin and a 22% operating margin, its retimers, switches and COSMOS software are designed into hyperscaler AI platforms, and Amazon signed a warrant-linked Transaction Agreement in February 2026. Against that, the $58.5B market value already prices in much of the AI buildout, and the edge is real but not absolute because PCIe/Ethernet/CXL are open standards, prices fall over time, and large competitors can build rival part",
+        "breaks_if": "Quarterly revenue growth falls well below 50%, gross margin drops below about 70%, or a top hyperscaler dual-sources or in-sources its retimer or switch sockets (for example Broadcom or Marvell winning the next-generation PCIe 6 sockets).",
+        "customers": "Major hyperscalers (Amazon named via the warrant agreement), AI accelerator and GPU vendors, and system OEMs; the filing says a limited number of end customers drive revenue, so concentration is high but unquantified here.",
+        "red_flags": [
+          "Customer concentration: a few hyperscalers drive revenue, and the percentages were not supplied",
+          "Backlog and deferred revenue not reported, so forward demand cannot be checked against numbers",
+          "Valuation of $58.5B already assumes continued AI capex growth",
+          "Built on open standards (PCIe, Ethernet, CXL) with competitors such as Broadcom and Marvell, and the filing says prices often decline over time",
+          "The Amazon warrant was granted to a customer; the vesting terms were cut off, and the warrant may be an incentive for purchases rather than proof of organic dem"
+        ]
+      },
+      "conviction": 42.3,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "ONC",
@@ -277,7 +362,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.3842361433456138,
-      "rank": 6
+      "rank": 6,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "BeOne has a real, evidence-backed edge: BRUKINSA is the global BTK-inhibitor leader at $3.9B in 2025 sales with the broadest label and superior efficacy to ibrutinib in the ALPINE trial. Operating leverage is visible (Q1 2026 operating income $250M versus $11M a year earlier), but the numbers show the inflection has largely already happened, and there is no backlog, prepaid revenue or named-contract evidence to show demand building beyond that growth.",
+        "breaks_if": "BRUKINSA quarterly growth falls well below 30% as competitors (acalabrutinib, pirtobrutinib) and IRA pricing pressure take share, or sonrotoclax is denied or delayed by the FDA in 1H 2026, or operating margin stops expanding as SG&A grows alongside revenue.",
+        "customers": "Not disclosed. Oncology drug sales through hospitals, specialty pharmacies and distributors across the US, Europe, China and 75+ markets; concentration in BRUKINSA (about 74% of 2025 revenue) rather than in a named customer.",
+        "red_flags": [
+          "BRUKINSA is about 74% of revenue; the franchise is concentrated in one drug",
+          "Third entrant in a crowded BTK class with strong competitors (ibrutinib, acalabrutinib, pirtobrutinib)",
+          "Exposure to IRA pricing reform and China pricing pressure",
+          "Backlog and prepaid revenue not reported; no named customer or contract evidence for demand",
+          "R&D at 38% of revenue and SG&A rising; royalty-sale liability ( $0.9B) and $1.1B debt; 4% share dilution; Dec 2025 material agreement ended (reason unknown)"
+        ]
+      },
+      "conviction": 39.2,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "SLAB",
@@ -318,7 +420,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.4501302302348222,
-      "rank": 7
+      "rank": 7,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Silicon Labs is a real IoT wireless chip designer with 58% gross margins and design-in stickiness, and its losses are narrowing as revenue recovers. But the equity is now priced as a $231 per share cash takeout by Texas Instruments, so there is no independent upside to find, and the recovery looks like a cyclical rebound from a trough rather than an inflection.",
+        "breaks_if": "The Texas Instruments merger fails on regulatory or shareholder grounds and revenue growth falls back below 10% with operating margin still negative, which would show the rebound was only inventory-cycle restocking.",
+        "customers": "Not disclosed in the supplied text; the business is a broad base of IoT device makers in industrial, commercial, home and life applications, and concentration through distributors is likely but unquantified.",
+        "red_flags": [
+          "Pending $231/share cash acquisition by Texas Instruments caps the price; any stock return is merger arbitrage, not a business inflection",
+          "Still loss-making: operating margin -9% in the latest quarter, with Q1 2026 operating loss of $17M",
+          "Operating cash flow fell to $4.9M from $48.1M a year earlier, with receivables and inventory building",
+          "R&D is 45% of revenue and stock compensation is about $21M a quarter, which dilutes holders and weighs on margins",
+          "No backlog, named customer wins or prepaid revenue disclosed; the growth looks like a cyclical recovery in a competitive IoT chip market (Nordic, Espressif, NXP"
+        ]
+      },
+      "conviction": 28.2,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "IOT",
@@ -359,7 +478,24 @@
       "backlog_growth": 0.4204511164755582,
       "prepaid_growth": 0.17975706140542758,
       "rd_share": 0.21288863764838892,
-      "rank": 8
+      "rank": 8,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 6.0,
+        "confidence": "medium",
+        "thesis": "Samsara looks like a real, scaled vertical SaaS and IoT platform: 30% growth at $20B market value, 77% gross margin, 42% backlog growth, and 3,194 customers above $100k ARR suggest real stickiness from embedded hardware and workflow integration. It is not a hidden diamond, though: the loss-to-profit turn is already priced in, the operating margin is still negative, and competition in telematics and video safety is serious.",
+        "breaks_if": "Backlog and large-customer ( $100k ARR) growth slow below revenue growth, or net retention and gross margin fall for a couple of quarters, which would show customers can switch to Motive, Geotab, or Verizon Connect.",
+        "customers": "Broad base of over 12,000 Core Customers (ARR of $25k or more) across transportation, construction, field services and government; 85% of ARR comes from Core Customers and 61% from 3,194 customers above $100k. No single-customer concentration disclosed.",
+        "red_flags": [
+          "Operating margin still negative at -3%, with profit dependent on stock-based compensation and scale",
+          "Share count up 3% a year, so dilution is a real cost",
+          "Deferred revenue growth of 18% is well below revenue growth of 30%",
+          "Competes directly with Motive, Geotab, Verizon Connect and others; edge claims such as 'network effects' are management assertions, not evidence",
+          "No named customer wins, retention or net-dollar-expansion figures in the supplied text; the quarterly MD&A excerpt was only boilerplate"
+        ]
+      },
+      "conviction": 36.4,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "ETON",
@@ -400,7 +536,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.09753376124416224,
-      "rank": 9
+      "rank": 9,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Eton is a rare-disease roll-up with real but narrow moats (FDA approvals, tiny patient pools, some patents to 2032-34, and the INCRELEX biologic). Its +80% growth looks driven by acquired products (INCRELEX, GALZIN, PKU GOLIKE) rather than organic demand, and gross margin is falling as it adds licensed products. This is a deal-making story with thin profit (+2% operating margin), not evidence of a company customers cannot replace.",
+        "breaks_if": "Operating margin slips back below zero as royalty-bearing acquired products (HEMANGEOL at 8%, IMPAVIDO fixed fees) dilute gross margin, or ET-600 is not approved on its Feb 2026 PDUFA date, or organic growth of existing products stalls once the acquisition lift anniversaries.",
+        "customers": "Not disclosed; patients are reached through specialty pharmacies, which suggests wholesaler and specialty pharmacy concentration, and prescribers are pediatric endocrinologists.",
+        "red_flags": [
+          "Growth is largely acquired (INCRELEX, GALZIN, PKU GOLIKE), so it is not proof of organic demand",
+          "Gross margin down 4 points on the year, and royalties on new licensed products add pressure",
+          "Debt-funded: SWK credit agreement amended six times, plus new debt in April 2026",
+          "Several products are generics of Carbaglu, Cystadane and Orfadin, and face generic competition",
+          "No backlog, deferred revenue or customer concentration data; 2% operating margin leaves little cushion"
+        ]
+      },
+      "conviction": 27.2,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "ESTA",
@@ -441,7 +594,24 @@
       "backlog_growth": null,
       "prepaid_growth": -0.3310249307479224,
       "rd_share": 0.08900320591002543,
-      "rank": 10
+      "rank": 10,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Motiva has real regulatory moats: FDA PMA approval in a market with only three other approved silicone implant makers, plus claimed lower complication rates and RFID traceability. Even so, the evidence for building demand is thin. Growth of 35-45% is partly a US launch ramp, and the company keeps raising expensive financing (a 12% inventory facility, Tranche D, an amended Oaktree credit agreement) while cash is $68M against a $30M liquidity covenant, so it is not clearly different from other los",
+        "breaks_if": "Growth slows below about 25% or gross margin stops rising while operating losses persist, forcing more dilutive equity or debt; or US surgeon adoption stalls so Motiva fails to take share from Allergan, Mentor and Sientra.",
+        "customers": "Plastic and aesthetic surgeons and clinics, served through exclusive distributors in many countries and a direct sales force. Concentration is not disclosed, and there are no named customers.",
+        "red_flags": [
+          "Deferred and prepaid revenue fell 33% on the year, the opposite of a signal that demand is building",
+          "Liquidity is tight: cash is $68M against a $30M minimum-liquidity covenant, with a 12% inventory financing line and a fourth credit tranche drawn",
+          "Further debt amendment with Oaktree on 2026-04-30; the covenant was raised and the revenue milestone for Tranche D was waived",
+          "Operating margin is still -12%, and the clinical-superiority claims are management's own and unverified against competitors",
+          "Single-source silicone supplier, new CEO since 2025, limited US operating history, and no backlog or named-customer evidence"
+        ]
+      },
+      "conviction": 28.8,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "WK",
@@ -482,7 +652,24 @@
       "backlog_growth": 0.19225000000000003,
       "prepaid_growth": 0.17285006373813316,
       "rd_share": 0.23117803270116272,
-      "rank": 11
+      "rank": 11,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Workiva is a real niche franchise: it is embedded in SEC and XBRL reporting at over 85% of the Fortune 1000, which creates real switching costs, and it is now clearly profitable (Q1 2026 operating income $15.3M against a $24.8M loss a year earlier). It is a diamond only in a modest sense: growth of about 20% is steady rather than accelerating, and the margin swing owes much to flat opex, not to new demand.",
+        "breaks_if": "Subscription growth falls below mid-teens, or backlog and deferred revenue growth drops below revenue growth, which would show the sustainability and regulatory tailwind fading and the margin gain was cost-cutting alone.",
+        "customers": "More than 6,600 organizations, including over 85% of the Fortune 1000; no single-customer concentration disclosed.",
+        "red_flags": [
+          "Growth is steady at 20-21%, with no acceleration in the latest quarter",
+          "Backlog (+19%) and deferred revenue (+17%) are growing no faster than revenue, so there is no sign of building demand",
+          "Margin gain came mainly from flat operating expenses (R&D down slightly year on year), not from new demand",
+          "Stock-based compensation of about $28.6M a quarter is large against $15.3M of operating income; GAAP profit is thin",
+          "$768M of convertible notes against a stockholders' deficit; $50M repurchase in one quarter; auditor change reported May 2026 with no explanation in the supplied"
+        ]
+      },
+      "conviction": 31.8,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "FRSH",
@@ -523,7 +710,24 @@
       "backlog_growth": 0.227717291013102,
       "prepaid_growth": 0.18628272663183099,
       "rd_share": 0.19797306837134931,
-      "rank": 12
+      "rank": 12,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Freshworks is a real SaaS business with 85% gross margin, 16% growth and a shrinking share count, but it sells a lower-priced alternative to ServiceNow and Zendesk in crowded ITSM and CX markets, so its moat is ordinary. The profit inflection is mostly an accounting-margin story: the latest quarter was still an operating loss of $8.1M, and growth is steady at 15-16% with no sign of acceleration.",
+        "breaks_if": "Revenue growth falls below 14% or operating margin stays negative on a GAAP basis for another two quarters as sales and R&D spending outpace revenue, or large-customer expansion fails to show up in ARR.",
+        "customers": "About 75,000 companies in 170 countries; over 60% of ARR from customers with more than 250 employees; no single-customer concentration disclosed.",
+        "red_flags": [
+          "Latest quarter still a GAAP operating loss (-$8.1M); the +2% operating margin is not confirmed by the quarterly statement",
+          "Growth is flat at 15-16%, down from 21% the prior year, so there is no acceleration",
+          "Opex growing faster than revenue in Q1: R&D +23%, S&M +26%",
+          "Competes against much larger ServiceNow, Zendesk and Salesforce; no named customer wins or contract figures disclosed",
+          "Acquisitions (FireHydrant, Device42) add goodwill, so organic growth is unclear; a restructuring was announced in May 2026"
+        ]
+      },
+      "conviction": 22.0,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "INCY",
@@ -564,7 +768,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.3970841369739341,
-      "rank": 13
+      "rank": 13,
+      "judgment": {
+        "edge": 6.5,
+        "demand": 5.5,
+        "confidence": "medium",
+        "thesis": "Incyte has real regulatory and orphan-drug moats in myelofibrosis, PV and GVHD, and its newer products (Opzelura, Monjuvi, Niktimvo) are growing revenue 20%+ with operating margin up from 4% to 30%. But the margin jump looks like a one-off swing from prior charges rather than a new inflection, and the edge on Jakafi ends with its 2028 patent expiry, so it is a mature, concentrated pharma business, not a hidden diamond.",
+        "breaks_if": "Jakafi US sales stall or fall before the 2028 patent expiry, or generic ruxolitinib enters earlier. Equally, Opzelura, Monjuvi and Niktimvo growth would have to fail to replace Jakafi revenue.",
+        "customers": "Specialty pharmacies and wholesalers sell to patients and payers. Novartis pays royalties on ex-US ruxolitinib (Jakavi). Customer concentration is likely high, but the excerpts do not give percentages.",
+        "red_flags": [
+          "Heavy dependence on Jakafi; composition-of-matter patents expire in 2028",
+          "Operating margin jump from 4% to 30% may reflect prior one-off charges (e.g. acquired R&D) rather than durable operating leverage",
+          "No backlog or deferred revenue data; demand evidence is only the reported revenue growth",
+          "Pricing and reimbursement risk, including the Inflation Reduction Act; the small-biotech exception is temporary",
+          "Share count up 3%, so dilution continues despite profitability; $1M of federal awards is trivial and may be misattributed"
+        ]
+      },
+      "conviction": 33.4,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "APPN",
@@ -605,7 +826,24 @@
       "backlog_growth": 0.15603929878636102,
       "prepaid_growth": 0.24678698490816142,
       "rd_share": 0.23165607041383732,
-      "rank": 14
+      "rank": 14,
+      "judgment": {
+        "edge": 5.5,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Appian is a 25-year-old low-code process platform with real lock-in (apps run only on its platform), steady 20% growth, a first operating profit, and buybacks. But it competes with ServiceNow, Pega, Microsoft, UiPath and others, and the evidence shows steady growth rather than a visible inflection or an unreplaceable product.",
+        "breaks_if": "Subscription growth falls below mid-teens, or deferred revenue and backlog growth drops below revenue growth, while operating margin slides back to negative as the AI-agent push fails to add new workloads.",
+        "customers": "Large enterprises and governments in financial services, government, life sciences, insurance and manufacturing; about 38% of revenue is international; sold directly and through Accenture, Deloitte, KPMG, PwC and Capgemini. No customer concentration disclosed, and federal awards are only about $11M ",
+        "red_flags": [
+          "Operating margin of 1% is thin; Q1 operating income was $3.2M on $202M revenue, and net loss persists",
+          "Stockholders' deficit of $59M and $238M of debt, with $22M spent on buybacks in the quarter",
+          "Stock comp of about $12M a quarter exceeds operating income",
+          "Professional services grew 31%, faster than subscriptions at 19%, at low margin ( 25%), so growth quality is diluted",
+          "Backlog (+16%) is growing slower than revenue (+20%), and no named wins or contract values are disclosed"
+        ]
+      },
+      "conviction": 28.5,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "MDB",
@@ -646,7 +884,24 @@
       "backlog_growth": 0.968850267379679,
       "prepaid_growth": 0.30822679266259034,
       "rd_share": 0.2907313386614238,
-      "rank": 15
+      "rank": 15,
+      "judgment": {
+        "edge": 6.5,
+        "demand": 6.5,
+        "confidence": "medium",
+        "thesis": "MongoDB has a real moat: its document database is embedded in customer applications, so switching means costly migrations, and it is the leading non-relational player. Growth is accelerating (+27% in the latest quarter vs +24% two quarters earlier) with backlog +97%, operating loss narrowing and a $2.4B cash and investment pile, but it is a well-known $27B company that is only just breaking even on GAAP and leans heavily on stock compensation, so it is not an overlooked diamond.",
+        "breaks_if": "Atlas consumption growth slows and total revenue growth falls back below 20%, or the operating margin stops improving (SBC stays near 20% of revenue) while hyperscaler or Postgres-compatible alternatives take new workloads.",
+        "customers": "Not disclosed in the supplied text; broad base of enterprises and developers, mostly via the Atlas cloud service, with no concentration evident.",
+        "red_flags": [
+          "GAAP operating margin still negative (-24.8M on 687.6M revenue); the net profit of 4.4M came from other income, not operations",
+          "Stock comp of 137.8M in one quarter is about 20% of revenue; the 9% share count rise dilutes holders",
+          "Gross margin down 2 points on the year as the mix shifts to cloud and AI",
+          "No named customers or contract values in the supplied evidence; the +97% backlog is unexplained",
+          "Competes with Oracle, Microsoft, AWS and open-source Postgres, and the cloud providers are also its distribution partners"
+        ]
+      },
+      "conviction": 35.7,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "TTWO",
@@ -687,7 +942,24 @@
       "backlog_growth": 0.08808485030840973,
       "prepaid_growth": 0.07277482189557216,
       "rd_share": null,
-      "rank": 16
+      "rank": 16,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Take-Two owns a few dominant franchises (Grand Theft Auto, Red Dead, NBA 2K) with no true substitutes, and the loss narrowing is real: nine-month operating loss fell from $614M to $115M and operating cash flow turned positive at $389M. But the evidence is of a hit-driven publisher, not a durable inflection. Growth has slowed to +6% in the latest quarter, the improvement leans on lower reorganization charges, and the next large step depends on one unreleased title.",
+        "breaks_if": "The next Grand Theft Auto release slips again or underperforms, or operating margin stays negative once the current release cycle's deferred revenue is recognized and reorganization charges are gone.",
+        "customers": "Consumers worldwide through console, PC and mobile platforms; the platform holders (Sony, Microsoft, Apple, Google) and retailers are the distribution gatekeepers. NBA 2K Online in China runs through Tencent. Customer concentration not quantified in the supplied text.",
+        "red_flags": [
+          "Operating margin is still negative (-2%) and net loss continues; this is a narrowing loss, not yet a profit",
+          "Quarterly growth decelerated from +31% to +6%",
+          "Backlog +9% and deferred revenue +7% are modest; the $201M deferred-revenue inflow in the nine months is likely pre-release timing",
+          "Share count up 5% and $1.25B of stock issued to fund the balance sheet, so dilution",
+          "Hit-driven earnings, with heavy dependence on a few franchises and release timing; about $525M of intangibles amortization and large capitalized software costs "
+        ]
+      },
+      "conviction": 32.4,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "FROG",
@@ -728,7 +1000,24 @@
       "backlog_growth": 0.35525695426685533,
       "prepaid_growth": 0.2438185852205721,
       "rd_share": 0.3613105908663318,
-      "rank": 17
+      "rank": 17,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 6.0,
+        "confidence": "medium",
+        "thesis": "JFrog's artifact repository is embedded in CI/CD pipelines at most of the Fortune 500, so switching costs are real, and 25-26% growth sustained for three quarters with backlog up 36% and deferred revenue up 24% shows demand building. The case is not a clean diamond: the losses are still deep (-15% operating margin), the 6% share dilution is heavy, the market value is already $9.6B, and GitHub, GitLab and the hyperscalers compete in the same space.",
+        "breaks_if": "Revenue growth falls below about 20% or backlog growth drops below revenue growth, which would suggest AI-era demand is being absorbed by bundled competitors, or operating margin stops improving while dilution continues.",
+        "customers": "Enterprise software development organizations, 'the majority of the Fortune 500' per the company; no named customers or concentration figures in the supplied text.",
+        "red_flags": [
+          "Still loss-making at -15% operating margin; share-based compensation is probably large, given share count +6% a year",
+          "Competes with GitHub/Microsoft, GitLab, cloud-provider registries and open-source alternatives",
+          "No named customers, net dollar retention figure or contract sizes in the evidence supplied",
+          "Edge claims (system of record, Fortune 500 majority) are management's own words, not measured share",
+          "$9.6B valuation already prices in sustained 25%+ growth; Israel/Middle East war risk is cited"
+        ]
+      },
+      "conviction": 32.2,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "IMCR",
@@ -769,7 +1058,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.6770975649932657,
-      "rank": 18
+      "rank": 18,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "KIMMTRAK is the first approved therapy for metastatic uveal melanoma, built on a proprietary TCR bispecific platform with regulatory approval in 39 countries. The company has just turned operating-profitable (Q1 2026 operating income $7.3M vs a $3.6M loss), but growth is decelerating from a single product and there are no contract or backlog signals beyond that, so this looks like a real but narrow business rather than a clear inflection.",
+        "breaks_if": "KIMMTRAK quarterly revenue growth keeps slowing toward single digits, the cutaneous melanoma Phase 3 (TEBE-AM, topline expected as early as 2H 2026) or the brenetafusp Phase 3 fails, or operating margin slips back to negative as R&D spend rises.",
+        "customers": "Hospitals and oncology centres buying KIMMTRAK through payers; US plus Europe. Distributors Medison and Er-Kim cover other regions. A single product accounts for all revenue; no customer concentration figures disclosed.",
+        "red_flags": [
+          "Single-product revenue (KIMMTRAK) in a rare niche, mUM, limited patient pool",
+          "Growth decelerating: +29% two quarters ago, +14% latest quarter",
+          "Operating cash flow negative in Q1 2026 (-$13.8M) despite reported profit; receivables and prepaids rising",
+          "About $394M of debt; net income helped by FX and securities gains",
+          "No backlog or deferred revenue signals; value depends on Phase 3 pipeline readouts (binary risk)"
+        ]
+      },
+      "conviction": 28.8,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "CRNC",
@@ -810,7 +1116,24 @@
       "backlog_growth": 0.1536714091278506,
       "prepaid_growth": 0.17009440522352004,
       "rd_share": 0.35928020837815206,
-      "rank": 19
+      "rank": 19,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 3.0,
+        "confidence": "medium",
+        "thesis": "Cerence has a real position in automotive voice AI: roughly 52% of cars shipped in FY25 carried its technology, nearly all major OEMs are customers, and the 78% gross margin and $1.17B five-year backlog support that. But it is not an inflecting diamond: FY25 revenue fell 24%, the +19% LTM growth and the swing in operating margin come from lumpy license recognition, and the latest quarter is down 18% with operating margin back to -3.8%.",
+        "breaks_if": "Quarterly revenue keeps falling year over year in the next one or two reports, and operating margin stays negative after the lumpy license revenue has passed; or OEMs move to in-house or big-tech assistants (Google, Amazon, etc.) and the variable backlog stops growing.",
+        "customers": "Over 80 OEMs and Tier 1 suppliers, including BMW, Mercedes-Benz, VW Group, Stellantis, Renault, Toyota, Ford, GM, BYD, and tier-ones such as Bosch, Continental and Aptiv. Concentration by customer is not disclosed in the excerpt, and the business is heavily tied to global auto production.",
+        "red_flags": [
+          "Latest quarter revenue -17.7% and operating margin -3.8% versus +22.2% a year ago: the profit inflection is not steady",
+          "Six-month revenue +39% is driven by license revenue timing (a large one-off-style recognition), not by an underlying trend",
+          "FY25 revenue fell 24% and the net loss was $18.7M after a $588M loss in FY24 (impairment-driven), so the margin comparison is flattered by a collapse base",
+          "Variable backlog ($1.0B) is forecast royalties that depend on car shipments and are not contractually committed; remaining performance obligations fell to $165M",
+          "Revenue is tied to cyclical auto production and tariffs; the share count is up 4% and R&D is 36% of revenue, with big-tech in-car AI as a competing alternative"
+        ]
+      },
+      "conviction": 22.6,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "CALX",
@@ -851,7 +1174,24 @@
       "backlog_growth": 0.10546415981198587,
       "prepaid_growth": -0.0059055118110236116,
       "rd_share": 0.18968777600797168,
-      "rank": 20
+      "rank": 20,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Calix has real growth (+27-28%), a swing to a 4% operating margin, 57% gross margin, and a platform with some switching costs among small broadband providers, but the evidence does not show customers lacking alternatives. Backlog growth of only 11% against 27% revenue growth, flat deferred revenue, and no named customer wins suggest demand is not accelerating beyond what is already in the numbers.",
+        "breaks_if": "Revenue growth falls below backlog growth (about 11%), or gross margin slips as appliance mix rises, showing hardware sales are not carrying durable software or service pull.",
+        "customers": "Small and mid-sized communications service providers: telcos, cooperatives, municipalities, fiber overbuilders and MSOs. About 80 new customers a year; no concentration or named customers disclosed in the supplied text.",
+        "red_flags": [
+          "Backlog growth (+11%) well below revenue growth (+27%): the growth rate looks set to slow",
+          "Deferred revenue flat to down (-1%), so no sign of prepaid demand",
+          "Appliance (hardware) is about 83% of revenue and software and service are only about 17%, so the 'agentic AI platform' pitch is mostly marketing",
+          "Operating margin of 4% is thin, and $20M a quarter of stock compensation exceeds operating income",
+          "Q1 buyback of $171M cut cash from $143M to $55M and equity by $122M; inventory up 56% since 2025 year-end"
+        ]
+      },
+      "conviction": 25.0,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "DKNG",
@@ -892,7 +1232,24 @@
       "backlog_growth": null,
       "prepaid_growth": -0.014764397905759119,
       "rd_share": null,
-      "rank": 21
+      "rank": 21,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "DraftKings is a scaled US online betting leader whose state licences and brand give it a real position, but customers can switch to FanDuel, BetMGM, or prediction-market apps at near-zero cost. The turn to profit rests on a 1% operating margin and a one-off $22.8M other gain, so it is a thin, early inflection in a heavily promotional, tax-exposed industry.",
+        "breaks_if": "Operating margin falls back below zero, or Sportsbook net revenue margin and monthly unique payers stall as promotional spend (sales and marketing at about 24% of revenue) keeps rising in new states or in prediction markets.",
+        "customers": "Retail consumers, with 4.0M average monthly unique payers in 2025 and no single-customer concentration. Sportsbook and iGaming make up 93% of revenue.",
+        "red_flags": [
+          "Operating margin of just 1% ($5.8M on $1.65B revenue); net income of $21M leans on a $22.8M other gain",
+          "Operating cash flow was negative $48M in Q1 2026; liabilities to users fell $123M",
+          "Growth is partly hold-driven: Sportsbook net revenue margin rose to 7.1% from 6.0%, which is outcome luck and not durable demand",
+          "Low switching costs: the product is a near-commodity versus FanDuel and BetMGM, with heavy promotions needed to acquire and retain users",
+          "Equity is only $605M against $1.8B of debt; buybacks of $99M in the quarter exceeded net income, and stock compensation is about $65M a quarter"
+        ]
+      },
+      "conviction": 18.7,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "ZG",
@@ -933,7 +1290,24 @@
       "backlog_growth": null,
       "prepaid_growth": 0.05714285714285716,
       "rd_share": 0.22577051615298924,
-      "rank": 22
+      "rank": 22,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Zillow has a real moat in its 1 consumer traffic position, its 173M-home database and the Zestimate, and growth of 16-18% with operating margin reaching breakeven shows steady operating leverage. But the numbers show a mature, housing-cycle-exposed marketplace with no named contract wins, no backlog and only a 6% rise in deferred revenue, so this looks like a steady compounder rather than an inflecting diamond.",
+        "breaks_if": "Enhanced Markets connection share stops rising or revenue growth drops below 10% while operating margin stays near zero, or NAR/MLS listing-data access rules or antitrust settlements weaken Zillow's listing supply or agent economics.",
+        "customers": "Real estate agents and teams (Premier Agent, Zillow Preferred), mortgage borrowers (Zillow Home Loans), and rental property managers and landlords; no concentration disclosed, with consumers as the free traffic side.",
+        "red_flags": [
+          "Gross margin fell 3 points while operating margin only reached 0%, so profitability is not yet proven",
+          "Revenue depends on housing transactions, mortgage rates and affordability, which are cyclical",
+          "No backlog reported and deferred revenue up only 6%, so forward demand is not visible",
+          "Listing data depends on MLS/NAR rules and syndication agreements (Redfin, Realtor.com), and litigation and regulatory risk is high",
+          "R&D at 23% of revenue and heavy AI/product spend, with new debt facility signed Jan 2026"
+        ]
+      },
+      "conviction": 24.4,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "IRTC",
@@ -974,7 +1348,24 @@
       "backlog_growth": null,
       "prepaid_growth": 0.23583180987202934,
       "rd_share": null,
-      "rank": 23
+      "rank": 23,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "iRhythm's Zio is an FDA-cleared, Medicare-reimbursed ambulatory ECG service, a real niche advantage that comes with a large body of clinical data and 71% gross margins. Revenue growth of 26-31% at scale and a Q1 operating loss that narrowed from $32.6M to $16.2M make this a plausible genuine inflection. But the supplied evidence has no named customers, backlog or contracts, and the business depends on reimbursement and faces competition, so it only just clears the bar.",
+        "breaks_if": "Medicare or commercial reimbursement rates are cut, or revenue growth falls below about 20% while SG&A stays near 68% of revenue, so operating margin stops improving toward breakeven.",
+        "customers": "Not disclosed in the excerpts. Revenue comes from Medicare, commercial payors and healthcare providers who order the tests, so payor concentration is likely but unquantified.",
+        "red_flags": [
+          "Single product family (Zio services), so reimbursement changes hit all revenue",
+          "Still operating at a loss: Q1 2026 operating loss of $16.2M, with SG&A at 68% of revenue",
+          "$650M convertible notes against $550M of cash and securities",
+          "Competitive remote cardiac monitoring market, and no market-share data in the evidence",
+          "Auditor change and officer/director changes in the last six months; DOJ and regulatory scrutiny flagged in the risk factors"
+        ]
+      },
+      "conviction": 26.9,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "VCEL",
@@ -1015,7 +1406,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.09725217915271529,
-      "rank": 24
+      "rank": 24,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Vericel could be a diamond because MACI and Epicel are FDA-approved autologous cell therapies with a biologics license, patient-specific manufacturing and a dominant niche position. Gross margin is 75% and revenue is growing 22-30% with operating leverage, yet the evidence of building demand beyond that growth is thin: no backlog, no named contracts, and still a Q1 operating loss.",
+        "breaks_if": "MACI quarterly growth falls back below about 15%, or MACI Arthro fails to widen surgeon adoption, so operating margin stalls near zero and Q1 losses persist.",
+        "customers": "Orthopedic surgeons and burn centers, paid mainly via US insurers and hospitals; concentration not disclosed. MACI is likely the large majority of revenue.",
+        "red_flags": [
+          "Q1 2026 still an operating loss (-$8.1M) on seasonally weak revenue; the 5% trailing margin depends on strong Q4",
+          "Stock-based compensation of $11.3M a quarter is about 16% of revenue and masks true profitability",
+          "Backlog and deferred revenue not reported; no named customer or contract evidence",
+          "Single-product dependence on MACI; Matricel is a sole-source membrane supplier and the Burlington facility is not yet validated",
+          "NexoBrid is licensed from MediWound and made in Israel, adding supply and licence risk"
+        ]
+      },
+      "conviction": 29.9,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "ATRC",
@@ -1056,7 +1464,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.18276685797698844,
-      "rank": 25
+      "rank": 25,
+      "judgment": {
+        "edge": 6.5,
+        "demand": 4.5,
+        "confidence": "medium",
+        "thesis": "AtriCure holds a leading niche position in surgical ablation and left atrial appendage (LAA) exclusion. It has regulatory clearances, Class 1/2 society guideline support and a 76% gross margin. But 14-16% growth is already visible in the numbers, the operating margin is still about -1%, and the evidence supplied has no backlog, named-customer or contract signs of building demand, so this reads as a steady grower rather than a hidden inflection.",
+        "breaks_if": "Revenue growth falls below about 10% or the operating margin stops improving, for example because new LAA or ablation competitors take share, or because the LeAAPS or BoxX-NoAF trials fail to widen the indications.",
+        "customers": "Hospitals and medical centers through a direct sales force in the US and parts of Europe, Australia and Canada, plus distributors elsewhere; no customer concentration disclosed.",
+        "red_flags": [
+          "No backlog or deferred revenue data, so there is no forward demand evidence beyond reported growth",
+          "Operating margin still slightly negative (-1%) despite a 76% gross margin",
+          "Management says new entrants are developing competing products and warns of variability",
+          "LeAAPS and BoxX-NoAF trial outcomes are binary and not yet reported in the supplied text",
+          "Share count up 2% and new debt amendment in January 2026"
+        ]
+      },
+      "conviction": 26.8,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "GTLB",
@@ -1097,7 +1522,24 @@
       "backlog_growth": 0.2019047619047618,
       "prepaid_growth": 0.23157982733806448,
       "rd_share": 0.2874446203194225,
-      "rank": 26
+      "rank": 26,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "GitLab is a real, scaled DevSecOps platform with 87% gross margin, 26% growth, more than 50% of the Fortune 100 as customers, and operating cash flow margin of 24%. But growth is decelerating (29% to 23%), the open-core model leaves free alternatives, and it faces GitHub/Microsoft and other strong competitors, so it looks like a decent business with ordinary competition rather than a hidden diamond.",
+        "breaks_if": "Quarterly revenue growth keeps slowing below about 20%, backlog and deferred revenue growth fall below revenue growth, or Duo Agent Platform fails to show up as paid expansion within the next two to three quarters.",
+        "customers": "Enterprises and software teams of all sizes; more than 50% of the Fortune 100 and over 50 million registered users, but no customer concentration or named large contracts disclosed.",
+        "red_flags": [
+          "Revenue growth decelerating: 29% to 23% over two quarters",
+          "Backlog +20% and deferred revenue +23% both trail revenue growth, so no acceleration signal",
+          "GAAP operating margin still -7%; net loss widened to $56M from $6.3M",
+          "Open-core model and free tiers: customers may not convert, and competitors such as GitHub/Microsoft are strong",
+          "Share count up 4% on the year (dilution); no named customer wins or AI revenue figures in the supplied text"
+        ]
+      },
+      "conviction": 23.7,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "GWRE",
@@ -1138,7 +1580,24 @@
       "backlog_growth": 0.6666666666666667,
       "prepaid_growth": 0.1666735084583204,
       "rd_share": 0.2374796171147672,
-      "rank": 27
+      "rank": 27,
+      "judgment": {
+        "edge": 7.5,
+        "demand": 6.5,
+        "confidence": "medium",
+        "thesis": "Guidewire is the core-system platform for P&C insurers, with five-year-plus subscriptions priced on direct written premium and costly, lengthy migrations that make it hard to replace. Subscription and support revenue grew about 33% in the latest quarter, backlog rose 67%, and operating margin improved from 0% to 7% as the cloud mix shifts, so this looks like real operating leverage rather than a one-off recovery.",
+        "breaks_if": "Backlog growth stalls or reverses while subscription growth slows below about 20%, or a large named carrier moves its core system off Guidewire to a rival or insurtech platform. Cloud gross margin failing to expand would also break it.",
+        "customers": "P&C insurers worldwide, from global carriers to regional ones, sold directly and through system integrators; no customer concentration disclosed in the supplied text.",
+        "red_flags": [
+          "Net income is inflated by large non-operating 'other income' ($27M in the quarter against a $66M loss a year ago), so operating income of $38M is the real figur",
+          "Services run at roughly breakeven or negative gross margin (-$0.8M in the quarter)",
+          "License revenue fell 7% in the quarter, so total growth leans on subscription conversion",
+          "Valuation of $13B is high for a 7% operating margin; stock-based compensation was about $43M in one quarter",
+          "No named customer wins or contract values in the supplied text; the 67% backlog jump is unexplained, though the $677M convertible notes add leverage"
+        ]
+      },
+      "conviction": 35.7,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "BA",
@@ -1179,7 +1638,24 @@
       "backlog_growth": 0.27531317922810317,
       "prepaid_growth": 0.02416794842425629,
       "rd_share": 0.03985507246376811,
-      "rank": 28
+      "rank": 28,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Boeing is half of a commercial aircraft duopoly with a large defense franchise, so customers cannot easily replace it, but that moat has not produced profit: Q1 2026 operating earnings fell to $448M from $461M and net loss was $7M. The revenue-driven turn from loss is a recovery from the 2024 strike and production collapse, not a clear inflection, and execution, labor and debt problems remain.",
+        "breaks_if": "Operating earnings stay near breakeven despite rising deliveries, or 737/787 production rates stall again from quality problems, regulatory caps or strikes, so backlog does not convert to cash and profit.",
+        "customers": "Airlines and lessors worldwide for commercial jets; US government (DoD, NASA) for defense and space, with federal awards of about $24B in fiscal 2025 versus $25.4B in fiscal 2024. Concentration by named customer not disclosed in the excerpts.",
+        "red_flags": [
+          "Q1 2026 operating earnings $448M vs $461M a year earlier, so profit is flat year on year despite 14% revenue growth",
+          "Net loss of $7M and an EPS loss of $0.11 per share after preferred dividends",
+          "Operating cash flow still negative at -$179M, with inventories of $87B",
+          "Debt of about $47B against equity of $6B; share count up 5% from dilution",
+          "Recovery from the 2024-25 strikes and production problems, with 2026 union contract expirations; competition from Airbus and China"
+        ]
+      },
+      "conviction": 26.6,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "AVPT",
@@ -1220,7 +1696,24 @@
       "backlog_growth": 0.33917551221920506,
       "prepaid_growth": 0.267623874575047,
       "rd_share": 0.12093536935820139,
-      "rank": 29
+      "rank": 29,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "AvePoint is a profitable, growing SaaS vendor (SaaS revenue +35% YoY in Q1, backlog +34%, deferred revenue +27%) with a real but not unique data-protection niche built on Microsoft 365 and other cloud ecosystems. It is not clearly a diamond: the growth was already visible in the numbers, switching-cost claims are management's own, competition from Microsoft, Veeam, Rubrik, Cohesity and others is heavy, and the profit inflection is modest.",
+        "breaks_if": "SaaS growth falls below about 20%, backlog and deferred revenue growth drop below revenue growth, or Microsoft bundles comparable native backup and governance features and net retention declines.",
+        "customers": "Not disclosed in the excerpts; the platform is sold to enterprises and through partners and managed service providers, with heavy dependence on the Microsoft 365 ecosystem.",
+        "red_flags": [
+          "No named customers, signed contracts or retention figures in the supplied text",
+          "Switching-cost claims are management assertion, not evidence",
+          "Platform depends on Microsoft and other hyperscalers, which also compete with it",
+          "Gross margin down 2 points, and term license revenue is shrinking as the mix shifts to SaaS",
+          "Share count up 8% year on year despite buybacks; stock compensation dilution; operating margin only about 10%"
+        ]
+      },
+      "conviction": 23.1,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "REAL",
@@ -1261,7 +1754,24 @@
       "backlog_growth": null,
       "prepaid_growth": 0.3596681096681096,
       "rd_share": null,
-      "rank": 30
+      "rank": 30,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "TheRealReal has a real but modest moat: a trusted authentication process, a two-sided network effect, and over 80% of GMV from repeat consignors and buyers. Even so, it is a consumer resale marketplace with many substitutes, a stockholders' deficit and heavy debt, and its reported net income comes mostly from warrant fair-value gains, not operations, so it is probably not a diamond.",
+        "breaks_if": "Revenue growth falls back below roughly 10%, or operating margin stays near breakeven or turns negative again over the next two to three quarters, so that positive net income continues to depend on warrant revaluation gains.",
+        "customers": "Mass-market individual consignors and buyers (over 1 million active buyers; over 80% of GMV from repeat consignors and buyers); no single-customer concentration, but dependent on supply of luxury brands such as Chanel, Herm s and Rolex.",
+        "red_flags": [
+          "Q1 2026 net income of $38.9M comes from a $47.3M warrant fair-value gain; operating loss was still $2.3M",
+          "Stockholders' deficit of $359M, with $231M convertible notes and $144M non-convertible notes against $124M cash",
+          "Cash fell $27M in one quarter, from $151M to $124M",
+          "Share count up 7% on the year, which dilutes holders",
+          "Competition is broad and low-friction for customers (consignment shops, auction houses, brands' own resale, other online platforms), and there are no contracts "
+        ]
+      },
+      "conviction": 16.8,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "TPC",
@@ -1302,7 +1812,24 @@
       "backlog_growth": null,
       "prepaid_growth": 0.3764998033581055,
       "rd_share": null,
-      "rank": 31
+      "rank": 31,
+      "judgment": {
+        "edge": 3.5,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Tutor Perini is a large, long-established heavy civil and building contractor whose pre-qualification and bonding capacity give it some advantage on mega-projects. But it still wins largely through competitive bidding, and its turn from loss to profit looks like a recovery from past project write-downs rather than a durable inflection. Its margins remain exposed to change-order disputes and cost estimates.",
+        "breaks_if": "Further adverse estimate revisions or unresolved change-order disputes on large projects (e.g., the California mass-transit job) push quarterly operating income back toward zero or negative, or backlog stops growing.",
+        "customers": "Public agencies (transit authorities, state and federal government, military in Guam) and private developers, casinos, and healthcare/tech/education owners. Concentration in a few mega-projects (California High-Speed Rail, NYC and Newark projects) but exact percentages not disclosed in the excerpt.",
+        "red_flags": [
+          "Backlog figure not reported in the supplied data, so demand visibility cannot be verified",
+          "Q1 2026 operating income fell to $59.2M from $65.3M despite 11.5% revenue growth",
+          "$16.4M unfavorable adjustment on a California mass-transit project from ongoing change-order negotiations",
+          "Operating margin of 4% is thin; the loss-to-profit swing looks like recovery from prior project write-downs",
+          "Price-driven competitive bidding on much of the Civil work; revenue growth is slowing (+31% to +11%) and management's 'ramp up substantially' claims are unquant"
+        ]
+      },
+      "conviction": 17.9,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "NRDS",
@@ -1343,7 +1870,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.0785075329566855,
-      "rank": 32
+      "rank": 32,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 3.0,
+        "confidence": "medium",
+        "thesis": "NerdWallet is a profitable, asset-light affiliate marketplace with real operating leverage (Q1 2026 operating margin about 12% vs 0.3% a year ago) and aggressive buybacks, but its edge is brand and search traffic rather than anything customers cannot replace. Growth is decelerating (+6% in the latest quarter vs +22% for FY2025), and the margin gain comes from cutting marketing spend, not from visible new demand, so this looks like ordinary cyclical-plus-cost-discipline recovery rather than a dia",
+        "breaks_if": "Revenue growth stays in the single digits while sales and marketing cuts stop, or Google/AI-search changes cut organic traffic and referral revenue falls, which would erase the margin expansion.",
+        "customers": "Consumers and SMBs are the users; revenue comes from financial-institution partners (card issuers, lenders, insurers) paying referral fees. Concentration is not disclosed in the excerpts supplied.",
+        "red_flags": [
+          "Revenue growth slowing: +12% two quarters ago, +6% latest quarter",
+          "Margin gain came from sales and marketing falling about 7% year on year, not from revenue strength",
+          "Revenue depends on referral fees from partners and on third-party search traffic, where Google and AI search can change the rules",
+          "Low switching costs: users can compare on many competing sites, and partners can shift spend",
+          "No backlog, deferred revenue or named customer wins; the filing excerpts give no partner concentration"
+        ]
+      },
+      "conviction": 10.4,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "LXU",
@@ -1384,7 +1928,24 @@
       "backlog_growth": 0.1770911831198192,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 33
+      "rank": 33,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 3.0,
+        "confidence": "medium",
+        "thesis": "LSB is a nitrogen fertilizer and industrial chemicals producer whose margin swing, from 3% operating margin in Q1 2025 to 14% in Q1 2026, looks like a recovery in commodity nitrogen pricing (gross profit up 149% on sales up 18%) rather than a durable advantage. Its natural-gas cost and logistics positions are real but not unique, and demand evidence is limited to an 18% backlog increase with no named customers or contracts.",
+        "breaks_if": "UAN and ammonia spot prices or the Tampa ammonia benchmark fall, or the gas-to-nitrogen spread narrows, and gross margin drops back toward the Q1 2025 level of about 10%.",
+        "customers": "Farmers, ranchers, fertilizer dealers and distributors, plus industrial users such as explosives and mining and acid customers; Covestro is named as a contract-operated site. Concentration is not disclosed in the excerpts.",
+        "red_flags": [
+          "Commodity nitrogen producer: margins follow nitrogen prices and natural gas costs, not product differentiation",
+          "Recovery from a weak year, not a clear inflection; Q1 2025 was near breakeven",
+          "$440M long-term debt against $542M equity",
+          "No named customer wins, contract values, or prepaid revenue data; the 18% backlog rise is unexplained",
+          "Customer deposits flat in Q1 2026 versus a $10.2M inflow a year earlier, and an auditor change in March 2026 is unexplained"
+        ]
+      },
+      "conviction": 10.0,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "FIGS",
@@ -1425,7 +1986,24 @@
       "backlog_growth": null,
       "prepaid_growth": -0.13016845329249616,
       "rd_share": null,
-      "rank": 34
+      "rank": 34,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 3.0,
+        "confidence": "medium",
+        "thesis": "FIGS is a well-run DTC scrubs brand with a 67% gross margin and about 2.9 million active customers, but it sells apparel that a nurse can swap for a competitor's at little cost, and brand loyalty is a soft moat. The turn to a 6% operating margin comes with 19% growth and an accelerating latest quarter (+28%), but there are no contracts, backlog or named customers behind it, so it looks like a decent consumer brand recovering from a slowdown rather than a diamond.",
+        "breaks_if": "Quarterly growth falls back to single digits (it was +8% two quarters ago) or gross margin keeps eroding under tariffs, showing that the brand cannot hold price or volume against Cherokee, Jaanuu, Lululemon-type entrants and unbranded scrubs.",
+        "customers": "Individual healthcare professionals buying their own scrubs (about 2.9 million active customers), plus a small B2B 'TEAMS' channel; no concentration disclosed. Federal award figures are likely noise from a name match.",
+        "red_flags": [
+          "Apparel with low switching costs; edge rests on brand and community, not technology or regulation",
+          "Deferred revenue down 13% on the year; no backlog or contract evidence",
+          "Growth is volatile: +8% two quarters ago, then +28%",
+          "Gross margin down 1 point on the year; tariff and trade-policy exposure and reliance on a limited number of suppliers",
+          "Operating margin of 6% is thin and recently turned; share count up 2%; the only material agreement is an office lease amendment, not a customer win"
+        ]
+      },
+      "conviction": 9.8,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "PEN",
@@ -1466,7 +2044,24 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 35
+      "rank": 35,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Penumbra is a real, growing thrombectomy franchise: revenue grew 17.5% to $1.40B, gross margin is about 67%, and the products carry regulatory clearance. But the margin 'inflection' is mostly the lapping of a $115M impairment charge from exiting the immersive healthcare business, and the stock is now pinned to Boston Scientific's $374/share takeover, so there is little upside left to find.",
+        "breaks_if": "The Boston Scientific deal closes at $374 per share, which caps upside at the deal price, or Q2 2026 operating margin stays below the prior-year level and growth slows below 15%.",
+        "customers": "Hospitals and specialist physicians (interventional neuroradiologists, vascular specialists), sold mostly direct in the US and Europe plus distributors elsewhere. Concentration is not disclosed in the excerpt.",
+        "red_flags": [
+          "Operating margin 'inflection' is mostly the 2024 impairment charge rolling off: 2024 operating income was $9.3M after $115.3M of charges",
+          "Q1 2026 operating income fell to $38.2M from $40.4M despite 16% revenue growth, as SG&A rose about 26%",
+          "Pending $14.5B acquisition by Boston Scientific makes the stock a merger-arbitrage situation, not an independent inflection",
+          "No backlog, deferred revenue or named customer contracts disclosed; demand evidence is only reported revenue growth",
+          "Inventory of $439M is about a third of annual revenue, and R&D is only about 6% of revenue"
+        ]
+      },
+      "conviction": 27.6,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "ROKU",
@@ -1507,7 +2102,24 @@
       "backlog_growth": -0.013068672173591422,
       "prepaid_growth": 0.07118280942955857,
       "rd_share": 0.14789975063730273,
-      "rank": 36
+      "rank": 36,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 4.0,
+        "confidence": "low",
+        "thesis": "Roku is the leading US TV streaming platform by hours streamed, with 17% revenue growth and a swing to a 2% operating margin. But the supplied text contains no named customer wins, signed contracts or rising backlog, and the platform faces competition from Amazon, Google, Walmart/Vizio and Samsung/LG. This looks like a decent scaled ad-platform business that is recovering, not a clear diamond.",
+        "breaks_if": "Platform revenue growth or ARPU stalls while Streaming Hours growth slows, or a large TV OEM or retailer moves its default operating system away from Roku, which would show the scale advantage is not protecting margins.",
+        "customers": "Not disclosed in the supplied text; revenue comes from advertisers and content partners on the platform, plus TV OEM licensees and retailers for devices. Concentration is not quantified here.",
+        "red_flags": [
+          "Backlog down 1% on the year, so no visible contract build",
+          "Gross margin flat at 44%, with no sign of operating leverage from pricing or mix",
+          "Operating margin of 2% is thin and the improvement is recent",
+          "Supplied text is only glossary and boilerplate, with no customer or contract evidence",
+          "Competes with larger platform owners (Amazon, Google, Walmart/Vizio, Samsung) that control hardware and distribution"
+        ]
+      },
+      "conviction": 18.3,
+      "hindsight_probe": "unknown"
     },
     {
       "ticker": "HROW",
@@ -1548,7 +2160,27 @@
       "backlog_growth": null,
       "prepaid_growth": 0.02758620689655178,
       "rd_share": 0.08861635805341025,
-      "rank": 37
+      "rank": 37,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 2.0,
+        "confidence": "high",
+        "thesis": "Not a diamond. The screen's 'turn to profit' is not visible in the latest quarter, which shows a $22M operating loss against $11M a year earlier, with revenue down 8% and gross profit down 16%. The portfolio is mostly acquired legacy eye drops plus a compounding business, and the growth drivers are unlaunched biosimilars that need capital while debt keeps rising.",
+        "breaks_if": "Revenue growth does not return to double digits once VEVYE and the mid-2026 launches (BYOOVIZ, BYQLOVI) ramp, or operating loss persists past the next two quarters while debt keeps rising.",
+        "customers": "U.S. eyecare professionals, with sales presumably routed through wholesalers and pharmacies. Concentration is not disclosed in the supplied text; the $101M receivable balance against $44M quarterly revenue suggests a few large payers or distributors.",
+        "red_flags": [
+          "Q1 2026 operating loss of $22.1M vs $11.2M a year earlier; the numbers screen's +7% operating margin conflicts with the latest filing",
+          "Revenue fell 8% year over year in Q1 and gross profit fell 16%; gross margin dropped from about 68% to 61%",
+          "Operating cash flow was -$9.0M, and a $50M add-on to the 8.625% senior notes funded a $18M product-rights purchase and cash needs; notes payable now $292M again",
+          "Growth depends on biosimilar launches (2026-2027) and 2028 pipeline assets, none of which is yet generating revenue; no backlog or named contracts",
+          "Mostly acquired legacy generics-like brands plus compounded products (ImprimisRx), which are exposed to regulatory and pricing pressure; moat is thin"
+        ]
+      },
+      "conviction": 5.6,
+      "hindsight_probe": "unknown"
     }
-  ]
+  ],
+  "judged_as_of": "2026-05-30",
+  "probed_until": "2026-10-11",
+  "model": "claude-sonnet-5-5"
 }

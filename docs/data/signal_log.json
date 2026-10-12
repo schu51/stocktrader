@@ -619,5 +619,120 @@
     "blocked_by": "ma50_room",
     "news_arm": "news",
     "news_veto": false
+  },
+  {
+    "date": "2026-10-12",
+    "symbol": "FCX",
+    "price": 73.62000274658203,
+    "signals": {
+      "macd_cross": true,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 10.4,
+      "atr_pct": 0.03243,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.111,
+      "st_bull_ratio": 0.857
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-12",
+    "symbol": "DVN",
+    "price": 49.18000030517578,
+    "signals": {
+      "macd_cross": true,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 12.7,
+      "atr_pct": 0.02962,
+      "news_positive": null,
+      "news_negative": null,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 1.0,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-12",
+    "symbol": "JCI",
+    "price": 156.22999572753906,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": true,
+      "adx": 20.6,
+      "atr_pct": 0.0229,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.296,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": null,
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-12",
+    "symbol": "IFF",
+    "price": 84.55500030517578,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 13.2,
+      "atr_pct": 0.01807,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.111,
+      "st_bull_ratio": 0.833
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-12",
+    "symbol": "CNC",
+    "price": 65.61499786376953,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 12.9,
+      "atr_pct": 0.02813,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.833,
+      "st_bull_ratio": 0.714
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "control",
+    "news_veto": false
   }
 ]

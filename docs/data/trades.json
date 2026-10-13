@@ -2114,7 +2114,7 @@
   {
     "trade_id": "TRD-20260807140231-ANET",
     "symbol": "ANET",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-08-07",
     "entry_ts": "2026-08-07T14:02:31.675522",
     "entry_price": 192.26,
@@ -2128,14 +2128,15 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "c862bfec-3cd7-4f71-a336-af3da0369121",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-13",
+    "exit_price": 205.13,
+    "exit_reason": "STALE",
+    "pnl_usd": 167.31,
+    "pnl_pct": 6.69,
+    "hold_days": 67,
     "entry_limit": 192.28,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-13T14:02:57.873725"
   },
   {
     "trade_id": "TRD-20260813145410-FF",

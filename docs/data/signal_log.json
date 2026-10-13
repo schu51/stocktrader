@@ -734,5 +734,51 @@
     "blocked_by": "ma50_room",
     "news_arm": "control",
     "news_veto": false
+  },
+  {
+    "date": "2026-10-13",
+    "symbol": "TRGP",
+    "price": 291.57000732421875,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 11.4,
+      "atr_pct": 0.02294,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.8,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-13",
+    "symbol": "FCX",
+    "price": 72.70670318603516,
+    "signals": {
+      "macd_cross": true,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 10.4,
+      "atr_pct": 0.03071,
+      "news_positive": false,
+      "news_negative": true,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": -0.267,
+      "st_bull_ratio": 0.857
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": true
   }
 ]

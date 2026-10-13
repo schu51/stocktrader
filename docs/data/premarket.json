@@ -1,101 +1,134 @@
 {
-  "generated_at": "2026-10-12T06:00:53.869127-07:00",
+  "generated_at": "2026-10-13T06:00:44.911373-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 38,
-    "mixed": 11,
-    "weak": 26
+    "strong": 39,
+    "mixed": 9,
+    "weak": 27
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-10-12T09:01:00-04:00",
-  "premarket_quotes": 71,
+  "premarket_as_of": "2026-10-13T09:00:49-04:00",
+  "premarket_quotes": 72,
   "no_premarket_quote": [
     "PCOR",
     "NCNO",
-    "DXCM",
     "PODD"
   ],
   "gap_alerts": [
     {
-      "ticker": "SNOW",
-      "prev_close": 368.89,
-      "current": 368.56,
-      "pct_chg": -0.09,
-      "ma50": 330.25,
+      "ticker": "S",
+      "prev_close": 25.66,
+      "current": 23.64,
+      "pct_chg": -7.87,
+      "ma50": 22.38,
       "reasons": [
-        "volume spike 2.0x avg (prior session)"
+        "gap down -7.9%"
       ]
     },
     {
-      "ticker": "CRM",
-      "prev_close": 229.13,
-      "current": 238.2,
-      "pct_chg": 3.96,
-      "ma50": 224.77,
+      "ticker": "CRWV",
+      "prev_close": 80.26,
+      "current": 76.65,
+      "pct_chg": -4.5,
+      "ma50": 88.6,
       "reasons": [
-        "gap UP 4.0% above 50MA \u2014 momentum alert"
+        "gap down -4.5%"
+      ]
+    },
+    {
+      "ticker": "APLD",
+      "prev_close": 23.25,
+      "current": 22.24,
+      "pct_chg": -4.34,
+      "ma50": 26.94,
+      "reasons": [
+        "gap down -4.3%"
+      ]
+    },
+    {
+      "ticker": "MRVL",
+      "prev_close": 265.86,
+      "current": 256.38,
+      "pct_chg": -3.57,
+      "ma50": 238.01,
+      "reasons": [
+        "gap down -3.6%"
+      ]
+    },
+    {
+      "ticker": "ARM",
+      "prev_close": 255.24,
+      "current": 246.44,
+      "pct_chg": -3.45,
+      "ma50": 270.18,
+      "reasons": [
+        "gap down -3.4%"
+      ]
+    },
+    {
+      "ticker": "KLAC",
+      "prev_close": 190.12,
+      "current": 185.55,
+      "pct_chg": -2.4,
+      "ma50": 188.08,
+      "reasons": [
+        "crossed BELOW 50MA (188.08)"
+      ]
+    },
+    {
+      "ticker": "AMAT",
+      "prev_close": 497.53,
+      "current": 485.7,
+      "pct_chg": -2.38,
+      "ma50": 489.59,
+      "reasons": [
+        "crossed BELOW 50MA (489.59)"
+      ]
+    },
+    {
+      "ticker": "ETN",
+      "prev_close": 426.69,
+      "current": 419.88,
+      "pct_chg": -1.6,
+      "ma50": 426.58,
+      "reasons": [
+        "crossed BELOW 50MA (426.58)"
+      ]
+    },
+    {
+      "ticker": "QCOM",
+      "prev_close": 174.43,
+      "current": 172.46,
+      "pct_chg": -1.13,
+      "ma50": 173.24,
+      "reasons": [
+        "crossed BELOW 50MA (173.24)"
       ]
     }
   ],
-  "avoids": [],
-  "gap_up_priority": [
-    "CRM"
+  "avoids": [
+    "S",
+    "CRWV",
+    "APLD",
+    "MRVL",
+    "ARM",
+    "KLAC",
+    "AMAT",
+    "ETN",
+    "QCOM"
   ],
+  "gap_up_priority": [],
   "top_candidates": [
     {
-      "ticker": "ZS",
-      "price": 233.73,
-      "ma50": 185.78,
-      "ret_5d": 18.9,
-      "ret_20d": 42.1,
-      "score": 0.2682,
-      "gap_up": false,
-      "thesis_grade": "C",
-      "thesis_score": 53.0
-    },
-    {
       "ticker": "OKTA",
-      "price": 232.13,
-      "ma50": 173.11,
-      "ret_5d": 9.8,
-      "ret_20d": 39.4,
-      "score": 0.2675,
+      "price": 227.08,
+      "ma50": 174.81,
+      "ret_5d": 4.0,
+      "ret_20d": 21.8,
+      "score": 0.197,
       "gap_up": false,
-      "thesis_grade": "C",
-      "thesis_score": 52.0
-    },
-    {
-      "ticker": "SHOP",
-      "price": 170.85,
-      "ma50": 144.82,
-      "ret_5d": 12.9,
-      "ret_20d": 32.7,
-      "score": 0.2084,
-      "gap_up": false,
-      "thesis_grade": "C",
-      "thesis_score": 46.0
-    },
-    {
-      "ticker": "DDOG",
-      "price": 293.26,
-      "ma50": 246.88,
-      "ret_5d": 5.8,
-      "ret_20d": 32.6,
-      "score": 0.1902,
-      "gap_up": false,
-      "thesis_grade": "D",
-      "thesis_score": 26.0
-    },
-    {
-      "ticker": "S",
-      "price": 26.27,
-      "ma50": 22.24,
-      "ret_5d": 4.8,
-      "ret_20d": 33.0,
-      "score": 0.1859,
-      "gap_up": false,
-      "thesis_grade": "D",
-      "thesis_score": 26.0
+      "thesis_grade": "B",
+      "thesis_score": 57.0
     }
   ]
 }

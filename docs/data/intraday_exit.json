@@ -1,25 +1,23 @@
 {
-  "generated_at": "2026-10-14T13:45:49.144275",
-  "positions_checked": 22,
-  "exits_triggered": [],
-  "stops_updated": [
+  "generated_at": "2026-10-14T14:15:43.819028",
+  "positions_checked": 26,
+  "exits_triggered": [
     {
-      "symbol": "VLO",
-      "new_stop": 410.51,
-      "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 70.65
+      "symbol": "GEV",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$959.87 is 0.8% below 50MA $967.97",
+      "qty": 2,
+      "price": 959.87,
+      "pnl_pct": -2.73,
+      "executed": true,
+      "order_id": "e5adbb96-e45e-4d36-8d95-87cea358660f",
+      "confirmed": true,
+      "sale": "filled"
     }
   ],
+  "stops_updated": [],
   "stops_placed": [],
   "stop_failures": [],
-  "broker_exits": [
-    {
-      "symbol": "SMCI",
-      "trigger": "BROKER_STOP",
-      "price": 37.67,
-      "pnl_pct": -9.0,
-      "exit_date": "2026-10-14"
-    }
-  ],
+  "broker_exits": [],
   "mode": "EXECUTE"
 }

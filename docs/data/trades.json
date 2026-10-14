@@ -2970,7 +2970,7 @@
   {
     "trade_id": "TRD-20261005142009-GEV",
     "symbol": "GEV",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-05",
     "entry_ts": "2026-10-05T14:20:09.118212",
     "entry_price": 986.84,
@@ -3002,14 +3002,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.081975,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-14",
+    "exit_price": 959.87,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -53.88,
+    "pnl_pct": -2.73,
+    "hold_days": 9,
     "entry_limit": 1025.05,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-14T14:15:43.608649"
   },
   {
     "trade_id": "TRD-20261005142010-PSX",
@@ -3584,7 +3585,9 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 307.22,
+    "entry_filled": true
   },
   {
     "trade_id": "TRD-20261014140314-NTAP",
@@ -3626,7 +3629,9 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 233.3,
+    "entry_filled": true
   },
   {
     "trade_id": "TRD-20261014140314-TWLO",
@@ -3668,7 +3673,9 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 286.21,
+    "entry_filled": true
   },
   {
     "trade_id": "TRD-20261014140314-ILMN",
@@ -3676,7 +3683,7 @@
     "status": "OPEN",
     "entry_date": "2026-10-14",
     "entry_ts": "2026-10-14T14:03:14.864825",
-    "entry_price": 275.23,
+    "entry_price": 275.15,
     "shares": 9,
     "stop_loss": 253.21,
     "trend_score": 69,
@@ -3710,6 +3717,8 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 275.23,
+    "entry_filled": true
   }
 ]

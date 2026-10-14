@@ -2680,7 +2680,7 @@
   {
     "trade_id": "TRD-20260921190256-NVDA",
     "symbol": "NVDA",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-09-21",
     "entry_ts": "2026-09-21T19:02:56.924718",
     "entry_price": 227.79,
@@ -2694,14 +2694,15 @@
     "sector": "technology",
     "weight_version": 2,
     "order_id": "4f6e537a-5f55-4c65-8b07-74777f77e8ca",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-14",
+    "exit_price": 222.51,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -95.13,
+    "pnl_pct": -2.32,
+    "hold_days": 23,
     "entry_limit": 227.81,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-14T15:45:47.536618"
   },
   {
     "trade_id": "TRD-20260921190257-PLTR",

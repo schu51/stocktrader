@@ -1,21 +1,15 @@
 {
-  "generated_at": "2026-10-14T15:45:47.782956",
-  "positions_checked": 25,
-  "exits_triggered": [
+  "generated_at": "2026-10-14T16:15:46.404377",
+  "positions_checked": 24,
+  "exits_triggered": [],
+  "stops_updated": [
     {
-      "symbol": "NVDA",
-      "trigger": "PRICE_BELOW_50MA",
-      "reason": "$222.51 is 0.2% below 50MA $222.90",
-      "qty": 18,
-      "price": 222.515,
-      "pnl_pct": -2.32,
-      "executed": true,
-      "order_id": "fdbe27be-2ce7-48c9-98af-a7beffd79155",
-      "confirmed": true,
-      "sale": "filled"
+      "symbol": "VLO",
+      "new_stop": 411.7,
+      "tier": "50%+ gain \u2192 10% trail",
+      "pnl_pct": 71.15
     }
   ],
-  "stops_updated": [],
   "stops_placed": [],
   "stop_failures": [],
   "broker_exits": [],

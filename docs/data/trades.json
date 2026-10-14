@@ -3373,7 +3373,7 @@
   {
     "trade_id": "TRD-20261008140300-PWR",
     "symbol": "PWR",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-08",
     "entry_ts": "2026-10-08T14:03:00.317876",
     "entry_price": 694.23,
@@ -3405,14 +3405,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.075225,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-14",
+    "exit_price": 652.38,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -209.31,
+    "pnl_pct": -6.03,
+    "hold_days": 6,
     "entry_limit": 735.0,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-14T18:15:42.829484"
   },
   {
     "trade_id": "TRD-20261008140301-APA",

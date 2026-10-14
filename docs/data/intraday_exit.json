@@ -1,17 +1,25 @@
 {
-  "generated_at": "2026-10-13T19:45:43.031445",
-  "positions_checked": 23,
+  "generated_at": "2026-10-14T13:45:49.144275",
+  "positions_checked": 22,
   "exits_triggered": [],
   "stops_updated": [
     {
       "symbol": "VLO",
-      "new_stop": 409.97,
+      "new_stop": 410.51,
       "tier": "50%+ gain \u2192 10% trail",
-      "pnl_pct": 70.43
+      "pnl_pct": 70.65
     }
   ],
   "stops_placed": [],
   "stop_failures": [],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "SMCI",
+      "trigger": "BROKER_STOP",
+      "price": 37.67,
+      "pnl_pct": -9.0,
+      "exit_date": "2026-10-14"
+    }
+  ],
   "mode": "EXECUTE"
 }

@@ -2756,7 +2756,7 @@
   {
     "trade_id": "TRD-20260929190641-SMCI",
     "symbol": "SMCI",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-09-29",
     "entry_ts": "2026-09-29T19:06:41.135864",
     "entry_price": 41.4,
@@ -2770,14 +2770,15 @@
     "sector": "technology",
     "weight_version": 2,
     "order_id": "a8895440-ca26-4715-8a8d-2aa8109923c9",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-14",
+    "exit_price": 37.67,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": -227.33,
+    "pnl_pct": -9.0,
+    "hold_days": 15,
     "entry_limit": 41.4,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-14T13:33:51.150403"
   },
   {
     "trade_id": "TRD-20260929190641-ARM",

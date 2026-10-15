@@ -20,7 +20,7 @@ import logging
 import re
 from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Dict, Optional, Tuple
 from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
@@ -181,6 +181,56 @@ DIAMOND_SLEEVE = "diamond"
 SLEEVE_SHARE = 0.20            # of the account, set aside for the sleeve
 SLEEVE_STOP = 0.25             # its only price exit: a disaster stop this far below entry
 TRADES_PATH = Path(__file__).parent / "docs" / "data" / "trades.json"
+
+
+SLEEVE_ORDER_PREFIX = "dmd-"   # client order id of every sleeve buy: ownership the broker itself keeps
+
+
+def broker_sleeve_symbols(broker, held: set) -> Optional[set]:
+    """
+    Of the symbols held, those whose most recent filled buy was the sleeve's,
+    by its client order id. The trade log says the same thing, but each job
+    reads its own checkout of it, which can be minutes behind or lose an entry
+    when two jobs' commits are merged; the broker's record cannot. None if the
+    orders cannot be read.
+    """
+    if not held:
+        return set()
+    orders = []
+    for status in ("closed", "open"):
+        got = broker.get_orders(status=status, limit=500) or []
+        if not getattr(broker, "last_orders_ok", True):
+            return None
+        orders += got
+    latest: Dict[str, tuple] = {}
+    for o in orders:
+        if o.get("side") != "buy" or o.get("symbol") not in held:
+            continue
+        try:
+            filled = float(o.get("filled_qty") or 0) > 0 or o.get("status") in ("filled", "partially_filled")
+        except (TypeError, ValueError):
+            filled = o.get("status") in ("filled", "partially_filled")
+        if not filled:
+            continue
+        when = str(o.get("filled_at") or o.get("updated_at") or o.get("submitted_at") or "")
+        if o["symbol"] not in latest or when > latest[o["symbol"]][0]:
+            latest[o["symbol"]] = (when, str(o.get("client_order_id") or ""))
+    return {sym for sym, (_, cid) in latest.items() if cid.startswith(SLEEVE_ORDER_PREFIX)}
+
+
+def sleeve_holdings(broker, positions: list, trades_path=None) -> Optional[set]:
+    """
+    Symbols the sleeve owns: its open trade-log entries, plus any position the
+    broker shows it bought (broker_sleeve_symbols). None if either source
+    cannot be read: unknown ownership must stop a sale, not permit one.
+    """
+    logged = read_sleeve_symbols(trades_path)
+    if logged is None:
+        return None
+    seen = broker_sleeve_symbols(broker, {p.get("symbol") for p in positions or [] if p.get("symbol")})
+    if seen is None:
+        return None
+    return logged | seen
 
 
 def sleeve_symbols(trades) -> set:

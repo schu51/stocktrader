@@ -1,5 +1,7 @@
 """The large-cap bot's rules must never act on a holding that belongs to the diamond sleeve."""
 import json
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -7,6 +9,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import pytest
 from tests.test_stop_placement import _Broker, _stop, make_position
+
+ET = ZoneInfo("America/New_York")
 
 SLEEVE_TRADE = {"symbol": "STAA", "status": "OPEN", "entry_date": "2026-10-26", "entry_price": 30.0, "shares": 96,
                 "sleeve": "diamond", "stop_arm": "sleeve", "stop_dist": 0.25}
@@ -100,7 +104,8 @@ def test_daily_exit_check_skips_sleeve_positions(monkeypatch, tmp_path):
     from run_daily_analysis import DailyRunner
     (tmp_path / "trades.json").write_text(json.dumps([SLEEVE_TRADE]))
     monkeypatch.setattr(exit_logic, "TRADES_PATH", tmp_path / "trades.json")
-    broker = SimpleNamespace(get_positions=lambda: [_long("STAA", 96, 30.0, 25.0)], last_positions_ok=True)
+    broker = SimpleNamespace(get_positions=lambda: [_long("STAA", 96, 30.0, 25.0)], last_positions_ok=True,
+                             get_orders=lambda **kw: [], last_orders_ok=True)
     out = DailyRunner._evaluate_exits(SimpleNamespace(broker=broker), execute=True)
     assert out["sleeve"] == ["STAA"] and out["positions_checked"] == 0 and out["exits_triggered"] == []
     (tmp_path / "trades.json").write_text("{not json")
@@ -172,3 +177,56 @@ def test_no_stop_is_placed_on_a_guess_when_the_trade_log_is_unreadable(monkeypat
     assert broker.placed == [] and "trade log" in out["error"]
     (tmp_path / "docs" / "data" / "trades.json").unlink()
     assert stop_placement.load_trades() == []                       # no log at all is not "unreadable"
+
+
+# ── ownership that survives a lost or late trade-log write ───────────────────
+
+def test_a_position_bought_by_the_sleeve_is_known_from_the_broker_even_without_a_log_entry():
+    # The log can be behind (another job's checkout) or lose an entry in a git
+    # merge. Every sleeve buy also carries a client order id the broker keeps.
+    from exit_logic import SLEEVE_ORDER_PREFIX, broker_sleeve_symbols
+    class B:
+        last_orders_ok = True
+        def get_orders(self, status=None, limit=50, symbols=None):
+            return [
+                {"symbol": "STAA", "side": "buy", "status": "filled", "client_order_id": SLEEVE_ORDER_PREFIX + "STAA-1",
+                 "filled_at": "2026-10-26T14:31:00Z"},
+                {"symbol": "AME", "side": "buy", "status": "filled", "client_order_id": "abc", "filled_at": "2026-10-26T14:01:00Z"},
+                # sold by the sleeve and later bought by the large-cap run: the latest buy decides
+                {"symbol": "KLIC", "side": "buy", "status": "filled", "client_order_id": SLEEVE_ORDER_PREFIX + "KLIC-1",
+                 "filled_at": "2026-09-01T14:31:00Z"},
+                {"symbol": "KLIC", "side": "buy", "status": "filled", "client_order_id": "x", "filled_at": "2026-10-20T14:01:00Z"},
+                {"symbol": "ETON", "side": "buy", "status": "partially_filled", "client_order_id": SLEEVE_ORDER_PREFIX + "ETON-1",
+                 "filled_at": "2026-10-26T14:31:00Z"},
+            ]
+    assert broker_sleeve_symbols(B(), {"STAA", "AME", "KLIC", "ETON"}) == {"STAA", "ETON"}
+    down = B(); down.last_orders_ok = False
+    assert broker_sleeve_symbols(down, {"STAA"}) is None                 # unknown, not "none"
+
+
+def test_the_intraday_monitor_leaves_alone_a_sleeve_fill_its_checkout_has_not_seen(monkeypatch, tmp_path):
+    from exit_logic import SLEEVE_ORDER_PREFIX
+    broker = _Broker([_long("STAA", 96, 30.0, 25.0)])                    # far below its 50-day
+    broker.get_orders = lambda status=None, limit=50, symbols=None: (
+        [{"symbol": "STAA", "side": "buy", "status": "filled", "client_order_id": SLEEVE_ORDER_PREFIX + "STAA-1",
+          "filled_at": "2026-10-26T14:31:00Z"}] if status == "closed" else [])
+    mod = _intraday(monkeypatch, tmp_path, broker, {"STAA": 40.0}, [])   # the log has no entry for it at all
+    mod.main()
+    out = json.loads((tmp_path / "intraday_exit.json").read_text())
+    assert out["exits_triggered"] == [] and out["sleeve_positions"] == ["STAA"]
+    assert [(o["symbol"], o["stop_price"]) for o in broker.placed] == [("STAA", 22.5)]   # the sleeve's stop, not 8%
+
+
+def test_the_dispatcher_never_starts_the_sleeve_beside_a_job_that_writes_the_trade_log():
+    from dispatcher import run_due
+    started = []
+    # 10:45 after a missed 10:30: the intraday check is due, the sleeve is a catch-up
+    run_due(datetime(2026, 10, 26, 10, 45, 5, tzinfo=ET), "main",
+            already_started=lambda wf, since: wf not in ("diamond_sleeve.yml", "intraday_exit.yml"),
+            start=lambda wf, ref: started.append(wf) or True)
+    assert "diamond_sleeve.yml" not in started and "intraday_exit.yml" in started
+    started.clear()
+    # 11:00: nothing else that writes the log is due, so the sleeve is caught up now
+    run_due(datetime(2026, 10, 26, 11, 0, 5, tzinfo=ET), "main", already_started=lambda wf, since: wf != "diamond_sleeve.yml",
+            start=lambda wf, ref: started.append(wf) or True)
+    assert "diamond_sleeve.yml" in started

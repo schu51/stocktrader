@@ -45,7 +45,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
 from exit_logic import (clear_stops_for_sale, drop_sleeve_candidates, find_untradable, is_long_equity,
-                        read_sleeve_symbols, reconcile_phantom_trades, record_broker_exits, safe_to_reconcile,
+                        read_sleeve_symbols, reconcile_phantom_trades, sleeve_holdings, record_broker_exits, safe_to_reconcile,
                         sleeve_cash_reserved, split_positions, without_sleeve)
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
@@ -141,7 +141,10 @@ def fetch_market_data(symbol: str):
         return None, None
 
 
-def classify_order_for_reconcile(status: str) -> str:
+_NOT_GIVEN = object()
+
+
+def classify_order_for_reconcile(status: str, filled_qty=_NOT_GIVEN) -> str:
     """
     Decide whether an OPEN trade's BUY order indicates a phantom (never filled).
 
@@ -156,7 +159,14 @@ def classify_order_for_reconcile(status: str) -> str:
     if s in ("filled", "partially_filled"):
         return "keep"
     if s in ("canceled", "cancelled", "expired", "rejected", "done_for_day", "replaced"):
-        return "cancel"
+        if filled_qty is _NOT_GIVEN:
+            return "cancel"
+        # An order that ended after a partial fill left shares in the account:
+        # those are a real position, not a phantom. Unreadable is not zero.
+        try:
+            return "cancel" if float(filled_qty) == 0 else "keep"
+        except (TypeError, ValueError):
+            return "keep"
     return "keep"
 
 
@@ -241,7 +251,7 @@ class DailyRunner:
         # An unreadable trade log is "unknown", not "the sleeve holds nothing":
         # _positions_verified then fails, which switches off rotation, the
         # stale exit, reconciliation and buying for this run.
-        sleeve = read_sleeve_symbols()
+        sleeve = sleeve_holdings(self.broker, raw)
         self._sleeve_known = sleeve is not None
         self._sleeve = sleeve or set()
         sleeve_value = 0.0
@@ -1295,7 +1305,7 @@ class DailyRunner:
             try:
                 order = self.broker.get_order(t["order_id"])
                 status = order.get("status") if isinstance(order, dict) else None
-                if classify_order_for_reconcile(status) == "cancel":
+                if classify_order_for_reconcile(status, order.get("filled_qty") if isinstance(order, dict) else None) == "cancel":
                     t["status"] = "CANCELLED"
                     t["exit_reason"] = "ORDER_NOT_FILLED"
                     cancelled += 1
@@ -1461,9 +1471,9 @@ class DailyRunner:
         result["unmanaged"] = [p["symbol"] for p in unmanaged]
         # ...nor the diamond sleeve's holdings. If the trade log cannot say which
         # those are, no exit is evaluated: every position keeps its broker stop.
-        sleeve = read_sleeve_symbols()
+        sleeve = sleeve_holdings(self.broker, positions)
         if sleeve is None:
-            result["error"] = "trade log unreadable: cannot tell which positions the diamond sleeve holds"
+            result["error"] = "trade log or orders unreadable: cannot tell which positions the diamond sleeve holds"
             return result
         positions, sleeve_held = without_sleeve(positions, sleeve)
         result["sleeve"] = [p["symbol"] for p in sleeve_held]

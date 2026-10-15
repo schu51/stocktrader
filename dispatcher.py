@@ -173,12 +173,36 @@ def catch_up(now: datetime) -> list:
     return missed
 
 
+# The sleeve and these jobs all write the trade log from their own checkouts.
+# Started together, one can act on positions the other has just bought, before
+# its record arrives; and their commits are merged. The sleeve waits a tick.
+LOG_WRITERS = {"daily_trade.yml", "intraday_exit.yml", "postmarket.yml"}
+SLEEVE_WORKFLOW = "diamond_sleeve.yml"
+
+
 def run_due(now: datetime, ref: str, already_started=already_started, start=start) -> int:
-    """Start any workflow a missed trigger skipped, then this slot's workflows. Returns failures."""
-    failed = 0
-    for workflow, since in catch_up(now):
-        failed += dispatch([workflow], since, ref, already_started=already_started, start=start)
-    failed += dispatch(due_workflows(now), slot_start(now), ref, already_started=already_started, start=start)
+    """
+    Start any workflow a missed trigger skipped, then this slot's workflows.
+    Returns failures. The sleeve goes last, and not at all this tick if a job
+    that writes the trade log was started in it (LOG_WRITERS); it is caught up
+    on a later tick.
+    """
+    failed, started = 0, []
+
+    def tracked(workflow, ref_):
+        ok = start(workflow, ref_)
+        if ok:
+            started.append(workflow)
+        return ok
+
+    jobs = [(wf, since) for wf, since in catch_up(now)] + [(wf, slot_start(now)) for wf in due_workflows(now)]
+    for workflow, since in [j for j in jobs if j[0] != SLEEVE_WORKFLOW]:
+        failed += dispatch([workflow], since, ref, already_started=already_started, start=tracked)
+    for workflow, since in [j for j in jobs if j[0] == SLEEVE_WORKFLOW]:
+        if LOG_WRITERS & set(started):
+            print(f"defer {workflow}: {', '.join(sorted(LOG_WRITERS & set(started)))} started this tick")
+            continue
+        failed += dispatch([workflow], since, ref, already_started=already_started, start=tracked)
     return failed
 
 

@@ -367,17 +367,17 @@ def main():
     # Holdings of the diamond sleeve are not this monitor's to sell or to trail.
     # If the trade log cannot say which they are, nothing is sold on these rules:
     # every position keeps the stop it has at the broker, and the run fails.
-    from exit_logic import read_sleeve_symbols, without_sleeve
-    sleeve = read_sleeve_symbols(TRADES_FILE)
+    from exit_logic import sleeve_holdings, without_sleeve
+    sleeve = sleeve_holdings(broker, held_now, TRADES_FILE)
     if sleeve is None:
-        logger.error("Trade log unreadable — cannot tell which positions the diamond sleeve holds; no exits evaluated")
+        logger.error("Cannot tell which positions the diamond sleeve holds (trade log or orders unreadable); no exits evaluated")
         out_path = DOCS_DATA / "intraday_exit.json"
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps({
             "generated_at": datetime.now().isoformat(), "positions_checked": 0, "exits_triggered": [],
             "stops_updated": [], "stops_placed": [], "broker_exits": [], "sleeve_positions": [], "mode": "EXECUTE",
             "stop_failures": [{"status": "sleeve_unknown",
-                               "error": "trade log unreadable: cannot tell which positions the diamond sleeve holds"}],
+                               "error": "trade log or orders unreadable: cannot tell which positions the diamond sleeve holds"}],
         }, indent=2))
         sys.exit(1)
     positions, sleeve_held = without_sleeve(positions, sleeve)

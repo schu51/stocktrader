@@ -126,16 +126,23 @@ class Broker:
     def get_asset(self, symbol): return {"status": "active", "tradable": True}
     def get_order(self, oid): return self.orders.get(oid, {})
     def get_orders(self, status=None, limit=50, symbols=None):
-        return [o for o in self.orders.values() if o["status"] in ("new", "accepted") and o["id"] not in self.cancelled
+        live = ("new", "accepted")
+        return [o for o in self.orders.values()
+                if (o["status"] not in live if status == "closed" else o["status"] in live and o["id"] not in self.cancelled)
                 and (not symbols or o["symbol"] in symbols)]
-    def cancel_order(self, oid): self.cancelled.append(oid); return {"success": True}
+    def cancel_order(self, oid):
+        self.cancelled.append(oid)
+        if oid in self.orders:
+            self.orders[oid]["status"] = "canceled"
+        return {"success": True}
     def place_order(self, **kw):
         oid = f"o{len(self.sent) + 1}"
         self.sent.append(kw)
         if kw["side"] == "buy":
             done = self.fills
             self.orders[oid] = {"id": oid, "symbol": kw["symbol"], "side": "buy", "type": "limit", "qty": str(kw["qty"]),
-                                "status": "filled" if done else "new", "filled_qty": str(kw["qty"] if done else 0)}
+                                "status": "filled" if done else "new", "filled_qty": str(kw["qty"] if done else 0),
+                                "client_order_id": kw.get("client_order_id") or "", "filled_at": "2026-10-26T14:31:00Z"}
             if done:
                 self.positions[kw["symbol"]] = _pos(kw["symbol"], kw["qty"], kw["limit_price"], kw["limit_price"])
         else:
@@ -288,14 +295,13 @@ def test_a_company_marked_not_to_be_bought_is_never_a_candidate():
 def test_a_do_not_buy_mark_cannot_shield_a_holding_from_being_sold():
     # The mark takes a company out of the buy ranking. It must not also hide a
     # failing judgment, or a company could keep itself in the sleeve by writing
-    # to the model. A holding whose filings address the model is sold: the
-    # judgment it was bought on can no longer be trusted.
+    # to the model.
     weak = _row("WEAK", 3, 3, 20); weak["judgment"]["do_not_buy"] = True
     good = _row("GOOD", 9, 9, 1); good["judgment"]["do_not_buy"] = True
     doc = _doc([weak, good])
     hist = _hist("2026-10-17", {"WEAK": 3, "GOOD": 1}) + _hist("2026-10-24", {"WEAK": 20, "GOOD": 1})
     assert "fell to 6" in broken("WEAK", doc, hist, TODAY)
-    assert "addressed" in broken("GOOD", doc, hist, TODAY)
+    assert broken("GOOD", doc, hist, TODAY) is None          # flagged for a human instead (owner decision pending)
 
 
 def test_the_sleeve_does_not_buy_a_stock_the_large_cap_run_has_ordered_but_not_yet_received(tmp_path, monkeypatch):
@@ -306,3 +312,76 @@ def test_the_sleeve_does_not_buy_a_stock_the_large_cap_run_has_ordered_but_not_y
     out = _run(broker, paths)
     assert [o["symbol"] for o in broker.sent if o["side"] == "buy"] == ["BBB"]
     assert {s["symbol"]: s["reason"] for s in out["skipped"]}["AAA"] == "held by the large-cap strategy"
+
+
+# ── fixes from the whole-branch review ───────────────────────────────────────
+
+def test_every_sleeve_buy_carries_the_client_order_id_the_broker_keeps(tmp_path, monkeypatch):
+    from exit_logic import SLEEVE_ORDER_PREFIX
+    broker = Broker()
+    paths = _files(tmp_path, monkeypatch)
+    _run(broker, paths)
+    buys = [o for o in broker.sent if o["side"] == "buy"]
+    assert buys and all(o["client_order_id"].startswith(SLEEVE_ORDER_PREFIX + o["symbol"]) for o in buys)
+
+
+def test_a_sleeve_position_missing_from_the_log_is_adopted_back_not_bought_again(tmp_path, monkeypatch):
+    from exit_logic import SLEEVE_ORDER_PREFIX
+    broker = Broker([_pos("AAA", 50, 50.0, 51.0)])
+    broker.orders["b0"] = {"id": "b0", "symbol": "AAA", "side": "buy", "status": "filled", "filled_qty": "50",
+                           "client_order_id": SLEEVE_ORDER_PREFIX + "AAA-1", "filled_at": "2026-10-26T14:31:00Z",
+                           "filled_avg_price": "50.0"}
+    paths = _files(tmp_path, monkeypatch)                                # the log lost its entry
+    out = _run(broker, paths)
+    trades = json.loads(paths["trades_file"].read_text())
+    aaa = [t for t in trades if t["symbol"] == "AAA"]
+    assert len(aaa) == 1 and aaa[0]["sleeve"] == "diamond" and aaa[0]["status"] == "OPEN" and aaa[0]["adopted"] is True
+    assert [o["symbol"] for o in broker.sent if o["side"] == "buy"] == ["BBB"]
+    assert any("AAA" in a for a in out["alerts"])
+
+
+def test_a_stop_tighter_than_the_sleeves_is_replaced(tmp_path, monkeypatch):
+    broker = Broker([_pos("GONE", 60, 40.0, 44.0)])
+    broker.orders["s1"] = {"id": "s1", "symbol": "GONE", "side": "sell", "type": "stop", "status": "new", "qty": "60",
+                           "stop_price": "36.80"}                         # the large-cap 8%: a dip would sell a diamond
+    doc = _doc([_row("GONE", 7, 7, 1)])
+    hist = _hist("2026-10-17", {"GONE": 1}) + _hist("2026-10-24", {"GONE": 1})
+    paths = _files(tmp_path, monkeypatch, trades=[SLEEVE_OPEN], doc=doc, history=hist)
+    out = _run(broker, paths)
+    stops = [o for o in broker.sent if o.get("order_type") == "stop"]
+    assert "s1" in broker.cancelled and [(o["symbol"], o["stop_price"]) for o in stops] == [("GONE", 30.0)]
+    assert any("GONE" in a and "stop" in a for a in out["alerts"])
+
+
+def test_a_failed_sale_does_not_free_its_slot(tmp_path, monkeypatch):
+    held = [_pos(f"H{i}", 50, 50.0, 50.0) for i in range(7)] + [_pos("GONE", 60, 40.0, 44.0)]
+    broker = Broker(held)
+    broker.close_position = lambda symbol: {"error": "rejected"}
+    trades = [dict(SLEEVE_OPEN, symbol=f"H{i}") for i in range(7)] + [SLEEVE_OPEN]
+    doc = _doc([_row("AAA", 7, 7, 1), _row("BBB", 6, 6, 2)] + [_row(f"H{i}", 6, 6, 5) for i in range(7)])
+    hist = HISTORY + _hist("2026-10-17", {f"H{i}": 5 for i in range(7)}) + _hist("2026-10-24", {f"H{i}": 5 for i in range(7)})
+    paths = _files(tmp_path, monkeypatch, trades=trades, doc=doc, history=hist)
+    out = _run(broker, paths)
+    assert out["sells"][0]["status"] == "failed"
+    assert [o for o in broker.sent if o["side"] == "buy"] == []           # still eight positions
+
+
+def test_a_holding_whose_filings_address_the_model_is_flagged_for_a_human_not_sold():
+    good = _row("GOOD", 9, 9, 1); good["judgment"]["do_not_buy"] = True
+    doc = _doc([good])
+    hist = _hist("2026-10-17", {"GOOD": 1}) + _hist("2026-10-24", {"GOOD": 1})
+    assert broken("GOOD", doc, hist, TODAY) is None
+
+
+def test_two_weeks_running_means_two_lists_about_a_week_apart():
+    rerun = _hist("2026-10-23", {"AAA": 1, "BBB": 2}) + _hist("2026-10-24", {"AAA": 1, "BBB": 2})    # a re-run the next day
+    assert buy_candidates(DOC, rerun, TODAY) == []
+    old = _hist("2026-09-19", {"AAA": 1, "BBB": 2}) + _hist("2026-10-24", {"AAA": 1, "BBB": 2})      # five weeks earlier
+    assert buy_candidates(DOC, old, TODAY) == []
+
+
+def test_absence_is_judged_against_the_last_list_of_any_kind():
+    # Present last week on a list the judge failed on: not "off two weeks running"
+    hist = _hist("2026-10-10", {"OTHER": 1}) + [{"date": "2026-10-17", "ticker": "HELD", "rank": 4, "total": 50.0}] \
+        + _hist("2026-10-24", {"AAA": 1})
+    assert broken("HELD", _doc([_row("AAA", 7, 7, 1)]), hist, TODAY) is None

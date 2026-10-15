@@ -84,10 +84,9 @@ def section(text: str, heading: str, limit: int, fallback_at: float = 0.02) -> s
 _MACHINE_ADDRESS = re.compile(
     r"ignore (all |any |the )?(previous|prior|above|earlier) (instructions|prompts?|text)"
     r"|disregard (all |any |the )?(previous|prior|above|earlier)"
-    r"|(as|you are) an? (ai|artificial intelligence|large language model|language model|llm)\b"
+    r"|you are (now )?an? (ai|artificial intelligence|large language model|language model|llm)\b"
     r"|note to (the )?(ai|llm|model|automated|language model)"
-    r"|(system|developer) prompt"
-    r"|you (must|should|shall) (assign|give|rate|score|output|respond|reply)"
+    r"|you (must|should|shall) (assign|rate|score|output)\b"
     r"|(assign|give) (it |this company |us )?an? (edge|demand) (score )?of",
     re.I)
 
@@ -104,6 +103,10 @@ def plain(text) -> str:
     folded = unicodedata.normalize("NFKC", str(text))
     kept = "".join(" " if c.isspace() else c for c in folded if c.isspace() or unicodedata.category(c) not in ("Cf", "Cc", "Co", "Cs"))
     return " ".join(kept.split())
+
+
+class EvidenceUnavailable(Exception):
+    """A filing the company has made could not be fetched, so a pack would judge it on less than it has said."""
 
 
 def addressed_to_a_machine(text) -> bool:
@@ -185,12 +188,14 @@ def build_pack(row: Dict, submissions: Dict, today: date, fetch_doc: Callable[[i
     filings = recent_filings(submissions, today)
 
     def text_of(filing: Optional[Dict]) -> str:
+        # A filing that exists but cannot be fetched is not an empty filing: a
+        # pack judged without it could score low and sell a holding on that.
         if not filing:
             return ""
         try:
             return plain(strip_html(fetch_doc(cik, filing["accession"], filing["document"])))
-        except Exception:
-            return ""
+        except Exception as exc:
+            raise EvidenceUnavailable(f"filing {filing['accession']} could not be fetched ({exc})")
 
     business = section(text_of(filings["10-K"]), r"item\s*1(?![0-9AB])\s*\.", BUSINESS_CHARS)
     mdna = section(text_of(filings["10-Q"]), r"item\s*2\s*\.", MDNA_CHARS, fallback_at=0.4)

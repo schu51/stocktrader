@@ -374,7 +374,7 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
             if t.get("status") == "CLOSED" and str(t.get("exit_date") or "") > week_ago:
                 out.append(f"  - Sold {sym(t)}: {_num(t.get('pnl_pct')):+.1f}% (${_num(t.get('pnl_usd')):+,.0f}) after "
                            f"{int(_num(t.get('hold_days')))} days, {_md(t.get('exit_reason'), 40)}")
-        for failure in [f for f in sleeve.get("failures") or [] if isinstance(f, str)][:5]:
+        for failure in [f for f in (sleeve.get("failures") or []) + (sleeve.get("alerts") or []) if isinstance(f, str)][:6]:
             problems.append(f"Diamond sleeve: {_md(failure, 200)}")
 
     # Is the judgment worth acting on yet? (diamond_track.py; the owner asked to be told)

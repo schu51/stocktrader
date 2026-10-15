@@ -25,6 +25,8 @@ Rules (owner decisions, 2026-10-08 and 2026-10-11):
   Sell     when the thesis breaks: a fresh judgment below SELL_BELOW, or the
            company absent from two weekly lists running (its numbers stopped
            qualifying, or it faded). Slipping down the list is not a reason.
+           A holding whose filings appear to address the model is raised for
+           a human, not sold: the check behind that can match ordinary wording.
   Stop     one price exit, a disaster stop SLEEVE_STOP below entry that never
            trails. Placed by the same sweep that protects every position
            (stop_placement.place_missing_stops).
@@ -34,9 +36,16 @@ rotation, stale exit, caps) skips sleeve holdings: see exit_logic's sleeve
 section. A holding is the sleeve's when its trade-log entry carries
 "sleeve": "diamond".
 
-Fails closed. No list, a stale list, an unreadable trade log, an unreadable
-account, a closed market: nothing is bought or sold, and holdings keep the
-stops they have at the broker.
+Ownership. A holding is the sleeve's if its open trade-log entry says so, or
+if the broker shows its latest filled buy carried the sleeve's client order
+id (SLEEVE_ORDER_PREFIX): each job reads its own checkout of the log, which
+can lag or lose an entry in a merge. A sleeve holding missing from the log
+is adopted back. A buy not yet filled holds its slot and budget.
+
+Fails closed. No list, a stale list, an unreadable trade log or order list,
+an unreadable account, a closed market: nothing is bought or sold, and
+holdings keep the stops they have at the broker. A sale that fails does not
+free its slot; a stop tighter than the sleeve's is replaced.
 
 Usage:
     python diamond_sleeve.py             # dry run: print the plan, send nothing
@@ -52,7 +61,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Set
 
-from exit_logic import DIAMOND_SLEEVE, SLEEVE_SHARE, SLEEVE_STOP
+from exit_logic import DIAMOND_SLEEVE, SLEEVE_ORDER_PREFIX, SLEEVE_SHARE, SLEEVE_STOP
 
 logger = logging.getLogger(__name__)
 
@@ -98,10 +107,13 @@ def _fresh(doc: Dict, today: date) -> bool:
     return bool(day) and 0 <= (today - date.fromisoformat(day)).days <= LIST_MAX_AGE_DAYS
 
 
-def _previous_day(history: List[Dict], before: str) -> Optional[str]:
-    """The latest earlier weekly list that was judged."""
+LIST_GAP_DAYS = (5, 9)       # "two weekly lists running": the earlier one 5 to 9 days before
+
+
+def _previous_day(history: List[Dict], before: str, judged_only: bool = True) -> Optional[str]:
+    """The latest earlier list: judged ones only for buying, any for the absence rule."""
     days = {h.get("date") for h in history or [] if isinstance(h, dict) and isinstance(h.get("date"), str)
-            and h["date"] < before and h.get("judgment_rank") is not None}
+            and h["date"] < before and (h.get("judgment_rank") is not None or not judged_only)}
     return max(days) if days else None
 
 
@@ -109,9 +121,13 @@ def buy_candidates(doc: Dict, history: List[Dict], today: date) -> List[Dict]:
     """Watchlist rows the sleeve may buy today, best judgment first."""
     if not _fresh(doc, today):
         return []
-    previous = _previous_day(history, _list_day(doc))
+    day = _list_day(doc)
+    previous = _previous_day(history, day)
     if previous is None:
         return []                                    # one judged list is not "two weeks running"
+    gap = (date.fromisoformat(day) - date.fromisoformat(previous)).days
+    if not LIST_GAP_DAYS[0] <= gap <= LIST_GAP_DAYS[1]:
+        return []                                    # a re-run the next day, or a list weeks old, is not last week's
     top_before = {h["ticker"] for h in history if isinstance(h, dict) and h.get("date") == previous
                   and isinstance(h.get("judgment_rank"), (int, float)) and h["judgment_rank"] <= MAX_POSITIONS}
     out = []
@@ -135,10 +151,10 @@ def broken(symbol: str, doc: Dict, history: List[Dict], today: date) -> Optional
         score = judgment_of(dict(row, judgment={k: v for k, v in j.items() if k != "do_not_buy"}))
         if score is not None and score < SELL_BELOW:
             return f"judgment fell to {score:g} of 20 on its latest filings"
-        if j.get("do_not_buy") and not j.get("stale"):
-            return "its filings addressed an automated reader: the judgment it was bought on cannot be trusted"
+        # A do-not-buy mark on a holding is raised for a human (run's alerts), not sold on:
+        # the pattern behind it can match ordinary wording.
         return None
-    previous = _previous_day(history, _list_day(doc))
+    previous = _previous_day(history, _list_day(doc), judged_only=False)
     if previous is None:
         return None
     on_previous = any(isinstance(h, dict) and h.get("date") == previous and h.get("ticker") == symbol for h in history)
@@ -248,12 +264,26 @@ def log_buy(symbol: str, shares: int, price: float, order_id: Optional[str], buy
     _write(trades_file, trades)
 
 
+def adopt(symbol: str, pos: Dict, trades_file: Path) -> None:
+    """Re-record a sleeve holding the trade log has lost (the broker's buy order says it is the sleeve's)."""
+    trades = _load(trades_file) if trades_file.exists() else []
+    cost = float(pos["avg_entry_price"])
+    trades.append({
+        "trade_id": f"DMD-ADOPTED-{datetime.now():%Y%m%d%H%M%S}-{symbol}", "symbol": symbol, "status": "OPEN",
+        "sleeve": DIAMOND_SLEEVE, "adopted": True, "entry_date": date.today().isoformat(), "entry_ts": datetime.now().isoformat(),
+        "entry_price": round(cost, 2), "shares": int(float(pos["qty"])), "stop_loss": round(cost * (1 - SLEEVE_STOP), 2),
+        "stop_arm": "sleeve", "stop_dist": SLEEVE_STOP, "order_id": None,
+        "exit_date": None, "exit_price": None, "exit_reason": None, "pnl_usd": None, "pnl_pct": None, "hold_days": None,
+    })
+    _write(trades_file, trades)
+
+
 def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seconds: float = FILL_WAIT_SECONDS,
         list_file: Path = None, history_file: Path = None, trades_file: Path = None) -> Dict:
     """One pass of the sleeve. Returns the result document; `failures` non-empty means a human should look."""
     list_file, history_file, trades_file = list_file or LIST_FILE, history_file or HISTORY_FILE, trades_file or TRADES_FILE
     out = {"generated_at": datetime.now().isoformat(), "mode": "EXECUTE" if execute else "DRY-RUN",
-           "holdings": [], "sells": [], "buys": [], "skipped": [], "failures": [], "note": None}
+           "holdings": [], "sells": [], "buys": [], "skipped": [], "failures": [], "alerts": [], "note": None}
 
     def stop(note: str, failure: bool = False) -> Dict:
         out["note"] = note
@@ -287,6 +317,24 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
     longs, _ = split_positions(positions)
     by_symbol = {p["symbol"]: p for p in longs}
     trades = _load(trades_file) if trades_file.exists() else []
+
+    # The broker's record of who bought each holding (client order ids). A
+    # sleeve buy the log has lost is adopted back; a symbol both records claim
+    # is left to a human.
+    from exit_logic import broker_sleeve_symbols
+    seen = broker_sleeve_symbols(broker, set(by_symbol))
+    if seen is None:
+        return stop("could not read orders to tell the sleeve's holdings apart; nothing done", failure=True)
+    large_cap_logged = {t.get("symbol") for t in trades if t.get("status") == "OPEN" and not t.get("sleeve")}
+    for symbol in sorted(seen - sleeve):
+        if symbol in large_cap_logged:
+            out["alerts"].append(f"{symbol}: the broker shows a sleeve buy but the log has it as a large-cap trade; left alone")
+            continue
+        if execute:
+            adopt(symbol, by_symbol[symbol], trades_file)
+            trades = _load(trades_file)
+        out["alerts"].append(f"{symbol}: a sleeve holding missing from the trade log was adopted back")
+        sleeve = sleeve | {symbol}
     in_flight = {t["symbol"] for t in trades if t.get("status") == "OPEN" and t.get("sleeve") and t.get("pending_exit")}
     held = {s: float(by_symbol[s]["market_value"]) for s in sleeve if s in by_symbol}
     pending = set()
@@ -310,6 +358,12 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
          **({"pnl_pct": round(float(by_symbol[s]["unrealized_plpc"]) * 100, 2)} if s in by_symbol else {"pending": True})}
         for s, v in sorted(held.items())]
 
+    for row in doc.get("watchlist") or []:
+        j = row.get("judgment") if isinstance(row.get("judgment"), dict) else {}
+        if row.get("ticker") in held and j.get("do_not_buy") and not j.get("stale"):
+            out["alerts"].append(f"{row['ticker']}: its filings appear to address the model; review this holding "
+                                 f"(not sold automatically)")
+
     todo = plan(doc, history, held, others, equity, cash, today, above_200, lambda s: ask_price(broker, s),
                 pending=pending)
     out.update(budget=todo["budget"], slot=todo["slot"], skipped=todo["skipped"],
@@ -318,9 +372,9 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
         out["sells"], out["buys"] = todo["sells"], todo["buys"]
         return stop("dry run: nothing sent")
 
-    from exit_logic import SALE_DEAD, SALE_FILLED, sale_status
+    from exit_logic import SALE_DEAD, SALE_FILLED, clear_stops_for_sale, sale_status
     import intraday_exit
-    from stop_placement import place_missing_stops
+    from stop_placement import place_missing_stops, stop_coverage
 
     # Sells first: a sale is recorded only once it has filled (the same rule as every other exit)
     for sell in todo["sells"]:
@@ -329,7 +383,9 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
             out["sells"].append(dict(sell, status="already selling"))
             continue
         try:
-            intraday_exit._cancel_open_stops(broker, symbol)
+            cleared, why = clear_stops_for_sale(broker, symbol)
+            if not cleared:
+                raise RuntimeError(why)
             result = broker.close_position(symbol)
             if "error" in result:
                 raise RuntimeError(result.get("error"))
@@ -349,12 +405,45 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
             out["sells"].append(dict(sell, status="failed", error=str(exc)))
             out["failures"].append(f"{symbol}: sell failed ({exc})")
 
-    # Buys: a limit at the ask, good for the day
+    # Buys are worked out again now: only a sale that filled frees a slot and its budget
+    sold = {s["symbol"] for s in out["sells"] if s.get("status") == "sold"}
+    still_held = {k: v for k, v in held.items() if k not in sold}
+    todo = plan(doc, history, still_held, others, equity, cash, today, above_200, lambda s: ask_price(broker, s),
+                pending=set(still_held))
+    out["skipped"] = todo["skipped"]
+
+    # A stop on a holding tighter than its disaster level (the large-cap rule
+    # caught it before its record arrived) would sell a diamond on a dip: replace it
+    open_orders = broker.get_orders(status="open", limit=500) or []
+    cover = stop_coverage(open_orders) if getattr(broker, "last_orders_ok", True) else {}
+    for symbol in sorted(set(still_held) - pending):
+        pos, trade = by_symbol.get(symbol), next((t for t in reversed(trades) if t.get("symbol") == symbol
+                                                  and t.get("status") == "OPEN" and t.get("sleeve")), {})
+        live = (cover.get(symbol) or {}).get("stop")
+        if not pos or live is None:
+            continue
+        try:
+            dist = float(trade.get("stop_dist") or SLEEVE_STOP)
+        except (TypeError, ValueError):
+            dist = SLEEVE_STOP
+        level = round(float(pos["avg_entry_price"]) * (1 - dist), 2)
+        if live > level + 0.01:
+            cleared, why = clear_stops_for_sale(broker, symbol)
+            if cleared:
+                broker.place_order(symbol=symbol, qty=int(float(pos["qty"])), side="sell", order_type="stop",
+                                   stop_price=level, time_in_force="gtc")
+                out["alerts"].append(f"{symbol}: a stop at {live:.2f} was tighter than the sleeve's {level:.2f}; replaced")
+            else:
+                out["failures"].append(f"{symbol}: a stop at {live:.2f} is tighter than the sleeve's {level:.2f} "
+                                       f"and could not be replaced ({why})")
+
+    # Buys: a limit at the ask, good for the day, tagged so the broker records whose it is
     sent = []
     for buy in todo["buys"]:
         try:
             result = broker.place_order(symbol=buy["symbol"], qty=buy["shares"], side="buy", order_type="limit",
-                                        limit_price=buy["limit_price"], time_in_force="day")
+                                        limit_price=buy["limit_price"], time_in_force="day",
+                                        client_order_id=f"{SLEEVE_ORDER_PREFIX}{buy['symbol']}-{datetime.now():%Y%m%d%H%M%S}")
             if "error" in result:
                 raise RuntimeError(result.get("error"))
             log_buy(buy["symbol"], buy["shares"], buy["limit_price"], result.get("id"), buy, trades_file)

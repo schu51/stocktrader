@@ -230,3 +230,31 @@ def test_the_dispatcher_never_starts_the_sleeve_beside_a_job_that_writes_the_tra
     run_due(datetime(2026, 10, 26, 11, 0, 5, tzinfo=ET), "main", already_started=lambda wf, since: wf != "diamond_sleeve.yml",
             start=lambda wf, ref: started.append(wf) or True)
     assert "diamond_sleeve.yml" in started
+
+
+def test_daily_exits_on_a_mixed_portfolio_sell_only_the_large_cap_holding(monkeypatch, tmp_path):
+    # Both holdings are far below their 50-day average; only the large-cap one may be sold.
+    import exit_logic, pandas as pd, yfinance
+    from run_daily_analysis import DailyRunner
+    (tmp_path / "trades.json").write_text(json.dumps([SLEEVE_TRADE, PLAIN_TRADE]))
+    monkeypatch.setattr(exit_logic, "TRADES_PATH", tmp_path / "trades.json")
+    monkeypatch.setattr(exit_logic, "CANCEL_POLL_SECONDS", 0)
+    closes = pd.DataFrame({"Close": [300.0] * 230 + [200.0] * 20})
+    monkeypatch.setattr(yfinance, "Ticker", lambda sym: SimpleNamespace(history=lambda period="1y": closes))
+    sold = []
+    broker = SimpleNamespace(
+        get_positions=lambda: [_long("STAA", 96, 30.0, 25.0), _long("AME", 16, 254.01, 200.0)], last_positions_ok=True,
+        get_orders=lambda **kw: [], last_orders_ok=True, get_order=lambda oid: {"status": "canceled"},
+        cancel_order=lambda oid: {"success": True}, place_order=lambda **kw: {"id": "x"},
+        close_position=lambda sym, qty=None: sold.append(sym) or {"id": f"sale-{sym}"})
+    runner = SimpleNamespace(broker=broker, _log_trade=lambda *a, **k: None)
+    out = DailyRunner._evaluate_exits(runner, execute=True)
+    assert sold == ["AME"] and out["sleeve"] == ["STAA"]
+
+
+def test_the_large_cap_buy_loop_drops_sleeve_holdings_before_evaluating_candidates():
+    import inspect
+    from run_daily_analysis import DailyRunner
+    source = inspect.getsource(DailyRunner)
+    assert source.index("drop_sleeve_candidates(candidates") < source.index("for candidate in candidates:")
+    assert source.count('| getattr(self, "_sleeve", set())') == 2          # rotation and the stale exit

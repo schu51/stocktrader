@@ -178,15 +178,14 @@ def place_missing_stops(broker, trades: Optional[List[Dict]] = None, skip: Optio
     cover       = stop_coverage(open_orders)
     to_protect  = uncovered_positions(positions, open_orders, skip)
     trades      = load_trades() if trades is None else trades
-    # A sleeve buy the trade log has not caught up with still gets the sleeve's
-    # stop: the broker's record of who bought it (exit_logic.broker_sleeve_symbols)
-    from exit_logic import DIAMOND_SLEEVE, SLEEVE_STOP, broker_sleeve_symbols
-    sleeve_seen = broker_sleeve_symbols(broker, {p["symbol"] for p in to_protect}) if to_protect else set()
-    if sleeve_seen is None:
-        logger.error("Could not read orders to tell sleeve buys apart — stop check did not run")
-        return {"generated_at": datetime.now().isoformat(), "positions_checked": 0, "already_protected": 0,
-                "stops_placed": 0, "stops_failed": 0, "untradable": 0, "results": [],
-                "error": "could not read orders to tell the diamond sleeve's buys apart; stop check did not run"}
+    # A position the log does not explain (a sleeve buy this checkout has not
+    # caught up with) is looked up at the broker. The sleeve's, or one that
+    # cannot be looked up, gets the sleeve's wide stop: it cannot sell a
+    # diamond on a dip, and it still protects a large-cap holding.
+    from exit_logic import DIAMOND_SLEEVE, SLEEVE_STOP, lookup_sleeve_buys
+    unexplained = {p["symbol"] for p in to_protect if open_trade_for(p["symbol"], trades) is None}
+    sleeve_seen, unknown = lookup_sleeve_buys(broker, unexplained)
+    wide = sleeve_seen | unknown
     if trades is None:
         # Which rule a position is under is in the log. A diamond-sleeve holding
         # given the large-cap bot's tight stop would be sold on an ordinary dip,
@@ -217,7 +216,7 @@ def place_missing_stops(broker, trades: Optional[List[Dict]] = None, skip: Optio
 
         try:
             trade = open_trade_for(sym, trades)
-            if sym in sleeve_seen and not (trade and trade.get("sleeve")):
+            if sym in wide and not (trade and trade.get("sleeve")):
                 trade = {"sleeve": DIAMOND_SLEEVE, "stop_dist": SLEEVE_STOP}
             stop_price, tier = calculate_stop_for_position(pos, trade)
             partial = cover.get(sym)

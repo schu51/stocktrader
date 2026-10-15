@@ -25,9 +25,10 @@ Rules (owner decisions, 2026-10-08 and 2026-10-11):
   Sell     when the thesis breaks: a fresh judgment below SELL_BELOW, or the
            company absent from two weekly lists running (its numbers stopped
            qualifying, or it faded). Slipping down the list is not a reason.
-           A holding whose filings appear to address the model is raised for
-           a human the first week (the check can match ordinary wording) and
-           sold if it happens again on the next list.
+           A holding whose filings appear to address the model opens an issue
+           for a human (the check can match ordinary wording); it is sold only
+           for an unmistakable attempt to steer the score, or the model's own
+           report of one, on last week's list as well as this week's.
   Stop     one price exit, a disaster stop SLEEVE_STOP below entry that never
            trails. Placed by the same sweep that protects every position
            (stop_placement.place_missing_stops).
@@ -111,6 +112,15 @@ def _fresh(doc: Dict, today: date) -> bool:
 LIST_GAP_DAYS = (5, 9)       # "two weekly lists running": the earlier one 5 to 9 days before
 
 
+def _last_weeks_list(history: List[Dict], day: str) -> Optional[str]:
+    """The latest earlier list of any kind, if it is last week's (LIST_GAP_DAYS before `day`). Otherwise None."""
+    previous = _previous_day(history, day, judged_only=False)
+    if previous is None or not day:
+        return None
+    gap = (date.fromisoformat(day) - date.fromisoformat(previous)).days
+    return previous if LIST_GAP_DAYS[0] <= gap <= LIST_GAP_DAYS[1] else None
+
+
 def _previous_day(history: List[Dict], before: str, judged_only: bool = True) -> Optional[str]:
     """The latest earlier list: judged ones only for buying, any for the absence rule."""
     days = {h.get("date") for h in history or [] if isinstance(h, dict) and isinstance(h.get("date"), str)
@@ -152,16 +162,16 @@ def broken(symbol: str, doc: Dict, history: List[Dict], today: date) -> Optional
         score = judgment_of(dict(row, judgment={k: v for k, v in j.items() if k != "do_not_buy"}))
         if score is not None and score < SELL_BELOW:
             return f"judgment fell to {score:g} of 20 on its latest filings"
-        # A do-not-buy mark on a holding is raised for a human the first week
-        # (run's alerts): the check behind it can match ordinary wording. If it
-        # is there again on the list before, the score it is held on cannot be trusted.
-        if j.get("do_not_buy") and not j.get("stale"):
-            previous = _previous_day(history, _list_day(doc))
+        # A do-not-buy mark on a holding opens an issue for a human (run's
+        # failures). It sells only if it is an unmistakable attempt to steer
+        # the score, and was there on last week's list too.
+        if j.get("manipulation") and not j.get("stale"):
+            previous = _last_weeks_list(history, _list_day(doc))
             if previous and any(isinstance(h, dict) and h.get("date") == previous and h.get("ticker") == symbol
-                                and h.get("do_not_buy") for h in history):
-                return "its filings addressed the model on two lists running: the judgment cannot be trusted"
+                                and h.get("manipulation") for h in history):
+                return "its filings tried to steer the model's score on two lists running"
         return None
-    previous = _previous_day(history, _list_day(doc), judged_only=False)
+    previous = _last_weeks_list(history, _list_day(doc))
     if previous is None:
         return None
     on_previous = any(isinstance(h, dict) and h.get("date") == previous and h.get("ticker") == symbol for h in history)
@@ -328,10 +338,12 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
     # The broker's record of who bought each holding (client order ids). A
     # sleeve buy the log has lost is adopted back; a symbol both records claim
     # is left to a human.
-    from exit_logic import broker_sleeve_symbols
-    seen = broker_sleeve_symbols(broker, set(by_symbol))
-    if seen is None:
-        return stop("could not read orders to tell the sleeve's holdings apart; nothing done", failure=True)
+    from exit_logic import lookup_sleeve_buys
+    explained = {t.get("symbol") for t in trades if t.get("status") == "OPEN"}
+    seen, unknown = lookup_sleeve_buys(broker, set(by_symbol) - explained)
+    if unknown:
+        return stop(f"could not read orders for {', '.join(sorted(unknown))} to tell whose they are; nothing done",
+                    failure=True)
     large_cap_logged = {t.get("symbol") for t in trades if t.get("status") == "OPEN" and not t.get("sleeve")}
     for symbol in sorted(seen - sleeve):
         if symbol in large_cap_logged:
@@ -368,8 +380,8 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
     for row in doc.get("watchlist") or []:
         j = row.get("judgment") if isinstance(row.get("judgment"), dict) else {}
         if row.get("ticker") in held and j.get("do_not_buy") and not j.get("stale"):
-            out["alerts"].append(f"{row['ticker']}: its filings appear to address the model; review this holding "
-                                 f"(not sold automatically)")
+            out["failures"].append(f"{row['ticker']}: its filings appear to address the model; review this holding "
+                                   f"(sold automatically only if it is an unmistakable attempt, two weeks running)")
 
     todo = plan(doc, history, held, others, equity, cash, today, above_200, lambda s: ask_price(broker, s),
                 pending=pending)
@@ -435,14 +447,15 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
             dist = SLEEVE_STOP
         level = round(float(pos["avg_entry_price"]) * (1 - dist), 2)
         if live > level + 0.01:
-            cleared, why = clear_stops_for_sale(broker, symbol)
-            if cleared:
-                broker.place_order(symbol=symbol, qty=int(float(pos["qty"])), side="sell", order_type="stop",
-                                   stop_price=level, time_in_force="gtc")
+            from exit_logic import replace_stop
+            moved = replace_stop(broker, symbol, int(float(pos["qty"])), level, previous=live)
+            if moved["status"] == "replaced":
                 out["alerts"].append(f"{symbol}: a stop at {live:.2f} was tighter than the sleeve's {level:.2f}; replaced")
             else:
-                out["failures"].append(f"{symbol}: a stop at {live:.2f} is tighter than the sleeve's {level:.2f} "
-                                       f"and could not be replaced ({why})")
+                back = {True: "the old stop was put back", False: "the old stop could NOT be put back",
+                        None: "nothing was changed"}[moved.get("restored")]
+                out["failures"].append(f"{symbol}: a stop at {live:.2f} is tighter than the sleeve's {level:.2f} and "
+                                       f"could not be replaced ({moved['error']}); {back}")
 
     # Buys: a limit at the ask, good for the day, tagged so the broker records whose it is
     sent = []

@@ -366,13 +366,13 @@ def test_a_failed_sale_does_not_free_its_slot(tmp_path, monkeypatch):
     assert [o for o in broker.sent if o["side"] == "buy"] == []           # still eight positions
 
 
-def test_a_holding_whose_filings_address_the_model_is_flagged_once_and_sold_if_it_repeats():
+def test_a_broad_mark_on_a_holding_never_sells_it_even_when_it_repeats():
+    # The broad pattern matches ordinary wording ("positioned as an AI
+    # provider"), and a filing stays current for months: it opens an issue
+    # for a human instead (see the failure test above).
     good = _row("GOOD", 9, 9, 1); good["judgment"]["do_not_buy"] = True
-    doc = _doc([good])
-    once = _hist("2026-10-17", {"GOOD": 1}) + _hist("2026-10-24", {"GOOD": 1})
-    assert broken("GOOD", doc, once, TODAY) is None                     # one week: an alert for a human
-    twice = [dict(h, do_not_buy=True) if h["ticker"] == "GOOD" else h for h in once]
-    assert "two lists running" in broken("GOOD", doc, twice, TODAY)      # it persists: its score cannot be trusted
+    twice = [dict(h, do_not_buy=True) for h in _hist("2026-10-17", {"GOOD": 1}) + _hist("2026-10-24", {"GOOD": 1})]
+    assert broken("GOOD", _doc([good]), twice, TODAY) is None
 
 
 def test_two_weeks_running_means_two_lists_about_a_week_apart():
@@ -387,3 +387,50 @@ def test_absence_is_judged_against_the_last_list_of_any_kind():
     hist = _hist("2026-10-10", {"OTHER": 1}) + [{"date": "2026-10-17", "ticker": "HELD", "rank": 4, "total": 50.0}] \
         + _hist("2026-10-24", {"AAA": 1})
     assert broken("HELD", _doc([_row("AAA", 7, 7, 1)]), hist, TODAY) is None
+
+
+# ── second review ────────────────────────────────────────────────────────────
+
+def test_a_rejected_stop_replacement_puts_the_old_one_back_and_is_a_failure(tmp_path, monkeypatch):
+    broker = Broker([_pos("GONE", 60, 40.0, 44.0)])
+    broker.orders["s1"] = {"id": "s1", "symbol": "GONE", "side": "sell", "type": "stop", "status": "new", "qty": "60",
+                           "stop_price": "36.80"}
+    real = broker.place_order
+    broker.place_order = lambda **kw: {"error": "rejected"} if kw.get("stop_price") == 30.0 else real(**kw)
+    doc = _doc([_row("GONE", 7, 7, 1)])
+    hist = _hist("2026-10-17", {"GONE": 1}) + _hist("2026-10-24", {"GONE": 1})
+    paths = _files(tmp_path, monkeypatch, trades=[SLEEVE_OPEN], doc=doc, history=hist)
+    out = _run(broker, paths)
+    assert [(o["symbol"], o["stop_price"]) for o in broker.sent if o.get("order_type") == "stop"] == [("GONE", 36.8)]
+    assert any("GONE" in f and "stop" in f for f in out["failures"]) and not any("replaced" in a for a in out["alerts"])
+
+
+def test_only_a_strong_or_self_reported_attempt_can_sell_a_holding():
+    weak = _row("WEAK", 9, 9, 1); weak["judgment"].update(do_not_buy=True)                      # broad pattern only
+    strong = _row("STRONG", 9, 9, 2); strong["judgment"].update(do_not_buy=True, manipulation=True)
+    doc = _doc([weak, strong])
+    hist = [dict(h, do_not_buy=True, manipulation=h["ticker"] == "STRONG")
+            for h in _hist("2026-10-17", {"WEAK": 1, "STRONG": 2})] + _hist("2026-10-24", {"WEAK": 1, "STRONG": 2})
+    assert broken("WEAK", doc, hist, TODAY) is None
+    assert "two lists" in broken("STRONG", doc, hist, TODAY)
+
+
+def test_a_mark_on_a_holding_is_a_failure_so_an_issue_opens(tmp_path, monkeypatch):
+    held = _row("AAA", 7, 7, 1); held["judgment"]["do_not_buy"] = True
+    doc = _doc([held, _row("BBB", 6, 6, 2)])
+    broker = Broker([_pos("AAA", 50, 50.0, 50.0)])
+    paths = _files(tmp_path, monkeypatch, trades=[dict(SLEEVE_OPEN, symbol="AAA")], doc=doc)
+    out = _run(broker, paths)
+    assert any("AAA" in f and "address" in f for f in out["failures"])
+
+
+def test_both_sale_rules_need_the_earlier_list_to_be_last_weeks():
+    strong = _row("S", 9, 9, 1); strong["judgment"].update(do_not_buy=True, manipulation=True)
+    doc = _doc([strong])
+    flagged = lambda day: [{"date": day, "ticker": "S", "rank": 1, "total": 60.0, "judgment_rank": 1, "do_not_buy": True,
+                            "manipulation": True}]
+    assert broken("S", doc, flagged("2026-10-23") + flagged("2026-10-24"), TODAY) is None     # a re-run the next day
+    assert broken("S", doc, flagged("2026-09-12") + flagged("2026-10-24"), TODAY) is None     # six weeks earlier
+    absent = _doc([_row("AAA", 7, 7, 1)])
+    assert broken("GONE", absent, _hist("2026-10-23", {"X": 1}) + _hist("2026-10-24", {"AAA": 1}), TODAY) is None
+    assert "two weeks" in broken("GONE", absent, _hist("2026-10-17", {"X": 1}) + _hist("2026-10-24", {"AAA": 1}), TODAY)

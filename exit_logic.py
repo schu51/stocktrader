@@ -219,51 +219,78 @@ TRADES_PATH = Path(__file__).parent / "docs" / "data" / "trades.json"
 SLEEVE_ORDER_PREFIX = "dmd-"   # client order id of every sleeve buy: ownership the broker itself keeps
 
 
+def lookup_sleeve_buys(broker, symbols) -> Tuple[set, set]:
+    """
+    For each symbol, whether its most recent filled buy was the sleeve's (its
+    client order id starts SLEEVE_ORDER_PREFIX). Looked up one symbol at a
+    time, which reaches back much further than the account's latest orders.
+    Returns (the sleeve's, could not be read). Each lookup is tried twice.
+    """
+    sleeve, unknown = set(), set()
+    for sym in sorted(s for s in symbols or () if s):
+        orders = None
+        for _ in range(2):
+            try:
+                got = []
+                for status in ("closed", "open"):
+                    got += broker.get_orders(status=status, limit=100, symbols=[sym]) or []
+                    if not getattr(broker, "last_orders_ok", True):
+                        raise RuntimeError("orders unreadable")
+                orders = got
+                break
+            except Exception:
+                continue
+        if orders is None:
+            unknown.add(sym)
+            continue
+        latest = None
+        for o in orders:
+            if o.get("side") != "buy" or o.get("symbol") != sym:
+                continue
+            try:
+                filled = float(o.get("filled_qty") or 0) > 0
+            except (TypeError, ValueError):
+                filled = False
+            if not (filled or o.get("status") in ("filled", "partially_filled")):
+                continue
+            when = str(o.get("filled_at") or o.get("updated_at") or o.get("submitted_at") or "")
+            if latest is None or when > latest[0]:
+                latest = (when, str(o.get("client_order_id") or ""))
+        if latest and latest[1].startswith(SLEEVE_ORDER_PREFIX):
+            sleeve.add(sym)
+    return sleeve, unknown
+
+
 def broker_sleeve_symbols(broker, held: set) -> Optional[set]:
-    """
-    Of the symbols held, those whose most recent filled buy was the sleeve's,
-    by its client order id. The trade log says the same thing, but each job
-    reads its own checkout of it, which can be minutes behind or lose an entry
-    when two jobs' commits are merged; the broker's record cannot. None if the
-    orders cannot be read.
-    """
-    if not held:
-        return set()
-    orders = []
-    for status in ("closed", "open"):
-        got = broker.get_orders(status=status, limit=500) or []
-        if not getattr(broker, "last_orders_ok", True):
-            return None
-        orders += got
-    latest: Dict[str, tuple] = {}
-    for o in orders:
-        if o.get("side") != "buy" or o.get("symbol") not in held:
-            continue
-        try:
-            filled = float(o.get("filled_qty") or 0) > 0 or o.get("status") in ("filled", "partially_filled")
-        except (TypeError, ValueError):
-            filled = o.get("status") in ("filled", "partially_filled")
-        if not filled:
-            continue
-        when = str(o.get("filled_at") or o.get("updated_at") or o.get("submitted_at") or "")
-        if o["symbol"] not in latest or when > latest[o["symbol"]][0]:
-            latest[o["symbol"]] = (when, str(o.get("client_order_id") or ""))
-    return {sym for sym, (_, cid) in latest.items() if cid.startswith(SLEEVE_ORDER_PREFIX)}
+    """lookup_sleeve_buys for `held`; None if any of them could not be read."""
+    sleeve, unknown = lookup_sleeve_buys(broker, held)
+    return None if unknown else sleeve
 
 
 def sleeve_holdings(broker, positions: list, trades_path=None) -> Optional[set]:
     """
-    Symbols the sleeve owns: its open trade-log entries, plus any position the
-    broker shows it bought (broker_sleeve_symbols). None if either source
-    cannot be read: unknown ownership must stop a sale, not permit one.
+    Symbols the large-cap rules must not sell or trail: the sleeve's open
+    trade-log entries, plus any held position the log does not explain (no
+    open entry of either strategy) whose latest buy the broker shows was the
+    sleeve's, or that could not be looked up. Each job reads its own checkout
+    of the log, which can lag or lose an entry in a merge; the broker's record
+    cannot. None only if the log itself cannot be read.
     """
-    logged = read_sleeve_symbols(trades_path)
-    if logged is None:
-        return None
-    seen = broker_sleeve_symbols(broker, {p.get("symbol") for p in positions or [] if p.get("symbol")})
-    if seen is None:
-        return None
-    return logged | seen
+    path = Path(trades_path or TRADES_PATH)
+    if not path.exists():
+        trades = []
+    else:
+        try:
+            trades = json.loads(path.read_text())
+            if not isinstance(trades, list):
+                return None
+        except Exception:
+            return None
+    logged = sleeve_symbols(trades)
+    explained = {t.get("symbol") for t in trades if isinstance(t, dict) and t.get("status") == "OPEN"}
+    unexplained = {p.get("symbol") for p in positions or [] if p.get("symbol")} - explained
+    sleeve, unknown = lookup_sleeve_buys(broker, unexplained)
+    return logged | sleeve | unknown
 
 
 def sleeve_symbols(trades) -> set:

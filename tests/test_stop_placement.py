@@ -179,7 +179,8 @@ class _Broker:
         self.positions, self.orders, self.inactive = list(positions), list(orders), set(inactive)
         self.placed, self.cancelled = [], []
     def get_positions(self): return self.positions
-    def get_orders(self, status=None, limit=50): return [o for o in self.orders if o["id"] not in self.cancelled]
+    def get_orders(self, status=None, limit=50, symbols=None):
+        return [o for o in self.orders if o["id"] not in self.cancelled and (not symbols or o["symbol"] in symbols)]
     def get_asset(self, symbol):
         return {"status": "inactive", "tradable": False} if symbol in self.inactive else {"status": "active", "tradable": True}
     def cancel_order(self, order_id): self.cancelled.append(order_id); return {"success": True}

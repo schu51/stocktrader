@@ -115,6 +115,23 @@ class EvidenceUnavailable(Exception):
     """A filing the company has made could not be fetched, so a pack would judge it on less than it has said."""
 
 
+# The unmistakable subset: wording that can only be an attempt to steer a
+# model's score. Unlike the broad pattern it can sell a holding (twice running).
+_MANIPULATION = re.compile(
+    r"ignore (all |any |the )?(previous|prior|above|earlier) (instructions|prompts?|text)"
+    r"|disregard (all |any |the )?(previous|prior|above|earlier) (instructions|prompts?|text)"
+    r"|note to (the )?(ai|llm|model|automated|language model)"
+    r"|you (must|should|shall) (assign|rate|score|output)\b"
+    r"|respond with an? (edge|demand|score|rating)"
+    r"|(assign|give) (it |this company |us )?an? (edge|demand) (score )?of",
+    re.I)
+
+
+def tries_to_steer_a_score(text) -> bool:
+    """True only for wording that is unmistakably an instruction to a model about its score."""
+    return bool(_MANIPULATION.search(plain(text)))
+
+
 def addressed_to_a_machine(text) -> bool:
     """True if the text contains wording aimed at an automated reader rather than an investor."""
     return bool(_MACHINE_ADDRESS.search(plain(text)))

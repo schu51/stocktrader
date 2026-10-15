@@ -224,7 +224,7 @@ def _guard(parsed: Optional[Dict], pack: Dict) -> Optional[Dict]:
     attempt could gain is also bounded elsewhere: only companies that passed
     the numbers screen can be judged, and one position is an eighth of 20%.)
     """
-    from diamond_evidence import addressed_to_a_machine
+    from diamond_evidence import addressed_to_a_machine, tries_to_steer_a_score
     if parsed is None:
         return None
     # Everything build_prompt shows the model that did not come from a number
@@ -232,8 +232,14 @@ def _guard(parsed: Optional[Dict], pack: Dict) -> Optional[Dict]:
         + list(pack.get("events") or []) + [a.get("text") for a in pack.get("agreements") or []]
     if parsed.get("do_not_buy"):
         return parsed
-    if parsed.get("instructions_found") or pack.get("suspicious") or any(addressed_to_a_machine(t) for t in texts):
+    # Two levels. Anything that looks addressed to a model blocks a buy. Only an
+    # unmistakable attempt to steer the score, or the model saying it was given
+    # instructions, counts as manipulation, which can sell a holding.
+    manipulation = bool(parsed.get("instructions_found")) or any(tries_to_steer_a_score(t) for t in texts)
+    if manipulation or pack.get("suspicious") or any(addressed_to_a_machine(t) for t in texts):
         parsed = dict(parsed, do_not_buy=True, red_flags=([INJECTION_FLAG] + parsed.get("red_flags", []))[:MAX_FLAGS])
+        if manipulation:
+            parsed["manipulation"] = True
     return parsed
 
 

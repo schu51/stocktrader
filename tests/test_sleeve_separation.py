@@ -258,3 +258,50 @@ def test_the_large_cap_buy_loop_drops_sleeve_holdings_before_evaluating_candidat
     source = inspect.getsource(DailyRunner)
     assert source.index("drop_sleeve_candidates(candidates") < source.index("for candidate in candidates:")
     assert source.count('| getattr(self, "_sleeve", set())') == 2          # rotation and the stale exit
+
+
+# ── second review: ownership lookups that cannot block the large-cap side ────
+
+class _OrdersBroker:
+    """Orders per symbol, as Alpaca's symbols= filter returns them; can fail."""
+    def __init__(self, orders, fail=False):
+        self.orders, self.fail, self.calls = orders, fail, []
+        self.last_orders_ok = True
+    def get_orders(self, status=None, limit=50, symbols=None):
+        self.calls.append((status, tuple(symbols or ())))
+        self.last_orders_ok = not self.fail
+        return [] if self.fail else [o for o in self.orders if not symbols or o["symbol"] in symbols]
+
+
+def test_ownership_is_looked_up_only_for_positions_the_log_does_not_explain(tmp_path, monkeypatch):
+    import exit_logic
+    from exit_logic import SLEEVE_ORDER_PREFIX, sleeve_holdings
+    (tmp_path / "trades.json").write_text(json.dumps([SLEEVE_TRADE, PLAIN_TRADE]))
+    broker = _OrdersBroker([{"symbol": "NEW", "side": "buy", "status": "filled", "filled_qty": "10",
+                             "client_order_id": SLEEVE_ORDER_PREFIX + "NEW-1", "filled_at": "2026-10-26T14:31:00Z"}])
+    held = [{"symbol": s} for s in ("STAA", "AME", "NEW", "VLO")]
+    assert sleeve_holdings(broker, held, tmp_path / "trades.json") == {"STAA", "NEW"}
+    assert {sym for _, syms in broker.calls for sym in syms} == {"NEW", "VLO"}          # one symbol at a time
+
+
+def test_a_failed_lookup_keeps_unexplained_positions_out_of_large_cap_sales_without_blocking_the_rest(tmp_path):
+    from exit_logic import sleeve_holdings
+    (tmp_path / "trades.json").write_text(json.dumps([SLEEVE_TRADE, PLAIN_TRADE]))
+    broker = _OrdersBroker([], fail=True)
+    held = [{"symbol": s} for s in ("STAA", "AME", "NEW")]
+    # NEW cannot be explained: treated as not the large-cap strategy's to sell. AME is.
+    assert sleeve_holdings(broker, held, tmp_path / "trades.json") == {"STAA", "NEW"}
+
+
+def test_stops_still_go_on_when_the_lookup_fails_and_an_unexplained_position_gets_the_wide_one(monkeypatch):
+    import stop_placement
+    broker = _Broker([_long("AME", 16, 254.01, 250.0), _long("NEW", 10, 50.0, 50.0)])
+    real = broker.get_orders
+    def orders(status=None, limit=50, symbols=None):
+        broker.last_orders_ok = status != "closed"
+        return real(status=status, limit=limit) if status != "closed" else []
+    broker.get_orders = orders
+    out = stop_placement.place_missing_stops(broker, trades=[PLAIN_TRADE])
+    placed = {o["symbol"]: o["stop_price"] for o in broker.placed}
+    assert placed == {"AME": round(254.01 * 0.92, 2), "NEW": 37.5}              # NEW: 25% below, safe either way
+    assert "error" not in out

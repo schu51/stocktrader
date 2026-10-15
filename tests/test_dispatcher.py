@@ -116,7 +116,9 @@ def test_dispatch_does_not_start_when_duplicate_check_fails():
     assert failed == 1
 
 
-def test_dispatch_counts_start_failures():
+def test_dispatch_counts_start_failures(monkeypatch):
+    import dispatcher
+    monkeypatch.setattr(dispatcher.time, "sleep", lambda s: None)       # the retry pause
     from dispatcher import dispatch
     failed = dispatch(["premarket.yml"], datetime(2026, 10, 5, 13, 0, tzinfo=timezone.utc), "main",
                       already_started=lambda wf, since: False, start=lambda wf, ref: False)

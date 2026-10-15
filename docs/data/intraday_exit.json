@@ -1,10 +1,78 @@
 {
-  "generated_at": "2026-10-14T19:45:38.430812",
-  "positions_checked": 23,
-  "exits_triggered": [],
+  "generated_at": "2026-10-15T13:45:52.929015",
+  "positions_checked": 21,
+  "exits_triggered": [
+    {
+      "symbol": "NET",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$316.99 is 0.7% below 50MA $319.22",
+      "qty": 8,
+      "price": 316.99,
+      "pnl_pct": 1.35,
+      "executed": false,
+      "order_id": null,
+      "confirmed": false,
+      "sale": "dead"
+    },
+    {
+      "symbol": "PANW",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$370.18 is 0.9% below 50MA $373.46",
+      "qty": 6,
+      "price": 370.18,
+      "pnl_pct": -1.42,
+      "executed": false,
+      "order_id": null,
+      "confirmed": false,
+      "sale": "dead"
+    },
+    {
+      "symbol": "SNOW",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$326.01 is 2.1% below 50MA $332.96",
+      "qty": 16,
+      "price": 326.01,
+      "pnl_pct": 18.9,
+      "executed": false,
+      "order_id": null,
+      "confirmed": false,
+      "sale": "dead"
+    }
+  ],
   "stops_updated": [],
   "stops_placed": [],
-  "stop_failures": [],
-  "broker_exits": [],
+  "stop_failures": [
+    {
+      "symbol": "NET",
+      "status": "exit_failed",
+      "error": "insufficient qty available for order (requested: 8, available: 0)"
+    },
+    {
+      "symbol": "PANW",
+      "status": "exit_failed",
+      "error": "insufficient qty available for order (requested: 6, available: 0)"
+    },
+    {
+      "symbol": "SNOW",
+      "status": "exit_failed",
+      "error": "insufficient qty available for order (requested: 16, available: 0)"
+    }
+  ],
+  "broker_exits": [
+    {
+      "symbol": "MRVL",
+      "trigger": "BROKER_STOP",
+      "price": 230.6,
+      "pnl_pct": 0.6,
+      "exit_date": "2026-10-15"
+    },
+    {
+      "symbol": "JCI",
+      "trigger": "BROKER_STOP",
+      "price": 146.26,
+      "pnl_pct": -6.47,
+      "exit_date": "2026-10-15"
+    }
+  ],
   "mode": "EXECUTE"
 }

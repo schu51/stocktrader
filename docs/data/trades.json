@@ -2526,7 +2526,7 @@
   {
     "trade_id": "TRD-20260908174500-MRVL",
     "symbol": "MRVL",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-09-08",
     "entry_ts": "2026-09-08T17:45:00.387557",
     "entry_price": 229.23,
@@ -2540,14 +2540,15 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "3147e007-4da7-427b-b621-d5a9ab36accf",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-15",
+    "exit_price": 230.6,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": 13.71,
+    "pnl_pct": 0.6,
+    "hold_days": 37,
     "entry_limit": 231.68,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-15T13:35:34.548312"
   },
   {
     "trade_id": "TRD-20260909173133-NET",
@@ -3506,7 +3507,7 @@
   {
     "trade_id": "TRD-20261012140302-JCI",
     "symbol": "JCI",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-12",
     "entry_ts": "2026-10-12T14:03:02.789042",
     "entry_price": 156.38,
@@ -3538,14 +3539,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.05725,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-15",
+    "exit_price": 146.26,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": -161.84,
+    "pnl_pct": -6.47,
+    "hold_days": 3,
     "entry_limit": 156.45,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-15T13:35:18.605119"
   },
   {
     "trade_id": "TRD-20261014140314-CRL",

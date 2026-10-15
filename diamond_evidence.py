@@ -84,11 +84,17 @@ def section(text: str, heading: str, limit: int, fallback_at: float = 0.02) -> s
 _MACHINE_ADDRESS = re.compile(
     r"ignore (all |any |the )?(previous|prior|above|earlier) (instructions|prompts?|text)"
     r"|disregard (all |any |the )?(previous|prior|above|earlier)"
-    r"|you are (now )?an? (ai|artificial intelligence|large language model|language model|llm)\b"
+    r"|(as|you are) (now )?an? (ai|artificial intelligence|large language model|language model|llm)\b"
     r"|note to (the )?(ai|llm|model|automated|language model)"
-    r"|you (must|should|shall) (assign|rate|score|output)\b"
+    r"|(system|developer) prompt"
+    r"|you (must|should|shall) (assign|give|rate|score|output|respond|reply)"
+    r"|respond with an? (edge|demand|score|rating)"
     r"|(assign|give) (it |this company |us )?an? (edge|demand) (score )?of",
     re.I)
+# Broad on purpose: the mark blocks a buy, raises an alert on a holding, and
+# sells only when it repeats on two lists running (diamond_sleeve.broken), so
+# a false alarm costs little and a miss could cost a bought score. Ordinary
+# wording ("positioned as an AI company") will sometimes trip it.
 
 
 def plain(text) -> str:

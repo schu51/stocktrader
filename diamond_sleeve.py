@@ -26,7 +26,8 @@ Rules (owner decisions, 2026-10-08 and 2026-10-11):
            company absent from two weekly lists running (its numbers stopped
            qualifying, or it faded). Slipping down the list is not a reason.
            A holding whose filings appear to address the model is raised for
-           a human, not sold: the check behind that can match ordinary wording.
+           a human the first week (the check can match ordinary wording) and
+           sold if it happens again on the next list.
   Stop     one price exit, a disaster stop SLEEVE_STOP below entry that never
            trails. Placed by the same sweep that protects every position
            (stop_placement.place_missing_stops).
@@ -151,8 +152,14 @@ def broken(symbol: str, doc: Dict, history: List[Dict], today: date) -> Optional
         score = judgment_of(dict(row, judgment={k: v for k, v in j.items() if k != "do_not_buy"}))
         if score is not None and score < SELL_BELOW:
             return f"judgment fell to {score:g} of 20 on its latest filings"
-        # A do-not-buy mark on a holding is raised for a human (run's alerts), not sold on:
-        # the pattern behind it can match ordinary wording.
+        # A do-not-buy mark on a holding is raised for a human the first week
+        # (run's alerts): the check behind it can match ordinary wording. If it
+        # is there again on the list before, the score it is held on cannot be trusted.
+        if j.get("do_not_buy") and not j.get("stale"):
+            previous = _previous_day(history, _list_day(doc))
+            if previous and any(isinstance(h, dict) and h.get("date") == previous and h.get("ticker") == symbol
+                                and h.get("do_not_buy") for h in history):
+                return "its filings addressed the model on two lists running: the judgment cannot be trusted"
         return None
     previous = _previous_day(history, _list_day(doc), judged_only=False)
     if previous is None:

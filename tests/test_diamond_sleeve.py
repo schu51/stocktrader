@@ -366,11 +366,13 @@ def test_a_failed_sale_does_not_free_its_slot(tmp_path, monkeypatch):
     assert [o for o in broker.sent if o["side"] == "buy"] == []           # still eight positions
 
 
-def test_a_holding_whose_filings_address_the_model_is_flagged_for_a_human_not_sold():
+def test_a_holding_whose_filings_address_the_model_is_flagged_once_and_sold_if_it_repeats():
     good = _row("GOOD", 9, 9, 1); good["judgment"]["do_not_buy"] = True
     doc = _doc([good])
-    hist = _hist("2026-10-17", {"GOOD": 1}) + _hist("2026-10-24", {"GOOD": 1})
-    assert broken("GOOD", doc, hist, TODAY) is None
+    once = _hist("2026-10-17", {"GOOD": 1}) + _hist("2026-10-24", {"GOOD": 1})
+    assert broken("GOOD", doc, once, TODAY) is None                     # one week: an alert for a human
+    twice = [dict(h, do_not_buy=True) if h["ticker"] == "GOOD" else h for h in once]
+    assert "two lists running" in broken("GOOD", doc, twice, TODAY)      # it persists: its score cannot be trusted
 
 
 def test_two_weeks_running_means_two_lists_about_a_week_apart():

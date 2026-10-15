@@ -2931,7 +2931,7 @@
   {
     "trade_id": "TRD-20261005142008-AME",
     "symbol": "AME",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-05",
     "entry_ts": "2026-10-05T14:20:08.176245",
     "entry_price": 254.01,
@@ -2963,14 +2963,15 @@
     "stop_arm": "fixed",
     "stop_dist": null,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-15",
+    "exit_price": 244.13,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -158.1,
+    "pnl_pct": -3.89,
+    "hold_days": 10,
     "entry_limit": 254.01,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-15T14:15:49.605390"
   },
   {
     "trade_id": "TRD-20261005142009-GEV",

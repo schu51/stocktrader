@@ -19,6 +19,7 @@ import argparse
 import json
 import subprocess
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -97,6 +98,9 @@ def start(workflow: str, ref: str) -> bool:
     return subprocess.run(["gh", "workflow", "run", workflow, "--ref", ref]).returncode == 0
 
 
+START_RETRIES = 2      # GitHub refuses the odd start (2026-10-14); tried again after a pause
+
+
 def dispatch(due: list, since: datetime, ref: str,
              already_started=already_started, start=start) -> int:
     """Start each due workflow at most once per slot. Returns the failure count.
@@ -115,7 +119,21 @@ def dispatch(due: list, since: datetime, ref: str,
             print(f"::error::could not check {workflow} for an existing run, not starting it: {exc}")
             failed += 1
             continue
-        if not start(workflow, ref):
+        ok = start(workflow, ref)
+        for attempt in range(START_RETRIES):
+            if ok:
+                break
+            time.sleep(5 * (attempt + 1))
+            # A refused start may have gone through anyway. Starting the trade
+            # job twice is worse than missing it, so look before trying again.
+            try:
+                if already_started(workflow, since):
+                    ok = True
+                    break
+            except Exception:
+                break
+            ok = start(workflow, ref)
+        if not ok:
             print(f"::error::failed to start {workflow}")
             failed += 1
     return failed

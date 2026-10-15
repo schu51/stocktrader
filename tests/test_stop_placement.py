@@ -183,6 +183,9 @@ class _Broker:
     def get_asset(self, symbol):
         return {"status": "inactive", "tradable": False} if symbol in self.inactive else {"status": "active", "tradable": True}
     def cancel_order(self, order_id): self.cancelled.append(order_id); return {"success": True}
+    def get_order(self, order_id):
+        # Like Alpaca: a cancelled order reads back as canceled (exit_logic.clear_stops_for_sale waits for that)
+        return {"status": "canceled"} if order_id in self.cancelled else {"status": "new"}
     def place_order(self, **kw):
         self.placed.append(kw)
         self.orders.append({"id": f"new{len(self.placed)}", "symbol": kw["symbol"], "side": "sell", "type": "stop",
@@ -424,7 +427,7 @@ def test_an_exit_that_has_not_filled_stays_working_and_is_tracked_not_recorded_a
     broker = _Broker([pos], orders=[_stop("VRT", 5, 92.0, "old")])
     broker.get_orders = lambda status=None, limit=50, symbols=None: [o for o in broker.orders if o["id"] not in broker.cancelled]
     broker.close_position = lambda sym: {"id": "sell1"}
-    broker.get_order = lambda oid: {"status": "accepted"}
+    broker.get_order = lambda oid: {"status": "canceled"} if oid in broker.cancelled else {"status": "accepted"}
     intraday = _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0})
     monkeypatch.setattr(intraday, "EXIT_CONFIRM_SECONDS", 0)
     (tmp_path / "trades.json").write_text(json.dumps([{"symbol": "VRT", "status": "OPEN", "entry_date": "2026-09-01",
@@ -546,7 +549,7 @@ def test_a_filled_exit_is_left_alone_by_the_sweep(monkeypatch, tmp_path):
     broker = _Broker([pos], orders=[_stop("VRT", 5, 92.0, "old")])
     broker.get_orders = lambda status=None, limit=50, symbols=None: [o for o in broker.orders if o["id"] not in broker.cancelled]
     broker.close_position = lambda sym: {"id": "sell1"}
-    broker.get_order = lambda oid: {"status": "filled"}
+    broker.get_order = lambda oid: {"status": "canceled"} if oid in broker.cancelled else {"status": "filled"}
     monkeypatch.setattr("intraday_exit._log_exit", lambda *a, **k: None)
     _intraday(monkeypatch, tmp_path, broker, {"VRT": 90.0}).main()               # no SystemExit
     assert broker.placed == []

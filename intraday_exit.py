@@ -420,7 +420,16 @@ def main():
                 f"EXIT TRIGGERED: {sym} — {action['trigger']} | {action['reason']} "
                 f"| P&L: {action['pnl_pct']:+.1f}%"
             )
-            _cancel_open_stops(broker, sym)
+            from exit_logic import clear_stops_for_sale
+            cleared, why = clear_stops_for_sale(broker, sym)
+            if not cleared:
+                # Not sold this run. The sweep below makes sure it is still
+                # protected; the exit is tried again on the next check.
+                logger.error(f"EXIT DEFERRED: {sym} — {why}")
+                action.update(executed=False, confirmed=False, sale="deferred", error=why)
+                stop_failures.append({"symbol": sym, "status": "exit_deferred", "error": why})
+                exits_triggered.append(action)
+                continue
             result = broker.close_position(sym)
             action["executed"] = "error" not in result
             action["order_id"] = result.get("id")

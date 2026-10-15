@@ -93,6 +93,8 @@ class _Broker:
     def cancel_order(self, oid): self.cancelled.append(oid); return {"success": True}
     def close_position(self, sym): self.closed.append(sym); return self._close
     def get_order(self, oid):
+        if oid in self.cancelled and any(o["id"] == oid for o in self.orders):
+            return {"status": "canceled"}          # a cancelled stop reads back as canceled, like Alpaca
         status = self._fill.pop(0) if isinstance(self._fill, list) and len(self._fill) > 1 else self._fill
         return {"status": status[0] if isinstance(status, list) else status}
     def market_clock(self): return self.clock

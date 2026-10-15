@@ -918,5 +918,120 @@
     "blocked_by": null,
     "news_arm": "news",
     "news_veto": false
+  },
+  {
+    "date": "2026-10-15",
+    "symbol": "DVN",
+    "price": 48.98500061035156,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 15.0,
+      "atr_pct": 0.02701,
+      "news_positive": null,
+      "news_negative": null,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 1.0,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-15",
+    "symbol": "MRK",
+    "price": 150.93499755859375,
+    "signals": {
+      "macd_cross": true,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 17.3,
+      "atr_pct": 0.02469,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.75,
+      "st_bull_ratio": 0.833
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-15",
+    "symbol": "IEX",
+    "price": 238.01499938964844,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 15.4,
+      "atr_pct": 0.01869,
+      "news_positive": null,
+      "news_negative": null,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.0,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-15",
+    "symbol": "REGN",
+    "price": 802.25,
+    "signals": {
+      "macd_cross": true,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 17.9,
+      "atr_pct": 0.02911,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": true,
+      "social_bearish": false,
+      "news_score": 1.0,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-15",
+    "symbol": "IQV",
+    "price": 267.3500061035156,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 20.5,
+      "atr_pct": 0.02675,
+      "news_positive": null,
+      "news_negative": null,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 1.0,
+      "st_bull_ratio": 1.0
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": false
   }
 ]

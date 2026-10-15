@@ -44,7 +44,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import (clear_stops_for_sale, find_untradable, is_long_equity, reconcile_phantom_trades, record_broker_exits,
+from exit_logic import (clear_stops_for_sale, find_untradable, replace_stop, is_long_equity, reconcile_phantom_trades, record_broker_exits,
                         safe_to_reconcile, split_positions)
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
@@ -1641,28 +1641,18 @@ class DailyRunner:
 
                 if execute:
                     try:
-                        # Cancel any existing stop sell orders for this symbol
-                        open_orders = self.broker.get_orders(
-                            status="open", symbols=[sym]
-                        )
-                        for o in open_orders:
-                            if o.get("side") == "sell" and o.get("type") in (
-                                "stop", "stop_limit", "trailing_stop"
-                            ):
-                                self.broker.cancel_order(o["id"])
-                                logger.info(f"Cancelled stop order {o['id']} for {sym}")
-
-                        # Place new stop order
-                        stop_result = self.broker.place_order(
-                            symbol=sym,
-                            qty=qty,
-                            side="sell",
-                            order_type="stop",
-                            stop_price=new_stop,
-                            time_in_force="gtc",
-                        )
-                        stop_action["executed"] = "error" not in stop_result
-                        stop_action["order_id"] = stop_result.get("id")
+                        # Old stop confirmed gone before the new one goes on, and put
+                        # back if the new one is refused (exit_logic.replace_stop)
+                        open_orders = self.broker.get_orders(status="open", symbols=[sym]) or []
+                        old_stops = [float(o["stop_price"]) for o in open_orders
+                                     if o.get("side") == "sell" and o.get("type") in ("stop", "stop_limit")
+                                     and o.get("stop_price") not in (None, "")]
+                        moved = replace_stop(self.broker, sym, qty, new_stop,
+                                             previous=max(old_stops) if old_stops else None)
+                        stop_action["executed"] = moved["status"] == "replaced"
+                        stop_action["order_id"] = moved.get("order_id")
+                        if moved["status"] != "replaced":
+                            stop_action["error"] = moved["error"]
                         logger.info(
                             f"STOP UPDATED: {sym} → ${new_stop:.2f} ({tier}) | "
                             f"P&L: {pnl_pct:+.1f}%"
@@ -1795,6 +1785,17 @@ class DailyRunner:
                 result["exits_triggered"].append(entry)
         except Exception as e:
             logger.warning(f"engine.check_positions_for_exit failed: {e}")
+
+        # An exit given up because its stop would not clear may still see that
+        # cancel go through afterwards: put a stop back on anything left bare.
+        if execute and any(a.get("executed") is False for a in result["exits_triggered"]):
+            try:
+                from stop_placement import place_missing_stops
+                sweep = place_missing_stops(self.broker)
+                result["stop_sweep"] = {k: sweep.get(k) for k in ("stops_placed", "stops_failed", "error")}
+            except Exception as e:
+                result["stop_sweep"] = {"error": str(e)}
+                logger.error(f"Stop sweep after a failed exit did not run: {e}")
 
         exits   = len(result["exits_triggered"])
         updates = len(result["stops_updated"])

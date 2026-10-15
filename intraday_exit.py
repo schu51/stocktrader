@@ -317,26 +317,20 @@ def _update_stop_if_better(broker, pos: Dict):
 
     # Only update if new stop is strictly higher (never lower a stop)
     if existing_stop is None or new_stop > existing_stop:
-        for order_id in cover["ids"]:
-            broker.cancel_order(order_id)
-        result = broker.place_order(
-            symbol=sym, qty=qty, side="sell",
-            order_type="stop", stop_price=new_stop, time_in_force="gtc",
-        )
-        if "error" not in result:
+        # Wait for the old stop to be gone before placing the new one (2026-10-15)
+        from exit_logic import replace_stop
+        out = replace_stop(broker, sym, qty, new_stop, previous=existing_stop)
+        if out["status"] == "replaced":
             logger.info(f"STOP RAISED: {sym} → ${new_stop:.2f} ({tier}) | P&L: {pnl_pct:+.1f}%")
             return {"symbol": sym, "new_stop": new_stop, "tier": tier, "pnl_pct": round(pnl_pct, 2)}
-        logger.warning(f"Stop update failed for {sym}: {result.get('error')}")
-        # The old stop is already cancelled. Put it back rather than leave the
-        # position with none; the sweep in main() is the second line of defence.
-        restored = False
-        if existing_stop is not None:
-            back = broker.place_order(symbol=sym, qty=qty, side="sell", order_type="stop",
-                                      stop_price=existing_stop, time_in_force="gtc")
-            restored = "error" not in back
-            if not restored:
-                logger.error(f"{sym}: could not restore the previous stop at ${existing_stop:.2f}: {back.get('error')}")
-        return {"symbol": sym, "status": "failed", "error": result.get("error"), "restored": restored}
+        if out["status"] == "sold":
+            logger.warning(f"{sym}: its stop filled while being raised — sold by the stop")
+            return None
+        logger.warning(f"Stop update failed for {sym}: {out['error']}")
+        if out["restored"] is False and existing_stop is not None:
+            logger.error(f"{sym}: could not restore the previous stop at ${existing_stop:.2f}")
+        # The sweep in main() is the second line of defence
+        return {"symbol": sym, "status": "failed", "error": out["error"], "restored": out["restored"]}
     return None
 
 

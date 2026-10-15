@@ -146,3 +146,54 @@ def test_daily_exits_clear_stops_before_selling():
     source = inspect.getsource(DailyRunner._evaluate_exits) + inspect.getsource(DailyRunner._rotate_out)
     assert source.count("clear_stops_for_sale(") >= 4
     assert "self.broker.cancel_order(o[\"id\"])\n\n                        r = self.broker.close_position" not in source
+
+
+# ── raising a stop has the same race as selling ───────────────────────────────
+
+def test_replacing_a_stop_waits_for_the_old_one_to_go_then_places_the_new_one():
+    from exit_logic import replace_stop
+    broker = SlowCancelBroker([_long("AMD", 7, 506.44, 637.68)], [_stop("AMD", 7, 465.92, "s1")], reads_until_cancelled=3)
+    out = replace_stop(broker, "AMD", 7, 514.04, previous=465.92, wait_seconds=5, poll=0)
+    assert out["status"] == "replaced" and [(o["symbol"], o["stop_price"]) for o in broker.placed] == [("AMD", 514.04)]
+
+
+def test_a_rejected_replacement_puts_the_old_stop_back():
+    from exit_logic import replace_stop
+    broker = SlowCancelBroker([_long("AMD", 7, 506.44, 637.68)], [_stop("AMD", 7, 465.92, "s1")])
+    real = broker.place_order
+    broker.place_order = lambda **kw: {"error": "rejected"} if kw["stop_price"] == 514.04 else real(**kw)
+    out = replace_stop(broker, "AMD", 7, 514.04, previous=465.92, wait_seconds=5, poll=0)
+    assert out["status"] == "failed" and out["restored"] is True
+    assert [(o["symbol"], o["stop_price"]) for o in broker.placed] == [("AMD", 465.92)]
+
+
+def test_a_replacement_is_not_attempted_while_the_old_stop_still_holds_the_shares():
+    from exit_logic import replace_stop
+    broker = SlowCancelBroker([_long("AMD", 7, 506.44, 637.68)], [_stop("AMD", 7, 465.92, "s1")], cancel_never=True)
+    out = replace_stop(broker, "AMD", 7, 514.04, previous=465.92, wait_seconds=0, poll=0)
+    assert out["status"] == "failed" and broker.placed == [] and "not confirmed" in out["error"]
+
+
+def test_both_trailing_stop_updates_use_the_safe_replacement():
+    import inspect
+    import intraday_exit
+    from run_daily_analysis import DailyRunner
+    assert "replace_stop(" in inspect.getsource(intraday_exit._update_stop_if_better)
+    assert "replace_stop(" in inspect.getsource(DailyRunner._evaluate_exits)
+
+
+def test_a_daily_exit_that_could_not_clear_its_stop_is_swept_afterwards(monkeypatch):
+    # The cancel may still go through after the sale was given up: without a
+    # sweep the position could sit with no stop until the next intraday check.
+    import exit_logic, pandas as pd, stop_placement, yfinance
+    from types import SimpleNamespace
+    from run_daily_analysis import DailyRunner
+    monkeypatch.setattr(exit_logic, "CANCEL_WAIT_SECONDS", 0)
+    monkeypatch.setattr(exit_logic, "CANCEL_POLL_SECONDS", 0)
+    closes = pd.DataFrame({"Close": [300.0] * 230 + [200.0] * 20})
+    monkeypatch.setattr(yfinance, "Ticker", lambda sym: SimpleNamespace(history=lambda period="1y": closes))
+    swept = []
+    monkeypatch.setattr(stop_placement, "place_missing_stops", lambda broker, **kw: swept.append(1) or {"stops_placed": 1})
+    broker = SlowCancelBroker([_long("AME", 16, 254.01, 200.0)], [_stop("AME", 16, 233.69, "s1")], cancel_never=True)
+    out = DailyRunner._evaluate_exits(SimpleNamespace(broker=broker, _log_trade=lambda *a, **k: None), execute=True)
+    assert broker.closed == [] and swept == [1] and out["exits_triggered"][0]["executed"] is False

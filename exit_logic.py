@@ -129,6 +129,39 @@ def clear_stops_for_sale(broker, symbol: str, wait_seconds: float = None, poll: 
         time.sleep(poll)
 
 
+def replace_stop(broker, symbol: str, qty: int, new_stop: float, previous: Optional[float] = None,
+                 wait_seconds: float = None, poll: float = None) -> Dict:
+    """
+    Move a position's stop to `new_stop`. The old stop is cancelled and
+    confirmed gone first (clear_stops_for_sale): placed while it is still being
+    cancelled, the new one is refused because the old one still holds the
+    shares, and so is any attempt to put the old one back. If the new stop is
+    refused, `previous` is put back. Returns {"status": "replaced" | "failed" |
+    "sold", "error", "restored"}.
+    """
+    cleared, why = clear_stops_for_sale(broker, symbol, wait_seconds, poll)
+    if not cleared:
+        if "filled" in why:
+            return {"status": "sold", "error": why, "restored": False}
+        return {"status": "failed", "error": why, "restored": None}     # nothing was placed; the old stop may stand
+    try:
+        result = broker.place_order(symbol=symbol, qty=qty, side="sell", order_type="stop",
+                                    stop_price=new_stop, time_in_force="gtc")
+    except Exception as exc:
+        result = {"error": str(exc)}
+    if "error" not in result:
+        return {"status": "replaced", "error": None, "restored": None, "order_id": result.get("id")}
+    restored = False
+    if previous is not None:
+        try:
+            back = broker.place_order(symbol=symbol, qty=qty, side="sell", order_type="stop",
+                                      stop_price=previous, time_in_force="gtc")
+            restored = "error" not in back
+        except Exception:
+            restored = False
+    return {"status": "failed", "error": result.get("error"), "restored": restored}
+
+
 SALE_FILLED, SALE_DEAD, SALE_PARTIAL, SALE_WORKING = "filled", "dead", "partial", "working"
 _ENDED_UNFILLED = ("canceled", "expired", "rejected")
 

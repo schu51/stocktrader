@@ -1,4 +1,5 @@
 import sys
+from types import SimpleNamespace
 from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -205,3 +206,27 @@ def test_diamond_screen_runs_saturday_before_the_rest_of_the_chain():
     assert _due(2026, 10, 3, 7, 30) == ["diamond_screen.yml"]
     assert "diamond_screen.yml" not in _due(2026, 10, 5, 7, 30)          # not on a weekday
     assert ("diamond_screen.yml", "07:30") in _catch_up(2026, 10, 3, 8, 0)
+
+
+def test_a_start_that_github_refuses_is_tried_again_unless_it_went_through(monkeypatch):
+    # 2026-10-14 15:00 UTC: "failed to start portfolio_sync.yml", a one-off from
+    # GitHub that opened an alarm issue for a job the next tick ran anyway.
+    import dispatcher
+    from dispatcher import dispatch
+    monkeypatch.setattr(dispatcher.time, "sleep", lambda s: None)
+    since = datetime(2026, 10, 14, 15, 0, tzinfo=timezone.utc)
+    tries = []
+    refuse_once = lambda wf, ref: tries.append(wf) or len(tries) > 1
+    assert dispatch(["portfolio_sync.yml"], since, "main", already_started=lambda wf, s: False, start=refuse_once) == 0
+    assert tries == ["portfolio_sync.yml", "portfolio_sync.yml"]
+    # refused, but it did start: not started a second time
+    tries.clear()
+    seen = iter([False, True])
+    assert dispatch(["daily_trade.yml"], since, "main", already_started=lambda wf, s: next(seen),
+                    start=lambda wf, ref: tries.append(wf) or False) == 0
+    assert tries == ["daily_trade.yml"]
+    # refused every time: reported
+    tries.clear()
+    assert dispatch(["daily_trade.yml"], since, "main", already_started=lambda wf, s: False,
+                    start=lambda wf, ref: tries.append(wf) or False) == 1
+    assert len(tries) == 3

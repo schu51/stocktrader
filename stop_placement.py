@@ -97,6 +97,8 @@ def stop_coverage(open_orders: List[Dict]) -> Dict[str, Dict]:
     for o in open_orders or []:
         if o.get("side") != "sell" or o.get("type") not in STOP_ORDER_TYPES or not o.get("symbol"):
             continue
+        if o.get("status") in ("pending_cancel", "canceled", "cancelled", "expired", "rejected", "replaced"):
+            continue                  # on its way out: it protects nothing, and must not stop a new one going on
         c = cover.setdefault(o["symbol"], {"qty": 0, "stop": None, "ids": []})
         try:
             c["qty"] += int(float(o.get("qty") or 0))

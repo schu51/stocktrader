@@ -80,6 +80,53 @@ def find_untradable(positions: list, protected, get_asset) -> dict:
     return stuck
 
 
+CANCEL_WAIT_SECONDS = 10      # how long to wait for the broker to confirm a stop is cancelled
+CANCEL_POLL_SECONDS = 0.5
+_CANCEL_DONE = ("canceled", "cancelled", "expired", "rejected", "replaced", "done_for_day")
+_STOP_TYPES = ("stop", "stop_limit", "trailing_stop")
+
+
+def clear_stops_for_sale(broker, symbol: str, wait_seconds: float = None, poll: float = None) -> Tuple[bool, str]:
+    """
+    Cancel a position's stop orders and wait until the broker confirms every
+    one is gone. Returns (ok, why not).
+
+    A stop holds the shares it protects: a sale sent while it is still being
+    cancelled is rejected with "insufficient qty available" (2026-10-15: NET,
+    PANW and SNOW, whose stops were cancelled and then left off). A stop that
+    filled while being cancelled means the stop already sold the position.
+    """
+    wait = CANCEL_WAIT_SECONDS if wait_seconds is None else wait_seconds
+    poll = CANCEL_POLL_SECONDS if poll is None else poll
+    import time
+    orders = broker.get_orders(status="open", symbols=[symbol]) or []
+    if not getattr(broker, "last_orders_ok", True):
+        return False, "could not read open orders"
+    ids = [o["id"] for o in orders if o.get("side") == "sell" and o.get("type") in _STOP_TYPES
+           and o.get("symbol") == symbol and o.get("id")]
+    for oid in ids:
+        try:
+            broker.cancel_order(oid)
+        except Exception as exc:
+            return False, f"could not cancel stop {oid}: {exc}"
+    deadline = time.monotonic() + wait
+    while True:
+        states = {}
+        for oid in ids:
+            try:
+                states[oid] = (broker.get_order(oid) or {}).get("status")
+            except Exception:
+                states[oid] = None
+        if any(s == "filled" for s in states.values()):
+            return False, "a stop filled while being cancelled: the stop sold the position"
+        if all(s in _CANCEL_DONE for s in states.values()):
+            return True, ""
+        if time.monotonic() >= deadline:
+            pending = [oid for oid, s in states.items() if s not in _CANCEL_DONE]
+            return False, f"stop cancel not confirmed after {wait:g}s ({', '.join(pending)})"
+        time.sleep(poll)
+
+
 SALE_FILLED, SALE_DEAD, SALE_PARTIAL, SALE_WORKING = "filled", "dead", "partial", "working"
 _ENDED_UNFILLED = ("canceled", "expired", "rejected")
 

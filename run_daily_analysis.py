@@ -44,7 +44,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import (find_untradable, is_long_equity, reconcile_phantom_trades, record_broker_exits,
+from exit_logic import (clear_stops_for_sale, find_untradable, is_long_equity, reconcile_phantom_trades, record_broker_exits,
                         safe_to_reconcile, split_positions)
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
@@ -1478,7 +1478,9 @@ class DailyRunner:
                 }
                 if execute:
                     try:
-                        close_result = self.broker.close_position(sym)
+                        # A stop holds the shares: confirm it is cancelled before selling (2026-10-15)
+                        cleared, why = clear_stops_for_sale(self.broker, sym)
+                        close_result = self.broker.close_position(sym) if cleared else {"error": why}
                         action["executed"] = "error" not in close_result
                         action["order_id"] = close_result.get("id")
                         logger.info(
@@ -1547,7 +1549,9 @@ class DailyRunner:
                     }
                     if execute:
                         try:
-                            close_result = self.broker.close_position(sym)
+                            # A stop holds the shares: confirm it is cancelled before selling (2026-10-15)
+                            cleared, why = clear_stops_for_sale(self.broker, sym)
+                            close_result = self.broker.close_position(sym) if cleared else {"error": why}
                             action["executed"] = "error" not in close_result
                             action["order_id"] = close_result.get("id")
                             logger.info(
@@ -1589,7 +1593,9 @@ class DailyRunner:
                         }
                         if execute:
                             try:
-                                close_result = self.broker.close_position(sym)
+                                # A stop holds the shares: confirm it is cancelled before selling (2026-10-15)
+                                cleared, why = clear_stops_for_sale(self.broker, sym)
+                                close_result = self.broker.close_position(sym) if cleared else {"error": why}
                                 action["executed"] = "error" not in close_result
                                 action["order_id"] = close_result.get("id")
                                 logger.info(
@@ -1734,16 +1740,10 @@ class DailyRunner:
                 }
                 if execute and dec.action == "SELL":
                     try:
-                        # Cancel any open stop orders first — they reserve shares and
-                        # cause Alpaca 403 "insufficient qty" when we try to sell a partial.
-                        open_orders = self.broker.get_orders(status="open", symbols=[dec.symbol])
-                        for o in open_orders:
-                            if o.get("side") == "sell" and o.get("type") in (
-                                "stop", "stop_limit", "trailing_stop"
-                            ):
-                                self.broker.cancel_order(o["id"])
-
-                        r = self.broker.close_position(dec.symbol, qty=dec.shares)
+                        # Stops reserve the shares: confirm they are cancelled first, or
+                        # Alpaca rejects the sale with "insufficient qty" (2026-10-15)
+                        cleared, why = clear_stops_for_sale(self.broker, dec.symbol)
+                        r = self.broker.close_position(dec.symbol, qty=dec.shares) if cleared else {"error": why}
                         entry["executed"] = "error" not in r
                         entry["order_id"] = r.get("id")
                         if entry["executed"]:
@@ -2140,11 +2140,9 @@ class DailyRunner:
             sym = lag["symbol"]
             pos = self.portfolio.positions.get(sym)
             try:
-                orders = self.broker.get_orders(status="open", symbols=[sym]) or []
-                if not getattr(self.broker, "last_orders_ok", True):
-                    raise RuntimeError("could not read open orders")
-                for order_id in (stop_coverage(orders).get(sym) or {}).get("ids", []):
-                    self.broker.cancel_order(order_id)
+                cleared, why = clear_stops_for_sale(self.broker, sym)
+                if not cleared:
+                    raise RuntimeError(why)
                 result = self.broker.close_position(sym)
                 if "error" in result:
                     raise RuntimeError(result.get("error"))

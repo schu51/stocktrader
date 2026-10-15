@@ -15,9 +15,11 @@ Exit triggers:
   HARD_LOSS_STOP    →  unrealized loss exceeds 15%
 """
 
+import json
 import logging
 import re
 from datetime import date, datetime, timezone
+from pathlib import Path
 from typing import Dict, Optional, Tuple
 from zoneinfo import ZoneInfo
 
@@ -199,6 +201,140 @@ def sale_status(broker, order_id: Optional[str], wait_seconds: float = 20, poll:
         if time.monotonic() >= deadline:
             return SALE_WORKING
         time.sleep(poll)
+
+
+# ── the diamond sleeve ───────────────────────────────────────────────────────
+# A second strategy shares this account: a handful of small and mid-sized
+# companies held for many months on a thesis (diamond_sleeve.py). Its holdings
+# are marked in the trade log, and every large-cap rule (the 50-day exit, the
+# trailing stop tiers, rotation, the stale exit, the position and sector caps)
+# must leave them alone: they would sell a diamond on its first ordinary dip.
+
+DIAMOND_SLEEVE = "diamond"
+SLEEVE_SHARE = 0.20            # of the account, set aside for the sleeve
+SLEEVE_STOP = 0.25             # its only price exit: a disaster stop this far below entry
+TRADES_PATH = Path(__file__).parent / "docs" / "data" / "trades.json"
+
+
+SLEEVE_ORDER_PREFIX = "dmd-"   # client order id of every sleeve buy: ownership the broker itself keeps
+
+
+def lookup_sleeve_buys(broker, symbols) -> Tuple[set, set]:
+    """
+    For each symbol, whether its most recent filled buy was the sleeve's (its
+    client order id starts SLEEVE_ORDER_PREFIX). Looked up one symbol at a
+    time, which reaches back much further than the account's latest orders.
+    Returns (the sleeve's, could not be read). Each lookup is tried twice.
+    """
+    sleeve, unknown = set(), set()
+    for sym in sorted(s for s in symbols or () if s):
+        orders = None
+        for _ in range(2):
+            try:
+                got = []
+                for status in ("closed", "open"):
+                    got += broker.get_orders(status=status, limit=100, symbols=[sym]) or []
+                    if not getattr(broker, "last_orders_ok", True):
+                        raise RuntimeError("orders unreadable")
+                orders = got
+                break
+            except Exception:
+                continue
+        if orders is None:
+            unknown.add(sym)
+            continue
+        latest = None
+        for o in orders:
+            if o.get("side") != "buy" or o.get("symbol") != sym:
+                continue
+            try:
+                filled = float(o.get("filled_qty") or 0) > 0
+            except (TypeError, ValueError):
+                filled = False
+            if not (filled or o.get("status") in ("filled", "partially_filled")):
+                continue
+            when = str(o.get("filled_at") or o.get("updated_at") or o.get("submitted_at") or "")
+            if latest is None or when > latest[0]:
+                latest = (when, str(o.get("client_order_id") or ""))
+        if latest and latest[1].startswith(SLEEVE_ORDER_PREFIX):
+            sleeve.add(sym)
+    return sleeve, unknown
+
+
+def broker_sleeve_symbols(broker, held: set) -> Optional[set]:
+    """lookup_sleeve_buys for `held`; None if any of them could not be read."""
+    sleeve, unknown = lookup_sleeve_buys(broker, held)
+    return None if unknown else sleeve
+
+
+def sleeve_holdings(broker, positions: list, trades_path=None) -> Optional[set]:
+    """
+    Symbols the large-cap rules must not sell or trail: the sleeve's open
+    trade-log entries, plus any held position the log does not explain (no
+    open entry of either strategy) whose latest buy the broker shows was the
+    sleeve's, or that could not be looked up. Each job reads its own checkout
+    of the log, which can lag or lose an entry in a merge; the broker's record
+    cannot. None only if the log itself cannot be read.
+    """
+    path = Path(trades_path or TRADES_PATH)
+    if not path.exists():
+        trades = []
+    else:
+        try:
+            trades = json.loads(path.read_text())
+            if not isinstance(trades, list):
+                return None
+        except Exception:
+            return None
+    logged = sleeve_symbols(trades)
+    explained = {t.get("symbol") for t in trades if isinstance(t, dict) and t.get("status") == "OPEN"}
+    unexplained = {p.get("symbol") for p in positions or [] if p.get("symbol")} - explained
+    sleeve, unknown = lookup_sleeve_buys(broker, unexplained)
+    return logged | sleeve | unknown
+
+
+def sleeve_symbols(trades) -> set:
+    """Symbols the sleeve holds: open trade-log entries carrying a sleeve tag."""
+    return {t.get("symbol") for t in trades or []
+            if isinstance(t, dict) and t.get("status") == "OPEN" and t.get("sleeve") and t.get("symbol")}
+
+
+def read_sleeve_symbols(path=None) -> Optional[set]:
+    """
+    sleeve_symbols from the trade log on disk. None if the log exists but cannot
+    be read: that is "unknown", and a caller about to sell on the large-cap
+    rules must stop rather than treat every position as its own.
+    """
+    path = Path(path or TRADES_PATH)
+    if not path.exists():
+        return set()
+    try:
+        trades = json.loads(path.read_text())
+        return sleeve_symbols(trades) if isinstance(trades, list) else None
+    except Exception:
+        return None
+
+
+def without_sleeve(positions: list, sleeve: set) -> Tuple[list, list]:
+    """(positions the large-cap rules manage, positions that belong to the sleeve)."""
+    mine = [p for p in positions or [] if p.get("symbol") not in (sleeve or ())]
+    theirs = [p for p in positions or [] if p.get("symbol") in (sleeve or ())]
+    return mine, theirs
+
+
+def drop_sleeve_candidates(candidates: list, sleeve: set) -> Tuple[list, list]:
+    """
+    Buy candidates with the sleeve's holdings removed, and the symbols removed.
+    The broker keeps one position per symbol, so if both strategies bought the
+    same stock neither could tell its shares from the other's.
+    """
+    kept = [c for c in candidates or [] if c.get("symbol") not in (sleeve or ())]
+    return kept, [c.get("symbol") for c in candidates or [] if c.get("symbol") in (sleeve or ())]
+
+
+def sleeve_cash_reserved(total_value: float, sleeve_value: float) -> float:
+    """Cash that belongs to the sleeve: its share of the account, less what it has already invested."""
+    return max(0.0, SLEEVE_SHARE * float(total_value or 0) - float(sleeve_value or 0))
 
 
 def split_positions(positions: list) -> Tuple[list, list]:

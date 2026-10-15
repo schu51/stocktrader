@@ -31,6 +31,7 @@ the pack empty, and the judge is told what is missing.
 import html
 import re
 import time
+import unicodedata
 from datetime import date, timedelta
 from typing import Callable, Dict, List, Optional
 
@@ -75,6 +76,65 @@ def section(text: str, heading: str, limit: int, fallback_at: float = 0.02) -> s
     starts = [m.start() for m in re.finditer(heading, text, flags=re.I)]
     start = starts[1] if len(starts) > 1 else int(len(text) * fallback_at)
     return text[start:start + limit]
+
+
+# Phrases that address a reader who is a model, not an investor. A filing is
+# written by the company being judged; one that tries to instruct the judge is
+# trying to buy itself a score, and the sleeve trades on that score.
+_MACHINE_ADDRESS = re.compile(
+    r"ignore (all |any |the )?(previous|prior|above|earlier) (instructions|prompts?|text)"
+    r"|disregard (all |any |the )?(previous|prior|above|earlier)"
+    r"|(as|you are) (now )?an? (ai|artificial intelligence|large language model|language model|llm)\b"
+    r"|note to (the )?(ai|llm|model|automated|language model)"
+    r"|(system|developer) prompt"
+    r"|you (must|should|shall) (assign|give|rate|score|output|respond|reply)"
+    r"|respond with an? (edge|demand|score|rating)"
+    r"|(assign|give) (it |this company |us )?an? (edge|demand) (score )?of",
+    re.I)
+# Broad on purpose: the mark blocks a buy, raises an alert on a holding, and
+# sells only when it repeats on two lists running (diamond_sleeve.broken), so
+# a false alarm costs little and a miss could cost a bought score. Ordinary
+# wording ("positioned as an AI company") will sometimes trip it.
+
+
+def plain(text) -> str:
+    """
+    Text in one plain form: look-alike characters folded to ordinary ones
+    (NFKC), invisible formatting and control characters removed, whitespace
+    collapsed. The guard below checks this form and the model is shown this
+    form, so a phrase cannot reach one and be hidden from the other.
+    """
+    if not text:
+        return ""
+    folded = unicodedata.normalize("NFKC", str(text))
+    kept = "".join(" " if c.isspace() else c for c in folded if c.isspace() or unicodedata.category(c) not in ("Cf", "Cc", "Co", "Cs"))
+    return " ".join(kept.split())
+
+
+class EvidenceUnavailable(Exception):
+    """A filing the company has made could not be fetched, so a pack would judge it on less than it has said."""
+
+
+# The unmistakable subset: wording that can only be an attempt to steer a
+# model's score. Unlike the broad pattern it can sell a holding (twice running).
+_MANIPULATION = re.compile(
+    r"ignore (all |any |the )?(previous|prior|above|earlier) (instructions|prompts?|text)"
+    r"|disregard (all |any |the )?(previous|prior|above|earlier) (instructions|prompts?|text)"
+    r"|note to (the )?(ai|llm|model|automated|language model)"
+    r"|you (must|should|shall) (assign|rate|score|output)\b"
+    r"|respond with an? (edge|demand|score|rating)"
+    r"|(assign|give) (it |this company |us )?an? (edge|demand) (score )?of",
+    re.I)
+
+
+def tries_to_steer_a_score(text) -> bool:
+    """True only for wording that is unmistakably an instruction to a model about its score."""
+    return bool(_MANIPULATION.search(plain(text)))
+
+
+def addressed_to_a_machine(text) -> bool:
+    """True if the text contains wording aimed at an automated reader rather than an investor."""
+    return bool(_MACHINE_ADDRESS.search(plain(text)))
 
 
 def recent_filings(submissions: Dict, today: date) -> Dict:
@@ -151,12 +211,14 @@ def build_pack(row: Dict, submissions: Dict, today: date, fetch_doc: Callable[[i
     filings = recent_filings(submissions, today)
 
     def text_of(filing: Optional[Dict]) -> str:
+        # A filing that exists but cannot be fetched is not an empty filing: a
+        # pack judged without it could score low and sell a holding on that.
         if not filing:
             return ""
         try:
-            return strip_html(fetch_doc(cik, filing["accession"], filing["document"]))
-        except Exception:
-            return ""
+            return plain(strip_html(fetch_doc(cik, filing["accession"], filing["document"])))
+        except Exception as exc:
+            raise EvidenceUnavailable(f"filing {filing['accession']} could not be fetched ({exc})")
 
     business = section(text_of(filings["10-K"]), r"item\s*1(?![0-9AB])\s*\.", BUSINESS_CHARS)
     mdna = section(text_of(filings["10-Q"]), r"item\s*2\s*\.", MDNA_CHARS, fallback_at=0.4)
@@ -178,6 +240,7 @@ def build_pack(row: Dict, submissions: Dict, today: date, fetch_doc: Callable[[i
         "business": business, "mdna": mdna,
         "events": eight_k_lines(filings["8-K"]), "agreements": agreements,
         "federal_awards": awards, "sentiment": sentiment,
+        "suspicious": any(addressed_to_a_machine(t) for t in [business, mdna] + [a["text"] for a in agreements]),
     }
 
 

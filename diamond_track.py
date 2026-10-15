@@ -88,7 +88,10 @@ def evaluate(history: List[Dict], quotes: Dict[str, dict], horizons=HORIZONS, n:
     """One row per (list date, horizon) for which the window has passed and both rankings have priced picks."""
     out = []
     for day in sorted({h.get("date") for h in history or [] if isinstance(h, dict) and isinstance(h.get("date"), str)}):
-        by_conviction, by_numbers = picks(history, day, "conviction_rank", n), picks(history, day, "rank", n)
+        # The sleeve ranks on the judgment alone; lists judged before that rank
+        # was recorded fall back to the blended conviction rank
+        by_conviction = picks(history, day, "judgment_rank", n) or picks(history, day, "conviction_rank", n)
+        by_numbers = picks(history, day, "rank", n)
         if not by_conviction:
             continue                                   # a list from before the judgment existed
         index = quotes.get(BENCHMARK) or {}

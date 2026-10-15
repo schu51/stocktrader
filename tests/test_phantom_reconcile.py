@@ -115,3 +115,15 @@ def test_untradable_holding_takes_no_sector_allocation():
         total_value=100_000.0, positions={live: SimpleNamespace(market_value=30_000.0),
                                           stuck: SimpleNamespace(market_value=10_000.0)}))
     assert DailyRunner._get_sector_allocations(stub) == {sector: 0.3}
+
+
+def test_an_order_that_ended_after_a_partial_fill_is_kept_not_written_off():
+    # A DAY limit that fills 30 of 100 shares and expires reads "expired". The
+    # 30 shares are held: writing the trade off loses them from the log (and a
+    # diamond-sleeve holding would lose its tag and get the large-cap exits).
+    from run_daily_analysis import classify_order_for_reconcile
+    assert classify_order_for_reconcile("expired", "30") == "keep"
+    assert classify_order_for_reconcile("canceled", "0") == "cancel"
+    assert classify_order_for_reconcile("expired", None) == "keep"        # unreadable amount: do not guess
+    assert classify_order_for_reconcile("expired", "junk") == "keep"
+    assert classify_order_for_reconcile("canceled") == "cancel"           # old callers: status only

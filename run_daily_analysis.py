@@ -44,8 +44,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import (clear_stops_for_sale, find_untradable, replace_stop, is_long_equity, reconcile_phantom_trades, record_broker_exits,
-                        safe_to_reconcile, split_positions)
+from exit_logic import (clear_stops_for_sale, drop_sleeve_candidates, find_untradable, is_long_equity,
+                        read_sleeve_symbols, reconcile_phantom_trades, record_broker_exits, replace_stop,
+                        safe_to_reconcile, sleeve_cash_reserved, sleeve_holdings, split_positions, without_sleeve)
 from models import PortfolioState, ResearchScore
 from universe_screener import UniverseScreener
 
@@ -140,7 +141,10 @@ def fetch_market_data(symbol: str):
         return None, None
 
 
-def classify_order_for_reconcile(status: str) -> str:
+_NOT_GIVEN = object()
+
+
+def classify_order_for_reconcile(status: str, filled_qty=_NOT_GIVEN) -> str:
     """
     Decide whether an OPEN trade's BUY order indicates a phantom (never filled).
 
@@ -155,7 +159,14 @@ def classify_order_for_reconcile(status: str) -> str:
     if s in ("filled", "partially_filled"):
         return "keep"
     if s in ("canceled", "cancelled", "expired", "rejected", "done_for_day", "replaced"):
-        return "cancel"
+        if filled_qty is _NOT_GIVEN:
+            return "cancel"
+        # An order that ended after a partial fill left shares in the account:
+        # those are a real position, not a phantom. Unreadable is not zero.
+        try:
+            return "cancel" if float(filled_qty) == 0 else "keep"
+        except (TypeError, ValueError):
+            return "keep"
     return "keep"
 
 
@@ -233,12 +244,26 @@ class DailyRunner:
         for sym, reason in self._untradable.items():
             logger.warning(f"{sym} is untradable ({reason}) — excluded from position and sector caps")
 
+        # Holdings of the diamond sleeve (diamond_sleeve.py) stay in `positions`
+        # for the same reason, and are likewise outside this strategy's position
+        # count, sector caps, rotation and stale exit. Its share of the cash is
+        # not this strategy's to spend.
+        # An unreadable trade log is "unknown", not "the sleeve holds nothing":
+        # _positions_verified then fails, which switches off rotation, the
+        # stale exit, reconciliation and buying for this run.
+        sleeve = sleeve_holdings(self.broker, raw)
+        self._sleeve_known = sleeve is not None
+        self._sleeve = sleeve or set()
+        sleeve_value = 0.0
+
         positions = {}
         total_unrealized = 0.0
         for p in raw:
             if not is_long_equity(p):
                 continue   # shorts and options are not holdings of the long engine
             mv  = float(p["market_value"])
+            if p["symbol"] in self._sleeve:
+                sleeve_value += mv
             pnl = float(p["unrealized_pl"])
             total_unrealized += pnl
             pos = Position(
@@ -257,6 +282,8 @@ class DailyRunner:
 
         cash = float(account.get("cash", self.portfolio.cash))
         bp   = float(account.get("buying_power", self.portfolio.buying_power))
+        self._sleeve_reserved = min(max(0.0, cash), sleeve_cash_reserved(total_value, sleeve_value))
+        cash -= self._sleeve_reserved
 
         # Use cash (not buying_power) so the model never trades on margin.
         # buying_power in Alpaca margin accounts is 2-3× cash; using it as the
@@ -269,7 +296,7 @@ class DailyRunner:
             cash=cash,
             invested=float(account.get("long_market_value", 0)),
             positions=positions,
-            num_positions=len([s for s in positions if s not in self._untradable]),
+            num_positions=len([s for s in positions if s not in self._untradable and s not in self._sleeve]),
             cash_allocation=cash / total_value if total_value > 0 else 0.0,
             available_cash=available,
             buying_power=bp,
@@ -284,7 +311,9 @@ class DailyRunner:
         """
         return (bool(self.broker)
                 and getattr(self.broker, "last_positions_ok", False) is True
-                and getattr(self, "_account_ok", False) is True)
+                and getattr(self, "_account_ok", False) is True
+                # ...and it is known which of them belong to the diamond sleeve
+                and getattr(self, "_sleeve_known", True) is True)
 
     def _initialize_portfolio(self, default_value: float) -> PortfolioState:
         """Load portfolio from Alpaca if available, otherwise use default value."""
@@ -540,6 +569,10 @@ class DailyRunner:
             self.portfolio.cash = cash_start + planned
             self.portfolio.available_cash = max(0.0, self.portfolio.cash) * 0.95
             self.portfolio.num_positions = rotation.planning_count(held_count, cap, len(laggards))
+
+            candidates, sleeve_skipped = drop_sleeve_candidates(candidates, getattr(self, "_sleeve", set()))
+            for sym in sleeve_skipped:
+                holds.append({"symbol": sym, "reason": "held by the diamond sleeve"})
 
             for candidate in candidates:
                 symbol = candidate["symbol"]
@@ -1129,7 +1162,7 @@ class DailyRunner:
             # a second positions call could fail and silently switch the cap off.
             positions = [{"symbol": sym, "market_value": pos.market_value}
                          for sym, pos in (self.portfolio.positions or {}).items()
-                         if sym not in getattr(self, "_untradable", {})]
+                         if sym not in getattr(self, "_untradable", {}) and sym not in getattr(self, "_sleeve", set())]
             total_value = self.portfolio.total_value or 1
             # Build symbol → sector lookup
             sym_to_sector = {}
@@ -1272,7 +1305,7 @@ class DailyRunner:
             try:
                 order = self.broker.get_order(t["order_id"])
                 status = order.get("status") if isinstance(order, dict) else None
-                if classify_order_for_reconcile(status) == "cancel":
+                if classify_order_for_reconcile(status, order.get("filled_qty") if isinstance(order, dict) else None) == "cancel":
                     t["status"] = "CANCELLED"
                     t["exit_reason"] = "ORDER_NOT_FILLED"
                     cancelled += 1
@@ -1436,6 +1469,14 @@ class DailyRunner:
         # The long-stock exit rules must not touch shorts or options
         positions, unmanaged = split_positions(positions)
         result["unmanaged"] = [p["symbol"] for p in unmanaged]
+        # ...nor the diamond sleeve's holdings. If the trade log cannot say which
+        # those are, no exit is evaluated: every position keeps its broker stop.
+        sleeve = sleeve_holdings(self.broker, positions)
+        if sleeve is None:
+            result["error"] = "trade log or orders unreadable: cannot tell which positions the diamond sleeve holds"
+            return result
+        positions, sleeve_held = without_sleeve(positions, sleeve)
+        result["sleeve"] = [p["symbol"] for p in sleeve_held]
         result["positions_checked"] = len(positions)
 
         if not positions:
@@ -2078,7 +2119,7 @@ class DailyRunner:
             holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2), "market_value": pos.market_value}
                         for sym, pos in (self.portfolio.positions or {}).items()}
             return rotation.find_laggards(holdings, trades, ranks, date.today(),
-                                          exclude=exited | set(getattr(self, "_untradable", {})))
+                                          exclude=exited | set(getattr(self, "_untradable", {})) | getattr(self, "_sleeve", set()))
         except Exception as e:
             logger.warning(f"Rotation: could not evaluate holdings ({e}) — nothing rotated")
             return []
@@ -2100,7 +2141,7 @@ class DailyRunner:
             holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2), "market_value": pos.market_value}
                         for sym, pos in (self.portfolio.positions or {}).items()}
             stale = rotation.find_stale(holdings, trades, date.today(),
-                                        exclude=exited | set(getattr(self, "_untradable", {})), ranks=ranks)
+                                        exclude=exited | set(getattr(self, "_untradable", {})) | getattr(self, "_sleeve", set()), ranks=ranks)
             return stale, rotation.stale_allowance(trades, date.today())
         except Exception as e:
             logger.warning(f"Stale exit: could not evaluate holdings ({e}) — nothing sold")

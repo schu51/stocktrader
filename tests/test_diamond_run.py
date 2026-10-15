@@ -247,3 +247,20 @@ def test_an_as_of_run_can_save_its_list_but_never_the_live_files(tmp_path, monke
     assert json.loads(saved.read_text())["cutoff"] == "2026-08-29" and not live.exists() and not hist.exists()
     with pytest.raises(SystemExit):
         diamond_run.main(["--out", str(saved)])                  # --out is only for historical runs
+
+
+def test_history_records_the_judgment_rank_the_sleeve_reads():
+    doc = {"generated_at": "2026-10-17T07:31:00", "watchlist": [
+        {"rank": 1, "ticker": "AAA", "score": {"total": 80.0}, "conviction": 41.0, "conviction_rank": 2, "judgment_rank": 2},
+        {"rank": 2, "ticker": "BBB", "score": {"total": 70.0}, "conviction": 60.0, "conviction_rank": 1, "judgment_rank": 1}]}
+    h = update_history([], doc)
+    assert [(r["ticker"], r["judgment_rank"]) for r in h] == [("AAA", 2), ("BBB", 1)]
+
+
+
+def test_history_records_a_do_not_buy_mark():
+    doc = {"generated_at": "2026-10-17T07:31:00", "watchlist": [
+        {"rank": 1, "ticker": "AAA", "score": {"total": 80.0}, "judgment": {"edge": 9, "demand": 9, "do_not_buy": True}},
+        {"rank": 2, "ticker": "BBB", "score": {"total": 70.0}, "judgment": {"edge": 5, "demand": 5}}]}
+    h = update_history([], doc)
+    assert h[0]["do_not_buy"] is True and "do_not_buy" not in h[1]

@@ -373,3 +373,32 @@ def test_the_review_says_when_the_judgment_has_enough_evidence_to_act_on():
     assert "Diamond judgment: the evidence does not support acting on it" in body.split("## Account")[0]
     _, body = build_review({"diamonds": _diamond_doc(), "diamond_track": "broken"}, date(2026, 10, 10))
     assert "## Macro theses" in body
+
+
+def test_sleeve_trades_are_reported_under_the_sleeve_not_mixed_into_the_large_cap_figures():
+    from datetime import date
+    from weekly_review import build_review
+    trades = [
+        {"symbol": "AME", "status": "CLOSED", "entry_date": "2026-10-26", "exit_date": "2026-10-28", "hold_days": 2,
+         "pnl_usd": -50.0, "pnl_pct": -2.0, "exit_reason": "PRICE_BELOW_50MA"},
+        {"symbol": "STAA", "status": "OPEN", "sleeve": "diamond", "entry_date": "2026-10-26", "entry_price": 30.0, "shares": 96},
+        {"symbol": "GONE", "status": "CLOSED", "sleeve": "diamond", "entry_date": "2026-09-01", "exit_date": "2026-10-26",
+         "hold_days": 55, "pnl_usd": 240.0, "pnl_pct": 10.0, "exit_reason": "THESIS_BROKEN"},
+    ]
+    sleeve = {"generated_at": "2026-10-26T10:31:00", "budget": 23000.0, "invested": 2880.0, "failures": [],
+              "holdings": [{"symbol": "STAA", "market_value": 2880.0, "pnl_pct": 0.0}]}
+    _, body = build_review({"trades": trades, "diamonds": _diamond_doc("2026-10-24"), "diamond_sleeve": sleeve}, date(2026, 10, 31))
+    large, diamond = body.split("## Diamond watchlist")[0], body.split("## Diamond watchlist")[1]
+    assert "Closed AME" in large and "STAA" not in large and "GONE" not in large
+    assert "100%** of 1 closed trades" in large                       # the sleeve's winner is not in this rate
+    assert "Sleeve: 1 of 8 positions, $2,880 of $23,000" in diamond and "STAA" in diamond
+    assert "Sold GONE" in diamond and "THESIS BROKEN" in diamond.upper().replace("_", " ")
+
+
+def test_a_sleeve_failure_is_raised_at_the_top():
+    from datetime import date
+    from weekly_review import build_review
+    sleeve = {"generated_at": "2026-10-26T10:31:00", "budget": 23000.0, "invested": 0.0, "holdings": [],
+              "failures": ["STAA: buy failed (rejected)"]}
+    _, body = build_review({"diamonds": _diamond_doc("2026-10-24"), "diamond_sleeve": sleeve}, date(2026, 10, 31))
+    assert "Diamond sleeve: STAA: buy failed" in body.split("## Account")[0]

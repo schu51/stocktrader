@@ -53,7 +53,7 @@ def load_data(failed_runs_file: str = None) -> Dict:
         "candidate_outcomes": _load("candidate_outcomes.json"), "macro_brief": _load("macro_brief.json"),
         "screener": _load("screener.json"), "experiments": _load("experiments.json"), "failed_runs": failed,
         "diamonds": _load("diamonds.json"), "diamond_history": _load("diamond_history.json"),
-        "diamond_track": _load("diamond_track.json"),
+        "diamond_track": _load("diamond_track.json"), "diamond_sleeve": _load("diamond_sleeve.json"),
     }
 
 
@@ -211,7 +211,11 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
 
     # ── Trades ───────────────────────────────────────────────────────────────
     out.append("\n## Trades this week")
-    trades = [t for t in (data.get("trades") or []) if isinstance(t, dict)]
+    all_trades = [t for t in (data.get("trades") or []) if isinstance(t, dict)]
+    # The diamond sleeve is a different strategy with a different holding period:
+    # its trades are reported under the Diamond watchlist, not mixed in here.
+    trades = [t for t in all_trades if not t.get("sleeve")]
+    sleeve_trades = [t for t in all_trades if t.get("sleeve")]
     sym = lambda t: _md(t.get("symbol"), 12)
     opened = [t for t in trades if str(t.get("entry_date") or "") > week_ago and t.get("status") != "CANCELLED"]
     closed = [t for t in trades if t.get("status") == "CLOSED" and str(t.get("exit_date") or "") > week_ago]
@@ -356,6 +360,23 @@ def build_review(data: Dict, today: date) -> Tuple[str, str]:
         # A damaged watchlist file must not cost the week its whole review
         out += ["## Diamond watchlist", "- The list could not be read."]
         problems.append("Diamond watchlist: the file could not be read")
+    # The sleeve (diamond_sleeve.py): what it holds and what it did this week
+    sleeve = data.get("diamond_sleeve") if isinstance(data.get("diamond_sleeve"), dict) else {}
+    if sleeve or sleeve_trades:
+        holdings = [h for h in sleeve.get("holdings") or [] if isinstance(h, dict)]
+        out.append(f"- Sleeve: {len(holdings)} of 8 positions, ${_num(sleeve.get('invested')):,.0f} of "
+                   f"${_num(sleeve.get('budget')):,.0f} invested"
+                   + (": " + ", ".join(f"{_md(h.get('symbol'), 8)} {_num(h.get('pnl_pct')):+.0f}%" for h in holdings)
+                      if holdings else ""))
+        for t in sleeve_trades:
+            if str(t.get("entry_date") or "") > week_ago and t.get("status") != "CANCELLED":
+                out.append(f"  - Bought {sym(t)}")
+            if t.get("status") == "CLOSED" and str(t.get("exit_date") or "") > week_ago:
+                out.append(f"  - Sold {sym(t)}: {_num(t.get('pnl_pct')):+.1f}% (${_num(t.get('pnl_usd')):+,.0f}) after "
+                           f"{int(_num(t.get('hold_days')))} days, {_md(t.get('exit_reason'), 40)}")
+        for failure in [f for f in (sleeve.get("failures") or []) + (sleeve.get("alerts") or []) if isinstance(f, str)][:6]:
+            problems.append(f"Diamond sleeve: {_md(failure, 200)}")
+
     # Is the judgment worth acting on yet? (diamond_track.py; the owner asked to be told)
     track = data.get("diamond_track") if isinstance(data.get("diamond_track"), dict) else {}
     track_verdict = track.get("verdict") if isinstance(track.get("verdict"), dict) else {}

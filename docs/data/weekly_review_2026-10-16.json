@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-16",
+  "generated_at": "2026-10-16T21:21:02.779215",
+  "type": "weekly_review",
+  "thesis_health": {
+    "intact": 12,
+    "weakening": 0,
+    "broken": 0,
+    "unknown": 1,
+    "unknown_detail": "CTLP - untradable, no stop possible, +5.3% P&L",
+    "borderline_watch": "ILMN at 14.9% below 52w high - monitor closely"
+  },
+  "weekly_summary": {
+    "week": "2026-10-12 to 2026-10-16",
+    "entries": 6,
+    "closes": 16,
+    "win_rate_pct": 31.0,
+    "portfolio_start": 115929,
+    "portfolio_end": 111243,
+    "portfolio_change_pct": -4.1,
+    "notable": "Heavy tech rotation out: NVDA, PANW, FTNT, SMCI, AMD, NET, TWLO all stopped via PRICE_BELOW_50MA or broker stop. Energy and healthcare positions intact.",
+    "big_winners": [
+      "SNOW +17.6%",
+      "ANET +6.7%",
+      "CRWD +7.1%",
+      "AMD +5.6%"
+    ],
+    "big_losers": [
+      "TWLO -11.4%",
+      "NTAP -9.1%",
+      "SMCI -9.0%",
+      "JCI -6.5%"
+    ],
+    "next_week_signal_threshold": "No change \u2014 insufficient data for threshold adjustment. System cutting losses as designed."
+  },
+  "pattern_findings": {
+    "rs_rank": "WATCH: RS 70-89 outperforming RS 90+ (27 trades: 26% WR, -0.3% avg) vs (33 trades: 12% WR, -3.0% avg). Pattern emerging but not yet actionable \u2014 continue monitoring.",
+    "sectors": "Energy and Unknown categories leading (7.3% avg, 9.2% avg). Industrials and healthcare dragging (-4.6%, -4.3%). Screener top sectors match current holdings.",
+    "exit_quality": "REDUCE exits average +45.9% \u2014 partial profit taking working well. PRICE_BELOW_50MA cutting losses at -2.2% avg.",
+    "hold_times": "Winners held 49.8d, losers cut at 11.8d. Asymmetry healthy.",
+    "profit_factor": "3.66x (avg win +15.8% vs avg loss -4.3%). System structurally sound despite 21.1% WR."
+  },
+  "screener_alignment": {
+    "top_screener_sectors": [
+      "energy",
+      "healthcare",
+      "technology"
+    ],
+    "current_holdings_sectors": {
+      "Energy": [
+        "APA",
+        "MPC",
+        "PSX",
+        "VLO"
+      ],
+      "Healthcare": [
+        "CRL",
+        "HUM",
+        "ILMN",
+        "MRNA"
+      ],
+      "Technology": [
+        "CTLP",
+        "PLTR",
+        "SHOP",
+        "TEAM"
+      ],
+      "Industrials": [
+        "EXPD"
+      ]
+    },
+    "alignment": "STRONG - portfolio concentrated in screener top 3 sectors",
+    "opportunity_gap": "basic_materials, consumer_defensive in screener top 6 but not in portfolio"
+  },
+  "model_health": "OK",
+  "action_taken": "None - no parameter changes. RS rank finding flagged for continued monitoring (needs 10+ more trades to confirm before any threshold change)."
+}

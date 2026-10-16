@@ -45,7 +45,8 @@ def _minutes(hhmm: str) -> int:
 TIMETABLE = [
     ("premarket.yml",      WEEKDAYS,   "09:00", "09:00", None),
     ("stop_placement.yml", WEEKDAYS,   "09:30", "09:30", None),  # at the open
-    ("daily_trade.yml",    WEEKDAYS,   "10:00", "10:00", None),
+    ("daily_open.yml",     WEEKDAYS,   "09:15", "09:15", None),  # buys into the opening auction
+    ("daily_trade.yml",    WEEKDAYS,   "10:00", "10:00", None),  # exits, stops, rotation, stale exit
     ("diamond_sleeve.yml", WEEKDAYS,   "10:30", "10:30", None),  # after the large-cap run has spent its cash
     ("intraday_exit.yml",  WEEKDAYS,   "09:45", "15:45", 30),    # :15/:45, offset from sync
     ("postmarket.yml",     WEEKDAYS,   "16:15", "16:15", None),
@@ -176,7 +177,7 @@ def catch_up(now: datetime) -> list:
 # The sleeve and these jobs all write the trade log from their own checkouts.
 # Started together, one can act on positions the other has just bought, before
 # its record arrives; and their commits are merged. The sleeve waits a tick.
-LOG_WRITERS = {"daily_trade.yml", "intraday_exit.yml", "postmarket.yml"}
+LOG_WRITERS = {"daily_open.yml", "daily_trade.yml", "intraday_exit.yml", "postmarket.yml"}
 SLEEVE_WORKFLOW = "diamond_sleeve.yml"
 
 

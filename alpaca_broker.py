@@ -505,6 +505,26 @@ class AlpacaBroker:
             return None
         return bool(result["is_open"])
 
+    def opening_auction_ahead(self, cutoff=(9, 28)) -> Optional[bool]:
+        """
+        True if today is a trading day and it is not yet `cutoff` (New York
+        time): Alpaca takes opening-auction orders (time in force "opg") until
+        9:28. False if the market is open, closed for the day, or past the
+        cutoff; None if the clock cannot be read.
+        """
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+        result = self._request("GET", "/v2/clock")
+        try:
+            et = ZoneInfo("America/New_York")
+            now = datetime.fromisoformat(str(result["timestamp"])).astimezone(et)
+            nxt = datetime.fromisoformat(str(result["next_open"])).astimezone(et)
+            if result.get("is_open"):
+                return False
+        except (KeyError, TypeError, ValueError):
+            return None
+        return nxt.date() == now.date() and (now.hour, now.minute) < cutoff
+
     def get_market_calendar(self, start: str = None, end: str = None) -> List[Dict]:
         """Get market calendar."""
         params = {}

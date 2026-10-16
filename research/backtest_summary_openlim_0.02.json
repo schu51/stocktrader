@@ -1,0 +1,77 @@
+{
+  "generated_at": "2026-10-16T08:20:44.256013",
+  "start": "2023-10-02",
+  "end": "2026-10-01",
+  "sessions": 753,
+  "universe": 520,
+  "w_rs": 0.8,
+  "w_thesis": 0.2,
+  "slippage_bps": 10.0,
+  "variant": {
+    "entry_trigger": "none",
+    "atr_stop": 2.5,
+    "min_adx": 0.0,
+    "min_above_50ma": 0.06
+  },
+  "strategy": {
+    "final_equity": 264594.36313335306,
+    "total_return": 1.6459436313335307,
+    "cagr": 0.38342836364903543,
+    "max_drawdown": -0.1614291436935319
+  },
+  "spy_buy_and_hold": {
+    "total_return": 0.8539010871582384,
+    "cagr": 0.22863644419447215,
+    "max_drawdown": -0.18755237333914399
+  },
+  "average_invested_share": 0.6665753997874115,
+  "open_positions_at_end": 37,
+  "closed_trades": {
+    "trades": 800,
+    "win_rate": 0.3725,
+    "total_pnl_usd": 150138.06000000003,
+    "profit_factor": 1.9089131790844838,
+    "avg_win_pct": 26.489795302013427,
+    "avg_loss_pct": -7.353754980079682,
+    "mean_pnl_pct": 5.2529675,
+    "median_pnl_pct": -4.4030000000000005,
+    "median_hold_days": 30.0,
+    "pnl_without_best_trade_usd": 138882.15000000002,
+    "pnl_without_best_5_usd": 111040.33000000003
+  },
+  "exit_reasons": {
+    "PRICE_BELOW_50MA": 380,
+    "STOP": 366,
+    "STALE": 53,
+    "HARD_LOSS_STOP": 1
+  },
+  "funnel": {
+    "candidates": 36229,
+    "gate_rsi": 1531,
+    "gate_bb": 4113,
+    "gate_sector": 794,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 5597,
+    "gate_volatile": 0,
+    "days_market_weak": 0,
+    "engine_buy": 1131,
+    "engine_hold": 9116,
+    "orders": 1029,
+    "fills": 837,
+    "unfilled_no_cash": 82,
+    "unfilled_at_cap": 0,
+    "unfilled_gap": 110
+  },
+  "learning_fit": {
+    "n": 800,
+    "t_rs": 3.788943364115283,
+    "t_thesis": -1.940430279986695,
+    "coef_rs": 3.4449909326688566,
+    "coef_thesis": -1.764282037926725,
+    "derived_weights": {
+      "w_rs": 0.9,
+      "w_thesis": 0.1
+    }
+  }
+}

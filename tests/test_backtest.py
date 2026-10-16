@@ -267,3 +267,11 @@ def test_early_loss_rate_counts_trades_that_lost_six_percent_within_five_days():
     t = pd.DataFrame({"hold_days": [1, 3, 5, 6, 2], "pnl_pct": [-9.0, -6.0, -7.0, -20.0, -2.0]})
     assert early_loss_rate(t) == 0.6
     assert early_loss_rate(pd.DataFrame()) is None
+
+
+def test_a_limit_on_open_order_does_not_fill_on_a_gap_above_its_limit():
+    from backtest import opening_fill
+    assert opening_fill(open_px=101.5, prev_close=100.0, limit=0.02) == 101.5
+    assert opening_fill(open_px=102.5, prev_close=100.0, limit=0.02) is None
+    assert opening_fill(open_px=105.0, prev_close=100.0, limit=0.0) == 105.0      # no limit: any gap fills
+    assert opening_fill(open_px=105.0, prev_close=float("nan"), limit=0.02) == 105.0

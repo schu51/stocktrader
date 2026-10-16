@@ -141,6 +141,25 @@ def fetch_market_data(symbol: str):
         return None, None
 
 
+# Buying at the open (2026-10-16). The 9:15 ET run decides on the previous
+# close and sends limit-on-open orders; the 10:00 run manages positions only.
+# Live buys sent at 10:00 at the ask filled 1.1% above the open on average and
+# two-thirds of the way up the day's range; in the backtest that kind of fill
+# cut the three-year return from 174% to 108%.
+OPEN_LIMIT = 0.05    # skip a stock that opens more than 5% above its previous close (backtest: no real difference 1-5%)
+PHASES = ("all", "open", "manage")
+
+
+def phase_buys(phase: str) -> bool:
+    """Whether this run looks for and sends buys."""
+    return phase in ("all", "open")
+
+
+def phase_exits(phase: str) -> bool:
+    """Whether this run evaluates exits: not before the open, when a sale would only queue."""
+    return phase in ("all", "manage")
+
+
 _NOT_GIVEN = object()
 
 
@@ -398,7 +417,8 @@ class DailyRunner:
             symbols: List[str] = None,
             max_candidates: int = 30,
             execute: bool = False,
-            min_confidence: float = MIN_CONFIDENCE_DEFAULT) -> Dict:
+            min_confidence: float = MIN_CONFIDENCE_DEFAULT,
+            phase: str = "all") -> Dict:
         """
         Run daily analysis and optionally execute trades.
 
@@ -444,8 +464,15 @@ class DailyRunner:
             # phantom lot with a fabricated P&L.
             self._reconcile_phantom_trades()
 
-            # 0b. Evaluate exits on ALL open positions before looking for new entries
-            exit_results = self._evaluate_exits(execute=execute)
+            # 0b. Evaluate exits on ALL open positions before looking for new entries.
+            # Not in the 9:15 opening run: before the open a sale would only queue.
+            self._phase = phase
+            if phase_exits(phase):
+                exit_results = self._evaluate_exits(execute=execute)
+            else:
+                exit_results = {"exits_triggered": [], "stops_updated": [], "positions_checked": 0,
+                                "mode": "EXECUTE" if execute else "DRY-RUN",
+                                "skipped": "opening run: exits are left to the 10:00 run and the intraday checks"}
             results["exits"] = exit_results
             if exit_results.get("error"):
                 results["alerts"].append(f"Exit checks did not run: {exit_results['error']}")
@@ -523,6 +550,8 @@ class DailyRunner:
                 candidates = self._load_screener_candidates(max_candidates) or \
                              self.screener.get_screening_candidates(max_candidates=max_candidates)
 
+            if not phase_buys(phase):
+                candidates = []          # the 10:00 run manages positions; buys went into the opening auction
             logger.info(f"Screening {len(candidates)} candidates")
 
             # 2. Generate signals for each candidate
@@ -1892,10 +1921,13 @@ class DailyRunner:
         if not ALPACA_AVAILABLE or not self.broker:
             return {"status": "error", "reason": "Alpaca not available - check API keys"}
 
-        # Gate 1: market must be open
+        # Gate 1: the opening auction is ahead (the 9:15 run), or the market is open
+        opening = False
         try:
-            if not self.broker.is_market_open():
-                logger.warning("Execution skipped: market is closed")
+            if getattr(self, "_phase", "all") == "open" and self.broker.opening_auction_ahead() is True:
+                opening = True
+            elif not self.broker.is_market_open():
+                logger.warning("Execution skipped: market is closed and the opening auction has closed to orders")
                 return {"status": "skipped", "reason": "Market is closed"}
         except Exception as e:
             return {"status": "error", "reason": f"Could not check market status: {e}"}
@@ -1960,8 +1992,14 @@ class DailyRunner:
                 })
                 continue
 
+            # Before the open: a limit-on-open at the previous close plus OPEN_LIMIT.
+            # It fills at the opening price, or not at all on a bigger gap.
+            if opening and limit_price:
+                limit_price = round(limit_price * (1 + OPEN_LIMIT), 2)
+                opp["limit_price"] = limit_price
+
             # Gate 4: live ask price override (use Alpaca ask instead of stale yfinance close)
-            if self.broker:
+            if self.broker and not opening:
                 try:
                     quote = self.broker.get_latest_quote(symbol)
                     # BUY limit orders must be priced at (or above) the ask to be
@@ -2036,7 +2074,13 @@ class DailyRunner:
 
             # Submit order
             try:
-                result = executor.execute_decision(opp)
+                if opening:
+                    sent = self.broker.place_order(symbol=symbol, qty=shares, side="buy", order_type="limit",
+                                                   limit_price=limit_price, time_in_force="opg")
+                    result = ({"status": "error", "reason": sent.get("error")} if "error" in sent
+                              else {"status": "submitted", "order_id": sent.get("id")})
+                else:
+                    result = executor.execute_decision(opp)
                 status = result.get("status", "error")
 
                 if status == "submitted":
@@ -2335,6 +2379,9 @@ def main():
                         help="Write results to JSON file")
     parser.add_argument("--data-dir", type=str, default=None,
                         help="Data directory path")
+    parser.add_argument("--phase", choices=PHASES, default="all",
+                        help="open: decide on the previous close and send opening-auction buys, no exits (9:15 ET); "
+                             "manage: exits, stops, rotation and the stale exit, no buys (10:00 ET); all: both")
     parser.add_argument("--quiet", action="store_true",
                         help="Suppress console output (log file still written)")
 
@@ -2352,7 +2399,8 @@ def main():
         symbols=symbols,
         max_candidates=args.max_candidates,
         execute=args.execute,
-        min_confidence=args.min_confidence
+        min_confidence=args.min_confidence,
+        phase=args.phase,
     )
 
     if args.output:

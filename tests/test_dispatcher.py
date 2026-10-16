@@ -30,7 +30,7 @@ def test_daily_trade_at_1000():
 def test_intraday_exit_on_quarter_hours_during_market():
     assert _due(2026, 10, 5, 9, 45) == ["intraday_exit.yml"]
     assert _due(2026, 10, 5, 15, 45) == ["intraday_exit.yml"]
-    assert _due(2026, 10, 5, 9, 15) == []      # before the open
+    assert _due(2026, 10, 5, 9, 15) == ["daily_open.yml"]      # before the open: buys, no exit check
     assert _due(2026, 10, 5, 16, 45) == []     # after the close
 
 
@@ -199,7 +199,8 @@ def test_run_due_on_a_normal_slot_starts_exactly_that_slot():
     from dispatcher import run_due
     started = []
     run_due(datetime(2026, 10, 5, 10, 0, 5, tzinfo=ET), "main",
-            already_started=lambda wf, since: wf in {"premarket.yml", "stop_placement.yml", "intraday_exit.yml"},
+            already_started=lambda wf, since: wf in {"premarket.yml", "stop_placement.yml", "intraday_exit.yml",
+                                                     "daily_open.yml"},
             start=lambda wf, ref: started.append(wf) or True)
     assert started == ["daily_trade.yml", "portfolio_sync.yml"]
 

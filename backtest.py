@@ -105,6 +105,16 @@ def entry_price(bar: Dict, mode: str = "open") -> float:
     return o
 
 
+def opening_fill(open_px: float, prev_close: float, limit: float) -> Optional[float]:
+    """
+    A limit-on-open buy: fills at the open unless the open is more than `limit`
+    above the previous close (0 = no limit). Unknown previous close: fills.
+    """
+    if limit and prev_close == prev_close and prev_close > 0 and open_px > prev_close * (1 + limit):
+        return None
+    return open_px
+
+
 def capped_stop(stop_dist: Optional[float], cap: float) -> Optional[float]:
     """Experimental: no entry stop further away than `cap` (0 = off)."""
     if stop_dist is None or not cap:
@@ -305,7 +315,7 @@ class Backtest:
                  exit_line: str = "sma50", exit_confirm: int = 1, drawdown_mode: str = "live",
                  stale_days: int = 0, stale_gain: float = 5.0, stale_needs_cash: bool = False,
                  risk_per_trade: float = 0.0, max_atr_pct: float = 0.0, fill_mode: str = "open",
-                 max_stop_dist: float = 0.0):
+                 max_stop_dist: float = 0.0, open_limit: float = 0.0):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -329,6 +339,7 @@ class Backtest:
         self.risk_per_trade, self.max_atr_pct = risk_per_trade, max_atr_pct
         # Live-vs-backtest checks (2026-10-16): when in the day a buy fills, and a cap on the entry stop
         self.fill_mode, self.max_stop_dist = fill_mode, max_stop_dist
+        self.open_limit = open_limit       # limit-on-open buys: skip an open gapping above the prior close by more
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -456,6 +467,9 @@ class Backtest:
             sym = order["symbol"]
             px = entry_price({"open": self.open[sym].iloc[i], "high": self.high[sym].iloc[i],
                               "low": self.low[sym].iloc[i], "close": self.close[sym].iloc[i]}, self.fill_mode)
+            if self.open_limit and opening_fill(float(px), float(self.close[sym].iloc[i - 1]), self.open_limit) is None:
+                self.counters["unfilled_gap"] = self.counters.get("unfilled_gap", 0) + 1
+                continue
             if sym in self.positions or np.isnan(px):
                 continue
             if max_positions is not None and len(self.positions) >= max_positions:
@@ -768,6 +782,8 @@ def main() -> int:
     parser.add_argument("--fill", choices=["open", "typical", "adverse"], default="open",
                         help="entry fill price: the open, the day's typical price, or halfway from open to high")
     parser.add_argument("--max-stop-dist", type=float, default=0.0, help="experimental: cap the entry stop distance")
+    parser.add_argument("--open-limit", type=float, default=0.0,
+                        help="buy at the open only if it is no more than this above the prior close (0 = any)")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -787,7 +803,7 @@ def main() -> int:
                   drawdown_mode="off" if args.no_drawdown_halt else args.drawdown_mode,
                   stale_days=args.stale_days, stale_gain=args.stale_gain, stale_needs_cash=args.stale_needs_cash,
                   risk_per_trade=args.risk_per_trade, max_atr_pct=args.max_atr_pct,
-                  fill_mode=args.fill, max_stop_dist=args.max_stop_dist)
+                  fill_mode=args.fill, max_stop_dist=args.max_stop_dist, open_limit=args.open_limit)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

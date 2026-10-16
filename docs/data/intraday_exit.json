@@ -1,7 +1,20 @@
 {
-  "generated_at": "2026-10-16T16:15:40.366122",
+  "generated_at": "2026-10-16T16:45:50.569382",
   "positions_checked": 15,
-  "exits_triggered": [],
+  "exits_triggered": [
+    {
+      "symbol": "FTNT",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$168.42 is 0.5% below 50MA $169.21",
+      "qty": 34,
+      "price": 168.4151,
+      "pnl_pct": -2.0,
+      "executed": true,
+      "order_id": "f23d972e-9760-4d74-a295-d9f795de1543",
+      "confirmed": true,
+      "sale": "filled"
+    }
+  ],
   "stops_updated": [],
   "stops_placed": [],
   "stop_failures": [],

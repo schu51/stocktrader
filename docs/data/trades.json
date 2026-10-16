@@ -2635,7 +2635,7 @@
   {
     "trade_id": "TRD-20260916175646-FTNT",
     "symbol": "FTNT",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-09-16",
     "entry_ts": "2026-09-16T17:56:46.150448",
     "entry_price": 171.85,
@@ -2649,14 +2649,15 @@
     "sector": "technology",
     "weight_version": 2,
     "order_id": "94987095-1a80-4a52-8acb-0e8d4da5dc95",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-16",
+    "exit_price": 168.42,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -116.86,
+    "pnl_pct": -2.0,
+    "hold_days": 30,
     "entry_limit": 180.0,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-16T16:45:49.380467"
   },
   {
     "trade_id": "TRD-20260917175539-WDAY",

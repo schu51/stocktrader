@@ -2582,7 +2582,7 @@
   {
     "trade_id": "TRD-20260910172852-AMD",
     "symbol": "AMD",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-09-10",
     "entry_ts": "2026-09-10T17:28:52.883303",
     "entry_price": 506.44,
@@ -2596,14 +2596,15 @@
     "sector": "technology",
     "weight_version": 1,
     "order_id": "8b01fce0-4f80-45e4-a251-630199bb0809",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-16",
+    "exit_price": 534.85,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": 198.88,
+    "pnl_pct": 5.61,
+    "hold_days": 36,
     "entry_limit": 506.57,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-16T18:15:46.901020"
   },
   {
     "trade_id": "TRD-20260914190113-PANW",

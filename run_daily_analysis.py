@@ -160,6 +160,23 @@ def phase_exits(phase: str) -> bool:
     return phase in ("all", "manage")
 
 
+def opening_missed_alert(phase: str, execute: bool, opportunities: list, execution: Dict) -> Optional[str]:
+    """An alert when the 9:15 run had buys but reached the broker too late for the opening auction."""
+    if phase == "open" and execute and opportunities and (execution or {}).get("status") == "skipped":
+        return (f"Opening run reached the broker after the 9:28 auction cutoff: {len(opportunities)} buy(s) "
+                f"were not sent today ({(execution or {}).get('reason')})")
+    return None
+
+
+def keep_morning_run(phase: str, previous: Optional[Dict], today: str) -> Optional[Dict]:
+    """The 10:00 run buys nothing: it keeps the 9:15 run's buys on the dashboard rather than blank them."""
+    if phase != "manage" or not isinstance(previous, dict):
+        return None
+    if str(previous.get("generated_at") or "")[:10] != today:
+        return None
+    return previous.get("todays_run")
+
+
 _NOT_GIVEN = object()
 
 
@@ -748,6 +765,10 @@ class DailyRunner:
                 results["execution"] = self._execute_opportunities(
                     opportunities, execute, min_confidence, portfolio=live_portfolio
                 )
+                missed = opening_missed_alert(phase, execute, opportunities, results["execution"])
+                if missed:
+                    logger.error(missed)
+                    results["alerts"].append(missed)
 
             # 4. Build summary
             total_investment = sum(o.get("position_value", 0) for o in opportunities)
@@ -975,6 +996,10 @@ class DailyRunner:
             acct = run_results.get("portfolio", {})
             total_unrealized = sum(p["unrealized_pnl"] for p in positions)
 
+            try:
+                previous_latest = json.loads((docs_dir / "latest.json").read_text())
+            except Exception:
+                previous_latest = None
             latest = {
                 "generated_at": datetime.now().isoformat(),
                 "run_id": run_results.get("run_id", ""),
@@ -987,7 +1012,8 @@ class DailyRunner:
                     "unrealized_pnl": total_unrealized,
                 },
                 "positions": positions,
-                "todays_run": {
+                "todays_run": keep_morning_run(getattr(self, "_phase", "all"), previous_latest,
+                                               datetime.now().strftime("%Y-%m-%d")) or {
                     "mode": "EXECUTE" if execute else "DRY-RUN",
                     "candidates_screened": run_results.get("summary", {}).get("candidates_screened", 0),
                     "buy_signals": run_results.get("summary", {}).get("buy_signals", 0),

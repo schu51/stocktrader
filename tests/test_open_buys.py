@@ -112,3 +112,22 @@ def test_alpaca_clock_timestamps_with_nanoseconds_are_read():
     broker._request = lambda method, endpoint, **kw: {"timestamp": "2026-10-19T13:15:05.5Z", "is_open": False,
                                                       "next_open": "2026-10-19T13:30:00Z"}
     assert broker.opening_auction_ahead() is True
+
+
+def test_an_opening_run_that_missed_the_auction_raises_an_alert():
+    import run_daily_analysis as rda
+    skipped = {"status": "skipped", "reason": "Market is closed"}
+    assert "were not sent" in rda.opening_missed_alert("open", True, [{"symbol": "AAA"}], skipped)
+    assert rda.opening_missed_alert("open", True, [], skipped) is None                      # nothing to buy anyway
+    assert rda.opening_missed_alert("open", True, [{"symbol": "AAA"}], {"status": "completed"}) is None
+    assert rda.opening_missed_alert("manage", True, [{"symbol": "AAA"}], skipped) is None
+    assert rda.opening_missed_alert("open", False, [{"symbol": "AAA"}], skipped) is None    # dry run
+
+
+def test_the_ten_oclock_run_keeps_the_mornings_buys_on_the_dashboard():
+    import run_daily_analysis as rda
+    morning = {"generated_at": "2026-10-19T13:19:00", "todays_run": {"buy_signals": 2, "orders_submitted": 2}}
+    assert rda.keep_morning_run("manage", morning, "2026-10-19") == morning["todays_run"]
+    assert rda.keep_morning_run("manage", morning, "2026-10-20") is None                  # yesterday's
+    assert rda.keep_morning_run("open", morning, "2026-10-19") is None
+    assert rda.keep_morning_run("manage", None, "2026-10-19") is None

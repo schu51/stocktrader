@@ -242,3 +242,28 @@ def test_risk_cap_shrinks_only_positions_whose_stop_would_cost_too_much():
     assert risk_capped_shares(50, 100.0, 0.05, 100_000, 0.003) == 50      # $5 a share: 60 allowed, 50 asked
     assert risk_capped_shares(50, 100.0, None, 100_000, 0.003) == 50      # no stop distance known: unchanged
     assert risk_capped_shares(50, 100.0, 0.12, 100_000, 0.0) == 50        # rule off
+
+
+def test_entry_fill_price_options_model_buying_later_than_the_open():
+    # Live buys go out around 10:00 ET at the ask, often after the day's move
+    # has started; the backtest bought at the open.
+    from backtest import entry_price
+    bar = {"open": 100.0, "high": 110.0, "low": 98.0, "close": 106.0}
+    assert entry_price(bar, "open") == 100.0
+    assert entry_price(bar, "typical") == round((110.0 + 98.0 + 106.0) / 3, 4)
+    assert entry_price(bar, "adverse") == 105.0                         # halfway from the open to the high
+    assert entry_price(dict(bar, high=float("nan")), "adverse") == 100.0  # missing data: the open
+
+
+def test_stop_distance_can_be_capped():
+    from backtest import capped_stop
+    assert capped_stop(0.1366, 0.08) == 0.08 and capped_stop(0.05, 0.08) == 0.05
+    assert capped_stop(0.1366, 0.0) == 0.1366 and capped_stop(None, 0.08) is None
+
+
+def test_early_loss_rate_counts_trades_that_lost_six_percent_within_five_days():
+    import pandas as pd
+    from backtest import early_loss_rate
+    t = pd.DataFrame({"hold_days": [1, 3, 5, 6, 2], "pnl_pct": [-9.0, -6.0, -7.0, -20.0, -2.0]})
+    assert early_loss_rate(t) == 0.6
+    assert early_loss_rate(pd.DataFrame()) is None

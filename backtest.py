@@ -90,6 +90,35 @@ def evaluate_exit(pos: Dict, bar: Dict, sma50: Optional[float]) -> Tuple[Optiona
     return None, ""
 
 
+def entry_price(bar: Dict, mode: str = "open") -> float:
+    """
+    The price a buy fills at on its entry day. "open" is the original model.
+    Live buys go out around 10:00 ET at the ask, after the open, so two harsher
+    stand-ins: "typical" (high + low + close) / 3, and "adverse", halfway from
+    the open to the day's high. Missing data falls back to the open.
+    """
+    o, h, l, c = (float(bar.get(k, float("nan"))) for k in ("open", "high", "low", "close"))
+    if mode == "typical" and h == h and l == l and c == c:
+        return round((h + l + c) / 3, 4)
+    if mode == "adverse" and h == h:
+        return round(o + (h - o) / 2, 4)
+    return o
+
+
+def capped_stop(stop_dist: Optional[float], cap: float) -> Optional[float]:
+    """Experimental: no entry stop further away than `cap` (0 = off)."""
+    if stop_dist is None or not cap:
+        return stop_dist
+    return min(stop_dist, cap)
+
+
+def early_loss_rate(trades: pd.DataFrame, days: int = 5, loss: float = -6.0) -> Optional[float]:
+    """Share of closed trades that lost `loss` percent or more within `days` days of entry (live check, 2026-10-16)."""
+    if trades is None or not len(trades) or "hold_days" not in trades:
+        return None
+    return round(float(((trades["hold_days"] <= days) & (trades["pnl_pct"] <= loss)).mean()), 4)
+
+
 def risk_capped_shares(shares: int, price: float, stop_dist: Optional[float], equity: float, risk: float) -> int:
     """
     Experimental: no position may lose more than `risk` (a share of the account)
@@ -275,7 +304,8 @@ class Backtest:
                  min_adx: float = 0.0, min_above_50ma: float = 0.0, min_spy_above_50ma: float = 0.0,
                  exit_line: str = "sma50", exit_confirm: int = 1, drawdown_mode: str = "live",
                  stale_days: int = 0, stale_gain: float = 5.0, stale_needs_cash: bool = False,
-                 risk_per_trade: float = 0.0, max_atr_pct: float = 0.0):
+                 risk_per_trade: float = 0.0, max_atr_pct: float = 0.0, fill_mode: str = "open",
+                 max_stop_dist: float = 0.0):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -297,6 +327,8 @@ class Backtest:
         # Fast stop-outs (experimental, off by default): cap the dollars a stop
         # can cost (risk_capped_shares), or pass on the most volatile candidates
         self.risk_per_trade, self.max_atr_pct = risk_per_trade, max_atr_pct
+        # Live-vs-backtest checks (2026-10-16): when in the day a buy fills, and a cap on the entry stop
+        self.fill_mode, self.max_stop_dist = fill_mode, max_stop_dist
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -422,7 +454,8 @@ class Backtest:
         self.cash_short_today = False
         for order in self.pending:
             sym = order["symbol"]
-            px = self.open[sym].iloc[i]
+            px = entry_price({"open": self.open[sym].iloc[i], "high": self.high[sym].iloc[i],
+                              "low": self.low[sym].iloc[i], "close": self.close[sym].iloc[i]}, self.fill_mode)
             if sym in self.positions or np.isnan(px):
                 continue
             if max_positions is not None and len(self.positions) >= max_positions:
@@ -552,7 +585,8 @@ class Backtest:
                 self.counters["engine_hold"] += 1
                 continue
             self.counters["engine_buy"] += 1
-            d["stop_dist"] = stop_distance(atr_pct(h, l, c), self.atr_stop) if self.atr_stop else None
+            d["stop_dist"] = capped_stop(stop_distance(atr_pct(h, l, c), self.atr_stop) if self.atr_stop else None,
+                                         self.max_stop_dist)
             d["shares"] = risk_capped_shares(d.get("shares") or 0, float(c[-1]), d["stop_dist"] or 0.08,
                                              total_value, self.risk_per_trade)
             d["features"] = {"rs_rank": cand["rs_rank"], "thesis_score": cand["thesis_score"],
@@ -731,6 +765,9 @@ def main() -> int:
                         help="experimental: cap what a stop-out can cost, as a share of the account (0.003 = 0.3%%)")
     parser.add_argument("--max-atr-pct", type=float, default=0.0,
                         help="experimental: skip candidates whose ATR(14) exceeds this share of price (0.04 = 4%%)")
+    parser.add_argument("--fill", choices=["open", "typical", "adverse"], default="open",
+                        help="entry fill price: the open, the day's typical price, or halfway from open to high")
+    parser.add_argument("--max-stop-dist", type=float, default=0.0, help="experimental: cap the entry stop distance")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -749,7 +786,8 @@ def main() -> int:
                   exit_line=args.exit_line, exit_confirm=args.exit_confirm,
                   drawdown_mode="off" if args.no_drawdown_halt else args.drawdown_mode,
                   stale_days=args.stale_days, stale_gain=args.stale_gain, stale_needs_cash=args.stale_needs_cash,
-                  risk_per_trade=args.risk_per_trade, max_atr_pct=args.max_atr_pct)
+                  risk_per_trade=args.risk_per_trade, max_atr_pct=args.max_atr_pct,
+                  fill_mode=args.fill, max_stop_dist=args.max_stop_dist)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

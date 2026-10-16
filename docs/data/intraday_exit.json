@@ -1,8 +1,28 @@
 {
-  "generated_at": "2026-10-16T13:45:39.032031",
-  "positions_checked": 16,
-  "exits_triggered": [],
-  "stops_updated": [],
+  "generated_at": "2026-10-16T14:15:50.888128",
+  "positions_checked": 17,
+  "exits_triggered": [
+    {
+      "symbol": "TWLO",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$253.45 is 0.3% below 50MA $254.26",
+      "qty": 9,
+      "price": 253.45,
+      "pnl_pct": -11.45,
+      "executed": true,
+      "order_id": "3137d4e4-f951-48a6-870f-3271c476dea7",
+      "confirmed": true,
+      "sale": "filled"
+    }
+  ],
+  "stops_updated": [
+    {
+      "symbol": "VLO",
+      "new_stop": 400.32,
+      "tier": "50%+ gain \u2192 10% trail",
+      "pnl_pct": 66.42
+    }
+  ],
   "stops_placed": [],
   "stop_failures": [],
   "broker_exits": [],

@@ -3645,7 +3645,7 @@
   {
     "trade_id": "TRD-20261014140314-TWLO",
     "symbol": "TWLO",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-14",
     "entry_ts": "2026-10-14T14:03:14.717206",
     "entry_price": 286.21,
@@ -3677,14 +3677,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.1366,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-16",
+    "exit_price": 253.45,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -294.94,
+    "pnl_pct": -11.45,
+    "hold_days": 2,
     "entry_limit": 286.21,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-16T14:15:48.936903"
   },
   {
     "trade_id": "TRD-20261014140314-ILMN",
@@ -3770,6 +3771,8 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 425.57,
+    "entry_filled": true
   }
 ]

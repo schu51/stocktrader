@@ -101,3 +101,14 @@ def test_the_schedule_buys_at_9_15_and_manages_at_10():
     text = (Path(__file__).parent.parent / ".github" / "workflows" / "daily_open.yml").read_text()
     assert "--phase open" in text and "screener.py" in text
     assert "--phase manage" in (Path(__file__).parent.parent / ".github" / "workflows" / "daily_trade.yml").read_text()
+
+
+def test_alpaca_clock_timestamps_with_nanoseconds_are_read():
+    from alpaca_broker import AlpacaBroker
+    broker = AlpacaBroker.__new__(AlpacaBroker)
+    broker._request = lambda method, endpoint, **kw: {"timestamp": "2026-10-19T09:15:05.123456789-04:00", "is_open": False,
+                                                      "next_open": "2026-10-19T09:30:00-04:00"}
+    assert broker.opening_auction_ahead() is True
+    broker._request = lambda method, endpoint, **kw: {"timestamp": "2026-10-19T13:15:05.5Z", "is_open": False,
+                                                      "next_open": "2026-10-19T13:30:00Z"}
+    assert broker.opening_auction_ahead() is True

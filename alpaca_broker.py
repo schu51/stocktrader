@@ -514,11 +514,17 @@ class AlpacaBroker:
         """
         from datetime import datetime
         from zoneinfo import ZoneInfo
+        import re
         result = self._request("GET", "/v2/clock")
+
+        def parse(text):
+            # Alpaca sends nanoseconds; older Pythons read at most six fractional digits, and not "Z"
+            text = re.sub(r"(\.\d{6})\d+", r"\1", str(text)).replace("Z", "+00:00")
+            return datetime.fromisoformat(text)
         try:
             et = ZoneInfo("America/New_York")
-            now = datetime.fromisoformat(str(result["timestamp"])).astimezone(et)
-            nxt = datetime.fromisoformat(str(result["next_open"])).astimezone(et)
+            now = parse(result["timestamp"]).astimezone(et)
+            nxt = parse(result["next_open"]).astimezone(et)
             if result.get("is_open"):
                 return False
         except (KeyError, TypeError, ValueError):

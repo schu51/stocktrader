@@ -9,14 +9,14 @@
       },
       "note": "every new position; backtest with ma50_room 163% vs 138%, drawdown -16.5% vs -20.4%",
       "evidence": {
-        "n_atr": 4,
-        "n_fixed": 3,
-        "difference": 3.2641666666666667,
-        "t": 1.889048595633867,
-        "mean_atr": -2.5325,
-        "mean_fixed": -5.796666666666667
+        "n_atr": 9,
+        "n_fixed": 4,
+        "difference": 0.21888888888888935,
+        "t": 0.13831157147443365,
+        "mean_atr": -5.101111111111111,
+        "mean_fixed": -5.32
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "macd_cross": {
       "kind": "entry_signal",
@@ -29,7 +29,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-10",
+      "last_evaluated": "2026-10-17",
       "auto_promote": false
     },
     "ema21_reclaim": {
@@ -43,7 +43,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "breakout": {
       "kind": "entry_signal",
@@ -56,7 +56,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "adx25": {
       "kind": "entry_signal",
@@ -69,7 +69,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "ma50_room": {
       "kind": "entry_signal",
@@ -82,7 +82,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "news_positive": {
       "kind": "entry_signal",
@@ -95,7 +95,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "social_bullish": {
       "kind": "entry_signal",
@@ -108,7 +108,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "news_negative": {
       "kind": "bearish_signal",
@@ -117,11 +117,11 @@
       "params": {},
       "note": "week of headlines scores negative; confirmed if those stocks then lag (the put case)",
       "evidence": {
-        "days": 0,
-        "mean": null,
+        "days": 1,
+        "mean": 0.014791060368856163,
         "t": null
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "social_bearish": {
       "kind": "bearish_signal",
@@ -134,7 +134,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     },
     "news_veto": {
       "kind": "news_arm",
@@ -143,14 +143,14 @@
       "params": {},
       "note": "A/B on real buys: half are skipped when news is negative or social is bearish",
       "evidence": {
-        "n_news": 3,
-        "n_control": 4,
-        "difference": -2.091666666666667,
-        "t": -0.955744860548453,
-        "mean_news": -5.126666666666667,
-        "mean_control": -3.035
+        "n_news": 7,
+        "n_control": 6,
+        "difference": -1.157857142857143,
+        "t": -0.6438425506476894,
+        "mean_news": -5.702857142857143,
+        "mean_control": -4.545
       },
-      "last_evaluated": "2026-10-10"
+      "last_evaluated": "2026-10-17"
     }
   },
   "changes": [
@@ -176,12 +176,28 @@
       "reason": "owner decision on the three-year backtest comparison (research/backtest_summary_v3_*.json); the live trial could not have confirmed an edge this size"
     }
   ],
-  "generated_at": "2026-10-10T12:15:44.977309",
-  "signals_logged": 27,
+  "generated_at": "2026-10-17T12:15:45.880555",
+  "signals_logged": 51,
   "sentiment": {
-    "rows": 309,
-    "days": 6,
+    "rows": 582,
+    "days": 11,
     "horizon": 10,
+    "news_score": {
+      "days": 1,
+      "ic": null,
+      "t": null
+    },
+    "st_bull_ratio": {
+      "days": 1,
+      "ic": null,
+      "t": null
+    },
+    "news_negative_vs_rest": {
+      "days": 1,
+      "mean": 0.014791060368856163,
+      "t": null
+    },
+    "enough_history": false,
     "weights": {
       "basis": "equal (not enough evidence yet)",
       "news_score": 0.5,

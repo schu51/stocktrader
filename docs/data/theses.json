@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T13:02:08.791463",
+  "generated_at": "2026-10-17T13:02:52.104872",
   "theses": [
     {
       "theme": "Oil-driven inflation forces the Fed to hike: sustained high crude favors oilfield services and midstream over the integrated majors",
@@ -30,7 +30,7 @@
       "conviction": 0.512,
       "status": "active",
       "created_at": "2026-10-03",
-      "last_validated": "2026-10-10"
+      "last_validated": "2026-10-17"
     },
     {
       "theme": "Higher-for-longer policy rates: asset-sensitive regional and mid-cap banks and non-bank lenders over the money-center banks",
@@ -59,7 +59,7 @@
       "conviction": 0.475,
       "status": "active",
       "created_at": "2026-10-03",
-      "last_validated": "2026-10-10"
+      "last_validated": "2026-10-17"
     },
     {
       "theme": "AI/capex-driven demand keeps inflation sticky, so grid equipment makers and merchant power generators benefit more than the AI chip and hyperscaler leaders",
@@ -94,7 +94,7 @@
       "conviction": 0.562,
       "status": "active",
       "created_at": "2026-10-10",
-      "last_validated": "2026-10-10"
+      "last_validated": "2026-10-17"
     },
     {
       "theme": "Robust capex plus sticky 3.4% inflation supports the electrification metals supply chain (copper and electrical inputs) as an underpriced input to the investment cycle",
@@ -128,7 +128,114 @@
       "conviction": 0.5,
       "status": "active",
       "created_at": "2026-10-10",
-      "last_validated": "2026-10-10"
+      "last_validated": "2026-10-17"
+    },
+    {
+      "theme": "US gas-oil price dislocation: LNG export growth and unhedged gas producers over the integrated majors",
+      "causal_chain": "Brent settled at $109.86 on 16 Oct, its highest since May, on Middle East and Russian supply disruptions. Henry Hub gas was only about $3.12/MMBtu, so US gas trades at a deep discount to the global energy complex. US LNG plants shipped 35 cargoes in the week to 14 Oct, and FERC is proposing blanket authorizations to speed up LNG project permitting. High oil and import-security concerns keep overseas buyers looking for non-Gulf LNG, which pulls more US feedgas demand. That tightens the domestic gas balance while spot gas is still cheap. Gas-weighted producers and LNG export or feedgas infrastructure capture the rerating. The integrated majors are already priced for $110 oil.",
+      "beneficiary_sectors": [
+        "energy",
+        "utilities"
+      ],
+      "second_order": "Gas-weighted E&Ps with unhedged volumes, LNG feedgas pipelines and LNG exporters with merchant volumes. Gas-fired generators also gain as US gas-to-power and export demand grows. This is a gas-versus-oil spread trade. It is not the oil-services or midstream-on-crude trade.",
+      "consensus_names_excluded": [
+        "XOM",
+        "CVX",
+        "COP",
+        "OXY"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.55,
+        "causal_directness": 0.5,
+        "non_consensus": 0.6,
+        "invalidation_clarity": 0.75
+      },
+      "invalidation_condition": "Henry Hub front-month settles below $2.50/MMBtu for 10 consecutive trading days, or EIA-reported weekly US LNG cargoes average below 30 over any 8-week stretch, before the horizon date.",
+      "horizon": "2027-04-30",
+      "sources": [
+        "https://bloomberg.com/news/articles/2026-10-16/oil-tops-110-for-first-time-since-may-as-supply-risk-grows",
+        "https://lngprime.com/americas/us-weekly-lng-exports-rise-to-35-shipments/198488/",
+        "https://naturalgasintel.com/news/ferc-moves-ahead-with-blanket-lng-authorizations-as-export-capacity-surges",
+        "https://tradingeconomics.com/commodity/natural-gas",
+        "https://www.iea.org/data-and-statistics/data-tools/global-lng-capacity-tracker"
+      ],
+      "id": "TH-2026-0005",
+      "conviction": 0.6,
+      "status": "active",
+      "created_at": "2026-10-17",
+      "last_validated": "2026-10-17"
+    },
+    {
+      "theme": "Munitions and missile-defense replenishment: the defense supply chain over the prime contractors",
+      "causal_chain": "Congress lifted FY2026 US national defense discretionary spending more than 17% to about $1.05 trillion. Missile and drone strikes on energy infrastructure are now driving oil, including a Yanbu missile strike that helped push Brent to $110. Sustained use of air defense and long-range munitions, together with record budgets, creates a multi-year replenishment and capacity-expansion cycle. The prime contractors are the consensus winners. Bottlenecks and margin upside sit with sub-tier suppliers: energetics and propellants, solid rocket motors, castings and forgings, precision components and defense electronics. They have less index visibility and lower valuation premiums.",
+      "beneficiary_sectors": [
+        "industrials",
+        "basic_materials",
+        "technology"
+      ],
+      "second_order": "Sub-tier and mid-cap defense suppliers (energetics, rocket motors, forgings, RF and electronic components) and specialty metals inputs. These firms get volume and pricing from prime-contractor capacity ramps.",
+      "consensus_names_excluded": [
+        "LMT",
+        "RTX",
+        "NOC",
+        "GD",
+        "LHX"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.45,
+        "causal_directness": 0.45,
+        "non_consensus": 0.55,
+        "invalidation_clarity": 0.65
+      },
+      "invalidation_condition": "A negotiated de-escalation that takes Brent below $90 and holds it there for 30 days, or an enacted FY2027 defense appropriation or continuing resolution that cuts procurement and munitions accounts below FY2026 enacted levels, before the horizon date.",
+      "horizon": "2027-06-30",
+      "sources": [
+        "https://www.armscontrol.org/act/2026-03/news/us-defense-spending-rises-more-17-percent",
+        "https://www.congress.gov/crs-product/R48860",
+        "https://bloomberg.com/news/articles/2026-10-16/oil-tops-110-for-first-time-since-may-as-supply-risk-grows",
+        "https://financefeeds.com/brent-crude-oil-price-110-week-ahead-highest-settle-since-may-bull-115-bear-100/"
+      ],
+      "id": "TH-2026-0006",
+      "conviction": 0.525,
+      "status": "active",
+      "created_at": "2026-10-17",
+      "last_validated": "2026-10-17"
+    },
+    {
+      "theme": "Real-wage squeeze and stagnating payrolls drive trade-down: discount, dollar-channel and off-price retail over the big-box leaders",
+      "causal_chain": "September CPI rose 3.7% year over year and PPI rose 6.3%. Wage growth has slowed to about 3.0\u20133.1%, so real wages are falling. September payrolls rose only 29,000 against an 84,000 forecast, and unemployment rose to 4.2%. The 30-year mortgage rate is 7.40% and the 10-year Treasury yield is about 5.1\u20135.2%, which limits household credit capacity. Lower- and middle-income households facing negative real wage growth shift spending to dollar stores, off-price and value formats. These channels are less crowded than the mega-cap retail leaders and benefit from vendor-sourced closeout inventory when brands over-order.",
+      "beneficiary_sectors": [
+        "consumer_defensive",
+        "consumer_cyclical"
+      ],
+      "second_order": "Dollar-channel and off-price retailers and value-oriented packaged goods and private-label suppliers. These are the beneficiaries of trade-down behavior, as opposed to the large-cap retail and staples leaders.",
+      "consensus_names_excluded": [
+        "WMT",
+        "COST",
+        "AMZN",
+        "TGT",
+        "PG"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.5,
+        "causal_directness": 0.4,
+        "non_consensus": 0.4,
+        "invalidation_clarity": 0.7
+      },
+      "invalidation_condition": "Year-over-year growth in average hourly earnings re-accelerates above CPI inflation for two consecutive monthly reports, or the dollar-channel and off-price retailer group posts negative comparable-store sales in its next two quarterly reports, before the horizon date.",
+      "horizon": "2027-03-31",
+      "sources": [
+        "https://www.cnbc.com/2026/10/16/kevin-warsh-fed-october-rate-hike-interest-rates-markets.html",
+        "https://www.cnbc.com/2026/10/02/jobs-report-september-2026.html",
+        "https://cepr.net/publications/september-2026-preview/",
+        "https://www.freddiemac.com/pmms",
+        "https://www.etftrends.com/fixed-income-content-hub/treasury-yields-snapshot-october-9-2026/"
+      ],
+      "id": "TH-2026-0007",
+      "conviction": 0.5,
+      "status": "active",
+      "created_at": "2026-10-17",
+      "last_validated": "2026-10-17"
     }
   ]
 }

@@ -1,17 +1,19 @@
 {
-  "generated_at": "2026-10-10T13:02:08.794868",
+  "generated_at": "2026-10-17T13:02:52.105571",
   "status": "generated",
-  "admitted": 2,
+  "admitted": 3,
   "rejected": [],
   "revalidation": {
-    "checked": 2,
+    "checked": 4,
     "confirmed": [
       "TH-2026-0001",
-      "TH-2026-0002"
+      "TH-2026-0002",
+      "TH-2026-0003",
+      "TH-2026-0004"
     ],
     "invalidated": []
   },
-  "active_total": 4,
+  "active_total": 7,
   "active": [
     {
       "id": "TH-2026-0001",
@@ -46,6 +48,34 @@
       "beneficiary_sectors": [
         "basic_materials",
         "industrials"
+      ]
+    },
+    {
+      "id": "TH-2026-0005",
+      "theme": "US gas-oil price dislocation: LNG export growth and unhedged gas producers over the integrated majors",
+      "conviction": 0.6,
+      "beneficiary_sectors": [
+        "energy",
+        "utilities"
+      ]
+    },
+    {
+      "id": "TH-2026-0006",
+      "theme": "Munitions and missile-defense replenishment: the defense supply chain over the prime contractors",
+      "conviction": 0.525,
+      "beneficiary_sectors": [
+        "industrials",
+        "basic_materials",
+        "technology"
+      ]
+    },
+    {
+      "id": "TH-2026-0007",
+      "theme": "Real-wage squeeze and stagnating payrolls drive trade-down: discount, dollar-channel and off-price retail over the big-box leaders",
+      "conviction": 0.5,
+      "beneficiary_sectors": [
+        "consumer_defensive",
+        "consumer_cyclical"
       ]
     }
   ]

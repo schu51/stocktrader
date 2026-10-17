@@ -1,28 +1,29 @@
 {
-  "generated_at": "2026-10-10T11:32:19.758929",
-  "cutoff": "2026-10-10",
-  "data_through": "2026-10-10",
+  "generated_at": "2026-10-17T11:32:04.305529",
+  "cutoff": "2026-10-17",
+  "data_through": "2026-10-17",
   "reference_quarter": "CY2026Q2",
   "coverage": {
-    "companies_with_data": 7816,
-    "companies_with_revenue": 3523,
-    "listed": 6016,
-    "with_metrics": 2227,
+    "companies_with_data": 7820,
+    "companies_with_revenue": 3526,
+    "listed": 6013,
+    "with_metrics": 2226,
     "passed_financial_gates": 47,
     "priced": 47,
     "passed_size": 28,
     "excluded_industry": 0,
+    "faded": 0,
     "watchlist": 28
   },
   "gate_failures": {
-    "revenue": 332,
-    "growth": 1543,
-    "turning": 1642,
-    "break_even": 494,
+    "revenue": 330,
+    "growth": 1539,
+    "turning": 1639,
+    "break_even": 492,
     "already_rich": 1080,
     "edge": 1459,
-    "runway": 541,
-    "dilution": 531
+    "runway": 540,
+    "dilution": 530
   },
   "size_failures": {
     "too_big": 14,
@@ -30,12 +31,14 @@
     "penny": 4,
     "too_small": 1
   },
+  "faded": [],
   "watchlist": [
     {
       "ticker": "STAA",
       "name": "STAAR SURGICAL CO",
       "cik": 718937,
       "sic": 3851,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 36.7,
         "revenue": 25.0,
@@ -44,9 +47,9 @@
         "safety": 9.2,
         "total": 94.4
       },
-      "price": 21.670000076293945,
-      "market_value": 1090456073.8391876,
-      "dollar_volume": 18587498.754119873,
+      "price": 21.270000457763672,
+      "market_value": 1070327693.0351257,
+      "dollar_volume": 17404960.91222763,
       "latest_quarter_end": "2026-07-03",
       "ttm_revenue": 339590000.0,
       "prior_ttm_revenue": 224449000.0,
@@ -69,13 +72,34 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.11284490120439353,
-      "rank": 1
+      "rank": 1,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "STAAR has a real moat: proprietary Collamer material, regulatory-approved phakic ICLs and a leading share of a niche, with 77% gross margin and operating margin turning positive. But the 111% quarter is a rebound in China distributor sales from a depressed base ($5.3M to $52.3M), so it looks like a recovery from a collapse rather than a clean inflection.",
+        "breaks_if": "China distributor sell-through fails to match the $52.3M of sales into the channel, so distributor orders drop again and revenue falls back toward the prior-year quarterly level of about $44M.",
+        "customers": "Surgeons and patients, served through distributors in most markets. Two China distributors took $52.3M of $93.5M in the latest quarter (56%). 91% of revenue is outside the US, and almost 100% comes from ICLs.",
+        "red_flags": [
+          "Two China distributors were 56% of the latest quarter's sales, up from $5.3M a year earlier: channel concentration and a rebound from a collapse",
+          "Single product line (ICL) and heavy reliance on Asia",
+          "Gross margin fell to 74.5% in the quarter and is hurt by tariffs until China supply moves to Switzerland",
+          "Governance turmoil: Alcon merger voted down, Broadwood cooperation agreement, repeated officer/director changes",
+          "No backlog or deferred revenue disclosed, and the +18% growth two quarters ago shows lumpy demand"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 42.8,
+      "conviction_rank": 1,
+      "judgment_rank": 11
     },
     {
       "ticker": "KLIC",
       "name": "KULICKE & SOFFA INDUSTRIES INC",
       "cik": 56978,
       "sic": 3674,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 33.4,
         "revenue": 21.8,
@@ -84,9 +108,9 @@
         "safety": 10.0,
         "total": 82.2
       },
-      "price": 92.01000213623047,
-      "market_value": 4815159441.795349,
-      "dollar_volume": 66299365.54412842,
+      "price": 78.62999725341797,
+      "market_value": 4114943646.2631226,
+      "dollar_volume": 62619966.63398743,
       "latest_quarter_end": "2026-07-04",
       "ttm_revenue": 950213000.0,
       "prior_ttm_revenue": 657842000.0,
@@ -109,13 +133,34 @@
       "backlog_growth": null,
       "prepaid_growth": 2.1441067623640238,
       "rd_share": 0.1699966218100573,
-      "rank": 2
+      "rank": 2,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 6.0,
+        "confidence": "medium",
+        "thesis": "K&S is a leading wire-bonder maker, and its latest quarter shows a sharp upturn: revenue rose from $148M to $330M, operating income was $68M against a $6M loss, and deferred revenue rose 214%. Even so, this looks mostly like a cyclical recovery from a deep trough in a capital-equipment business with real competition, and the filing shows no durable lock-in or named customer wins.",
+        "breaks_if": "Quarterly revenue falls back toward the $150-250M range, or gross margin falls back below the low-to-mid 40s, which would show the jump was a restocking and capex cycle rather than lasting demand.",
+        "customers": "IDMs, OSATs, foundries and automotive electronics suppliers; no named customers or concentration figures in the excerpts supplied.",
+        "red_flags": [
+          "Prior-year comparison is a trough year (inventory destocking, Project W cancellation, EA equipment wind-down), so growth is partly recovery",
+          "Semiconductor assembly equipment is cyclical; margins follow utilization and capex cycles",
+          "No backlog reported and no named customer wins or contracts; the deferred revenue jump is unexplained",
+          "Prior-year results were distorted by one-offs (gain of about $76M, impairment of about $40M), so comparisons are noisy",
+          "Receivables (+80%) and inventory (+42%) grew sharply, and manufacturing is concentrated in Israel and China"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 40.9,
+      "conviction_rank": 2,
+      "judgment_rank": 6
     },
     {
       "ticker": "ETON",
       "name": "Eton Pharmaceuticals, Inc.",
       "cik": 1710340,
       "sic": 2834,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 33.5,
         "revenue": 25.0,
@@ -124,9 +169,9 @@
         "safety": 8.6,
         "total": 79.6
       },
-      "price": 55.209999084472656,
-      "market_value": 1526114794.6929932,
-      "dollar_volume": 28308599.983024597,
+      "price": 50.310001373291016,
+      "market_value": 1390669057.9605103,
+      "dollar_volume": 27845736.855125427,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 105595000.0,
       "prior_ttm_revenue": 58181000.0,
@@ -149,13 +194,34 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.054548037312372746,
-      "rank": 3
+      "rank": 3,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "low",
+        "thesis": "Eton is a rare-disease roll-up with FDA-approved niche products (INCRELEX, ALKINDI SPRINKLE, KHINDIVI, GALZIN), and its 81% revenue growth and 15% operating margin are real. However, much of the growth comes from acquired products rather than organic demand, several products are generics or face ordinary competition, and the evidence offers no named customers, backlog or prepaid revenue to show demand building beyond the acquisitions.",
+        "breaks_if": "Revenue growth from the acquired products (INCRELEX, GALZIN) stalls once the acquisitions annualize, or the ET-600 FDA decision (PDUFA 25 Feb 2026) is negative or the launch is slow, leaving growth dependent on further deal-making.",
+        "customers": "Patients reach the products through specialty pharmacies, so the buyers are rare-disease patients and prescribing pediatric endocrinologists. Specialty pharmacy concentration is likely but not disclosed in the supplied material.",
+        "red_flags": [
+          "Growth is largely acquisition-driven (INCRELEX and GALZIN acquired Dec 2024), not clearly organic",
+          "Several products are generics (carglumic acid, betaine, nitisinone) that face competition",
+          "No backlog or deferred revenue reported; no named customers or contract evidence",
+          "Gross margin down 2 points on the year; share count up 3% and cashless warrant exercises add dilution",
+          "Market value of $1.4B is high for a company with a 12-person R&D team, and it carries SWK credit-facility debt (a sixth amendment was signed)"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 36.8,
+      "conviction_rank": 3,
+      "judgment_rank": 12
     },
     {
       "ticker": "GPOR",
       "name": "GULFPORT ENERGY CORP",
       "cik": 874499,
       "sic": 1311,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 26.7,
         "revenue": 11.5,
@@ -164,9 +230,9 @@
         "safety": 9.5,
         "total": 68.7
       },
-      "price": 162.66000366210938,
-      "market_value": 2910800765.5334473,
-      "dollar_volume": 43315819.553375244,
+      "price": 166.0,
+      "market_value": 2970570000.0,
+      "dollar_volume": 42750726.207733154,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 1538693000.0,
       "prior_ttm_revenue": 1138435000.0,
@@ -189,13 +255,34 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 4
+      "rank": 4,
+      "judgment": {
+        "edge": 1.0,
+        "demand": 2.0,
+        "confidence": "high",
+        "thesis": "Gulfport is a natural gas-weighted E&P whose swing from a -3% to a +45% operating margin comes from commodity prices and from emerging out of its 2020 bankruptcy, not from a product customers can't replace. It sells a commodity at market prices, so margins follow the gas price and this is a cyclical recovery rather than a diamond.",
+        "breaks_if": "Realized natural gas prices fall back toward prior-year levels and operating margin compresses toward single digits while production stays flat near 1.03-1.055 Bcfe/d.",
+        "customers": "not disclosed; as a gas producer it sells into the market at index-linked prices, and no named customers or contracts appear in the supplied text",
+        "red_flags": [
+          "Commodity producer: margin tracks gas/oil prices, no pricing power or switching costs",
+          "Latest-quarter revenue growth of -28% after +66% two quarters earlier shows volatility, not a steady inflection",
+          "Guided 2026 production of 1.030-1.055 Bcfe/d is roughly flat against 2025's 1,038 MMcfe/d (841 + 197), so no volume growth is signalled",
+          "No backlog, prepaid revenue, named customers or contracts supplied as demand evidence",
+          "Chapter 11 history (2020) and reliance on a revolving credit facility plus $336M of 2025 buybacks"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 11.5,
+      "conviction_rank": 25,
+      "judgment_rank": 27
     },
     {
       "ticker": "ESTA",
       "name": "ESTABLISHMENT LABS HOLDINGS INC.",
       "cik": 1688757,
       "sic": 3842,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 26.7,
         "revenue": 13.5,
@@ -204,9 +291,9 @@
         "safety": 7.4,
         "total": 65.0
       },
-      "price": 61.66999816894531,
-      "market_value": 1857604258.7955475,
-      "dollar_volume": 28694041.117477417,
+      "price": 59.18000030517578,
+      "market_value": 1782601327.4924088,
+      "dollar_volume": 27271542.82913208,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 245818000.0,
       "prior_ttm_revenue": 177418000.0,
@@ -229,13 +316,34 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.08268719133667998,
-      "rank": 5
+      "rank": 5,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Motiva is one of only four silicone breast implants with US PMA approval, and its 5-year IDE data compare favorably with the three incumbents. With 39% growth, 70% gross margin and operating margin improving from -35% to -8%, it could be a real share-taker. However, the company still relies on lender and RTW financing, so the picture is a funded growth story rather than a proven inflection.",
+        "breaks_if": "US launch growth stalls, so revenue growth falls well below 30% and operating margin stops improving, while cash stays near the $30M minimum-liquidity covenant and the company has to raise more debt or equity.",
+        "customers": "Plastic surgeons and clinics, served through exclusive distributors in many countries and a direct sales force. Concentration is not disclosed, and there is meaningful emerging-market exposure.",
+        "red_flags": [
+          "Still loss-making and dependent on financing: Oaktree term loans (Tranche D $25M drawn Sept 2025), a 12% RTW inventory funding facility, and a new amended credi",
+          "Cash of $71M against a $30M minimum-liquidity covenant leaves a thin buffer",
+          "Single-source silicone supplier (NuSil); the supply agreement was extended to 2031, but the dependency remains",
+          "No backlog or deferred-revenue data, and no named customer wins or contracts; demand evidence is only the reported growth",
+          "CEO turnover in 2025, 4% share dilution, news tone negative, and competitors with far greater resources"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 34.0,
+      "conviction_rank": 6,
+      "judgment_rank": 7
     },
     {
       "ticker": "FRSH",
       "name": "Freshworks Inc.",
       "cik": 1544522,
       "sic": 7372,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 30.5,
         "revenue": 5.3,
@@ -244,9 +352,9 @@
         "safety": 10.0,
         "total": 62.7
       },
-      "price": 13.920000076293945,
-      "market_value": 3785557940.7482147,
-      "dollar_volume": 70875881.98752403,
+      "price": 13.739999771118164,
+      "market_value": 3736606677.755356,
+      "dollar_volume": 62943887.169361115,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 903868000.0,
       "prior_ttm_revenue": 782097000.0,
@@ -269,13 +377,34 @@
       "backlog_growth": 0.19634382140973816,
       "prepaid_growth": 0.1805931428908345,
       "rd_share": 0.1950948589838339,
-      "rank": 6
+      "rank": 6,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Freshworks is a real, scaling SaaS business (16% growth, 85% gross margin, a swing to a 3% operating margin, an 8% lower share count), but its helpdesk/ITSM products compete directly with ServiceNow, Zendesk, Atlassian and Salesforce, so the edge is ordinary. Growth is steady rather than accelerating, and the evidence shows no named customer wins or signed deals, so this looks like a decent mid-tier software company rather than a hidden diamond.",
+        "breaks_if": "Revenue growth falls below 12% or backlog and deferred revenue growth falls below revenue growth, or the operating margin slips back to negative once restructuring charges and stock compensation are counted.",
+        "customers": "About 75,000 companies in 170 countries; over 60% of ARR comes from customers with more than 250 employees; no single-customer concentration disclosed.",
+        "red_flags": [
+          "Crowded market against much larger rivals (ServiceNow, Zendesk, Salesforce, Atlassian); no proof of switching costs",
+          "Growth slowed from 21% to 16%, and recent quarters are steady at 14-16%, not inflecting",
+          "Restructuring charges in both of the last two quarters; the 3% operating margin is thin and may owe something to cost cuts",
+          "Accumulated deficit of about $3.55B; heavy stock compensation, with buybacks mainly offsetting dilution",
+          "No named customer wins or contract figures in the supplied text; cash and securities fell in the half-year, partly through acquisitions (goodwill up)"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 27.1,
+      "conviction_rank": 11,
+      "judgment_rank": 17
     },
     {
       "ticker": "CRNC",
       "name": "Cerence Inc.",
       "cik": 1768267,
       "sic": 7372,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 33.4,
         "revenue": 6.2,
@@ -284,8 +413,8 @@
         "safety": 7.8,
         "total": 62.1
       },
-      "price": 8.430000305175781,
-      "market_value": 380901133.7890625,
+      "price": 8.930000305175781,
+      "market_value": 403493133.7890625,
       "dollar_volume": 5423347.1693992615,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 309494000.0,
@@ -309,13 +438,34 @@
       "backlog_growth": 0.04346567374243948,
       "prepaid_growth": 0.06568059744826371,
       "rd_share": 0.35748350533451373,
-      "rank": 7
+      "rank": 7,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 3.0,
+        "confidence": "medium",
+        "thesis": "Cerence has a real position, with an estimated 52% of cars shipped in FY2025 using its technology, 80+ OEM and Tier 1 customers, and a $1.17B five-year backlog. But the recovery is lumpy and mostly license-timing driven, and the latest quarter's growth slowed to 12% with a 2.7% operating margin, so this looks like a rebound rather than a durable inflection.",
+        "breaks_if": "Quarterly revenue growth fades to low single digits or turns negative as fixed license deals roll off, or OEMs shift to in-house or big-tech assistants (Google, Amazon, or LLM-based builds) and cut per-vehicle royalties.",
+        "customers": "Nearly all major automakers and Tier 1 suppliers (BMW, Mercedes, VW Group, Stellantis, Renault, Toyota, Ford, GM, BYD, NIO; Harman, Bosch, Continental, Aptiv). Concentration is not quantified in the supplied text, and it is likely meaningful among a few OEMs.",
+        "red_flags": [
+          "FY2025 revenue fell 24% and the net loss was $18.7M, so the recent growth is a rebound from a trough, not clean inflection",
+          "Latest-quarter growth slowed to 12% and operating margin fell from 11.6% (nine-month) to 2.7%, so the lumpy fixed-license revenue is fading",
+          "Quarterly operating cash flow fell 15.8% year on year",
+          "Backlog up only 4% and deferred revenue up 7%; most of the $1.0B five-year backlog is variable, forecast royalties, not signed",
+          "Share count up 4%, R&D at 36% of revenue, and a competitive threat from in-house or big-tech assistants; no named new wins in the evidence"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 23.8,
+      "conviction_rank": 13,
+      "judgment_rank": 21
     },
     {
       "ticker": "WK",
       "name": "WORKIVA INC",
       "cik": 1445305,
       "sic": 7372,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 30.1,
         "revenue": 2.7,
@@ -324,9 +474,9 @@
         "safety": 10.0,
         "total": 60.6
       },
-      "price": 73.25,
-      "market_value": 4075551329.5,
-      "dollar_volume": 61089419.313430786,
+      "price": 75.30999755859375,
+      "market_value": 4190167381.2227783,
+      "dollar_volume": 63369785.74714661,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 965697000.0,
       "prior_ttm_revenue": 806977000.0,
@@ -349,13 +499,34 @@
       "backlog_growth": 0.2137500000000001,
       "prepaid_growth": 0.15739257306505783,
       "rd_share": 0.22432605672379638,
-      "rank": 8
+      "rank": 8,
+      "judgment": {
+        "edge": 6.5,
+        "demand": 5.5,
+        "confidence": "medium",
+        "thesis": "Workiva is an embedded, audit-grade reporting platform with strong switching costs (85% of the Fortune 1000, 80% gross margin, 90 patents), and it is now crossing into GAAP profit with 19-20% growth and 21% backlog growth. The evidence shows steady, durable compounding rather than a new inflection, and the profit turn is partly a cost-discipline story, so it looks like a quality compounder rather than a hidden diamond.",
+        "breaks_if": "Revenue growth falls below mid-teens or backlog growth drops below revenue growth while operating margin stalls near low single digits. Another sign would be sustainability and CSRD demand fading, or AI-native tools eroding seat and use-case expansion.",
+        "customers": "More than 6,600 organizations, including over 85% of the Fortune 1000, mainly the offices of the CFO, CSO and CAE; no single-customer concentration disclosed.",
+        "red_flags": [
+          "Operating margin only about 3% (Q2 2026 about 4.6%); GAAP profit is thin and stock-based comp is about $30M a quarter",
+          "Roughly $770M of convertible notes against a stockholders' deficit that widened to -$97M after heavy buybacks",
+          "Sustainability/CSRD demand is regulation-dependent and the regulatory outlook is uncertain",
+          "Auditor change reported in May 2026 and new CFO and CRO, which warrants a check on the reason",
+          "No named customer wins or contract figures in the supplied text; deferred revenue growth (+16%) trails revenue growth"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 35.2,
+      "conviction_rank": 5,
+      "judgment_rank": 2
     },
     {
       "ticker": "MQ",
       "name": "Marqeta, Inc.",
       "cik": 1522540,
       "sic": 7372,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 37.5,
         "revenue": 4.2,
@@ -364,9 +535,9 @@
         "safety": 10.0,
         "total": 59.2
       },
-      "price": 18.110000610351562,
-      "market_value": 1909971214.3707275,
-      "dollar_volume": 15152282.015705109,
+      "price": 18.690000534057617,
+      "market_value": 1971140906.3243866,
+      "dollar_volume": 14381524.373722076,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 677212000.0,
       "prior_ttm_revenue": 553222000.0,
@@ -389,13 +560,34 @@
       "backlog_growth": -0.10087719298245612,
       "prepaid_growth": -0.03842341998932686,
       "rd_share": null,
-      "rank": 9
+      "rank": 9,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Marqeta is a real card-issuing platform with 31% TPV growth and a flip to small operating profit (Q2 2026 operating income of $3.6M on $176M revenue), but this is mostly cost-cutting leverage (compensation down year on year) rather than proof of a hard-to-replace product. Backlog is down 10%, deferred revenue is down 4%, quarterly growth has slowed from 27% to 17%, and competitors such as Adyen, Stripe and Lithic offer similar issuer processing, so it is not clearly a diamond.",
+        "breaks_if": "Revenue growth keeps slowing below mid-teens or TPV growth drops below 20%, or a large program customer moves its volume to a competitor or in-house, with operating margin falling back below zero.",
+        "customers": "Not disclosed in the supplied text; the business is a fintech and card-program customer base, and the company is historically known for heavy concentration in a few large programs, but that is not evidenced here.",
+        "red_flags": [
+          "Backlog down 10% and deferred revenue down 4% year on year, so contracted demand is not building",
+          "Revenue growth decelerating from 27% to 17% in two quarters",
+          "Operating profit is thin ($3.6M in the quarter) and driven by lower compensation, not by gross margin gains (gross margin down 1%)",
+          "Net income is helped by interest income on a large cash balance; share count is down 9% from buybacks and a 1-for-4 reverse split",
+          "No named customer wins or signed contracts in the evidence, and repeated officer and director changes in recent filings"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 22.7,
+      "conviction_rank": 15,
+      "judgment_rank": 22
     },
     {
       "ticker": "PCOR",
       "name": "PROCORE TECHNOLOGIES, INC.",
       "cik": 1611052,
       "sic": 7372,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 25.5,
         "revenue": 5.2,
@@ -404,9 +596,9 @@
         "safety": 9.4,
         "total": 58.8
       },
-      "price": 56.209999084472656,
-      "market_value": 8507711290.569595,
-      "dollar_volume": 153896225.90694427,
+      "price": 56.97999954223633,
+      "market_value": 8624255352.034798,
+      "dollar_volume": 156366298.56815338,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 1422448000.0,
       "prior_ttm_revenue": 1232484000.0,
@@ -429,13 +621,34 @@
       "backlog_growth": 0.3076923076923077,
       "prepaid_growth": 0.20137959821476348,
       "rd_share": 0.2564424147666558,
-      "rank": 10
+      "rank": 10,
+      "judgment": {
+        "edge": 6.5,
+        "demand": 6.0,
+        "confidence": "medium",
+        "thesis": "Procore is the dominant construction-management platform, and its stickiness (system of record, unlimited-user model, integrations) plus rising enterprise ARR (115 customers above $1M vs 86, backlog +31%) point to a durable business whose margin is improving with scale. It is not a clear diamond: growth is steady at 15-16% rather than inflecting, operating margin is still negative, and it is now spending on an acquisition and a convertible raise.",
+        "breaks_if": "Growth in customers above $100k ARR slips below about 10%, or backlog and deferred revenue growth falls below revenue growth, or operating margin stops improving despite the DroneDeploy deal.",
+        "customers": "Owners, general contractors and specialty contractors; 17,850 customers, with 2,710 above $100k ARR (66% of ARR) and 115 above $1M (20% of ARR); no single-customer concentration disclosed.",
+        "red_flags": [
+          "Growth steady at 15-16%, with no acceleration",
+          "Operating margin still negative at -5%",
+          "$950M 0% convertible notes issued Aug 2026 are dilutive and add debt",
+          "DroneDeploy acquisition adds integration risk and goodwill",
+          "Total customer count growth only 4%, and management is ending that disclosure"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 36.0,
+      "conviction_rank": 4,
+      "judgment_rank": 1
     },
     {
       "ticker": "CVI",
       "name": "CVR ENERGY INC",
       "cik": 1376139,
       "sic": 2911,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 22.0,
         "revenue": 6.7,
@@ -444,9 +657,9 @@
         "safety": 10.0,
         "total": 53.7
       },
-      "price": 58.02000045776367,
-      "market_value": 5831010046.005249,
-      "dollar_volume": 43355436.80381775,
+      "price": 61.41999816894531,
+      "market_value": 6172709815.979004,
+      "dollar_volume": 45384857.345199585,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 8473000000.0,
       "prior_ttm_revenue": 7187000000.0,
@@ -469,13 +682,34 @@
       "backlog_growth": null,
       "prepaid_growth": 2.5555555555555554,
       "rd_share": null,
-      "rank": 11
+      "rank": 11,
+      "judgment": {
+        "edge": 1.0,
+        "demand": 2.0,
+        "confidence": "high",
+        "thesis": "This is not a diamond: CVR is a two-refinery independent whose margin swing from -5% to +4% tracks crack spreads, now boosted by Iran War supply disruption, which is a cyclical and price-driven recovery rather than a durable advantage. The +256% jump in prepaid/deferred revenue is the only demand-like signal, and it is unexplained and probably a fertilizer prepay timing effect.",
+        "breaks_if": "Crack spreads and nitrogen fertilizer prices normalize as Middle East supply returns, and operating margin falls back to roughly zero or negative without any contract-backed volume gains.",
+        "customers": "Not disclosed; the products are commodity fuels and fertilizer sold to wholesale, retail and farm customers, with no named customers or contracts supplied.",
+        "red_flags": [
+          "Margin recovery tracks commodity prices and the Iran War disruption, not a company-specific advantage",
+          "Commodity refining and fertilizer with no switching costs or proprietary technology",
+          "Coffeyville crude throughput fell about 20% in 2025 (123.8k to 98.8k bpd)",
+          "Renewable diesel unit reverted in December 2025 because the economics were unfavorable",
+          "Icahn controls about 71% and is weighing strategic transactions; the +256% deferred revenue is unexplained and there is no backlog or named-customer evidence"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 5.5,
+      "conviction_rank": 28,
+      "judgment_rank": 28
     },
     {
       "ticker": "VCYT",
       "name": "VERACYTE, INC.",
       "cik": 1384101,
       "sic": 8071,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 29.3,
         "revenue": 1.3,
@@ -484,9 +718,9 @@
         "safety": 9.0,
         "total": 51.0
       },
-      "price": 45.22999954223633,
-      "market_value": 3617151117.8615456,
-      "dollar_volume": 58154213.71231079,
+      "price": 43.119998931884766,
+      "market_value": 3448409328.260273,
+      "dollar_volume": 55589462.97874451,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 561900000.0,
       "prior_ttm_revenue": 479129000.0,
@@ -509,13 +743,34 @@
       "backlog_growth": null,
       "prepaid_growth": -0.5882758620689655,
       "rd_share": 0.16616835735896066,
-      "rank": 12
+      "rank": 12,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Decipher Prostate is the only gene expression test in the 2026 NCCN prostate guidelines, with 115+ studies behind it and coverage for 215M+ enrollees. Together with Afirma, that gives a real reimbursement and evidence moat, and operating margin is up from 3% to 19% on 15-19% growth. It is not a classic early inflection, though: the loss-to-profit swing is partly an artifact of a $20.5M impairment and lower G&A in the prior-year quarter, and no named customer wins or backlog back the demand story",
+        "breaks_if": "Medicare or commercial payers cut reimbursement for Decipher or Afirma, a competing prostate genomic test gains NCCN inclusion, or quarterly revenue growth falls below about 10% while R&D (up about 80% year on year) keeps pushing margins down.",
+        "customers": "Not disclosed. Revenue is mostly testing billed to Medicare and commercial payers for Decipher Prostate and Afirma, ordered by physicians. A smaller IVD product line is distributed outside the US. Payer concentration is likely but not quantified in the supplied text.",
+        "red_flags": [
+          "Prior-year operating loss included a $20.5M impairment, so the margin swing overstates the underlying inflection",
+          "No backlog is reported, and deferred revenue is immaterial and falling (current portion $0.6M vs $1.2M), so it signals nothing about demand",
+          "Revenue depends on Medicare and commercial reimbursement for two tests, which is a policy risk",
+          "R&D spend rose from $16.3M to $29.4M in the quarter, and the TrueMRD launch is unproven in a crowded MRD field",
+          "Merger with Convergent Genomics signed 2026-09-14 with terms not shown in the excerpt; goodwill is already $767M and acquisition risk is a concern"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 31.4,
+      "conviction_rank": 7,
+      "judgment_rank": 3
     },
     {
       "ticker": "SEDG",
       "name": "SOLAREDGE TECHNOLOGIES, INC.",
       "cik": 1419612,
       "sic": 3674,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 23.3,
         "revenue": 15.2,
@@ -524,9 +779,9 @@
         "safety": 6.7,
         "total": 50.7
       },
-      "price": 32.209999084472656,
-      "market_value": 1966265642.8514557,
-      "dollar_volume": 88417297.82962799,
+      "price": 31.360000610351562,
+      "market_value": 1914377321.0990295,
+      "dollar_volume": 87085618.55258942,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 1332281000.0,
       "prior_ttm_revenue": 940561000.0,
@@ -549,13 +804,34 @@
       "backlog_growth": null,
       "prepaid_growth": 0.3268951417657502,
       "rd_share": 0.1567071811427169,
-      "rank": 13
+      "rank": 13,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 3.0,
+        "confidence": "medium",
+        "thesis": "SolarEdge is recovering from a collapse: gross margin went from about 11% to 27% in the June quarter and operating loss narrowed from -$115M to -$16M, but the revenue growth is rebounding off a deeply depressed base. Its optimizer-plus-inverter system is differentiated but faces real competition from Enphase, Tesla and Chinese vendors, and there are no named customers, signed contracts or backlog to show demand is building.",
+        "breaks_if": "Gross margin stalls below about 25% or quarterly revenue growth fades while operating losses persist, which would show the improvement was inventory clearing and restructuring rather than durable demand.",
+        "customers": "Not disclosed in the supplied text; the risk factors mention reliance on distributors and large installers, and consolidation among them.",
+        "red_flags": [
+          "Still loss-making: June quarter operating loss $16M, net loss $31M, accumulated deficit $1.5B",
+          "Recovery from a collapse, so year-on-year growth and margin gains come off a depressed base",
+          "No backlog reported and no named customers or contracts supplied",
+          "Cash flow helped by a $188M rise in trade payables while inventory is $600M and prepaid assets are up $113M",
+          "Exited e-Mobility, storage and tracker businesses; $332M convertible debt; equity down to $412M; US policy (IRA/H.R.1) and tariff exposure"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 16.3,
+      "conviction_rank": 22,
+      "judgment_rank": 24
     },
     {
       "ticker": "VCEL",
       "name": "Vericel Corp",
       "cik": 887359,
       "sic": 2836,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 22.1,
         "revenue": 4.5,
@@ -564,9 +840,9 @@
         "safety": 9.3,
         "total": 50.7
       },
-      "price": 40.099998474121094,
-      "market_value": 2048107422.0657349,
-      "dollar_volume": 21293914.679145813,
+      "price": 40.130001068115234,
+      "market_value": 2049639804.5539856,
+      "dollar_volume": 20524090.838432312,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 306303000.0,
       "prior_ttm_revenue": 249119000.0,
@@ -589,13 +865,34 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.09522596905678364,
-      "rank": 14
+      "rank": 14,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Vericel has FDA-approved autologous cell therapies (MACI, Epicel) that are hard to replicate, with 75% gross margins, steady 22-23% growth, and operating income just turning positive (Q2 operating income $0.4M vs a $2.0M loss a year ago). It is not clearly a diamond: profitability is thin, SBC absorbs most of the cash profit, and the evidence of demand building beyond current growth is missing.",
+        "breaks_if": "MACI growth decelerates well below 20% or operating margin fails to stay positive as SG&A keeps growing near revenue growth, or the Burlington facility validation slips or Matricel supply is disrupted.",
+        "customers": "Orthopedic surgeons and burn centers in the US, paid mostly through insurers and hospitals; concentration not disclosed in the supplied text.",
+        "red_flags": [
+          "No backlog or deferred revenue data; demand signals rely on reported growth only",
+          "Six-month operating loss of $7.6M; the profit turn is one quarter at a 0.6% margin",
+          "Stock-based comp of $20M in six months is large relative to cash earnings",
+          "Single-source Matricel membrane and NexoBrid made by MediWound in Israel create supply dependence",
+          "Federal award match ($36M) is unverified and may be an unrelated recipient"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 31.3,
+      "conviction_rank": 8,
+      "judgment_rank": 4
     },
     {
       "ticker": "KVYO",
       "name": "Klaviyo, Inc.",
       "cik": 1835830,
       "sic": 7372,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 14.4,
         "revenue": 7.9,
@@ -604,9 +901,9 @@
         "safety": 7.9,
         "total": 48.6
       },
-      "price": 17.31999969482422,
-      "market_value": 5141473189.328018,
-      "dollar_volume": 97523465.45085907,
+      "price": 17.079999923706055,
+      "market_value": 5070228823.832005,
+      "dollar_volume": 99897867.82159805,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 1389656000.0,
       "prior_ttm_revenue": 1078202000.0,
@@ -629,13 +926,34 @@
       "backlog_growth": 0.5559458103361765,
       "prepaid_growth": 0.44526121072166935,
       "rd_share": 0.23125507319797128,
-      "rank": 15
+      "rank": 15,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 6.0,
+        "confidence": "medium",
+        "thesis": "Klaviyo is a scaled B2C marketing CRM with revenue up about 29-32%, margin moving from -10% to -2%, backlog up 56% and deferred revenue up 45%, so demand looks real. It is probably not a diamond because the edge is ordinary: email/SMS marketing has many competitors, plans are mostly monthly, and the Shopify dependence and a market value of $5.1B already price in much of the improvement.",
+        "breaks_if": "Revenue growth falls below about 20% or gross margin keeps sliding, or Shopify changes its integration or promotes its own competing email product, causing customer churn or weaker net revenue retention.",
+        "customers": "Over 193,000 businesses, mostly SMB and e-commerce, expanding into mid-market and enterprise. No single-customer concentration is disclosed, but there is heavy reliance on Shopify's platform and agency partners for acquiring customers.",
+        "red_flags": [
+          "Mostly monthly plans, so switching costs are modest and churn can come quickly",
+          "Dependence on Shopify integration and partner channels for customer acquisition",
+          "Gross margin down 2 points, with an expanding AI/messaging cost base",
+          "Still loss-making at -2% operating margin; 4% share dilution",
+          "No named enterprise wins or retention figures in the supplied text; the MD&A excerpt is only boilerplate"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 27.4,
+      "conviction_rank": 10,
+      "judgment_rank": 8
     },
     {
       "ticker": "ALGM",
       "name": "ALLEGRO MICROSYSTEMS, INC.",
       "cik": 866291,
       "sic": 3674,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 23.2,
         "revenue": 5.3,
@@ -644,9 +962,9 @@
         "safety": 9.7,
         "total": 47.6
       },
-      "price": 35.56999969482422,
-      "market_value": 6609138677.806343,
-      "dollar_volume": 87319187.51277924,
+      "price": 31.6200008392334,
+      "market_value": 5875203045.595057,
+      "dollar_volume": 87971791.84989929,
       "latest_quarter_end": "2026-06-26",
       "ttm_revenue": 945934000.0,
       "prior_ttm_revenue": 761492000.0,
@@ -669,13 +987,34 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.2267304061382718,
-      "rank": 16
+      "rank": 16,
+      "judgment": {
+        "edge": 6.5,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Allegro is the world's largest magnetic sensor IC supplier with proprietary 120V BCD and TMR technology and long automotive design-in cycles, which gives real switching costs. Revenue growth of 24-29% and a swing to a 5% operating margin (about 10% in the latest quarter) are encouraging, but the evidence is thin on named wins, backlog or prepaid revenue, and part of the move looks like a recovery from a cyclical trough in automotive and industrial chips.",
+        "breaks_if": "Gross margin stops expanding or growth falls back to single digits as automotive and industrial inventory restocking fades, with no named AI data center or robotics wins appearing.",
+        "customers": "Over 15,000 customers, including virtually all major automakers and tier-one suppliers, plus a growing data center and robotics base; no concentration figures disclosed in the supplied text.",
+        "red_flags": [
+          "Backlog and deferred revenue not reported, so forward demand is unverified",
+          "Growth may be partly a cyclical rebound from a 2025 trough (operating loss a year ago)",
+          "AI data center and robotics claims are management narrative with no named customers or contracts",
+          "Operating margin of 5% is still thin and R&D takes 23% of revenue",
+          "Inventory of $188M and $286M of long-term debt; social sentiment is the only tone signal and carries little weight"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 28.5,
+      "conviction_rank": 9,
+      "judgment_rank": 5
     },
     {
       "ticker": "IRTC",
       "name": "iRhythm Holdings, Inc.",
       "cik": 1388658,
       "sic": 3841,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 19.7,
         "revenue": 6.0,
@@ -684,9 +1023,9 @@
         "safety": 8.6,
         "total": 46.1
       },
-      "price": 106.69999694824219,
-      "market_value": 3509896399.6124268,
-      "dollar_volume": 57390889.87007141,
+      "price": 108.66000366210938,
+      "market_value": 3574370820.465088,
+      "dollar_volume": 56456414.94369507,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 825336000.0,
       "prior_ttm_revenue": 657227000.0,
@@ -709,13 +1048,34 @@
       "backlog_growth": null,
       "prepaid_growth": 0.2017719348385254,
       "rd_share": null,
-      "rank": 17
+      "rank": 17,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "iRhythm is a real growth business: 20-27% revenue growth, 73% gross margin in Q2 2026, operating loss narrowed to about -1% in the quarter, and a Zio service that has 510(k) clearance and an established reimbursement footprint. It is not clearly a diamond, though: it has a single service line, a Baxter/Bardy patent fight just settled, and an operating margin that is being flattered by growth rather than proven by a durable moat, so the edge is good but not overwhelming.",
+        "breaks_if": "Revenue growth falls below about 15%, or Medicare/commercial reimbursement for the Zio services is cut, or competitors such as Baxter/Bardy take share, so that the operating margin goes back to negative.",
+        "customers": "Not disclosed in the supplied text; revenue comes from Medicare, commercial payors and healthcare providers who order the tests. The filings point to payor concentration and reimbursement dependence, not to named customers.",
+        "red_flags": [
+          "Single service line (Zio) with revenue dependent on Medicare and commercial payor reimbursement",
+          "Still loss-making: Q2 2026 operating loss of $2.5M, including a $14M litigation settlement charge",
+          "$651M of convertible notes against $591M of cash and securities",
+          "Share count up 3% a year, with heavy stock compensation dilution",
+          "No backlog, named customer wins or contracts disclosed; deferred revenue is tiny ($4M), and its 20% growth is not meaningful"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 26.4,
+      "conviction_rank": 12,
+      "judgment_rank": 9
     },
     {
       "ticker": "SLAB",
       "name": "SILICON LABORATORIES INC.",
       "cik": 1038074,
       "sic": 3674,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 17.7,
         "revenue": 3.8,
@@ -724,8 +1084,8 @@
         "safety": 9.2,
         "total": 45.4
       },
-      "price": 222.0399932861328,
-      "market_value": 7373060017.059326,
+      "price": 221.0,
+      "market_value": 7338526000.0,
       "dollar_volume": 60523203.25241089,
       "latest_quarter_end": "2026-07-04",
       "ttm_revenue": 855894000.0,
@@ -749,13 +1109,34 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.42156622198543275,
-      "rank": 18
+      "rank": 18,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Silicon Labs is a credible IoT wireless chip vendor with a 61% gross margin, and revenue is recovering (Q2 up 18%, operating loss narrowed to -$10.7M). It is still not a diamond: the recovery follows an inventory-driven downturn, the edge is ordinary design-in stickiness with no disclosed share, and the pending $231/share Texas Instruments cash takeout caps any upside for new buyers.",
+        "breaks_if": "The Texas Instruments merger closes or fails to close at $231, ending the equity story. Otherwise, gross margin stalls near 61% while operating expenses keep growing faster than revenue, so operating losses persist.",
+        "customers": "not disclosed; the filing excerpt says it sells to makers of IoT devices in industrial, commercial, home and life applications, with no named customers or concentration figures",
+        "red_flags": [
+          "Pending $231/share all-cash acquisition by Texas Instruments caps upside and makes the stock trade on deal terms, not fundamentals",
+          "Still loss-making: operating loss of $27.7M over six months, with SG&A up about 32% year on year",
+          "Operating cash flow was -$9.6M over six months against +$53M a year earlier, and inventory rose $28M (about 29%) from year-end",
+          "Stock-based compensation of about $47M over six months exceeds the operating loss, and the share count is up 2%",
+          "No backlog, prepaid revenue, named customer wins or contract data; deferred revenue is only $5M, so demand evidence is thin and the growth looks like a cyclical"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 20.2,
+      "conviction_rank": 18,
+      "judgment_rank": 18
     },
     {
       "ticker": "TTAN",
       "name": "ServiceTitan, Inc.",
       "cik": 1638826,
       "sic": 7372,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 23.4,
         "revenue": 4.5,
@@ -764,9 +1145,9 @@
         "safety": 6.4,
         "total": 45.3
       },
-      "price": 72.58999633789062,
-      "market_value": 6958712240.53833,
-      "dollar_volume": 112682262.50915527,
+      "price": 74.9800033569336,
+      "market_value": 7187826057.006531,
+      "dollar_volume": 113828946.91963196,
       "latest_quarter_end": "2026-07-31",
       "ttm_revenue": 1064730000.0,
       "prior_ttm_revenue": 866371000.0,
@@ -789,13 +1170,34 @@
       "backlog_growth": null,
       "prepaid_growth": 0.005780346820809301,
       "rd_share": 0.3278183201374997,
-      "rank": 19
+      "rank": 19,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 4.0,
+        "confidence": "low",
+        "thesis": "ServiceTitan is a trades-specific system of record with a 71% gross margin, 21-23% steady growth and operating margin improving from -26% to -13%, so switching costs are plausible. However, the supplied evidence has no named customers, retention or net revenue retention figures, backlog, or signed contracts, and deferred revenue grew only 1%, so this looks like steady SaaS improvement rather than a visible inflection.",
+        "breaks_if": "Revenue growth falls below about 18%, or operating margin stops improving while stock-based compensation and share dilution (+5%) continue, or disclosed customer retention and net revenue retention fall.",
+        "customers": "Small and mid-sized trades businesses (HVAC, plumbing, roofing, landscaping) plus some PE-owned consolidators; concentration not disclosed in the supplied text.",
+        "red_flags": [
+          "Deferred revenue up only 1% against 21-23% revenue growth, so there is no sign of building prepaid demand",
+          "Backlog not reported and no named customers or contracts in the evidence",
+          "Still loss-making at -13% operating margin with R&D at 33% of revenue",
+          "Share count up 5% in a year, so dilution is eroding shareholder value",
+          "Edge claims (largest data asset, only end-to-end platform) are management's own assertions with no retention data"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 23.1,
+      "conviction_rank": 14,
+      "judgment_rank": 13
     },
     {
       "ticker": "LXU",
       "name": "LSB INDUSTRIES, INC.",
       "cik": 60714,
       "sic": 2810,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 15.9,
         "revenue": 4.1,
@@ -804,9 +1206,9 @@
         "safety": 9.6,
         "total": 40.9
       },
-      "price": 9.8100004196167,
-      "market_value": 710626620.3966141,
-      "dollar_volume": 8051224.154520035,
+      "price": 10.630000114440918,
+      "market_value": 770026578.2899857,
+      "dollar_volume": 8100287.418413162,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 658059000.0,
       "prior_ttm_revenue": 538851000.0,
@@ -829,13 +1231,34 @@
       "backlog_growth": 0.24802527646129535,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 20
+      "rank": 20,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 3.0,
+        "confidence": "medium",
+        "thesis": "LSB is a commodity nitrogen producer (ammonia, UAN, AN) whose margin gains track fertilizer prices against natural gas costs, so it is a cyclical recovery rather than a durable franchise. The only support for a diamond case is a 25% rise in backlog and some industrial contracts with cost pass-through, and the latest quarter already shows the profit improvement reversing.",
+        "breaks_if": "Gross margin keeps falling, as it did in Q2 2026 (6.8% versus 15.3% a year earlier), and the operating loss persists as nitrogen prices or gas spreads move against it.",
+        "customers": "Farmers, ranchers and fertilizer dealers (through distributors and direct), explosives manufacturers, and industrial users such as Covestro (a plant operated on its behalf); no named customer concentration figures disclosed in the supplied text.",
+        "red_flags": [
+          "Q2 2026 operating loss of $2.7M and net loss of $6.2M versus a profit a year earlier; gross profit fell from $23.2M to $11.5M",
+          "Commodity nitrogen products with spot pricing; margins follow fertilizer prices and natural gas, so no pricing power",
+          "Quarterly revenue growth slowed from +22% to +11% while margin reversed, which does not look like an inflection",
+          "Backlog +25% has no named customers or contract values behind it; no prepaid or deferred revenue disclosed",
+          "Heavy debt of about $441M, and capex plus carbon capture spending absorb cash; first-half operating cash flow was lifted by a $29.7M payables increase"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 9.4,
+      "conviction_rank": 27,
+      "judgment_rank": 26
     },
     {
       "ticker": "CALX",
       "name": "CALIX, INC",
       "cik": 1406666,
       "sic": 4899,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 16.2,
         "revenue": 7.3,
@@ -844,9 +1267,9 @@
         "safety": 10.0,
         "total": 39.7
       },
-      "price": 37.2400016784668,
-      "market_value": 2365335946.609497,
-      "dollar_volume": 36556080.99346161,
+      "price": 36.5,
+      "market_value": 2318334000.0,
+      "dollar_volume": 34315293.51196289,
       "latest_quarter_end": "2026-06-27",
       "ttm_revenue": 1111199000.0,
       "prior_ttm_revenue": 869193000.0,
@@ -869,13 +1292,34 @@
       "backlog_growth": 0.11482977495672242,
       "prepaid_growth": 0.2200435729847494,
       "rd_share": 0.18717529443421024,
-      "rank": 21
+      "rank": 21,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Calix is a real operating-leverage story: revenue is up 28%, operating margin has swung from -4% to +6%, and it sells a platform of access-edge appliances, cloud software and managed services to small and mid-sized broadband providers, which gives some switching costs. But it is mostly hardware (about 83% of revenue) competing with Adtran, Nokia and Harmony, and the evidence shows no named wins or dominant niche share, so it looks like a decent business with ordinary competition rather than a hi",
+        "breaks_if": "Appliance revenue growth stalls, or gross margin falls below the mid-50s, as the BEAD/broadband build-out spending slows, or backlog keeps growing slower than revenue and turns negative.",
+        "customers": "Small and mid-sized communication service providers: telcos, fiber overbuilders, co-ops, municipalities, MSOs. Customer concentration is not disclosed in the supplied text; the company says it lands about 80 new customers a year.",
+        "red_flags": [
+          "Backlog up only 11% against revenue up 28%, so growth is outpacing signed orders",
+          "Inventory up 35% and receivables up 37% in six months, and operating cash flow fell to $31M from $57M despite higher profit",
+          "Roughly $240M of buybacks in six months cut cash and securities from about $388M to $194M; share-count shrinkage is largely offsetting stock compensation of abo",
+          "Business description is dominated by AI and 'CXP' buzzwords with no named customers, contracts or market-share figures",
+          "Margin recovery is recent, and a six-month operating margin of 6% is thin, with R&D at 19% of revenue"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 20.9,
+      "conviction_rank": 17,
+      "judgment_rank": 14
     },
     {
       "ticker": "REAL",
       "name": "TheRealReal, Inc.",
       "cik": 1573221,
       "sic": 5900,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 12.5,
         "revenue": 1.6,
@@ -884,8 +1328,8 @@
         "safety": 6.9,
         "total": 39.6
       },
-      "price": 9.75,
-      "market_value": 1179983327.25,
+      "price": 10.390000343322754,
+      "market_value": 1257438684.6402693,
       "dollar_volume": 26860551.39479637,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 749910000.0,
@@ -909,13 +1353,34 @@
       "backlog_growth": null,
       "prepaid_growth": 2.225022104332449,
       "rd_share": null,
-      "rank": 22
+      "rank": 22,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "TheRealReal is the largest authenticated luxury resale marketplace, with a real supply-side network effect (over 80% of GMV from repeat consignors, 74% gross margin) and revenue growing 17-18% as operating margin approaches breakeven. It is probably not a diamond: the moat is service-based rather than hard to replace, the operating loss is still there, and the balance sheet carries heavy debt and a stockholders' deficit.",
+        "breaks_if": "Revenue growth falls below about 10%, or the operating margin fails to turn positive on a sustained basis while the new $150M Fortress term loan adds to interest costs.",
+        "customers": "Consumer consignors and buyers (over 1 million active buyers); no single-customer concentration. Supply depends on consignors of third-party luxury brands such as Chanel, Herm s and Rolex.",
+        "red_flags": [
+          "Stockholders' deficit of about $378M, with convertible notes, non-convertible notes and a warrant liability outstanding",
+          "New $150M Fortress senior secured term loan on 2026-10-15 points to refinancing or a need for capital",
+          "Cash fell from $151M to $119M in H1 2026",
+          "Net income is driven by warrant fair-value gains, not operations; operating loss is still -$4.6M for H1",
+          "Competitors are low-barrier: luxury brands, eBay, Vestiaire, Fashionphile, and consignment shops; the +223% deferred revenue figure is unexplained and unverifie"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 17.8,
+      "conviction_rank": 20,
+      "judgment_rank": 19
     },
     {
       "ticker": "FIGS",
       "name": "FIGS, Inc.",
       "cik": 1846576,
       "sic": 2300,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 14.5,
         "revenue": 5.5,
@@ -924,9 +1389,9 @@
         "safety": 8.8,
         "total": 37.7
       },
-      "price": 15.779999732971191,
-      "market_value": 2626859204.2883463,
-      "dollar_volume": 34294568.94083023,
+      "price": 19.1200008392334,
+      "market_value": 3182861282.6651974,
+      "dollar_volume": 36566276.45225525,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 710078000.0,
       "prior_ttm_revenue": 569581000.0,
@@ -949,13 +1414,34 @@
       "backlog_growth": null,
       "prepaid_growth": -0.42056074766355145,
       "rd_share": null,
-      "rank": 23
+      "rank": 23,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "FIGS is a real brand with 69% gross margins, 25-33% growth and an operating margin up from 2% to 10%, but that is a consumer apparel brand with no switching costs and a low barrier to competition. Scrubs are replenishment-driven and the 2.9 million active customers show loyalty, yet nothing in the evidence points to demand accelerating or to a durable moat beyond brand.",
+        "breaks_if": "Quarterly revenue growth slows below about 15% or gross margin falls well below 65% from tariffs or promotions, or active customer count stops growing, which would show the brand premium is being competed away.",
+        "customers": "Individual healthcare professionals buying direct online or in stores (about 2.9 million active customers); a small B2B TEAMS channel; no concentration disclosed.",
+        "red_flags": [
+          "Brand-driven advantage only: no switching costs, regulatory approval or contracts, and the filing itself calls the market highly competitive",
+          "Prepaid and deferred revenue down 42% on the year; backlog not reported, so there is no forward-demand signal",
+          "Growth has slowed from +33% to +29% over two quarters, and the filing says historical growth may not be sustainable",
+          "Tariffs, a customs withhold release order on a Jordanian manufacturer, and a limited supplier base put margins and supply at risk",
+          "Federal awards figures are small and possibly a name match, so they are not evidence; the positive news and social tone is noise, not evidence"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 14.1,
+      "conviction_rank": 23,
+      "judgment_rank": 23
     },
     {
       "ticker": "AMBA",
       "name": "AMBARELLA INC",
       "cik": 1280263,
       "sic": 3674,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 16.8,
         "revenue": 2.9,
@@ -964,9 +1450,9 @@
         "safety": 8.3,
         "total": 37.6
       },
-      "price": 67.43000030517578,
-      "market_value": 2967296003.109436,
-      "dollar_volume": 93629364.21279907,
+      "price": 61.70000076293945,
+      "market_value": 2715144072.77359,
+      "dollar_volume": 88329935.57128906,
       "latest_quarter_end": "2026-07-31",
       "ttm_revenue": 417801000.0,
       "prior_ttm_revenue": 348051000.0,
@@ -989,13 +1475,34 @@
       "backlog_growth": 1.3316326530612246,
       "prepaid_growth": 0.0709886048660302,
       "rd_share": 0.5473586707547373,
-      "rank": 24
+      "rank": 24,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "low",
+        "thesis": "Ambarella has proprietary CVflow AI silicon and is moving into automotive and robotics, with backlog up 133% and revenue up 20% while operating losses narrow. But it is still loss-making (-15% operating margin) with R&D at 55% of revenue, no named customers or contracts in the evidence, and design-win cycles that favour larger rivals such as Nvidia, Qualcomm, Mobileye and Hisilicon, so this looks like an ordinary fabless chip company rather than a clear diamond.",
+        "breaks_if": "Revenue growth falls below about 10% or gross margin drops below 55% while operating margin stays negative, which would show the backlog is not turning into profitable automotive or edge-AI volume.",
+        "customers": "not disclosed; end markets are security cameras, automotive, robotics, drones and consumer cameras. Sales run through distributors such as WT Microelectronics, and the concentration level is not given.",
+        "red_flags": [
+          "Still unprofitable at -15% operating margin; R&D is 55% of revenue",
+          "Backlog +133% but deferred/prepaid revenue only +7%, and the backlog's composition and timing are unknown",
+          "No named customers, design wins or signed agreements in the supplied text",
+          "Growth slowed from +20% to +13% in the latest quarter",
+          "Sales through a distributor; share count up 3%; strong competition in edge AI and automotive silicon"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 20.0,
+      "conviction_rank": 19,
+      "judgment_rank": 15
     },
     {
       "ticker": "TPC",
       "name": "TUTOR PERINI CORP",
       "cik": 77543,
       "sic": 1540,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 15.6,
         "revenue": 5.5,
@@ -1004,9 +1511,9 @@
         "safety": 10.0,
         "total": 36.1
       },
-      "price": 83.36000061035156,
-      "market_value": 4384819392.105103,
-      "dollar_volume": 38122705.10139465,
+      "price": 77.6500015258789,
+      "market_value": 4084467730.2627563,
+      "dollar_volume": 37114924.24201965,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 5949230000.0,
       "prior_ttm_revenue": 4770779000.0,
@@ -1029,13 +1536,34 @@
       "backlog_growth": null,
       "prepaid_growth": 0.14561472147005716,
       "rd_share": null,
-      "rank": 25
+      "rank": 25,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Tutor Perini is a large, long-established heavy civil and building contractor with real pre-qualification and self-perform advantages on mega-projects. But its work is mostly competitively bid, project-by-project, and margins come from execution on a few big jobs, so this reads as a cyclical contractor recovering from a bad stretch rather than a diamond. Revenue growth of 25% and a rise in operating margin from -1% to +4% show improvement, but the evidence does not show a durable moat or an inde",
+        "breaks_if": "Gross margin slips back below roughly 8-9%, or a new write-down or dispute charge hits one of the large legacy projects (California High-Speed Rail, Hudson Yards-era claims, Newark, Midtown Bus Terminal). Either would show the margin gain is project-specific rather than structural.",
+        "customers": "Public agencies (transit authorities, state and federal government, military, airports) and private owners such as casinos, healthcare, technology and education clients. Not disclosed in the excerpts, but a few very large projects are likely a big share of revenue.",
+        "red_flags": [
+          "Backlog not reported, so the strongest demand evidence is missing",
+          "Margin recovery from a loss year (-1% to +4%) is not a true inflection; 4% operating margin is still thin",
+          "Much of the work is price-driven competitive bidding, so the edge is weak",
+          "Federal award figures are matched by name and may include an unrelated recipient",
+          "The $400M refinancing replaced 11.875% notes with 6.625% notes, so interest costs fall, but this is not demand; large billings in excess of costs ($1.9B) lean o"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 10.4,
+      "conviction_rank": 26,
+      "judgment_rank": 25
     },
     {
       "ticker": "IMCR",
       "name": "Immunocore Holdings plc",
       "cik": 1671927,
       "sic": 2836,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 11.1,
         "revenue": 3.4,
@@ -1044,9 +1572,9 @@
         "safety": 9.3,
         "total": 33.8
       },
-      "price": 29.389999389648438,
-      "market_value": 1498120832.5880432,
-      "dollar_volume": 12207590.472221375,
+      "price": 29.399999618530273,
+      "market_value": 1498630582.555027,
+      "dollar_volume": 11444368.831443787,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 430775000.0,
       "prior_ttm_revenue": 356145000.0,
@@ -1069,13 +1597,34 @@
       "backlog_growth": null,
       "prepaid_growth": -0.03535353535353536,
       "rd_share": 0.6603238349486391,
-      "rank": 26
+      "rank": 26,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "KIMMTRAK is the first approved therapy for metastatic uveal melanoma, with FDA/EC approval, a proprietary TCR platform and about $880M of cash and securities, so the edge is real and the business is near break-even on roughly 20% growth. It is not clearly a diamond because the evidence shows steady single-product growth with no named customer wins or backlog, and cash flow has weakened, so demand is not visibly accelerating beyond the numbers.",
+        "breaks_if": "KIMMTRAK quarterly revenue growth fades below 10% as the uveal melanoma patient pool saturates, or the TEBE-AM and PRISM-MEL-301 Phase 3 trials fail, leaving no second growth driver to fund R&D.",
+        "customers": "Hospitals and oncology centres in the US, Germany, France and other markets, reached through a direct sales force plus distributors Medison and Er-Kim; payer and customer concentration not disclosed.",
+        "red_flags": [
+          "Single commercial product (KIMMTRAK) in a small niche, ultra-rare indication",
+          "Operating cash flow fell to $2M in H1 2026 from $26M, with receivables up $22.6M",
+          "Q2 2026 operating loss of $3.0M, so profitability is not yet consistent",
+          "$394M of interest-bearing debt against a $1.5B market cap",
+          "No backlog reported and deferred revenue down 4%; the growth outlook depends on unproven Phase 3 trials"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 21.5,
+      "conviction_rank": 16,
+      "judgment_rank": 10
     },
     {
       "ticker": "ZG",
       "name": "ZILLOW GROUP, INC.",
       "cik": 1617640,
       "sic": 7389,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 9.4,
         "revenue": 1.5,
@@ -1084,9 +1633,9 @@
         "safety": 10.0,
         "total": 29.1
       },
-      "price": 29.8700008392334,
-      "market_value": 6807253711.257935,
-      "dollar_volume": 33951101.78318024,
+      "price": 31.8799991607666,
+      "market_value": 7265324288.742065,
+      "dollar_volume": 34351211.54689789,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 2810000000.0,
       "prior_ttm_revenue": 2388000000.0,
@@ -1109,13 +1658,34 @@
       "backlog_growth": null,
       "prepaid_growth": -0.0714285714285714,
       "rd_share": 0.21743772241992881,
-      "rank": 27
+      "rank": 27,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Zillow has a dominant consumer audience (the most visited US real estate app and site), a proprietary 173M-home database and the Zestimate, which together give it a real, hard-to-copy advantage in residential listings traffic. But operating margin is only about 0% after a -6% year ago, deferred revenue is falling, and there are no named contracts or backlog, so this looks like steady 18% growth in a rate-sensitive housing market rather than a visible inflection.",
+        "breaks_if": "Revenue growth falls below mid-teens, or operating margin stays near zero for another two to three quarters. Enhanced Markets lead share stalling around 40% or Zillow Preferred agent adoption flattening would also break it. So would an MLS, NAR or listing-data rule change that cuts Zillow's access t",
+        "customers": "Real estate agents and teams (Premier Agent, Preferred, Flex), rental property managers and landlords, mortgage borrowers via Zillow Home Loans, and advertisers. No customer concentration disclosed; dependence on listing and data providers is a risk.",
+        "red_flags": [
+          "Operating margin only about 0%, with no demonstrated operating leverage yet",
+          "Prepaid and deferred revenue down 7% year on year, which cuts against building demand",
+          "No backlog, signed contracts or named customer wins in the evidence",
+          "Heavily exposed to mortgage rates, housing turnover and NAR/MLS rule and litigation changes",
+          "R&D at 22% of revenue and gross margin down 3 points, so costs are absorbing the growth"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 16.6,
+      "conviction_rank": 21,
+      "judgment_rank": 16
     },
     {
       "ticker": "WEAV",
       "name": "Weave Communications, Inc.",
       "cik": 1609151,
       "sic": 7372,
+      "first_listed": "2026-10-09",
       "score": {
         "inflection": 13.5,
         "revenue": 1.0,
@@ -1124,9 +1694,9 @@
         "safety": 3.0,
         "total": 26.1
       },
-      "price": 7.380000114440918,
-      "market_value": 587687231.8132067,
-      "dollar_volume": 9255976.19254589,
+      "price": 7.400000095367432,
+      "market_value": 589279878.5943389,
+      "dollar_volume": 9947542.896461487,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 257787000.0,
       "prior_ttm_revenue": 220834000.0,
@@ -1149,7 +1719,34 @@
       "backlog_growth": null,
       "prepaid_growth": -0.05151938970120784,
       "rd_share": 0.17141671224693256,
-      "rank": 28
+      "rank": 28,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Weave is a decent vertical SaaS business with a 72% gross margin, about 40,000 locations, no customer above 5% of revenue, and integrations with more than 90 practice management systems. Growth is steady at 16-17% rather than accelerating, deferred revenue is falling, and the company is being acquired under an August 2026 merger agreement, so the upside is likely capped at the deal price and this is not a diamond.",
+        "breaks_if": "The merger closes at a price near the current market value, which caps upside. Alternatively, growth falls below 15% or location churn rises, which would show the platform is not sticky.",
+        "customers": "More than 30,000 SMB healthcare customers (dental, optometry, veterinary, specialty medical) across nearly 40,000 locations in the US and Canada. No customer is above 5% of revenue.",
+        "red_flags": [
+          "Merger agreement signed 2026-08-18 with Willow Parent, LLC; upside is likely capped at the deal price",
+          "Prepaid and deferred revenue fell 5% on the year, and no backlog is reported",
+          "Growth is steady at 16-17%, not accelerating; there is no evidence of named wins beyond location counts",
+          "Still loss-making at -8% operating margin, with share count up 5%",
+          "Competes against a patchwork of point solutions, and the ability to replace Weave is not demonstrated; no retention or net revenue retention figures are supplie"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 12.4,
+      "conviction_rank": 24,
+      "judgment_rank": 20
     }
-  ]
+  ],
+  "judged_at": "2026-10-17",
+  "judgment_counts": {
+    "judged": 28,
+    "reused": 0,
+    "failed": 0,
+    "skipped": 0
+  }
 }

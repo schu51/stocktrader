@@ -3,11 +3,11 @@
   "run_id": "20261019_140047",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 110930.12,
+    "portfolio_value": 110916.25,
     "cash": 65511.72,
     "buying_power": 62236.134,
-    "long_market_value": 45418.4,
-    "unrealized_pnl": 3793.74
+    "long_market_value": 45404.53,
+    "unrealized_pnl": 3779.87
   },
   "positions": [
     {
@@ -147,9 +147,9 @@
       "symbol": "MPC",
       "qty": 14,
       "avg_cost": 429.55,
-      "current_price": 473.71,
-      "market_value": 6631.94,
-      "unrealized_pnl": 618.24,
+      "current_price": 473.69,
+      "market_value": 6631.66,
+      "unrealized_pnl": 617.96,
       "unrealized_pnl_pct": 10.28,
       "stop_loss": 388.01,
       "side": "long",
@@ -191,10 +191,10 @@
       "symbol": "PLTR",
       "qty": 14,
       "avg_cost": 181.76,
-      "current_price": 194.41,
-      "market_value": 2721.74,
-      "unrealized_pnl": 177.1,
-      "unrealized_pnl_pct": 6.96,
+      "current_price": 194.52,
+      "market_value": 2723.28,
+      "unrealized_pnl": 178.64,
+      "unrealized_pnl_pct": 7.02,
       "stop_loss": 167.22,
       "side": "long",
       "asset_class": "us_equity",
@@ -213,10 +213,10 @@
       "symbol": "PSX",
       "qty": 9,
       "avg_cost": 266.8,
-      "current_price": 292.0,
-      "market_value": 2628.0,
-      "unrealized_pnl": 226.84,
-      "unrealized_pnl_pct": 9.45,
+      "current_price": 290.55,
+      "market_value": 2614.95,
+      "unrealized_pnl": 213.79,
+      "unrealized_pnl_pct": 8.9,
       "stop_loss": 245.45,
       "side": "long",
       "asset_class": "us_equity",
@@ -235,10 +235,10 @@
       "symbol": "SHOP",
       "qty": 26,
       "avg_cost": 149.99,
-      "current_price": 170.96,
-      "market_value": 4444.96,
-      "unrealized_pnl": 545.22,
-      "unrealized_pnl_pct": 13.98,
+      "current_price": 171.08,
+      "market_value": 4448.08,
+      "unrealized_pnl": 548.34,
+      "unrealized_pnl_pct": 14.06,
       "stop_loss": 137.99,
       "side": "long",
       "asset_class": "us_equity",
@@ -279,10 +279,10 @@
       "symbol": "VLO",
       "qty": 5,
       "avg_cost": 267.28,
-      "current_price": 434.35,
-      "market_value": 2171.75,
-      "unrealized_pnl": 835.35,
-      "unrealized_pnl_pct": 62.51,
+      "current_price": 433.31,
+      "market_value": 2166.55,
+      "unrealized_pnl": 830.15,
+      "unrealized_pnl_pct": 62.12,
       "stop_loss": 409.52,
       "side": "long",
       "asset_class": "us_equity",
@@ -473,7 +473,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-10-19T22:00:45.763915+00:00",
+  "sync_at": "2026-10-19T22:30:44.369657+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -542,6 +542,10 @@
       {
         "time": "22:00",
         "value": 110930.12
+      },
+      {
+        "time": "22:30",
+        "value": 110916.25
       }
     ]
   }

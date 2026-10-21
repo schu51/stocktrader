@@ -1,124 +1,128 @@
 {
-  "generated_at": "2026-10-20T06:00:45.999561-07:00",
+  "generated_at": "2026-10-21T06:00:41.442049-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 22,
-    "mixed": 7,
-    "weak": 46
+    "strong": 28,
+    "mixed": 8,
+    "weak": 39
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-10-20T09:00:54-04:00",
-  "premarket_quotes": 71,
+  "premarket_as_of": "2026-10-21T09:00:46-04:00",
+  "premarket_quotes": 74,
   "no_premarket_quote": [
-    "PCOR",
-    "VEEV",
-    "NCNO",
-    "PODD"
+    "APPF"
   ],
   "gap_alerts": [
     {
-      "ticker": "GE",
-      "prev_close": 311.28,
-      "current": 298.7,
-      "pct_chg": -4.04,
-      "ma50": 328.86,
+      "ticker": "ISRG",
+      "prev_close": 438.0,
+      "current": 406.6,
+      "pct_chg": -7.17,
+      "ma50": 393.65,
       "reasons": [
-        "gap down -4.0%"
+        "gap down -7.2%"
+      ]
+    },
+    {
+      "ticker": "FTNT",
+      "prev_close": 170.93,
+      "current": 166.0,
+      "pct_chg": -2.88,
+      "ma50": 169.77,
+      "reasons": [
+        "crossed BELOW 50MA (169.77)"
+      ]
+    },
+    {
+      "ticker": "PODD",
+      "prev_close": 142.64,
+      "current": 139.0,
+      "pct_chg": -2.55,
+      "ma50": 140.44,
+      "reasons": [
+        "crossed BELOW 50MA (140.44)"
+      ]
+    },
+    {
+      "ticker": "SPOT",
+      "prev_close": 526.08,
+      "current": 518.55,
+      "pct_chg": -1.43,
+      "ma50": 521.92,
+      "reasons": [
+        "crossed BELOW 50MA (521.92)"
+      ]
+    },
+    {
+      "ticker": "RTX",
+      "prev_close": 193.34,
+      "current": 193.87,
+      "pct_chg": 0.27,
+      "ma50": 198.86,
+      "reasons": [
+        "volume spike 2.3x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "GE",
+      "prev_close": 299.87,
+      "current": 301.2,
+      "pct_chg": 0.44,
+      "ma50": 327.54,
+      "reasons": [
+        "volume spike 2.3x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "HWM",
+      "prev_close": 211.63,
+      "current": 214.0,
+      "pct_chg": 1.12,
+      "ma50": 243.03,
+      "reasons": [
+        "volume spike 2.2x avg (prior session)"
       ]
     },
     {
       "ticker": "CRWV",
-      "prev_close": 61.12,
-      "current": 59.07,
-      "pct_chg": -3.35,
-      "ma50": 86.44,
+      "prev_close": 62.13,
+      "current": 63.88,
+      "pct_chg": 2.82,
+      "ma50": 85.92,
       "reasons": [
-        "gap down -3.4%",
-        "volume spike 2.5x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "CRM",
-      "prev_close": 242.45,
-      "current": 235.04,
-      "pct_chg": -3.06,
-      "ma50": 230.9,
-      "reasons": [
-        "gap down -3.1%"
-      ]
-    },
-    {
-      "ticker": "MSTR",
-      "prev_close": 136.02,
-      "current": 134.28,
-      "pct_chg": -1.28,
-      "ma50": 135.64,
-      "reasons": [
-        "crossed BELOW 50MA (135.64)"
-      ]
-    },
-    {
-      "ticker": "PYPL",
-      "prev_close": 56.51,
-      "current": 56.63,
-      "pct_chg": 0.21,
-      "ma50": 55.98,
-      "reasons": [
-        "volume spike 2.3x avg (prior session)"
+        "volume spike 2.2x avg (prior session)"
       ]
     }
   ],
   "avoids": [
-    "GE",
-    "CRWV",
-    "CRM",
-    "MSTR"
+    "ISRG",
+    "FTNT",
+    "PODD",
+    "SPOT"
   ],
   "gap_up_priority": [],
   "top_candidates": [
     {
-      "ticker": "PINS",
-      "price": 22.34,
-      "ma50": 21.0,
-      "ret_5d": 4.3,
-      "ret_20d": 15.4,
-      "score": 0.0846,
-      "gap_up": false,
-      "thesis_grade": "B",
-      "thesis_score": 57.0
-    },
-    {
-      "ticker": "MA",
-      "price": 616.4,
-      "ma50": 575.94,
-      "ret_5d": 3.6,
-      "ret_20d": 8.8,
-      "score": 0.0651,
-      "gap_up": false,
-      "thesis_grade": "B",
-      "thesis_score": 57.0
-    },
-    {
       "ticker": "PCOR",
-      "price": 58.01,
-      "ma50": 56.39,
-      "ret_5d": 3.2,
-      "ret_20d": 12.2,
-      "score": 0.0578,
+      "price": 60.73,
+      "ma50": 56.44,
+      "ret_5d": 8.1,
+      "ret_20d": 19.4,
+      "score": 0.113,
       "gap_up": false,
       "thesis_grade": "B",
-      "thesis_score": 69.0
+      "thesis_score": 55.0
     },
     {
-      "ticker": "MSFT",
-      "price": 533.52,
-      "ma50": 506.05,
-      "ret_5d": -1.4,
-      "ret_20d": 6.4,
-      "score": 0.0366,
+      "ticker": "WDAY",
+      "price": 203.98,
+      "ma50": 192.16,
+      "ret_5d": 9.7,
+      "ret_20d": 8.4,
+      "score": 0.0787,
       "gap_up": false,
-      "thesis_grade": "A",
-      "thesis_score": 79.0
+      "thesis_grade": "B",
+      "thesis_score": 63.0
     }
   ]
 }

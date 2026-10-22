@@ -1240,5 +1240,97 @@
     "blocked_by": "ma50_room",
     "news_arm": "control",
     "news_veto": true
+  },
+  {
+    "date": "2026-10-22",
+    "symbol": "OKTA",
+    "price": 208.63999938964844,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": true,
+      "ma50_room": true,
+      "adx": 34.6,
+      "atr_pct": 0.05508,
+      "news_positive": false,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.033,
+      "st_bull_ratio": 0.333
+    },
+    "blocked_by": null,
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-22",
+    "symbol": "DDOG",
+    "price": 273.0899963378906,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": true,
+      "breakout": false,
+      "adx25": true,
+      "ma50_room": true,
+      "adx": 25.4,
+      "atr_pct": 0.0501,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": null,
+      "social_bearish": null,
+      "news_score": 0.64,
+      "st_bull_ratio": 0.8
+    },
+    "blocked_by": null,
+    "news_arm": "control",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-22",
+    "symbol": "ABNB",
+    "price": 173.69000244140625,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 21.8,
+      "atr_pct": 0.02531,
+      "news_positive": true,
+      "news_negative": false,
+      "social_bullish": true,
+      "social_bearish": false,
+      "news_score": 0.75,
+      "st_bull_ratio": 0.875
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": false
+  },
+  {
+    "date": "2026-10-22",
+    "symbol": "CRM",
+    "price": 241.77999877929688,
+    "signals": {
+      "macd_cross": false,
+      "ema21_reclaim": false,
+      "breakout": false,
+      "adx25": false,
+      "ma50_room": false,
+      "adx": 19.2,
+      "atr_pct": 0.0345,
+      "news_positive": false,
+      "news_negative": false,
+      "social_bullish": true,
+      "social_bearish": false,
+      "news_score": -0.089,
+      "st_bull_ratio": 0.75
+    },
+    "blocked_by": "ma50_room",
+    "news_arm": "news",
+    "news_veto": false
   }
 ]

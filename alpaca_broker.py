@@ -505,12 +505,11 @@ class AlpacaBroker:
             return None
         return bool(result["is_open"])
 
-    def opening_auction_ahead(self, cutoff=(9, 28)) -> Optional[bool]:
+    def seconds_to_open(self) -> Optional[float]:
         """
-        True if today is a trading day and it is not yet `cutoff` (New York
-        time): Alpaca takes opening-auction orders (time in force "opg") until
-        9:28. False if the market is open, closed for the day, or past the
-        cutoff; None if the clock cannot be read.
+        Seconds until today's open: 0 if the market is open, None if it does
+        not open again today (a weekend, a holiday, after the close) or the
+        clock cannot be read.
         """
         from datetime import datetime
         from zoneinfo import ZoneInfo
@@ -522,14 +521,14 @@ class AlpacaBroker:
             text = re.sub(r"(\.\d{6})\d+", r"\1", str(text)).replace("Z", "+00:00")
             return datetime.fromisoformat(text)
         try:
+            if result.get("is_open"):
+                return 0
             et = ZoneInfo("America/New_York")
             now = parse(result["timestamp"]).astimezone(et)
             nxt = parse(result["next_open"]).astimezone(et)
-            if result.get("is_open"):
-                return False
-        except (KeyError, TypeError, ValueError):
+        except (AttributeError, KeyError, TypeError, ValueError):
             return None
-        return nxt.date() == now.date() and (now.hour, now.minute) < cutoff
+        return (nxt - now).total_seconds() if nxt.date() == now.date() and nxt > now else None
 
     def get_market_calendar(self, start: str = None, end: str = None) -> List[Dict]:
         """Get market calendar."""

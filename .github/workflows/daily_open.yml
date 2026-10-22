@@ -1,5 +1,5 @@
 name: Daily Opening Buys
-# 9:15 ET: screen on the previous close and send buys into the opening auction
+# 9:15 ET: screen on the previous close, wait for the bell and buy at the ask
 # (run_daily_analysis.py --phase open). Exits and stops are left to the 10:00
 # run (daily_trade.yml) and the intraday checks. Started by dispatcher.yml.
 
@@ -9,7 +9,7 @@ on:
 jobs:
   trade:
     runs-on: ubuntu-latest
-    timeout-minutes: 20        # Extra time for screener (~3-5 min) + trading run
+    timeout-minutes: 40        # screener (~3-5 min) + waiting for the 9:30 bell + trading run
     permissions:
       contents: write
       issues: write          # to open a failure issue

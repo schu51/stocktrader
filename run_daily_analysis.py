@@ -36,6 +36,7 @@ import json
 import logging
 import os
 import sys
+import time
 from datetime import datetime, date
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -142,11 +143,16 @@ def fetch_market_data(symbol: str):
 
 
 # Buying at the open (2026-10-16). The 9:15 ET run decides on the previous
-# close and sends limit-on-open orders; the 10:00 run manages positions only.
-# Live buys sent at 10:00 at the ask filled 1.1% above the open on average and
-# two-thirds of the way up the day's range; in the backtest that kind of fill
-# cut the three-year return from 174% to 108%.
-OPEN_LIMIT = 0.05    # skip a stock that opens more than 5% above its previous close (backtest: no real difference 1-5%)
+# close, waits for the bell and buys at the ask; the 10:00 run manages
+# positions only. Live buys sent at 10:00 at the ask filled 1.1% above the open
+# on average and two-thirds of the way up the day's range; in the backtest that
+# kind of fill cut the three-year return from 174% to 108%. Limit-on-open
+# orders were tried first: the paper account cancelled both (DDOG and OKTA,
+# 2026-10-22) unfilled although each opened under its limit.
+OPEN_LIMIT = 0.05            # skip a stock that opens more than 5% above its previous close (backtest: no real difference 1-5%)
+OPEN_WAIT_SECONDS = 25 * 60  # the longest the opening run waits for the bell
+OPEN_SETTLE_SECONDS = 30     # after the bell, so the opening trade has printed and quotes are live
+_sleep = time.sleep
 PHASES = ("all", "open", "manage")
 
 
@@ -161,9 +167,9 @@ def phase_exits(phase: str) -> bool:
 
 
 def opening_missed_alert(phase: str, execute: bool, opportunities: list, execution: Dict) -> Optional[str]:
-    """An alert when the 9:15 run had buys but reached the broker too late for the opening auction."""
+    """An alert when the 9:15 run had buys but could not send them at the open."""
     if phase == "open" and execute and opportunities and (execution or {}).get("status") == "skipped":
-        return (f"Opening run reached the broker after the 9:28 auction cutoff: {len(opportunities)} buy(s) "
+        return (f"Opening run could not buy at the open: {len(opportunities)} buy(s) "
                 f"were not sent today ({(execution or {}).get('reason')})")
     return None
 
@@ -568,7 +574,7 @@ class DailyRunner:
                              self.screener.get_screening_candidates(max_candidates=max_candidates)
 
             if not phase_buys(phase):
-                candidates = []          # the 10:00 run manages positions; buys went into the opening auction
+                candidates = []          # the 10:00 run manages positions; buys went in at the open
             logger.info(f"Screening {len(candidates)} candidates")
 
             # 2. Generate signals for each candidate
@@ -1947,13 +1953,16 @@ class DailyRunner:
         if not ALPACA_AVAILABLE or not self.broker:
             return {"status": "error", "reason": "Alpaca not available - check API keys"}
 
-        # Gate 1: the opening auction is ahead (the 9:15 run), or the market is open
-        opening = False
+        # Gate 1: the market is open. The 9:15 run waits for the bell.
+        opening = getattr(self, "_phase", "all") == "open"
         try:
-            if getattr(self, "_phase", "all") == "open" and self.broker.opening_auction_ahead() is True:
-                opening = True
-            elif not self.broker.is_market_open():
-                logger.warning("Execution skipped: market is closed and the opening auction has closed to orders")
+            if opening:
+                wait = self.broker.seconds_to_open()
+                if wait and 0 < wait <= OPEN_WAIT_SECONDS:
+                    logger.info(f"Waiting {wait:.0f}s for the open to buy {len(opportunities)} signal(s)")
+                    _sleep(wait + OPEN_SETTLE_SECONDS)
+            if not self.broker.is_market_open():
+                logger.warning("Execution skipped: market is closed")
                 return {"status": "skipped", "reason": "Market is closed"}
         except Exception as e:
             return {"status": "error", "reason": f"Could not check market status: {e}"}
@@ -2018,14 +2027,12 @@ class DailyRunner:
                 })
                 continue
 
-            # Before the open: a limit-on-open at the previous close plus OPEN_LIMIT.
-            # It fills at the opening price, or not at all on a bigger gap.
-            if opening and limit_price:
-                limit_price = round(limit_price * (1 + OPEN_LIMIT), 2)
-                opp["limit_price"] = limit_price
+            # The opening run decided on the previous close: skip a stock that
+            # opened more than OPEN_LIMIT above it (checked below on the ask)
+            gap_cap = round(limit_price * (1 + OPEN_LIMIT), 2) if opening and limit_price else None
 
             # Gate 4: live ask price override (use Alpaca ask instead of stale yfinance close)
-            if self.broker and not opening:
+            if self.broker:
                 try:
                     quote = self.broker.get_latest_quote(symbol)
                     # BUY limit orders must be priced at (or above) the ask to be
@@ -2047,6 +2054,13 @@ class DailyRunner:
                         opp["limit_price"] = limit_price
                 except Exception:
                     pass  # keep yfinance close as fallback
+            if gap_cap and limit_price > gap_cap:
+                reason = (f"opened more than {OPEN_LIMIT:.0%} above the previous close "
+                          f"(ask ${limit_price:.2f}, limit ${gap_cap:.2f})")
+                logger.info(f"Skipping {symbol}: {reason}")
+                skipped += 1
+                execution_results.append({"symbol": symbol, "status": "skipped", "reason": reason})
+                continue
 
             # Gate 4b: cash, counted as orders go out. This is the limit on how many
             # positions the account holds. Each buy was sized against the cash at
@@ -2100,13 +2114,7 @@ class DailyRunner:
 
             # Submit order
             try:
-                if opening:
-                    sent = self.broker.place_order(symbol=symbol, qty=shares, side="buy", order_type="limit",
-                                                   limit_price=limit_price, time_in_force="opg")
-                    result = ({"status": "error", "reason": sent.get("error")} if "error" in sent
-                              else {"status": "submitted", "order_id": sent.get("id")})
-                else:
-                    result = executor.execute_decision(opp)
+                result = executor.execute_decision(opp)
                 status = result.get("status", "error")
 
                 if status == "submitted":
@@ -2406,7 +2414,7 @@ def main():
     parser.add_argument("--data-dir", type=str, default=None,
                         help="Data directory path")
     parser.add_argument("--phase", choices=PHASES, default="all",
-                        help="open: decide on the previous close and send opening-auction buys, no exits (9:15 ET); "
+                        help="open: decide on the previous close and buy at the open, no exits (9:15 ET); "
                              "manage: exits, stops, rotation and the stale exit, no buys (10:00 ET); all: both")
     parser.add_argument("--quiet", action="store_true",
                         help="Suppress console output (log file still written)")

@@ -1,9 +1,11 @@
 """
-Buys go into the opening auction (2026-10-16). Bought at 10:00 ET at the ask,
-33 live buys filled 1.1% above the open on average, two-thirds of the way up
-the day's range; in the three-year backtest that kind of fill cut the return
-from 174% to 108%. A limit-on-open order fills at the open, as the backtest
-assumes, and is skipped if the stock gaps up more than OPEN_LIMIT.
+Buys go in at the open (2026-10-16). Bought at 10:00 ET at the ask, 33 live
+buys filled 1.1% above the open on average, two-thirds of the way up the day's
+range; in the three-year backtest that kind of fill cut the return from 174%
+to 108%. The first limit-on-open orders (2026-10-22, DDOG and OKTA) were
+cancelled unfilled by the paper account although both opened under their
+limits, so the 9:15 run now waits for the bell and buys at the ask, skipping a
+stock that opened more than OPEN_LIMIT above its previous close.
 """
 import sys
 from datetime import datetime, timezone
@@ -14,27 +16,29 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import pytest
 
 
-def test_the_opening_auction_is_ahead_only_before_the_cutoff_on_a_trading_day():
+def test_seconds_to_open_counts_down_to_todays_open_only():
     from alpaca_broker import AlpacaBroker
     broker = AlpacaBroker.__new__(AlpacaBroker)
     clock = lambda now, next_open, is_open=False: (lambda method, endpoint, **kw: {
-        "timestamp": now, "is_open": is_open, "next_open": next_open, "next_close": "2026-10-19T16:00:00-04:00"})
-    broker._request = clock("2026-10-19T09:15:05-04:00", "2026-10-19T09:30:00-04:00")
-    assert broker.opening_auction_ahead() is True
-    broker._request = clock("2026-10-19T09:28:30-04:00", "2026-10-19T09:30:00-04:00")
-    assert broker.opening_auction_ahead() is False                     # past Alpaca's 9:28 cutoff
-    broker._request = clock("2026-10-17T09:15:00-04:00", "2026-10-19T09:30:00-04:00")
-    assert broker.opening_auction_ahead() is False                     # Saturday: the next open is Monday
+        "timestamp": now, "is_open": is_open, "next_open": next_open})
+    broker._request = clock("2026-10-19T09:20:00-04:00", "2026-10-19T09:30:00-04:00")
+    assert broker.seconds_to_open() == 600
     broker._request = clock("2026-10-19T10:00:00-04:00", "2026-10-20T09:30:00-04:00", is_open=True)
-    assert broker.opening_auction_ahead() is False                     # already open
+    assert broker.seconds_to_open() == 0                               # already open
+    broker._request = clock("2026-10-17T09:15:00-04:00", "2026-10-19T09:30:00-04:00")
+    assert broker.seconds_to_open() is None                            # Saturday: no open today
+    broker._request = clock("2026-10-19T16:30:00-04:00", "2026-10-20T09:30:00-04:00")
+    assert broker.seconds_to_open() is None                            # closed for the day
     broker._request = lambda method, endpoint, **kw: {"error": "down"}
-    assert broker.opening_auction_ahead() is None                      # unknown
+    assert broker.seconds_to_open() is None
 
 
-def _runner(monkeypatch, ahead=True, market_open=False):
+def _runner(monkeypatch, ahead=True, market_open=False, to_open=600, ask=101.0):
     import run_daily_analysis as rda
     sent = []
+    slept = []
     monkeypatch.setattr(rda, "ALPACA_AVAILABLE", True)
+    monkeypatch.setattr(rda, "_sleep", lambda s: slept.append(s))
 
     class Executor:
         def __init__(self, broker): pass
@@ -44,8 +48,8 @@ def _runner(monkeypatch, ahead=True, market_open=False):
     monkeypatch.setattr(rda, "OrderExecutor", Executor)
     quotes = []
     broker = SimpleNamespace(
-        is_market_open=lambda: market_open, opening_auction_ahead=lambda: ahead,
-        get_latest_quote=lambda s: quotes.append(s) or {"ap": 999.0},
+        is_market_open=lambda: market_open or bool(slept), seconds_to_open=lambda: 0 if market_open else to_open,
+        get_latest_quote=lambda s: quotes.append(s) or {"ap": ask},
         place_order=lambda **kw: sent.append(("opg", kw["symbol"], kw["limit_price"], kw["time_in_force"],
                                               kw["order_type"])) or {"id": "opg-" + kw["symbol"]})
     engine = SimpleNamespace(
@@ -55,33 +59,47 @@ def _runner(monkeypatch, ahead=True, market_open=False):
     runner = SimpleNamespace(broker=broker, engine=engine, _phase="open",
                              portfolio=SimpleNamespace(num_positions=10, cash=60_000.0, total_value=100_000.0),
                              _log_trade=lambda **kw: logged.append(kw), _active_weight_version=lambda: 3)
+    runner.slept = slept
     return rda, runner, sent, quotes, logged
 
 
 OPPS = [{"symbol": "AAA", "confidence": 0.85, "limit_price": 100.0, "shares": 20, "stop_loss": 92.0}]
 
 
-def test_before_the_open_a_buy_goes_into_the_opening_auction_with_a_gap_limit(monkeypatch):
-    rda, runner, sent, quotes, logged = _runner(monkeypatch, ahead=True)
+def test_before_the_open_the_run_waits_for_the_bell_then_buys_at_the_ask(monkeypatch):
+    rda, runner, sent, quotes, logged = _runner(monkeypatch, to_open=600, ask=101.0)
     out = rda.DailyRunner._execute_opportunities(runner, [dict(o) for o in OPPS], True, 0.65)
-    assert sent == [("opg", "AAA", round(100.0 * (1 + rda.OPEN_LIMIT), 2), "opg", "limit")]
-    assert quotes == []                                          # no pre-market ask: the open is the price
-    assert out["submitted"] == 1 and out["details"][0]["order_id"] == "opg-AAA"
-    assert logged[0]["order_id"] == "opg-AAA" and logged[0]["price"] == round(100.0 * (1 + rda.OPEN_LIMIT), 2)
+    assert runner.slept == [600 + rda.OPEN_SETTLE_SECONDS]
+    assert sent == [("at_ask", "AAA", 101.0)] and quotes == ["AAA"]
+    assert not any(x[0] == "opg" for x in sent)                  # the paper account cancels opening-auction orders
+    assert out["submitted"] == 1 and logged[0]["order_id"] == "day-AAA"
 
 
-def test_a_late_opening_run_falls_back_to_buying_at_the_ask(monkeypatch):
+def test_the_opening_run_skips_a_stock_that_opened_too_far_above_its_previous_close(monkeypatch):
+    import run_daily_analysis as rda
+    rda, runner, sent, quotes, logged = _runner(monkeypatch, ask=round(100.0 * (1 + rda.OPEN_LIMIT) + 0.5, 2))
+    out = rda.DailyRunner._execute_opportunities(runner, [dict(o) for o in OPPS], True, 0.65)
+    assert sent == [] and out["details"][0]["status"] == "skipped" and "previous close" in out["details"][0]["reason"]
+
+
+def test_a_late_opening_run_buys_at_the_ask_without_waiting(monkeypatch):
     # A missed 9:15 trigger is caught up after the open: buy the old way rather than not at all
-    rda, runner, sent, quotes, logged = _runner(monkeypatch, ahead=False, market_open=True)
+    rda, runner, sent, quotes, logged = _runner(monkeypatch, market_open=True, ask=101.0)
     rda.DailyRunner._execute_opportunities(runner, [dict(o) for o in OPPS], True, 0.65)
-    assert sent == [("at_ask", "AAA", 999.0)] and quotes == ["AAA"]
+    assert runner.slept == [] and sent == [("at_ask", "AAA", 101.0)] and quotes == ["AAA"]
 
 
-def test_between_the_auction_cutoff_and_the_open_nothing_is_sent(monkeypatch):
-    for ahead in (False, None):
-        rda, runner, sent, quotes, logged = _runner(monkeypatch, ahead=ahead, market_open=False)
+def test_the_run_does_not_wait_when_the_open_is_far_off_or_unknown(monkeypatch):
+    for to_open in (None, 60 * 60):
+        rda, runner, sent, quotes, logged = _runner(monkeypatch, to_open=to_open)
         out = rda.DailyRunner._execute_opportunities(runner, [dict(o) for o in OPPS], True, 0.65)
-        assert sent == [] and out["status"] == "skipped"
+        assert sent == [] and runner.slept == [] and out["status"] == "skipped"
+
+
+def test_the_opening_workflow_has_time_to_wait_for_the_bell():
+    import re
+    text = (Path(__file__).parent.parent / ".github" / "workflows" / "daily_open.yml").read_text()
+    assert int(re.search(r"timeout-minutes:\s*(\d+)", text).group(1)) >= 35
 
 
 def test_the_ten_oclock_run_only_manages_and_never_buys():
@@ -106,15 +124,15 @@ def test_the_schedule_buys_at_9_15_and_manages_at_10():
 def test_alpaca_clock_timestamps_with_nanoseconds_are_read():
     from alpaca_broker import AlpacaBroker
     broker = AlpacaBroker.__new__(AlpacaBroker)
-    broker._request = lambda method, endpoint, **kw: {"timestamp": "2026-10-19T09:15:05.123456789-04:00", "is_open": False,
+    broker._request = lambda method, endpoint, **kw: {"timestamp": "2026-10-19T09:15:00.123456789-04:00", "is_open": False,
                                                       "next_open": "2026-10-19T09:30:00-04:00"}
-    assert broker.opening_auction_ahead() is True
-    broker._request = lambda method, endpoint, **kw: {"timestamp": "2026-10-19T13:15:05.5Z", "is_open": False,
+    assert round(broker.seconds_to_open()) == 900
+    broker._request = lambda method, endpoint, **kw: {"timestamp": "2026-10-19T13:15:00.5Z", "is_open": False,
                                                       "next_open": "2026-10-19T13:30:00Z"}
-    assert broker.opening_auction_ahead() is True
+    assert round(broker.seconds_to_open()) == 900
 
 
-def test_an_opening_run_that_missed_the_auction_raises_an_alert():
+def test_an_opening_run_that_could_not_buy_at_the_open_raises_an_alert():
     import run_daily_analysis as rda
     skipped = {"status": "skipped", "reason": "Market is closed"}
     assert "were not sent" in rda.opening_missed_alert("open", True, [{"symbol": "AAA"}], skipped)

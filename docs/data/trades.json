@@ -3470,7 +3470,7 @@
   {
     "trade_id": "TRD-20261008140302-MRNA",
     "symbol": "MRNA",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-08",
     "entry_ts": "2026-10-08T14:03:02.183822",
     "entry_price": 196.47,
@@ -3502,14 +3502,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.15,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-22",
+    "exit_price": 199.2,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": 35.49,
+    "pnl_pct": 1.39,
+    "hold_days": 14,
     "entry_limit": 196.88,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-22T16:46:50.539458"
   },
   {
     "trade_id": "TRD-20261012140302-JCI",

@@ -1,128 +1,301 @@
 {
-  "generated_at": "2026-10-21T06:00:41.442049-07:00",
+  "generated_at": "2026-10-22T06:00:42.666551-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 28,
+    "strong": 30,
     "mixed": 8,
-    "weak": 39
+    "weak": 37
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-10-21T09:00:46-04:00",
-  "premarket_quotes": 74,
+  "premarket_as_of": "2026-10-22T09:00:49-04:00",
+  "premarket_quotes": 73,
   "no_premarket_quote": [
-    "APPF"
+    "PCOR",
+    "PODD"
   ],
   "gap_alerts": [
     {
-      "ticker": "ISRG",
-      "prev_close": 438.0,
-      "current": 406.6,
-      "pct_chg": -7.17,
-      "ma50": 393.65,
+      "ticker": "MSTR",
+      "prev_close": 153.48,
+      "current": 144.5,
+      "pct_chg": -5.85,
+      "ma50": 137.7,
       "reasons": [
-        "gap down -7.2%"
+        "gap down -5.9%"
       ]
     },
     {
-      "ticker": "FTNT",
-      "prev_close": 170.93,
-      "current": 166.0,
-      "pct_chg": -2.88,
-      "ma50": 169.77,
+      "ticker": "KLAC",
+      "prev_close": 163.43,
+      "current": 154.01,
+      "pct_chg": -5.76,
+      "ma50": 184.9,
       "reasons": [
-        "crossed BELOW 50MA (169.77)"
+        "gap down -5.8%"
       ]
     },
     {
-      "ticker": "PODD",
-      "prev_close": 142.64,
-      "current": 139.0,
-      "pct_chg": -2.55,
-      "ma50": 140.44,
+      "ticker": "AMAT",
+      "prev_close": 408.94,
+      "current": 385.66,
+      "pct_chg": -5.69,
+      "ma50": 474.95,
       "reasons": [
-        "crossed BELOW 50MA (140.44)"
+        "gap down -5.7%"
       ]
     },
     {
-      "ticker": "SPOT",
-      "prev_close": 526.08,
-      "current": 518.55,
-      "pct_chg": -1.43,
-      "ma50": 521.92,
+      "ticker": "MRVL",
+      "prev_close": 244.76,
+      "current": 231.0,
+      "pct_chg": -5.62,
+      "ma50": 242.65,
       "reasons": [
-        "crossed BELOW 50MA (521.92)"
+        "gap down -5.6%",
+        "crossed BELOW 50MA (242.65)"
       ]
     },
     {
-      "ticker": "RTX",
-      "prev_close": 193.34,
-      "current": 193.87,
-      "pct_chg": 0.27,
-      "ma50": 198.86,
+      "ticker": "ARM",
+      "prev_close": 226.59,
+      "current": 214.93,
+      "pct_chg": -5.15,
+      "ma50": 265.0,
       "reasons": [
-        "volume spike 2.3x avg (prior session)"
+        "gap down -5.1%"
       ]
     },
     {
-      "ticker": "GE",
-      "prev_close": 299.87,
-      "current": 301.2,
-      "pct_chg": 0.44,
-      "ma50": 327.54,
+      "ticker": "APLD",
+      "prev_close": 20.98,
+      "current": 19.92,
+      "pct_chg": -5.03,
+      "ma50": 25.6,
       "reasons": [
-        "volume spike 2.3x avg (prior session)"
+        "gap down -5.0%"
       ]
     },
     {
-      "ticker": "HWM",
-      "prev_close": 211.63,
-      "current": 214.0,
-      "pct_chg": 1.12,
-      "ma50": 243.03,
+      "ticker": "VRT",
+      "prev_close": 212.15,
+      "current": 202.2,
+      "pct_chg": -4.69,
+      "ma50": 251.38,
       "reasons": [
-        "volume spike 2.2x avg (prior session)"
+        "gap down -4.7%"
+      ]
+    },
+    {
+      "ticker": "HOOD",
+      "prev_close": 101.93,
+      "current": 97.18,
+      "pct_chg": -4.66,
+      "ma50": 108.92,
+      "reasons": [
+        "gap down -4.7%"
+      ]
+    },
+    {
+      "ticker": "AMD",
+      "prev_close": 552.72,
+      "current": 527.1,
+      "pct_chg": -4.64,
+      "ma50": 541.1,
+      "reasons": [
+        "gap down -4.6%",
+        "crossed BELOW 50MA (541.10)"
       ]
     },
     {
       "ticker": "CRWV",
-      "prev_close": 62.13,
-      "current": 63.88,
-      "pct_chg": 2.82,
-      "ma50": 85.92,
+      "prev_close": 61.82,
+      "current": 58.96,
+      "pct_chg": -4.63,
+      "ma50": 85.35,
       "reasons": [
+        "gap down -4.6%"
+      ]
+    },
+    {
+      "ticker": "COIN",
+      "prev_close": 177.08,
+      "current": 169.0,
+      "pct_chg": -4.56,
+      "ma50": 178.94,
+      "reasons": [
+        "gap down -4.6%"
+      ]
+    },
+    {
+      "ticker": "SMCI",
+      "prev_close": 35.57,
+      "current": 33.97,
+      "pct_chg": -4.5,
+      "ma50": 38.79,
+      "reasons": [
+        "gap down -4.5%",
+        "volume spike 2.4x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "TSLA",
+      "prev_close": 386.47,
+      "current": 372.04,
+      "pct_chg": -3.73,
+      "ma50": 362.18,
+      "reasons": [
+        "gap down -3.7%"
+      ]
+    },
+    {
+      "ticker": "ANET",
+      "prev_close": 184.33,
+      "current": 178.17,
+      "pct_chg": -3.34,
+      "ma50": 197.83,
+      "reasons": [
+        "gap down -3.3%"
+      ]
+    },
+    {
+      "ticker": "AVGO",
+      "prev_close": 337.8,
+      "current": 327.0,
+      "pct_chg": -3.2,
+      "ma50": 360.18,
+      "reasons": [
+        "gap down -3.2%"
+      ]
+    },
+    {
+      "ticker": "HWM",
+      "prev_close": 208.15,
+      "current": 201.58,
+      "pct_chg": -3.16,
+      "ma50": 241.57,
+      "reasons": [
+        "gap down -3.2%",
         "volume spike 2.2x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "RXRX",
+      "prev_close": 3.64,
+      "current": 3.53,
+      "pct_chg": -3.02,
+      "ma50": 3.65,
+      "reasons": [
+        "gap down -3.0%"
+      ]
+    },
+    {
+      "ticker": "QCOM",
+      "prev_close": 177.96,
+      "current": 172.66,
+      "pct_chg": -2.98,
+      "ma50": 175.41,
+      "reasons": [
+        "crossed BELOW 50MA (175.41)"
+      ]
+    },
+    {
+      "ticker": "TOST",
+      "prev_close": 32.54,
+      "current": 32.13,
+      "pct_chg": -1.26,
+      "ma50": 32.43,
+      "reasons": [
+        "crossed BELOW 50MA (32.43)"
+      ]
+    },
+    {
+      "ticker": "ISRG",
+      "prev_close": 428.12,
+      "current": 428.0,
+      "pct_chg": -0.03,
+      "ma50": 394.19,
+      "reasons": [
+        "volume spike 2.4x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "DXCM",
+      "prev_close": 80.26,
+      "current": 80.78,
+      "pct_chg": 0.65,
+      "ma50": 87.35,
+      "reasons": [
+        "volume spike 2.5x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "SPOT",
+      "prev_close": 525.34,
+      "current": 564.03,
+      "pct_chg": 7.36,
+      "ma50": 522.41,
+      "reasons": [
+        "gap UP 7.4% above 50MA \u2014 momentum alert"
       ]
     }
   ],
   "avoids": [
-    "ISRG",
-    "FTNT",
-    "PODD",
+    "MSTR",
+    "KLAC",
+    "AMAT",
+    "MRVL",
+    "ARM",
+    "APLD",
+    "VRT",
+    "HOOD",
+    "AMD",
+    "CRWV",
+    "COIN",
+    "SMCI",
+    "TSLA",
+    "ANET",
+    "AVGO",
+    "HWM",
+    "RXRX",
+    "QCOM",
+    "TOST"
+  ],
+  "gap_up_priority": [
     "SPOT"
   ],
-  "gap_up_priority": [],
   "top_candidates": [
     {
+      "ticker": "PINS",
+      "price": 22.95,
+      "ma50": 20.96,
+      "ret_5d": 5.5,
+      "ret_20d": 24.4,
+      "score": 0.1276,
+      "gap_up": false,
+      "thesis_grade": "B",
+      "thesis_score": 57.0
+    },
+    {
       "ticker": "PCOR",
-      "price": 60.73,
-      "ma50": 56.44,
-      "ret_5d": 8.1,
-      "ret_20d": 19.4,
-      "score": 0.113,
+      "price": 60.91,
+      "ma50": 56.48,
+      "ret_5d": 8.8,
+      "ret_20d": 19.3,
+      "score": 0.1157,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 55.0
     },
     {
-      "ticker": "WDAY",
-      "price": 203.98,
-      "ma50": 192.16,
-      "ret_5d": 9.7,
-      "ret_20d": 8.4,
-      "score": 0.0787,
+      "ticker": "MA",
+      "price": 622.62,
+      "ma50": 578.34,
+      "ret_5d": 3.2,
+      "ret_20d": 11.4,
+      "score": 0.0744,
       "gap_up": false,
       "thesis_grade": "B",
-      "thesis_score": 63.0
+      "thesis_score": 65.0
     }
   ]
 }

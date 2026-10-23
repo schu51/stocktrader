@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-23",
+  "generated_at": "2026-10-23T21:10:00.000000",
+  "type": "weekly_review",
+  "thesis_health": {
+    "intact": 11,
+    "weakening": 0,
+    "broken": 0,
+    "unknown": 1,
+    "unknown_detail": "CTLP - untradable (delisted/acquired), no stop possible, +5.3% P&L. Risk flag: NO_STOP_LOSS.",
+    "note": "Live MA data unavailable (yfinance proxy-blocked). Assessment based on P&L, distance from 52w high, and stop placement.",
+    "highlights": [
+      "VLO +57.0% - trailing stop updated to 384.86 (50%+ tier, 10% trail)",
+      "TEAM +34.6% - trailing stop updated to 171.6 (break-even stop, 25%+ tier)",
+      "APA +13.9%, CRL +12.4%, SHOP +12.4% all intact",
+      "ILMN -2.0% (13% from 52w high) - borderline, stop at 240.08 provides 11% cushion",
+      "HUM -0.8% - minor drawdown, stop intact at 376.61"
+    ]
+  },
+  "weekly_summary": {
+    "week": "2026-10-19 to 2026-10-23",
+    "entries": 2,
+    "entries_filled": 0,
+    "closes": 1,
+    "win_rate_pct": 100,
+    "note": "Very quiet week: 2 orders placed (DDOG, OKTA) both cancelled unfilled. 1 close: MRNA +1.39% via BROKER_STOP.",
+    "portfolio_value": 111529.07,
+    "unrealized_pnl": 4357.27,
+    "cash_pct": 41.1,
+    "drawdown_from_peak_pct": 4.4,
+    "drawdown_status": "NORMAL (peak $116,590 on 2026-10-06)",
+    "trailing_stop_updates": [
+      "TEAM: stop raised to 171.6 (break-even lock, +34.6% P&L)",
+      "VLO: stop raised to 384.86 (10% trail, +57.0% P&L)"
+    ],
+    "notable": "Quiet week post the heavy tech rotation of the prior week. System is holding concentrated Energy + Technology core. 41% cash ready to deploy on next signals.",
+    "screener_status": "BLOCKED - yfinance connections failed via proxy (403). No live screener run available."
+  },
+  "pattern_findings": {
+    "profit_factor": "WATCH: Profit factor dropped to 0.98x (72 closed trades). System is near breakeven on a dollar-weighted basis: avg win +14.95% x 16 wins vs avg loss -4.34% x 56 losses. Exit discipline is working (losers cut at 13d, winners held 47d) but entry selection is underperforming.",
+    "rs_rank_inversion": "STRONG PATTERN (72 trades): RS < 70 leads all buckets (36% WR, +9.19% avg, n=11). RS 80-89 is the sweet spot for current system (25% WR, +0.52% avg, n=20). RS 90-94 and RS 95+ are dragging the portfolio hard (11% WR at -2.15% and 20% WR at -3.79% respectively, n=34 combined). This pattern has been building since Week of 10-16. Now exceeds 10-trade threshold in the RS 90+ bucket. RECOMMENDATION: Do NOT raise the RS floor or change thresholds yet — needs one more week of data. But monitor closely; if pattern holds next week across 5+ more trades, consider capping RS entries at 89.",
+    "thesis_grades": "Grade B entries leading (21% WR, +1.24% avg, n=19). Grade C underperforming (-2.81% avg, n=34). No Grade A or F trades in closed history. Grade D shows surprising 25% WR but terrible avg (-4.10%).",
+    "sectors": "Energy sector remains the only sector with positive average P&L (+7.34%, n=5). Technology is the largest bet (25 closed trades, -1.30% avg) — needs monitoring if screener sectors shift.",
+    "exit_quality": "PRICE_BELOW_50MA exit working well (n=55, -2.25% avg — cutting losses before they compound). REDUCE exits confirm partial profit-taking working (+45.87% avg, n=4).",
+    "hold_times": "Winners: 47.6d avg. Losers: 13.0d avg. Asymmetry healthy and improving.",
+    "cancelled_orders": "59/141 orders cancelled (ORDER_NOT_FILLED). High cancellation rate may indicate limit orders are set too tight or stocks move quickly after signal generation. This week: DDOG and OKTA both unfilled."
+  },
+  "screener_alignment": {
+    "status": "UNAVAILABLE - live data blocked by proxy",
+    "last_known": "From 2026-10-16 review: energy/healthcare/technology were top 3 sectors",
+    "current_portfolio_sectors": {
+      "Energy": ["APA", "MPC", "PSX", "VLO"],
+      "Healthcare": ["CRL", "HUM", "ILMN"],
+      "Technology": ["CTLP", "PLTR", "SHOP", "TEAM"],
+      "Industrials": ["EXPD"]
+    },
+    "alignment": "LIKELY STRONG (unchanged from last week)"
+  },
+  "model_health": "OK - imports clean (config.DEFAULT_CONFIG, signals.SignalGenerator)",
+  "action_taken": "None. Trailing stops raised for TEAM and VLO (automated by exit_logic). No parameter changes. RS rank pattern flagged for continued monitoring — pattern is strong but per CORE PRINCIPLE requires 1 more week of data before considering threshold adjustment.",
+  "next_week_watch": [
+    "RS 90+ entry performance — confirm or refute the inversion pattern",
+    "ILMN: -2.0% P&L, 13% off 52w high — watch for continued drift toward stop",
+    "CTLP: untradable position, no stop — broker should close it",
+    "Profit factor recovery — system needs wins to improve from 0.98x",
+    "Screener proxy issue — yfinance blocked, screener running blind"
+  ]
+}

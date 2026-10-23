@@ -3,21 +3,21 @@
   "run_id": "20261023_140053",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 111529.07,
+    "portfolio_value": 111527.37,
     "cash": 68101.25,
     "buying_power": 64696.1875,
-    "long_market_value": 43427.82,
-    "unrealized_pnl": 4357.27
+    "long_market_value": 43426.12,
+    "unrealized_pnl": 4355.57
   },
   "positions": [
     {
       "symbol": "APA",
       "qty": 90,
       "avg_cost": 45.55,
-      "current_price": 51.9,
-      "market_value": 4671.0,
-      "unrealized_pnl": 571.5,
-      "unrealized_pnl_pct": 13.94,
+      "current_price": 51.92,
+      "market_value": 4672.8,
+      "unrealized_pnl": 573.3,
+      "unrealized_pnl_pct": 13.98,
       "stop_loss": 41.76,
       "side": "long",
       "asset_class": "us_equity",
@@ -147,9 +147,9 @@
       "symbol": "MPC",
       "qty": 14,
       "avg_cost": 429.55,
-      "current_price": 458.49,
-      "market_value": 6418.8,
-      "unrealized_pnl": 405.1,
+      "current_price": 458.5,
+      "market_value": 6419.0,
+      "unrealized_pnl": 405.3,
       "unrealized_pnl_pct": 6.74,
       "stop_loss": 388.01,
       "side": "long",
@@ -169,10 +169,10 @@
       "symbol": "PLTR",
       "qty": 14,
       "avg_cost": 181.76,
-      "current_price": 196.84,
-      "market_value": 2755.76,
-      "unrealized_pnl": 211.12,
-      "unrealized_pnl_pct": 8.3,
+      "current_price": 196.6,
+      "market_value": 2752.4,
+      "unrealized_pnl": 207.76,
+      "unrealized_pnl_pct": 8.16,
       "stop_loss": 167.22,
       "side": "long",
       "asset_class": "us_equity",
@@ -235,10 +235,10 @@
       "symbol": "TEAM",
       "qty": 15,
       "avg_cost": 169.06,
-      "current_price": 227.61,
-      "market_value": 3414.15,
-      "unrealized_pnl": 878.25,
-      "unrealized_pnl_pct": 34.63,
+      "current_price": 228.0,
+      "market_value": 3420.0,
+      "unrealized_pnl": 884.1,
+      "unrealized_pnl_pct": 34.86,
       "stop_loss": 171.6,
       "side": "long",
       "asset_class": "us_equity",
@@ -257,10 +257,10 @@
       "symbol": "VLO",
       "qty": 5,
       "avg_cost": 267.28,
-      "current_price": 419.5,
-      "market_value": 2097.5,
-      "unrealized_pnl": 761.1,
-      "unrealized_pnl_pct": 56.95,
+      "current_price": 418.26,
+      "market_value": 2091.31,
+      "unrealized_pnl": 754.91,
+      "unrealized_pnl_pct": 56.49,
       "stop_loss": 385.34,
       "side": "long",
       "asset_class": "us_equity",
@@ -453,7 +453,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-10-23T21:00:50.327993+00:00",
+  "sync_at": "2026-10-23T21:30:54.791046+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -514,6 +514,10 @@
       {
         "time": "21:00",
         "value": 111529.07
+      },
+      {
+        "time": "21:30",
+        "value": 111527.37
       }
     ]
   }

@@ -9,14 +9,14 @@
       },
       "note": "every new position; backtest with ma50_room 163% vs 138%, drawdown -16.5% vs -20.4%",
       "evidence": {
-        "n_atr": 9,
+        "n_atr": 10,
         "n_fixed": 4,
-        "difference": 0.21888888888888935,
-        "t": 0.13831157147443365,
-        "mean_atr": -5.101111111111111,
+        "difference": 0.8680000000000003,
+        "t": 0.5357441110550493,
+        "mean_atr": -4.452,
         "mean_fixed": -5.32
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "macd_cross": {
       "kind": "entry_signal",
@@ -25,11 +25,11 @@
       "params": {},
       "note": "backtest 119% vs 124% control, drawdown -13% vs -16%; measured only, never blocks a buy",
       "evidence": {
-        "days": 0,
-        "mean": null,
-        "t": null
+        "days": 5,
+        "mean": 0.004026194845466779,
+        "t": 0.03077920001452465
       },
-      "last_evaluated": "2026-10-17",
+      "last_evaluated": "2026-10-24",
       "auto_promote": false
     },
     "ema21_reclaim": {
@@ -39,11 +39,11 @@
       "params": {},
       "note": "backtest 100% vs 124% control",
       "evidence": {
-        "days": 0,
-        "mean": null,
-        "t": null
+        "days": 5,
+        "mean": 0.016327372502964402,
+        "t": 0.2894483778499126
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "breakout": {
       "kind": "entry_signal",
@@ -56,7 +56,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "adx25": {
       "kind": "entry_signal",
@@ -65,11 +65,11 @@
       "params": {},
       "note": "backtest 55% vs 124% control",
       "evidence": {
-        "days": 0,
-        "mean": null,
-        "t": null
+        "days": 4,
+        "mean": 0.058602993634426226,
+        "t": 0.7641691157923156
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "ma50_room": {
       "kind": "entry_signal",
@@ -78,11 +78,11 @@
       "params": {},
       "note": "entry gate: close at least 6% above the 50-day average; backtest halves the trend-break exits (890 to 461)",
       "evidence": {
-        "days": 0,
-        "mean": null,
-        "t": null
+        "days": 4,
+        "mean": -0.02700091573945291,
+        "t": -0.9605552639471602
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "news_positive": {
       "kind": "entry_signal",
@@ -91,11 +91,11 @@
       "params": {},
       "note": "week of Google News headlines scores positive (finance word list); no backtest possible",
       "evidence": {
-        "days": 0,
-        "mean": null,
+        "days": 1,
+        "mean": -0.09854006067054684,
         "t": null
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "social_bullish": {
       "kind": "entry_signal",
@@ -108,7 +108,7 @@
         "mean": null,
         "t": null
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "news_negative": {
       "kind": "bearish_signal",
@@ -117,11 +117,11 @@
       "params": {},
       "note": "week of headlines scores negative; confirmed if those stocks then lag (the put case)",
       "evidence": {
-        "days": 1,
-        "mean": 0.014791060368856163,
-        "t": null
+        "days": 5,
+        "mean": -0.01562380177266599,
+        "t": -0.24357651874574182
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "social_bearish": {
       "kind": "bearish_signal",
@@ -130,11 +130,11 @@
       "params": {},
       "note": "StockTwits Bullish share <= 60%; confirmed if those stocks then lag",
       "evidence": {
-        "days": 0,
-        "mean": null,
-        "t": null
+        "days": 4,
+        "mean": 0.03438328243462929,
+        "t": 0.6719566203795877
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     },
     "news_veto": {
       "kind": "news_arm",
@@ -144,13 +144,13 @@
       "note": "A/B on real buys: half are skipped when news is negative or social is bearish",
       "evidence": {
         "n_news": 7,
-        "n_control": 6,
-        "difference": -1.157857142857143,
-        "t": -0.6438425506476894,
+        "n_control": 7,
+        "difference": -2.005714285714286,
+        "t": -1.0745638887242375,
         "mean_news": -5.702857142857143,
-        "mean_control": -4.545
+        "mean_control": -3.697142857142857
       },
-      "last_evaluated": "2026-10-17"
+      "last_evaluated": "2026-10-24"
     }
   },
   "changes": [
@@ -176,26 +176,31 @@
       "reason": "owner decision on the three-year backtest comparison (research/backtest_summary_v3_*.json); the live trial could not have confirmed an edge this size"
     }
   ],
-  "generated_at": "2026-10-17T12:15:45.880555",
-  "signals_logged": 51,
+  "generated_at": "2026-10-24T12:15:47.080954",
+  "signals_logged": 58,
   "sentiment": {
-    "rows": 582,
-    "days": 11,
+    "rows": 690,
+    "days": 16,
     "horizon": 10,
     "news_score": {
-      "days": 1,
-      "ic": null,
-      "t": null
+      "days": 6,
+      "ic": 0.08898864939745761,
+      "t": 0.34074262625327195
     },
     "st_bull_ratio": {
-      "days": 1,
-      "ic": null,
-      "t": null
+      "days": 6,
+      "ic": 0.10718020643855918,
+      "t": 0.5164016119723609
     },
     "news_negative_vs_rest": {
-      "days": 1,
-      "mean": 0.014791060368856163,
-      "t": null
+      "days": 5,
+      "mean": -0.01562380177266599,
+      "t": -0.24357651874574182
+    },
+    "social_bearish_vs_rest": {
+      "days": 4,
+      "mean": 0.03438328243462929,
+      "t": 0.6719566203795877
     },
     "enough_history": false,
     "weights": {
@@ -205,8 +210,11 @@
     }
   },
   "news_ab": {
-    "days": 0,
-    "signals": 0
+    "days": 5,
+    "signals": 27,
+    "vetoed_share": 0.0,
+    "technical_only": 0.0254852727126071,
+    "technical_plus_news": 0.0254852727126071
   },
   "review": {
     "due": "2026-12-05",

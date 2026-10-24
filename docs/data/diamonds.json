@@ -1,29 +1,29 @@
 {
-  "generated_at": "2026-10-17T11:32:04.305529",
-  "cutoff": "2026-10-17",
-  "data_through": "2026-10-17",
+  "generated_at": "2026-10-24T11:32:12.088380",
+  "cutoff": "2026-10-24",
+  "data_through": "2026-10-24",
   "reference_quarter": "CY2026Q2",
   "coverage": {
-    "companies_with_data": 7820,
-    "companies_with_revenue": 3526,
-    "listed": 6013,
-    "with_metrics": 2226,
-    "passed_financial_gates": 47,
-    "priced": 47,
-    "passed_size": 28,
+    "companies_with_data": 7828,
+    "companies_with_revenue": 3531,
+    "listed": 6005,
+    "with_metrics": 2224,
+    "passed_financial_gates": 48,
+    "priced": 48,
+    "passed_size": 29,
     "excluded_industry": 0,
     "faded": 0,
-    "watchlist": 28
+    "watchlist": 29
   },
   "gate_failures": {
-    "revenue": 330,
-    "growth": 1539,
-    "turning": 1639,
-    "break_even": 492,
-    "already_rich": 1080,
-    "edge": 1459,
-    "runway": 540,
-    "dilution": 530
+    "revenue": 333,
+    "growth": 1537,
+    "turning": 1634,
+    "break_even": 494,
+    "already_rich": 1079,
+    "edge": 1458,
+    "runway": 541,
+    "dilution": 534
   },
   "size_failures": {
     "too_big": 14,
@@ -47,9 +47,9 @@
         "safety": 9.2,
         "total": 94.4
       },
-      "price": 21.270000457763672,
-      "market_value": 1070327693.0351257,
-      "dollar_volume": 17404960.91222763,
+      "price": 22.610000610351562,
+      "market_value": 1137757840.713501,
+      "dollar_volume": 16784090.270900726,
       "latest_quarter_end": "2026-07-03",
       "ttm_revenue": 339590000.0,
       "prior_ttm_revenue": 224449000.0,
@@ -95,6 +95,67 @@
       "judgment_rank": 11
     },
     {
+      "ticker": "MXL",
+      "name": "MAXLINEAR, INC",
+      "cik": 1288469,
+      "sic": 3674,
+      "first_listed": null,
+      "score": {
+        "inflection": 36.7,
+        "revenue": 25.0,
+        "edge": 6.2,
+        "demand": 10.0,
+        "safety": 7.9,
+        "total": 85.8
+      },
+      "price": 63.459999084472656,
+      "market_value": 5763183276.855469,
+      "dollar_volume": 198965651.13945007,
+      "latest_quarter_end": "2026-09-30",
+      "ttm_revenue": 660528000.0,
+      "prior_ttm_revenue": 423372000.0,
+      "revenue_growth": 0.5601598594144157,
+      "q_growth_now": 0.7243296246214188,
+      "q_growth_2q_ago": 0.4300397152179125,
+      "ttm_op_income": -6059000.0,
+      "ttm_op_margin": -0.00917296465857617,
+      "prior_ttm_op_margin": -0.361788214619767,
+      "margin_change": 0.35261524996119087,
+      "seq_improvements": 2,
+      "latest_q_profitable": true,
+      "year_ago_q_profitable": false,
+      "ttm_gross_margin": 0.5801025845989874,
+      "gross_margin_change": 0.01675640204558293,
+      "cash": 81085000.0,
+      "runway_years": 13.382571381416076,
+      "shares": 90816000.0,
+      "shares_growth": 0.0416351249053748,
+      "backlog_growth": null,
+      "prepaid_growth": 2.736842105263158,
+      "rd_share": null,
+      "rank": 2,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 5.0,
+        "confidence": "low",
+        "thesis": "Revenue is up 72% in the latest quarter and the company just turned operating-profitable (Q3 operating income of $30M versus a $41M loss a year ago), with data center optical DSP exposure and a jump in prepaid assets. But this looks like a cyclical rebound from a trough in a competitive fabless chip business, and the evidence for durable switching costs or named wins is missing.",
+        "breaks_if": "Gross margin stalls near 58% and the quarterly revenue run-rate of about $218M fades, with inventory and receivables still growing faster than sales, which would indicate a restocking bounce rather than durable demand.",
+        "customers": "Distributors, module makers, OEMs and ODMs; data center end customers (Meta, Amazon, Microsoft, Google) are named only as end markets, and customer concentration is not quantified in the supplied text.",
+        "red_flags": [
+          "Recovery from a deep trough (revenue previously declined, 9-month operating loss a year ago of $112M), so this is not a clean inflection",
+          "No backlog, named design wins or contract figures supplied; the business section lists end markets and customers only generically",
+          "Inventory up 46% and receivables up 59% since December, which could signal channel stuffing or a restocking cycle; prepaid and other current assets also rose 14",
+          "Nine-month net loss of $14M after a $17M tax charge; debt rose to $164M with another credit amendment; share count up 4%",
+          "Terminated Silicon Motion merger, with arbitration and class action and potential damages; auditor change in June 2026"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-24"
+      },
+      "conviction": 36.3,
+      "conviction_rank": 4,
+      "judgment_rank": 17
+    },
+    {
       "ticker": "KLIC",
       "name": "KULICKE & SOFFA INDUSTRIES INC",
       "cik": 56978,
@@ -108,9 +169,9 @@
         "safety": 10.0,
         "total": 82.2
       },
-      "price": 78.62999725341797,
-      "market_value": 4114943646.2631226,
-      "dollar_volume": 62619966.63398743,
+      "price": 73.70999908447266,
+      "market_value": 3857465382.0877075,
+      "dollar_volume": 56478942.60559082,
       "latest_quarter_end": "2026-07-04",
       "ttm_revenue": 950213000.0,
       "prior_ttm_revenue": 657842000.0,
@@ -133,7 +194,7 @@
       "backlog_growth": null,
       "prepaid_growth": 2.1441067623640238,
       "rd_share": 0.1699966218100573,
-      "rank": 2,
+      "rank": 3,
       "judgment": {
         "edge": 5.0,
         "demand": 6.0,
@@ -169,9 +230,9 @@
         "safety": 8.6,
         "total": 79.6
       },
-      "price": 50.310001373291016,
-      "market_value": 1390669057.9605103,
-      "dollar_volume": 27845736.855125427,
+      "price": 50.0,
+      "market_value": 1382100000.0,
+      "dollar_volume": 25770133.693885803,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 105595000.0,
       "prior_ttm_revenue": 58181000.0,
@@ -194,7 +255,7 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.054548037312372746,
-      "rank": 3,
+      "rank": 4,
       "judgment": {
         "edge": 5.0,
         "demand": 5.0,
@@ -230,9 +291,9 @@
         "safety": 9.5,
         "total": 68.7
       },
-      "price": 166.0,
-      "market_value": 2970570000.0,
-      "dollar_volume": 42750726.207733154,
+      "price": 166.17999267578125,
+      "market_value": 2973790968.9331055,
+      "dollar_volume": 43746009.12322998,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 1538693000.0,
       "prior_ttm_revenue": 1138435000.0,
@@ -255,7 +316,7 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 4,
+      "rank": 5,
       "judgment": {
         "edge": 1.0,
         "demand": 2.0,
@@ -274,8 +335,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 11.5,
-      "conviction_rank": 25,
-      "judgment_rank": 27
+      "conviction_rank": 26,
+      "judgment_rank": 28
     },
     {
       "ticker": "ESTA",
@@ -291,9 +352,9 @@
         "safety": 7.4,
         "total": 65.0
       },
-      "price": 59.18000030517578,
-      "market_value": 1782601327.4924088,
-      "dollar_volume": 27271542.82913208,
+      "price": 63.79999923706055,
+      "market_value": 1921763480.018978,
+      "dollar_volume": 25978176.807403564,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 245818000.0,
       "prior_ttm_revenue": 177418000.0,
@@ -316,7 +377,7 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.08268719133667998,
-      "rank": 5,
+      "rank": 6,
       "judgment": {
         "edge": 6.0,
         "demand": 5.0,
@@ -335,7 +396,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 34.0,
-      "conviction_rank": 6,
+      "conviction_rank": 7,
       "judgment_rank": 7
     },
     {
@@ -352,9 +413,9 @@
         "safety": 10.0,
         "total": 62.7
       },
-      "price": 13.739999771118164,
-      "market_value": 3736606677.755356,
-      "dollar_volume": 62943887.169361115,
+      "price": 15.489999771118164,
+      "market_value": 4212520927.755356,
+      "dollar_volume": 59862354.37512398,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 903868000.0,
       "prior_ttm_revenue": 782097000.0,
@@ -377,7 +438,7 @@
       "backlog_growth": 0.19634382140973816,
       "prepaid_growth": 0.1805931428908345,
       "rd_share": 0.1950948589838339,
-      "rank": 6,
+      "rank": 7,
       "judgment": {
         "edge": 4.0,
         "demand": 5.0,
@@ -396,8 +457,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 27.1,
-      "conviction_rank": 11,
-      "judgment_rank": 17
+      "conviction_rank": 12,
+      "judgment_rank": 18
     },
     {
       "ticker": "CRNC",
@@ -413,8 +474,8 @@
         "safety": 7.8,
         "total": 62.1
       },
-      "price": 8.930000305175781,
-      "market_value": 403493133.7890625,
+      "price": 8.34000015258789,
+      "market_value": 376834566.89453125,
       "dollar_volume": 5423347.1693992615,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 309494000.0,
@@ -438,7 +499,7 @@
       "backlog_growth": 0.04346567374243948,
       "prepaid_growth": 0.06568059744826371,
       "rd_share": 0.35748350533451373,
-      "rank": 7,
+      "rank": 8,
       "judgment": {
         "edge": 5.0,
         "demand": 3.0,
@@ -457,8 +518,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 23.8,
-      "conviction_rank": 13,
-      "judgment_rank": 21
+      "conviction_rank": 14,
+      "judgment_rank": 22
     },
     {
       "ticker": "WK",
@@ -474,9 +535,9 @@
         "safety": 10.0,
         "total": 60.6
       },
-      "price": 75.30999755859375,
-      "market_value": 4190167381.2227783,
-      "dollar_volume": 63369785.74714661,
+      "price": 85.80000305175781,
+      "market_value": 4773820020.596527,
+      "dollar_volume": 64909666.56951904,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 965697000.0,
       "prior_ttm_revenue": 806977000.0,
@@ -499,7 +560,7 @@
       "backlog_growth": 0.2137500000000001,
       "prepaid_growth": 0.15739257306505783,
       "rd_share": 0.22432605672379638,
-      "rank": 8,
+      "rank": 9,
       "judgment": {
         "edge": 6.5,
         "demand": 5.5,
@@ -519,7 +580,7 @@
       },
       "conviction": 35.2,
       "conviction_rank": 5,
-      "judgment_rank": 2
+      "judgment_rank": 1
     },
     {
       "ticker": "MQ",
@@ -535,9 +596,9 @@
         "safety": 10.0,
         "total": 59.2
       },
-      "price": 18.690000534057617,
-      "market_value": 1971140906.3243866,
-      "dollar_volume": 14381524.373722076,
+      "price": 18.850000381469727,
+      "market_value": 1988015290.2317047,
+      "dollar_volume": 14111341.454601288,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 677212000.0,
       "prior_ttm_revenue": 553222000.0,
@@ -560,7 +621,7 @@
       "backlog_growth": -0.10087719298245612,
       "prepaid_growth": -0.03842341998932686,
       "rd_share": null,
-      "rank": 9,
+      "rank": 10,
       "judgment": {
         "edge": 4.0,
         "demand": 4.0,
@@ -579,8 +640,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 22.7,
-      "conviction_rank": 15,
-      "judgment_rank": 22
+      "conviction_rank": 16,
+      "judgment_rank": 23
     },
     {
       "ticker": "PCOR",
@@ -596,8 +657,8 @@
         "safety": 9.4,
         "total": 58.8
       },
-      "price": 56.97999954223633,
-      "market_value": 8624255352.034798,
+      "price": 63.0,
+      "market_value": 9535417542.0,
       "dollar_volume": 156366298.56815338,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 1422448000.0,
@@ -621,27 +682,27 @@
       "backlog_growth": 0.3076923076923077,
       "prepaid_growth": 0.20137959821476348,
       "rd_share": 0.2564424147666558,
-      "rank": 10,
+      "rank": 11,
       "judgment": {
         "edge": 6.5,
-        "demand": 6.0,
+        "demand": 5.5,
         "confidence": "medium",
-        "thesis": "Procore is the dominant construction-management platform, and its stickiness (system of record, unlimited-user model, integrations) plus rising enterprise ARR (115 customers above $1M vs 86, backlog +31%) point to a durable business whose margin is improving with scale. It is not a clear diamond: growth is steady at 15-16% rather than inflecting, operating margin is still negative, and it is now spending on an acquisition and a convertible raise.",
-        "breaks_if": "Growth in customers above $100k ARR slips below about 10%, or backlog and deferred revenue growth falls below revenue growth, or operating margin stops improving despite the DroneDeploy deal.",
-        "customers": "Owners, general contractors and specialty contractors; 17,850 customers, with 2,710 above $100k ARR (66% of ARR) and 115 above $1M (20% of ARR); no single-customer concentration disclosed.",
+        "thesis": "Procore is a dominant, construction-specific system of record with real switching costs. Large-customer growth is strong: $1M+ ARR customers rose 34% to 115, and backlog is up 31%. But revenue growth is a steady 15-16%, the loss narrowed rather than reversed, and the business is already well known and priced at $9.5B, so this looks like a quality compounder rather than a hidden diamond.",
+        "breaks_if": "Growth in customers above $100k ARR slows below roughly 10%, backlog growth falls toward revenue growth, or operating margin stops improving as the DroneDeploy acquisition and bundled-pricing changes are absorbed.",
+        "customers": "Owners, general contractors and specialty contractors in construction. About 17,850 customers, of which 2,710 have over $100k ARR (66% of ARR) and 115 have over $1M ARR (20% of ARR). No single-customer concentration disclosed.",
         "red_flags": [
-          "Growth steady at 15-16%, with no acceleration",
-          "Operating margin still negative at -5%",
-          "$950M 0% convertible notes issued Aug 2026 are dilutive and add debt",
-          "DroneDeploy acquisition adds integration risk and goodwill",
-          "Total customer count growth only 4%, and management is ending that disclosure"
+          "Still loss-making: operating margin -5%, and the accumulated deficit is about $1.3B",
+          "Total customer count grew only 4%, and management plans to stop disclosing it, which reduces transparency",
+          "Revenue growth is steady at 15-16%, with no acceleration",
+          "$950M of 0% convertible notes issued alongside a DroneDeploy acquisition raises dilution and integration risk",
+          "Heavy competition and cyclical exposure to construction volume; no federal awards and weak social sentiment"
         ],
         "instructions_found": false,
-        "judged_at": "2026-10-17"
+        "judged_at": "2026-10-24"
       },
-      "conviction": 36.0,
-      "conviction_rank": 4,
-      "judgment_rank": 1
+      "conviction": 34.5,
+      "conviction_rank": 6,
+      "judgment_rank": 2
     },
     {
       "ticker": "CVI",
@@ -657,9 +718,9 @@
         "safety": 10.0,
         "total": 53.7
       },
-      "price": 61.41999816894531,
-      "market_value": 6172709815.979004,
-      "dollar_volume": 45384857.345199585,
+      "price": 58.15999984741211,
+      "market_value": 5845079984.664917,
+      "dollar_volume": 45877799.440574646,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 8473000000.0,
       "prior_ttm_revenue": 7187000000.0,
@@ -682,7 +743,7 @@
       "backlog_growth": null,
       "prepaid_growth": 2.5555555555555554,
       "rd_share": null,
-      "rank": 11,
+      "rank": 12,
       "judgment": {
         "edge": 1.0,
         "demand": 2.0,
@@ -701,8 +762,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 5.5,
-      "conviction_rank": 28,
-      "judgment_rank": 28
+      "conviction_rank": 29,
+      "judgment_rank": 29
     },
     {
       "ticker": "VCYT",
@@ -718,9 +779,9 @@
         "safety": 9.0,
         "total": 51.0
       },
-      "price": 43.119998931884766,
-      "market_value": 3448409328.260273,
-      "dollar_volume": 55589462.97874451,
+      "price": 47.93000030517578,
+      "market_value": 3833076629.1756363,
+      "dollar_volume": 54964855.09300232,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 561900000.0,
       "prior_ttm_revenue": 479129000.0,
@@ -743,7 +804,7 @@
       "backlog_growth": null,
       "prepaid_growth": -0.5882758620689655,
       "rd_share": 0.16616835735896066,
-      "rank": 12,
+      "rank": 13,
       "judgment": {
         "edge": 7.0,
         "demand": 5.0,
@@ -762,7 +823,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 31.4,
-      "conviction_rank": 7,
+      "conviction_rank": 8,
       "judgment_rank": 3
     },
     {
@@ -779,9 +840,9 @@
         "safety": 6.7,
         "total": 50.7
       },
-      "price": 31.360000610351562,
-      "market_value": 1914377321.0990295,
-      "dollar_volume": 87085618.55258942,
+      "price": 33.31999969482422,
+      "market_value": 2034025845.4504852,
+      "dollar_volume": 85678919.18907166,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 1332281000.0,
       "prior_ttm_revenue": 940561000.0,
@@ -804,7 +865,7 @@
       "backlog_growth": null,
       "prepaid_growth": 0.3268951417657502,
       "rd_share": 0.1567071811427169,
-      "rank": 13,
+      "rank": 14,
       "judgment": {
         "edge": 4.0,
         "demand": 3.0,
@@ -823,8 +884,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 16.3,
-      "conviction_rank": 22,
-      "judgment_rank": 24
+      "conviction_rank": 23,
+      "judgment_rank": 25
     },
     {
       "ticker": "VCEL",
@@ -840,8 +901,8 @@
         "safety": 9.3,
         "total": 50.7
       },
-      "price": 40.130001068115234,
-      "market_value": 2049639804.5539856,
+      "price": 42.529998779296875,
+      "market_value": 2172219687.652588,
       "dollar_volume": 20524090.838432312,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 306303000.0,
@@ -865,7 +926,7 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.09522596905678364,
-      "rank": 14,
+      "rank": 15,
       "judgment": {
         "edge": 7.0,
         "demand": 5.0,
@@ -884,7 +945,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 31.3,
-      "conviction_rank": 8,
+      "conviction_rank": 9,
       "judgment_rank": 4
     },
     {
@@ -901,8 +962,8 @@
         "safety": 7.9,
         "total": 48.6
       },
-      "price": 17.079999923706055,
-      "market_value": 5070228823.832005,
+      "price": 21.110000610351562,
+      "market_value": 6266541805.843964,
       "dollar_volume": 99897867.82159805,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 1389656000.0,
@@ -926,7 +987,7 @@
       "backlog_growth": 0.5559458103361765,
       "prepaid_growth": 0.44526121072166935,
       "rd_share": 0.23125507319797128,
-      "rank": 15,
+      "rank": 16,
       "judgment": {
         "edge": 5.0,
         "demand": 6.0,
@@ -945,7 +1006,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 27.4,
-      "conviction_rank": 10,
+      "conviction_rank": 11,
       "judgment_rank": 8
     },
     {
@@ -962,9 +1023,9 @@
         "safety": 9.7,
         "total": 47.6
       },
-      "price": 31.6200008392334,
-      "market_value": 5875203045.595057,
-      "dollar_volume": 87971791.84989929,
+      "price": 31.479999542236328,
+      "market_value": 5849189888.584515,
+      "dollar_volume": 87282062.69283295,
       "latest_quarter_end": "2026-06-26",
       "ttm_revenue": 945934000.0,
       "prior_ttm_revenue": 761492000.0,
@@ -987,7 +1048,7 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.2267304061382718,
-      "rank": 16,
+      "rank": 17,
       "judgment": {
         "edge": 6.5,
         "demand": 5.0,
@@ -1006,7 +1067,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 28.5,
-      "conviction_rank": 9,
+      "conviction_rank": 10,
       "judgment_rank": 5
     },
     {
@@ -1023,9 +1084,9 @@
         "safety": 8.6,
         "total": 46.1
       },
-      "price": 108.66000366210938,
-      "market_value": 3574370820.465088,
-      "dollar_volume": 56456414.94369507,
+      "price": 121.2699966430664,
+      "market_value": 3989176539.5736694,
+      "dollar_volume": 56286144.9760437,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 825336000.0,
       "prior_ttm_revenue": 657227000.0,
@@ -1048,7 +1109,7 @@
       "backlog_growth": null,
       "prepaid_growth": 0.2017719348385254,
       "rd_share": null,
-      "rank": 17,
+      "rank": 18,
       "judgment": {
         "edge": 6.0,
         "demand": 5.0,
@@ -1067,7 +1128,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 26.4,
-      "conviction_rank": 12,
+      "conviction_rank": 13,
       "judgment_rank": 9
     },
     {
@@ -1084,8 +1145,8 @@
         "safety": 9.2,
         "total": 45.4
       },
-      "price": 221.0,
-      "market_value": 7338526000.0,
+      "price": 221.27000427246094,
+      "market_value": 7347491761.871338,
       "dollar_volume": 60523203.25241089,
       "latest_quarter_end": "2026-07-04",
       "ttm_revenue": 855894000.0,
@@ -1109,27 +1170,27 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.42156622198543275,
-      "rank": 18,
+      "rank": 19,
       "judgment": {
         "edge": 5.0,
         "demand": 4.0,
         "confidence": "medium",
-        "thesis": "Silicon Labs is a credible IoT wireless chip vendor with a 61% gross margin, and revenue is recovering (Q2 up 18%, operating loss narrowed to -$10.7M). It is still not a diamond: the recovery follows an inventory-driven downturn, the edge is ordinary design-in stickiness with no disclosed share, and the pending $231/share Texas Instruments cash takeout caps any upside for new buyers.",
-        "breaks_if": "The Texas Instruments merger closes or fails to close at $231, ending the equity story. Otherwise, gross margin stalls near 61% while operating expenses keep growing faster than revenue, so operating losses persist.",
-        "customers": "not disclosed; the filing excerpt says it sells to makers of IoT devices in industrial, commercial, home and life applications, with no named customers or concentration figures",
+        "thesis": "Silicon Labs is a credible IoT wireless chip designer with 61% gross margins and revenue up 18-22%, but it is still loss-making at -5% operating margin and its moat is ordinary: customers design in its chips, yet Nordic, TI, NXP, Qualcomm and others compete in the same protocols. The market value is effectively pinned to Texas Instruments' $231/share cash takeover, so the equity is a merger-arbitrage situation and offers no independent upside from an inflection.",
+        "breaks_if": "The Texas Instruments merger fails on regulatory or shareholder grounds and growth stalls, or gross margin falls back while operating expenses keep rising faster than revenue.",
+        "customers": "not disclosed; broad IoT base across industrial, commercial, home and life applications, with no concentration data in the supplied text",
         "red_flags": [
-          "Pending $231/share all-cash acquisition by Texas Instruments caps upside and makes the stock trade on deal terms, not fundamentals",
-          "Still loss-making: operating loss of $27.7M over six months, with SG&A up about 32% year on year",
-          "Operating cash flow was -$9.6M over six months against +$53M a year earlier, and inventory rose $28M (about 29%) from year-end",
-          "Stock-based compensation of about $47M over six months exceeds the operating loss, and the share count is up 2%",
-          "No backlog, prepaid revenue, named customer wins or contract data; deferred revenue is only $5M, so demand evidence is thin and the growth looks like a cyclical"
+          "Pending $231/share cash acquisition by Texas Instruments caps upside and makes market value a deal price, not an operating signal",
+          "Still operating-loss-making: -$10.7M in the latest quarter and -$27.7M over six months",
+          "Operating cash flow was -$9.6M for six months versus +$53.0M a year earlier, with inventory up $27.7M, which may signal channel build-up",
+          "Backlog and deferred revenue not reported; deferred revenue is tiny ($5.2M) and falling, so no contracted-demand evidence",
+          "Stock-based compensation of $46.7M over six months and a 2% share count increase dilute holders; revenue growth may partly reflect a recovery from a cyclical tr"
         ],
         "instructions_found": false,
-        "judged_at": "2026-10-17"
+        "judged_at": "2026-10-24"
       },
       "conviction": 20.2,
-      "conviction_rank": 18,
-      "judgment_rank": 18
+      "conviction_rank": 19,
+      "judgment_rank": 19
     },
     {
       "ticker": "TTAN",
@@ -1145,9 +1206,9 @@
         "safety": 6.4,
         "total": 45.3
       },
-      "price": 74.9800033569336,
-      "market_value": 7187826057.006531,
-      "dollar_volume": 113828946.91963196,
+      "price": 87.05999755859375,
+      "market_value": 8345853440.358887,
+      "dollar_volume": 118024661.02027893,
       "latest_quarter_end": "2026-07-31",
       "ttm_revenue": 1064730000.0,
       "prior_ttm_revenue": 866371000.0,
@@ -1170,7 +1231,7 @@
       "backlog_growth": null,
       "prepaid_growth": 0.005780346820809301,
       "rd_share": 0.3278183201374997,
-      "rank": 19,
+      "rank": 20,
       "judgment": {
         "edge": 6.0,
         "demand": 4.0,
@@ -1189,7 +1250,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 23.1,
-      "conviction_rank": 14,
+      "conviction_rank": 15,
       "judgment_rank": 13
     },
     {
@@ -1206,9 +1267,9 @@
         "safety": 9.6,
         "total": 40.9
       },
-      "price": 10.630000114440918,
-      "market_value": 770026578.2899857,
-      "dollar_volume": 8100287.418413162,
+      "price": 9.890000343322754,
+      "market_value": 716421734.869957,
+      "dollar_volume": 8045428.100442886,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 658059000.0,
       "prior_ttm_revenue": 538851000.0,
@@ -1231,7 +1292,7 @@
       "backlog_growth": 0.24802527646129535,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 20,
+      "rank": 21,
       "judgment": {
         "edge": 3.0,
         "demand": 3.0,
@@ -1250,8 +1311,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 9.4,
-      "conviction_rank": 27,
-      "judgment_rank": 26
+      "conviction_rank": 28,
+      "judgment_rank": 27
     },
     {
       "ticker": "CALX",
@@ -1267,9 +1328,9 @@
         "safety": 10.0,
         "total": 39.7
       },
-      "price": 36.5,
-      "market_value": 2318334000.0,
-      "dollar_volume": 34315293.51196289,
+      "price": 36.470001220703125,
+      "market_value": 2316428597.5341797,
+      "dollar_volume": 33217588.971138,
       "latest_quarter_end": "2026-06-27",
       "ttm_revenue": 1111199000.0,
       "prior_ttm_revenue": 869193000.0,
@@ -1292,26 +1353,26 @@
       "backlog_growth": 0.11482977495672242,
       "prepaid_growth": 0.2200435729847494,
       "rd_share": 0.18717529443421024,
-      "rank": 21,
+      "rank": 22,
       "judgment": {
         "edge": 5.0,
         "demand": 5.0,
         "confidence": "medium",
-        "thesis": "Calix is a real operating-leverage story: revenue is up 28%, operating margin has swung from -4% to +6%, and it sells a platform of access-edge appliances, cloud software and managed services to small and mid-sized broadband providers, which gives some switching costs. But it is mostly hardware (about 83% of revenue) competing with Adtran, Nokia and Harmony, and the evidence shows no named wins or dominant niche share, so it looks like a decent business with ordinary competition rather than a hi",
-        "breaks_if": "Appliance revenue growth stalls, or gross margin falls below the mid-50s, as the BEAD/broadband build-out spending slows, or backlog keeps growing slower than revenue and turns negative.",
-        "customers": "Small and mid-sized communication service providers: telcos, fiber overbuilders, co-ops, municipalities, MSOs. Customer concentration is not disclosed in the supplied text; the company says it lands about 80 new customers a year.",
+        "thesis": "Calix has real growth (+28% LTM, operating margin swinging from -4% to +6%), a sticky installed base of small broadband providers, and a sizeable buyback, so it could be a genuine inflection. The evidence for a hard-to-replace product is thin, though: appliance hardware is 83% of revenue, and Calix competes with Adtran, Nokia and Harmonic, so this reads as a decent business riding a fiber-buildout cycle rather than a clear diamond.",
+        "breaks_if": "Appliance revenue growth stalls or inventory keeps outrunning sales (inventory is up 35% in six months) while gross margin slips below about 55%, which would show the growth was a restocking and buildout wave rather than durable demand.",
+        "customers": "Small and mid-sized communications service providers (telcos, cooperatives, municipalities, fiber overbuilders, MSOs); about 80 new customers a year; concentration not disclosed in the supplied excerpts.",
         "red_flags": [
-          "Backlog up only 11% against revenue up 28%, so growth is outpacing signed orders",
-          "Inventory up 35% and receivables up 37% in six months, and operating cash flow fell to $31M from $57M despite higher profit",
-          "Roughly $240M of buybacks in six months cut cash and securities from about $388M to $194M; share-count shrinkage is largely offsetting stock compensation of abo",
-          "Business description is dominated by AI and 'CXP' buzzwords with no named customers, contracts or market-share figures",
-          "Margin recovery is recent, and a six-month operating margin of 6% is thin, with R&D at 19% of revenue"
+          "Appliance hardware is 83% of revenue; software and services are only 17%, so the AI/cloud platform story is not yet visible in the numbers",
+          "Inventory up 35% and receivables up 37% in six months; operating cash flow fell to $31M from $57M while profit rose",
+          "Backlog growth of +11% trails revenue growth of +28%, so near-term visibility is weakening",
+          "Buyback of $240M in six months cut cash from $143M to $69M; it is partly offsetting stock-based compensation of $37M",
+          "No named customer wins or signed contracts in the supplied material; management language ('agentic AI', 'CXP') is mostly adjectives; growth may depend on broadb"
         ],
         "instructions_found": false,
-        "judged_at": "2026-10-17"
+        "judged_at": "2026-10-24"
       },
       "conviction": 20.9,
-      "conviction_rank": 17,
+      "conviction_rank": 18,
       "judgment_rank": 14
     },
     {
@@ -1328,9 +1389,9 @@
         "safety": 6.9,
         "total": 39.6
       },
-      "price": 10.390000343322754,
-      "market_value": 1257438684.6402693,
-      "dollar_volume": 26860551.39479637,
+      "price": 10.84000015258789,
+      "market_value": 1311899430.5067863,
+      "dollar_volume": 26937877.314424515,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 749910000.0,
       "prior_ttm_revenue": 636971000.0,
@@ -1353,7 +1414,7 @@
       "backlog_growth": null,
       "prepaid_growth": 2.225022104332449,
       "rd_share": null,
-      "rank": 22,
+      "rank": 23,
       "judgment": {
         "edge": 5.0,
         "demand": 4.0,
@@ -1372,8 +1433,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 17.8,
-      "conviction_rank": 20,
-      "judgment_rank": 19
+      "conviction_rank": 21,
+      "judgment_rank": 20
     },
     {
       "ticker": "FIGS",
@@ -1389,9 +1450,9 @@
         "safety": 8.8,
         "total": 37.7
       },
-      "price": 19.1200008392334,
-      "market_value": 3182861282.6651974,
-      "dollar_volume": 36566276.45225525,
+      "price": 20.200000762939453,
+      "market_value": 3362646313.604725,
+      "dollar_volume": 43521082.2183609,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 710078000.0,
       "prior_ttm_revenue": 569581000.0,
@@ -1414,7 +1475,7 @@
       "backlog_growth": null,
       "prepaid_growth": -0.42056074766355145,
       "rd_share": null,
-      "rank": 23,
+      "rank": 24,
       "judgment": {
         "edge": 4.0,
         "demand": 4.0,
@@ -1433,8 +1494,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 14.1,
-      "conviction_rank": 23,
-      "judgment_rank": 23
+      "conviction_rank": 24,
+      "judgment_rank": 24
     },
     {
       "ticker": "AMBA",
@@ -1450,9 +1511,9 @@
         "safety": 8.3,
         "total": 37.6
       },
-      "price": 61.70000076293945,
-      "market_value": 2715144072.77359,
-      "dollar_volume": 88329935.57128906,
+      "price": 66.5,
+      "market_value": 2926370804.0,
+      "dollar_volume": 86145945.74813843,
       "latest_quarter_end": "2026-07-31",
       "ttm_revenue": 417801000.0,
       "prior_ttm_revenue": 348051000.0,
@@ -1475,7 +1536,7 @@
       "backlog_growth": 1.3316326530612246,
       "prepaid_growth": 0.0709886048660302,
       "rd_share": 0.5473586707547373,
-      "rank": 24,
+      "rank": 25,
       "judgment": {
         "edge": 5.0,
         "demand": 5.0,
@@ -1494,7 +1555,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 20.0,
-      "conviction_rank": 19,
+      "conviction_rank": 20,
       "judgment_rank": 15
     },
     {
@@ -1511,9 +1572,9 @@
         "safety": 10.0,
         "total": 36.1
       },
-      "price": 77.6500015258789,
-      "market_value": 4084467730.2627563,
-      "dollar_volume": 37114924.24201965,
+      "price": 76.86000061035156,
+      "market_value": 4042912892.1051025,
+      "dollar_volume": 34809116.022491455,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 5949230000.0,
       "prior_ttm_revenue": 4770779000.0,
@@ -1536,7 +1597,7 @@
       "backlog_growth": null,
       "prepaid_growth": 0.14561472147005716,
       "rd_share": null,
-      "rank": 25,
+      "rank": 26,
       "judgment": {
         "edge": 3.0,
         "demand": 4.0,
@@ -1555,8 +1616,8 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 10.4,
-      "conviction_rank": 26,
-      "judgment_rank": 25
+      "conviction_rank": 27,
+      "judgment_rank": 26
     },
     {
       "ticker": "IMCR",
@@ -1572,9 +1633,9 @@
         "safety": 9.3,
         "total": 33.8
       },
-      "price": 29.399999618530273,
-      "market_value": 1498630582.555027,
-      "dollar_volume": 11444368.831443787,
+      "price": 30.979999542236328,
+      "market_value": 1579169230.0660324,
+      "dollar_volume": 11680549.737358093,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 430775000.0,
       "prior_ttm_revenue": 356145000.0,
@@ -1597,7 +1658,7 @@
       "backlog_growth": null,
       "prepaid_growth": -0.03535353535353536,
       "rd_share": 0.6603238349486391,
-      "rank": 26,
+      "rank": 27,
       "judgment": {
         "edge": 7.0,
         "demand": 4.0,
@@ -1616,7 +1677,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 21.5,
-      "conviction_rank": 16,
+      "conviction_rank": 17,
       "judgment_rank": 10
     },
     {
@@ -1633,9 +1694,9 @@
         "safety": 10.0,
         "total": 29.1
       },
-      "price": 31.8799991607666,
-      "market_value": 7265324288.742065,
-      "dollar_volume": 34351211.54689789,
+      "price": 34.04999923706055,
+      "market_value": 7759858626.12915,
+      "dollar_volume": 33990633.62236023,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 2810000000.0,
       "prior_ttm_revenue": 2388000000.0,
@@ -1658,7 +1719,7 @@
       "backlog_growth": null,
       "prepaid_growth": -0.0714285714285714,
       "rd_share": 0.21743772241992881,
-      "rank": 27,
+      "rank": 28,
       "judgment": {
         "edge": 6.0,
         "demand": 4.0,
@@ -1677,7 +1738,7 @@
         "judged_at": "2026-10-17"
       },
       "conviction": 16.6,
-      "conviction_rank": 21,
+      "conviction_rank": 22,
       "judgment_rank": 16
     },
     {
@@ -1696,7 +1757,7 @@
       },
       "price": 7.400000095367432,
       "market_value": 589279878.5943389,
-      "dollar_volume": 9947542.896461487,
+      "dollar_volume": 12637686.297369003,
       "latest_quarter_end": "2026-06-30",
       "ttm_revenue": 257787000.0,
       "prior_ttm_revenue": 220834000.0,
@@ -1719,33 +1780,33 @@
       "backlog_growth": null,
       "prepaid_growth": -0.05151938970120784,
       "rd_share": 0.17141671224693256,
-      "rank": 28,
+      "rank": 29,
       "judgment": {
         "edge": 5.0,
         "demand": 4.0,
         "confidence": "medium",
-        "thesis": "Weave is a decent vertical SaaS business with a 72% gross margin, about 40,000 locations, no customer above 5% of revenue, and integrations with more than 90 practice management systems. Growth is steady at 16-17% rather than accelerating, deferred revenue is falling, and the company is being acquired under an August 2026 merger agreement, so the upside is likely capped at the deal price and this is not a diamond.",
-        "breaks_if": "The merger closes at a price near the current market value, which caps upside. Alternatively, growth falls below 15% or location churn rises, which would show the platform is not sticky.",
-        "customers": "More than 30,000 SMB healthcare customers (dental, optometry, veterinary, specialty medical) across nearly 40,000 locations in the US and Canada. No customer is above 5% of revenue.",
+        "thesis": "Weave is a decent vertical SaaS business: it owns the telephony stack, integrates with 90+ practice management systems, has about 40,000 locations, and shows 78% gross margin on recurring revenue. But growth is steady at 16-17% with no acceleration, deferred revenue is falling, and the 8/18/2026 merger agreement means the likely upside is a capped take-private price, not an inflection.",
+        "breaks_if": "The merger closes at a fixed price, which caps upside. Alternatively, location growth stalls or recurring revenue growth drops below 15% while deferred revenue keeps shrinking.",
+        "customers": "More than 30,000 SMB healthcare customers (dental, optometry, veterinary, specialty medical) across about 40,000 locations in the US and Canada; no customer exceeds 5% of revenue.",
         "red_flags": [
-          "Merger agreement signed 2026-08-18 with Willow Parent, LLC; upside is likely capped at the deal price",
-          "Prepaid and deferred revenue fell 5% on the year, and no backlog is reported",
-          "Growth is steady at 16-17%, not accelerating; there is no evidence of named wins beyond location counts",
-          "Still loss-making at -8% operating margin, with share count up 5%",
-          "Competes against a patchwork of point solutions, and the ability to replace Weave is not demonstrated; no retention or net revenue retention figures are supplie"
+          "Merger agreement signed 2026-08-18 (Willow Parent) caps upside and makes the stock trade on deal terms",
+          "Prepaid and deferred revenue down 5% while revenue is up 17%",
+          "Backlog not reported; no named customer wins or signed contract evidence",
+          "Competes against a patchwork of point solutions; switching costs are moderate, not proven by retention data",
+          "Share count up 5% and still operating at a -8% margin; the margin gain is modest"
         ],
         "instructions_found": false,
-        "judged_at": "2026-10-17"
+        "judged_at": "2026-10-24"
       },
       "conviction": 12.4,
-      "conviction_rank": 24,
-      "judgment_rank": 20
+      "conviction_rank": 25,
+      "judgment_rank": 21
     }
   ],
-  "judged_at": "2026-10-17",
+  "judged_at": "2026-10-24",
   "judgment_counts": {
-    "judged": 28,
-    "reused": 0,
+    "judged": 5,
+    "reused": 24,
     "failed": 0,
     "skipped": 0
   }

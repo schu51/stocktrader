@@ -180,21 +180,21 @@
     }
   },
   "PCOR": {
-    "basis": "0001628280-26-011055|0001628280-26-051460|8",
-    "judged_at": "2026-10-17",
+    "basis": "0001628280-26-011055|0001628280-26-051460|7",
+    "judged_at": "2026-10-24",
     "judgment": {
       "edge": 6.5,
-      "demand": 6.0,
+      "demand": 5.5,
       "confidence": "medium",
-      "thesis": "Procore is the dominant construction-management platform, and its stickiness (system of record, unlimited-user model, integrations) plus rising enterprise ARR (115 customers above $1M vs 86, backlog +31%) point to a durable business whose margin is improving with scale. It is not a clear diamond: growth is steady at 15-16% rather than inflecting, operating margin is still negative, and it is now spending on an acquisition and a convertible raise.",
-      "breaks_if": "Growth in customers above $100k ARR slips below about 10%, or backlog and deferred revenue growth falls below revenue growth, or operating margin stops improving despite the DroneDeploy deal.",
-      "customers": "Owners, general contractors and specialty contractors; 17,850 customers, with 2,710 above $100k ARR (66% of ARR) and 115 above $1M (20% of ARR); no single-customer concentration disclosed.",
+      "thesis": "Procore is a dominant, construction-specific system of record with real switching costs. Large-customer growth is strong: $1M+ ARR customers rose 34% to 115, and backlog is up 31%. But revenue growth is a steady 15-16%, the loss narrowed rather than reversed, and the business is already well known and priced at $9.5B, so this looks like a quality compounder rather than a hidden diamond.",
+      "breaks_if": "Growth in customers above $100k ARR slows below roughly 10%, backlog growth falls toward revenue growth, or operating margin stops improving as the DroneDeploy acquisition and bundled-pricing changes are absorbed.",
+      "customers": "Owners, general contractors and specialty contractors in construction. About 17,850 customers, of which 2,710 have over $100k ARR (66% of ARR) and 115 have over $1M ARR (20% of ARR). No single-customer concentration disclosed.",
       "red_flags": [
-        "Growth steady at 15-16%, with no acceleration",
-        "Operating margin still negative at -5%",
-        "$950M 0% convertible notes issued Aug 2026 are dilutive and add debt",
-        "DroneDeploy acquisition adds integration risk and goodwill",
-        "Total customer count growth only 4%, and management is ending that disclosure"
+        "Still loss-making: operating margin -5%, and the accumulated deficit is about $1.3B",
+        "Total customer count grew only 4%, and management plans to stop disclosing it, which reduces transparency",
+        "Revenue growth is steady at 15-16%, with no acceleration",
+        "$950M of 0% convertible notes issued alongside a DroneDeploy acquisition raises dilution and integration risk",
+        "Heavy competition and cyclical exposure to construction volume; no federal awards and weak social sentiment"
       ],
       "instructions_found": false
     }
@@ -340,21 +340,21 @@
     }
   },
   "SLAB": {
-    "basis": "0001038074-26-000005|0001038074-26-000029|5",
-    "judged_at": "2026-10-17",
+    "basis": "0001038074-26-000005|0001038074-26-000029|4",
+    "judged_at": "2026-10-24",
     "judgment": {
       "edge": 5.0,
       "demand": 4.0,
       "confidence": "medium",
-      "thesis": "Silicon Labs is a credible IoT wireless chip vendor with a 61% gross margin, and revenue is recovering (Q2 up 18%, operating loss narrowed to -$10.7M). It is still not a diamond: the recovery follows an inventory-driven downturn, the edge is ordinary design-in stickiness with no disclosed share, and the pending $231/share Texas Instruments cash takeout caps any upside for new buyers.",
-      "breaks_if": "The Texas Instruments merger closes or fails to close at $231, ending the equity story. Otherwise, gross margin stalls near 61% while operating expenses keep growing faster than revenue, so operating losses persist.",
-      "customers": "not disclosed; the filing excerpt says it sells to makers of IoT devices in industrial, commercial, home and life applications, with no named customers or concentration figures",
+      "thesis": "Silicon Labs is a credible IoT wireless chip designer with 61% gross margins and revenue up 18-22%, but it is still loss-making at -5% operating margin and its moat is ordinary: customers design in its chips, yet Nordic, TI, NXP, Qualcomm and others compete in the same protocols. The market value is effectively pinned to Texas Instruments' $231/share cash takeover, so the equity is a merger-arbitrage situation and offers no independent upside from an inflection.",
+      "breaks_if": "The Texas Instruments merger fails on regulatory or shareholder grounds and growth stalls, or gross margin falls back while operating expenses keep rising faster than revenue.",
+      "customers": "not disclosed; broad IoT base across industrial, commercial, home and life applications, with no concentration data in the supplied text",
       "red_flags": [
-        "Pending $231/share all-cash acquisition by Texas Instruments caps upside and makes the stock trade on deal terms, not fundamentals",
-        "Still loss-making: operating loss of $27.7M over six months, with SG&A up about 32% year on year",
-        "Operating cash flow was -$9.6M over six months against +$53M a year earlier, and inventory rose $28M (about 29%) from year-end",
-        "Stock-based compensation of about $47M over six months exceeds the operating loss, and the share count is up 2%",
-        "No backlog, prepaid revenue, named customer wins or contract data; deferred revenue is only $5M, so demand evidence is thin and the growth looks like a cyclical"
+        "Pending $231/share cash acquisition by Texas Instruments caps upside and makes market value a deal price, not an operating signal",
+        "Still operating-loss-making: -$10.7M in the latest quarter and -$27.7M over six months",
+        "Operating cash flow was -$9.6M for six months versus +$53.0M a year earlier, with inventory up $27.7M, which may signal channel build-up",
+        "Backlog and deferred revenue not reported; deferred revenue is tiny ($5.2M) and falling, so no contracted-demand evidence",
+        "Stock-based compensation of $46.7M over six months and a 2% share count increase dilute holders; revenue growth may partly reflect a recovery from a cyclical tr"
       ],
       "instructions_found": false
     }
@@ -400,21 +400,21 @@
     }
   },
   "CALX": {
-    "basis": "0001406666-26-000005|0001406666-26-000034|5",
-    "judged_at": "2026-10-17",
+    "basis": "0001406666-26-000005|0001406666-26-000034|3",
+    "judged_at": "2026-10-24",
     "judgment": {
       "edge": 5.0,
       "demand": 5.0,
       "confidence": "medium",
-      "thesis": "Calix is a real operating-leverage story: revenue is up 28%, operating margin has swung from -4% to +6%, and it sells a platform of access-edge appliances, cloud software and managed services to small and mid-sized broadband providers, which gives some switching costs. But it is mostly hardware (about 83% of revenue) competing with Adtran, Nokia and Harmony, and the evidence shows no named wins or dominant niche share, so it looks like a decent business with ordinary competition rather than a hi",
-      "breaks_if": "Appliance revenue growth stalls, or gross margin falls below the mid-50s, as the BEAD/broadband build-out spending slows, or backlog keeps growing slower than revenue and turns negative.",
-      "customers": "Small and mid-sized communication service providers: telcos, fiber overbuilders, co-ops, municipalities, MSOs. Customer concentration is not disclosed in the supplied text; the company says it lands about 80 new customers a year.",
+      "thesis": "Calix has real growth (+28% LTM, operating margin swinging from -4% to +6%), a sticky installed base of small broadband providers, and a sizeable buyback, so it could be a genuine inflection. The evidence for a hard-to-replace product is thin, though: appliance hardware is 83% of revenue, and Calix competes with Adtran, Nokia and Harmonic, so this reads as a decent business riding a fiber-buildout cycle rather than a clear diamond.",
+      "breaks_if": "Appliance revenue growth stalls or inventory keeps outrunning sales (inventory is up 35% in six months) while gross margin slips below about 55%, which would show the growth was a restocking and buildout wave rather than durable demand.",
+      "customers": "Small and mid-sized communications service providers (telcos, cooperatives, municipalities, fiber overbuilders, MSOs); about 80 new customers a year; concentration not disclosed in the supplied excerpts.",
       "red_flags": [
-        "Backlog up only 11% against revenue up 28%, so growth is outpacing signed orders",
-        "Inventory up 35% and receivables up 37% in six months, and operating cash flow fell to $31M from $57M despite higher profit",
-        "Roughly $240M of buybacks in six months cut cash and securities from about $388M to $194M; share-count shrinkage is largely offsetting stock compensation of abo",
-        "Business description is dominated by AI and 'CXP' buzzwords with no named customers, contracts or market-share figures",
-        "Margin recovery is recent, and a six-month operating margin of 6% is thin, with R&D at 19% of revenue"
+        "Appliance hardware is 83% of revenue; software and services are only 17%, so the AI/cloud platform story is not yet visible in the numbers",
+        "Inventory up 35% and receivables up 37% in six months; operating cash flow fell to $31M from $57M while profit rose",
+        "Backlog growth of +11% trails revenue growth of +28%, so near-term visibility is weakening",
+        "Buyback of $240M in six months cut cash from $143M to $69M; it is partly offsetting stock-based compensation of $37M",
+        "No named customer wins or signed contracts in the supplied material; management language ('agentic AI', 'CXP') is mostly adjectives; growth may depend on broadb"
       ],
       "instructions_found": false
     }
@@ -540,21 +540,41 @@
     }
   },
   "WEAV": {
-    "basis": "0001609151-26-000016|0001609151-26-000074|7",
-    "judged_at": "2026-10-17",
+    "basis": "0001609151-26-000016|0001609151-26-000074|8",
+    "judged_at": "2026-10-24",
     "judgment": {
       "edge": 5.0,
       "demand": 4.0,
       "confidence": "medium",
-      "thesis": "Weave is a decent vertical SaaS business with a 72% gross margin, about 40,000 locations, no customer above 5% of revenue, and integrations with more than 90 practice management systems. Growth is steady at 16-17% rather than accelerating, deferred revenue is falling, and the company is being acquired under an August 2026 merger agreement, so the upside is likely capped at the deal price and this is not a diamond.",
-      "breaks_if": "The merger closes at a price near the current market value, which caps upside. Alternatively, growth falls below 15% or location churn rises, which would show the platform is not sticky.",
-      "customers": "More than 30,000 SMB healthcare customers (dental, optometry, veterinary, specialty medical) across nearly 40,000 locations in the US and Canada. No customer is above 5% of revenue.",
+      "thesis": "Weave is a decent vertical SaaS business: it owns the telephony stack, integrates with 90+ practice management systems, has about 40,000 locations, and shows 78% gross margin on recurring revenue. But growth is steady at 16-17% with no acceleration, deferred revenue is falling, and the 8/18/2026 merger agreement means the likely upside is a capped take-private price, not an inflection.",
+      "breaks_if": "The merger closes at a fixed price, which caps upside. Alternatively, location growth stalls or recurring revenue growth drops below 15% while deferred revenue keeps shrinking.",
+      "customers": "More than 30,000 SMB healthcare customers (dental, optometry, veterinary, specialty medical) across about 40,000 locations in the US and Canada; no customer exceeds 5% of revenue.",
       "red_flags": [
-        "Merger agreement signed 2026-08-18 with Willow Parent, LLC; upside is likely capped at the deal price",
-        "Prepaid and deferred revenue fell 5% on the year, and no backlog is reported",
-        "Growth is steady at 16-17%, not accelerating; there is no evidence of named wins beyond location counts",
-        "Still loss-making at -8% operating margin, with share count up 5%",
-        "Competes against a patchwork of point solutions, and the ability to replace Weave is not demonstrated; no retention or net revenue retention figures are supplie"
+        "Merger agreement signed 2026-08-18 (Willow Parent) caps upside and makes the stock trade on deal terms",
+        "Prepaid and deferred revenue down 5% while revenue is up 17%",
+        "Backlog not reported; no named customer wins or signed contract evidence",
+        "Competes against a patchwork of point solutions; switching costs are moderate, not proven by retention data",
+        "Share count up 5% and still operating at a -8% margin; the margin gain is modest"
+      ],
+      "instructions_found": false
+    }
+  },
+  "MXL": {
+    "basis": "0001288469-26-000011|0001288469-26-000061|4",
+    "judged_at": "2026-10-24",
+    "judgment": {
+      "edge": 4.0,
+      "demand": 5.0,
+      "confidence": "low",
+      "thesis": "Revenue is up 72% in the latest quarter and the company just turned operating-profitable (Q3 operating income of $30M versus a $41M loss a year ago), with data center optical DSP exposure and a jump in prepaid assets. But this looks like a cyclical rebound from a trough in a competitive fabless chip business, and the evidence for durable switching costs or named wins is missing.",
+      "breaks_if": "Gross margin stalls near 58% and the quarterly revenue run-rate of about $218M fades, with inventory and receivables still growing faster than sales, which would indicate a restocking bounce rather than durable demand.",
+      "customers": "Distributors, module makers, OEMs and ODMs; data center end customers (Meta, Amazon, Microsoft, Google) are named only as end markets, and customer concentration is not quantified in the supplied text.",
+      "red_flags": [
+        "Recovery from a deep trough (revenue previously declined, 9-month operating loss a year ago of $112M), so this is not a clean inflection",
+        "No backlog, named design wins or contract figures supplied; the business section lists end markets and customers only generically",
+        "Inventory up 46% and receivables up 59% since December, which could signal channel stuffing or a restocking cycle; prepaid and other current assets also rose 14",
+        "Nine-month net loss of $14M after a $17M tax charge; debt rose to $164M with another credit amendment; share count up 4%",
+        "Terminated Silicon Motion merger, with arbitration and class action and potential damages; auditor change in June 2026"
       ],
       "instructions_found": false
     }

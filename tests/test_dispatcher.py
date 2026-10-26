@@ -45,6 +45,7 @@ def test_sync_window_edges():
 
 
 def test_saturday_chain_runs_in_dependency_order():
+    assert _due(2026, 10, 3, 7, 0) == ["refresh_universe.yml"]
     assert _due(2026, 10, 3, 8, 0) == ["candidate_outcomes.yml"]
     assert _due(2026, 10, 3, 8, 15) == ["experiments.yml"]
     assert _due(2026, 10, 3, 8, 30) == ["learning.yml"]

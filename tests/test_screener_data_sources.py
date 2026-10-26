@@ -137,3 +137,11 @@ def test_refresh_maps_gics_sectors_and_class_shares():
     import refresh_universe as ru
     df = pd.DataFrame({"Symbol": ["BRK.B", "AAPL"], "GICS Sector": ["Financials", "Information Technology"]})
     assert ru._members_from_table(df) == {"BRK-B": "financials", "AAPL": "technology"}
+
+
+def test_refresh_reads_the_icb_labelled_nasdaq_table():
+    import refresh_universe as ru
+    df = pd.DataFrame({"Company": ["Arm", "Comcast"], "Ticker": ["ARM", "CMCSA"],
+                       "ICB Industry": ["Technology", "Telecommunications"]})
+    assert ru._members_from_table(df) == {"ARM": "technology", "CMCSA": "communication_services"}
+    assert ru._members_from_table(pd.DataFrame({"Ticker": ["ZZZ"]})) == {"ZZZ": "other"}

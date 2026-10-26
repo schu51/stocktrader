@@ -40,6 +40,8 @@ UNIVERSE_PATH = Path(__file__).parent / "docs" / "data" / "universe.json"
 SP500_WIKI = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
 SP500_CSV = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
 NDX_WIKI = "https://en.wikipedia.org/wiki/Nasdaq-100"
+NDX_WIKI_LIST = "https://en.wikipedia.org/wiki/List_of_Nasdaq-100_companies"
+NDX_NASDAQ_API = "https://api.nasdaq.com/api/quote/list-type/nasdaq100"
 
 MIN_SP500 = 480
 MIN_NDX = 95
@@ -160,17 +162,32 @@ def fetch_sp500() -> Dict[str, str]:
     return {}
 
 
+def _ndx_from_nasdaq_api() -> Dict[str, str]:
+    """Nasdaq's own list (no sectors: names the S&P list lacks come out as "other")."""
+    import requests
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                             "(KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+               "Accept": "application/json, text/plain, */*", "Origin": "https://www.nasdaq.com",
+               "Referer": "https://www.nasdaq.com/"}
+    resp = requests.get(NDX_NASDAQ_API, headers=headers, timeout=20)
+    resp.raise_for_status()
+    rows = (((resp.json() or {}).get("data") or {}).get("data") or {}).get("rows") or []
+    return {normalize_ticker(r["symbol"]): "other" for r in rows if isinstance(r.get("symbol"), str)}
+
+
 def fetch_ndx() -> Dict[str, str]:
-    try:
-        tables = _read_wiki_tables(NDX_WIKI)
-        members = _best_table(tables, MIN_NDX)
-        if members:
-            logger.info(f"Nasdaq-100 from Wikipedia: {len(members)}")
-            return members
-        _note("Wikipedia Nasdaq-100 table too small or not found "
-                       f"(tables seen: {[list(map(str, t.columns))[:6] for t in tables if len(t) > 20][:6]})")
-    except Exception as e:
-        _note(f"Wikipedia Nasdaq-100 failed: {e}")
+    for label, fetch in (("Wikipedia Nasdaq-100", lambda: _best_table(_read_wiki_tables(NDX_WIKI), MIN_NDX)),
+                         ("Wikipedia Nasdaq-100 list", lambda: _best_table(_read_wiki_tables(NDX_WIKI_LIST), MIN_NDX)),
+                         ("Nasdaq API", _ndx_from_nasdaq_api)):
+        try:
+            members = fetch()
+            if len(members) >= MIN_NDX:
+                logger.info(f"Nasdaq-100 from {label}: {len(members)}")
+                NOTES.append(f"Nasdaq-100 from {label}")
+                return members
+            _note(f"{label}: only {len(members)} members found")
+        except Exception as e:
+            _note(f"{label} failed: {e}")
     return {}
 
 
@@ -186,7 +203,7 @@ def build(sp500: Dict[str, str], ndx: Dict[str, str], previous: Optional[dict]) 
     if len(sp500) < MIN_SP500:
         return None
 
-    ndx_source = "wikipedia"
+    ndx_source = "fetched"
     if len(ndx) < MIN_NDX:
         prev_ndx = (previous or {}).get("nasdaq100", [])
         prev_tickers = (previous or {}).get("tickers", {})

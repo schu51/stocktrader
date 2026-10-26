@@ -124,7 +124,7 @@ def test_refresh_build_merges_indexes_and_carries_over_ndx():
     ndx = {f"N{i:03d}": "technology" for i in range(ru.MIN_NDX)}
     out = ru.build(sp, ndx, None)
     assert out["count"] == ru.MIN_SP500 + ru.MIN_NDX
-    assert out["sources"]["nasdaq100_source"] == "wikipedia"
+    assert out["sources"]["nasdaq100_source"] == "fetched"
 
     again = ru.build(sp, {}, out)                       # NDX fetch failed this week
     assert again["sources"]["nasdaq100_source"] == "carried over"

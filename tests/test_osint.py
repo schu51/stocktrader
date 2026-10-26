@@ -290,3 +290,18 @@ def test_pageview_titles_are_escaped():
     except RuntimeError:
         pass
     assert "/Illumina%2C_Inc./" in s.url
+
+
+def test_wikidata_query_is_valid_text_and_filters_us_exchanges():
+    import osint_collect as oc
+
+    class S:
+        def get(self, url, params=None, timeout=None):
+            self.query = params["query"]
+            raise RuntimeError("stop")
+    s = S()
+    try:
+        oc.fetch_wiki_titles(["APA", "BRK-B"], s)
+    except RuntimeError:
+        pass
+    assert "{ wd:Q13677 wd:Q82059 }" in s.query and '"BRK.B"' in s.query

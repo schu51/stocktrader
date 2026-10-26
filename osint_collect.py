@@ -433,7 +433,7 @@ def fetch_wiki_titles(tickers: List[str], session) -> Dict[str, str]:
     values = " ".join(f'"{t.replace("-", ".")}"' for t in tickers)
     query = f"""SELECT ?ticker ?article WHERE {{
       VALUES ?ticker {{ {values} }}
-      VALUES ?exchange { wd:Q13677 wd:Q82059 }   # NYSE, Nasdaq: the same ticker can belong to a foreign company
+      VALUES ?exchange {{ wd:Q13677 wd:Q82059 }}   # NYSE, Nasdaq: the same ticker can belong to a foreign company
       ?item p:P414 ?listing . ?listing ps:P414 ?exchange ; pq:P249 ?ticker .
       ?article schema:about ?item ; schema:isPartOf <https://en.wikipedia.org/> .
     }}"""

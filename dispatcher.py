@@ -43,6 +43,7 @@ def _minutes(hhmm: str) -> int:
 # (workflow file, days, first slot, last slot, repeat every N minutes) — ET.
 # Order matters: it is the order workflows are started within a slot.
 TIMETABLE = [
+    ("osint_brief.yml",    WEEKDAYS,   "08:00", "08:00", None),  # OSINT collection + Claude brief, before the open
     ("premarket.yml",      WEEKDAYS,   "09:00", "09:00", None),
     ("stop_placement.yml", WEEKDAYS,   "09:30", "09:30", None),  # at the open
     ("daily_open.yml",     WEEKDAYS,   "09:15", "09:15", None),  # screens, waits for the bell, buys at the open

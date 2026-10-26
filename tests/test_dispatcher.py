@@ -15,6 +15,11 @@ def _due(y, m, d, hh, mm, ss=0):
 
 # 2026-10-05 is a Monday, 2026-10-03 a Saturday, 2026-10-04 a Sunday.
 
+def test_osint_brief_before_the_open():
+    assert _due(2026, 10, 5, 8, 0) == ["osint_brief.yml"]
+    assert _due(2026, 10, 3, 8, 0) == ["candidate_outcomes.yml"]                    # weekdays only
+
+
 def test_premarket_and_sync_at_0900():
     assert _due(2026, 10, 5, 9, 0) == ["premarket.yml", "portfolio_sync.yml"]
 
@@ -173,7 +178,8 @@ def test_missed_repeating_job_is_caught_up_one_slot_later_only():
 
 
 def test_repeating_catch_up_stays_inside_the_timetable():
-    assert _catch_up(2026, 10, 7, 8, 45) == []                                         # nothing was due at 08:30
+    assert _catch_up(2026, 10, 7, 7, 45) == []                                         # nothing due before 08:00
+    assert _catch_up(2026, 10, 7, 8, 45) == [("osint_brief.yml", "08:00")]             # OSINT brief missed at 08:00
     assert _catch_up(2026, 10, 7, 16, 0) == [("intraday_exit.yml", "15:45")]           # last check of the day
     assert _catch_up(2026, 10, 7, 19, 0) == []                                         # sync ended at 18:30, caught at 18:45 only
 

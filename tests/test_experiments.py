@@ -39,7 +39,8 @@ def test_default_registry_reflects_the_backtest_verdicts():
     assert states == {"atr_stop": "adopted", "macd_cross": "observing", "ema21_reclaim": "observing",
                       "breakout": "observing", "adx25": "observing", "ma50_room": "adopted",
                       "news_positive": "observing", "social_bullish": "observing",
-                      "news_negative": "observing", "social_bearish": "observing", "news_veto": "trial"}
+                      "news_negative": "observing", "social_bearish": "observing", "news_veto": "trial",
+                      "osint_positive": "observing", "osint_negative": "observing"}
 
 
 def test_live_defaults_gate_on_room_above_the_50_day_average_and_give_every_buy_the_atr_stop():
@@ -568,3 +569,12 @@ def test_a_veto_that_cannot_be_recorded_is_not_enforced(tmp_path):
     out = ex.on_buy_signal("BAD", bars, TODAY, registry_path=path, log_path=unwritable, sentiment_path=sent)
     assert out["blocked_by"] is None and out["news_arm"] == ex.NEWS_ARM_CAPPED
     assert out["error"]                                             # surfaced, so the run raises an alert
+
+
+def test_osint_positive_is_measured_but_never_promoted_to_a_gate():
+    import experiments as ex
+    reg = ex.default_registry(TODAY)
+    assert ex.promotion_bar("osint_positive", reg["experiments"]["osint_positive"]) is None
+    reg, _ = ex.evaluate(reg, {"osint_positive": _rows(60, 0.05, "osint_positive")}, [], TODAY)
+    assert reg["experiments"]["osint_positive"]["state"] == "observing"
+    assert ex.entry_gate({"ma50_room": True, "osint_positive": False}, reg) is None

@@ -1,0 +1,59 @@
+name: OSINT Brief
+# Weekdays 8:00 ET: open-source collection on holdings, watchlist and top
+# candidates, distilled by Claude into the morning brief (osint_brief.py).
+# Started by dispatcher.yml — timetable in dispatcher.py.
+
+on:
+  workflow_dispatch:   # started by dispatcher.yml
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      issues: write          # to open a failure issue
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Collect and brief
+        run: python osint_brief.py
+
+      - name: Commit brief
+        if: always()
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add docs/data/osint_latest.json docs/data/osint_brief.md docs/data/osint_log.json docs/data/osint_cache.json docs/data/osint/ 2>/dev/null || true
+          git diff --staged --quiet && { echo "Nothing to commit"; exit 0; }
+          git commit -m "OSINT brief [skip ci]"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      # In-workflow alert: runs started by the dispatcher belong to the Actions
+      # bot, which neither emails anyone nor triggers a workflow_run listener.
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create \
+            --title "🚨 ${GITHUB_WORKFLOW} run failed $(date -u +%Y-%m-%d)" \
+            --body "The ${GITHUB_WORKFLOW} workflow failed. Run log: ${RUN_URL}"

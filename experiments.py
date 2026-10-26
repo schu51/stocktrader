@@ -113,6 +113,10 @@ def default_registry(today: date) -> Dict:
     macd = exp("entry_signal", "observing",
                "backtest 119% vs 124% control, drawdown -13% vs -16%; measured only, never blocks a buy")
     macd["auto_promote"] = False
+    osint_pos = exp("entry_signal", "observing",
+                    "OSINT score >= +2 (e.g. insider cluster buy, contract award spike, material agreement); "
+                    "measured only, never blocks a buy")
+    osint_pos["auto_promote"] = False
     return {
         "experiments": {
             "atr_stop": exp("stop_arm", "adopted",
@@ -130,6 +134,12 @@ def default_registry(today: date) -> Dict:
                                  "week of headlines scores negative; confirmed if those stocks then lag (the put case)"),
             "social_bearish": exp("bearish_signal", "observing",
                                   "StockTwits Bullish share <= 60%; confirmed if those stocks then lag"),
+            # OSINT (osint_brief.py): the fixed-rule score of new filings, insider trades,
+            # awards, attention and crowd events. Measured only; never gates a buy.
+            "osint_positive": osint_pos,
+            "osint_negative": exp("bearish_signal", "observing",
+                                  "OSINT score <= -2 (e.g. late filing, cyber incident, short spike); "
+                                  "confirmed if those stocks then lag"),
             "news_veto": exp("news_arm", "trial",
                              "A/B on real buys: half are skipped when news is negative or social is bearish"),
             "ma50_room": exp("entry_signal", "adopted",
@@ -266,6 +276,22 @@ def _sentiment_signals(symbol: str, day: date, sentiment_path: Optional[Path]) -
         return blank
 
 
+def _osint_signals(symbol: str, day: date, osint_path: Optional[Path] = None) -> Dict:
+    """Today's OSINT flags for a symbol from the brief's log; None (unknown) if absent."""
+    blank = {"osint_positive": None, "osint_negative": None, "osint_score": None}
+    try:
+        from osint_brief import LOG_FILE, lookup
+        row = lookup(symbol, day, osint_path or LOG_FILE)
+        if not row:
+            return blank
+        return {"osint_positive": row.get("osint_positive") if isinstance(row.get("osint_positive"), bool) else None,
+                "osint_negative": row.get("osint_negative") if isinstance(row.get("osint_negative"), bool) else None,
+                "osint_score": row.get("osint_score") if isinstance(row.get("osint_score"), int) else None}
+    except Exception as e:
+        logger.warning(f"OSINT lookup failed for {symbol}: {e}")
+        return blank
+
+
 def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGISTRY_FILE,
                   log_path: Path = SIGNAL_LOG_FILE, sentiment_path: Optional[Path] = None) -> Dict:
     """
@@ -281,6 +307,7 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
         signals = compute_signals([b.close for b in price_bars], [b.high for b in price_bars],
                                   [b.low for b in price_bars], [b.volume for b in price_bars])
         signals.update(_sentiment_signals(symbol, day, sentiment_path))
+        signals.update(_osint_signals(symbol, day))
         registry = load_registry(registry_path, day)
         arm = stop_arm(f"{symbol}:{day.isoformat()}", registry)
         multiple = (registry["experiments"].get("atr_stop", {}).get("params") or {}).get("multiple", 2.5)
@@ -669,13 +696,23 @@ def main() -> int:
         sentiment_rows = load_sentiment_log()
     except Exception:
         sentiment_rows = []
+    try:
+        from osint_brief import LOG_FILE as OSINT_LOG
+        osint_rows = [r for r in json.loads(OSINT_LOG.read_text()) if r.get("date") and r.get("symbol")]
+    except Exception:
+        osint_rows = []
     excess = _forward_excess([(r["date"], r["symbol"]) for r in log]
-                             + [(r["date"], r["symbol"]) for r in sentiment_rows if r.get("date") and r.get("symbol")])
+                             + [(r["date"], r["symbol"]) for r in sentiment_rows if r.get("date") and r.get("symbol")]
+                             + [(r["date"], r["symbol"]) for r in osint_rows])
     names = [n for n, e in registry["experiments"].items() if e["kind"] == "entry_signal"]
 
     buy_signals = scored_log(log, names, excess)
     scanned = sentiment_frame(sentiment_rows, excess)
-    registry, changes = evaluate(registry, buy_signals, trades, today, sentiment_rows=scanned)
+    # Bearish flags are scored over every stock their own scan covered
+    bearish = {name: scanned for name, e in registry["experiments"].items() if e["kind"] == "bearish_signal"}
+    if osint_rows:
+        bearish["osint_negative"] = sentiment_frame(osint_rows, excess)
+    registry, changes = evaluate(registry, buy_signals, trades, today, sentiment_rows=bearish)
     registry["sentiment"] = sentiment_report(scanned)
     registry["news_ab"] = news_ab_shadow(buy_signals)
     registry["generated_at"] = datetime.now().isoformat()

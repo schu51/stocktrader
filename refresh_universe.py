@@ -26,6 +26,7 @@ Usage:
 import argparse
 import io
 import json
+import re
 import logging
 import sys
 from datetime import datetime, timezone
@@ -99,7 +100,8 @@ def _members_from_table(df, ticker_cols=("Symbol", "Ticker")) -> Dict[str, str]:
     labels sectors with GICS, the Nasdaq-100 table with ICB; a table with no
     recognised sector column still yields its tickers, as "other".
     """
-    cols = {str(c).strip(): c for c in df.columns}
+    # Headers carry footnote markers on Wikipedia ("ICB Industry[14]")
+    cols = {re.sub(r"\[[^\]]*\]", "", str(c)).strip(): c for c in df.columns}
     tcol = next((cols[c] for c in ticker_cols if c in cols), None)
     if tcol is None:
         return {}
@@ -166,7 +168,7 @@ def fetch_ndx() -> Dict[str, str]:
             logger.info(f"Nasdaq-100 from Wikipedia: {len(members)}")
             return members
         _note("Wikipedia Nasdaq-100 table too small or not found "
-                       f"(tables seen: {[list(map(str, t.columns))[:6] for t in tables][:8]})")
+                       f"(tables seen: {[list(map(str, t.columns))[:6] for t in tables if len(t) > 20][:6]})")
     except Exception as e:
         _note(f"Wikipedia Nasdaq-100 failed: {e}")
     return {}

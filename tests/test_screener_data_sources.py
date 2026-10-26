@@ -145,3 +145,9 @@ def test_refresh_reads_the_icb_labelled_nasdaq_table():
                        "ICB Industry": ["Technology", "Telecommunications"]})
     assert ru._members_from_table(df) == {"ARM": "technology", "CMCSA": "communication_services"}
     assert ru._members_from_table(pd.DataFrame({"Ticker": ["ZZZ"]})) == {"ZZZ": "other"}
+
+
+def test_refresh_ignores_footnote_markers_in_headers():
+    import refresh_universe as ru
+    df = pd.DataFrame({"Company": ["Arm"], "Ticker[12]": ["ARM"], "ICB Industry[14]": ["Technology"]})
+    assert ru._members_from_table(df) == {"ARM": "technology"}

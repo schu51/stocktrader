@@ -1,48 +1,44 @@
 {
-  "generated_at": "2026-10-23T14:01:12.991417",
-  "run_id": "20261023_140053",
+  "generated_at": "2026-10-26T13:31:37.491289",
+  "run_id": "20261026_131617",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 111655.22,
-    "cash": 68101.25,
-    "buying_power": 64696.1875,
-    "long_market_value": 43553.97,
-    "unrealized_pnl": 4486.04
+    "portfolio_value": 111169.83,
+    "cash": 45867.284,
+    "buying_power": 43573.919799999996,
+    "long_market_value": 43068.58,
+    "unrealized_pnl": 4520.84
   },
   "positions": [
     {
       "symbol": "APA",
       "qty": 90,
       "avg_cost": 45.55,
-      "current_price": 51.8,
-      "market_value": 4662.0,
-      "unrealized_pnl": 562.5,
-      "unrealized_pnl_pct": 13.72,
+      "current_price": 51.61,
+      "market_value": 4644.9,
+      "unrealized_pnl": 545.4,
+      "unrealized_pnl_pct": 13.3,
       "stop_loss": 41.76,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "APA Corporation",
         "sector": "Energy",
         "industry": "Oil & Gas E&P",
         "summary": "APA Corporation, an independent energy company, explores for, develops, and produces natural gas, crude oil, and natural gas liquids. The company has oil and gas operations in the United States, Egypt, and North Sea. It also has\u2026",
         "market_cap": "$16.0B",
-        "week_52_high": 50.5,
+        "week_52_high": 52.39,
         "week_52_low": 21.63,
-        "pct_from_high": -2.4
+        "pct_from_high": 1.5
       }
     },
     {
       "symbol": "CRL",
       "qty": 20,
       "avg_cost": 307.22,
-      "current_price": 347.59,
-      "market_value": 6951.8,
-      "unrealized_pnl": 807.4,
-      "unrealized_pnl_pct": 13.14,
+      "current_price": 350.0,
+      "market_value": 7000.0,
+      "unrealized_pnl": 855.6,
+      "unrealized_pnl_pct": 13.93,
       "stop_loss": 278.86,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Charles River Laboratories International, Inc.",
         "sector": "Healthcare",
@@ -51,7 +47,7 @@
         "market_cap": "$14.7B",
         "week_52_high": 351.21,
         "week_52_low": 146.2,
-        "pct_from_high": 3.0
+        "pct_from_high": 0.3
       }
     },
     {
@@ -63,8 +59,6 @@
       "unrealized_pnl": 157.36,
       "unrealized_pnl_pct": 5.26,
       "stop_loss": null,
-      "side": "long",
-      "asset_class": "us_equity",
       "untradable": "asset is inactive on Alpaca (delisted or acquired)",
       "company": {
         "name": "Cantaloupe Inc",
@@ -81,13 +75,11 @@
       "symbol": "EXPD",
       "qty": 13,
       "avg_cost": 192.39,
-      "current_price": 198.28,
-      "market_value": 2577.64,
-      "unrealized_pnl": 76.57,
-      "unrealized_pnl_pct": 3.06,
+      "current_price": 197.92,
+      "market_value": 2572.96,
+      "unrealized_pnl": 71.89,
+      "unrealized_pnl_pct": 2.87,
       "stop_loss": 181.96,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Expeditors International of Washington, Inc.",
         "sector": "Industrials",
@@ -96,20 +88,18 @@
         "market_cap": "$25.0B",
         "week_52_high": 200.66,
         "week_52_low": 117.45,
-        "pct_from_high": 2.4
+        "pct_from_high": 1.4
       }
     },
     {
       "symbol": "HUM",
       "qty": 5,
       "avg_cost": 425.57,
-      "current_price": 423.32,
-      "market_value": 2116.6,
-      "unrealized_pnl": -11.25,
-      "unrealized_pnl_pct": -0.53,
+      "current_price": 424.92,
+      "market_value": 2124.57,
+      "unrealized_pnl": -3.27,
+      "unrealized_pnl_pct": -0.15,
       "stop_loss": 376.61,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Humana Inc.",
         "sector": "Healthcare",
@@ -118,20 +108,18 @@
         "market_cap": "$48.0B",
         "week_52_high": 456.5,
         "week_52_low": 163.11,
-        "pct_from_high": 8.3
+        "pct_from_high": 6.9
       }
     },
     {
       "symbol": "ILMN",
       "qty": 9,
       "avg_cost": 275.15,
-      "current_price": 272.89,
-      "market_value": 2456.05,
-      "unrealized_pnl": -20.3,
-      "unrealized_pnl_pct": -0.82,
+      "current_price": 271.6,
+      "market_value": 2444.36,
+      "unrealized_pnl": -32.0,
+      "unrealized_pnl_pct": -1.29,
       "stop_loss": 240.08,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Illumina, Inc.",
         "sector": "Healthcare",
@@ -140,20 +128,18 @@
         "market_cap": "$41.5B",
         "week_52_high": 309.35,
         "week_52_low": 94.0,
-        "pct_from_high": 13.0
+        "pct_from_high": 12.2
       }
     },
     {
       "symbol": "MPC",
       "qty": 14,
       "avg_cost": 429.55,
-      "current_price": 458.17,
-      "market_value": 6414.38,
-      "unrealized_pnl": 400.68,
-      "unrealized_pnl_pct": 6.66,
+      "current_price": 458.28,
+      "market_value": 6415.95,
+      "unrealized_pnl": 402.25,
+      "unrealized_pnl_pct": 6.69,
       "stop_loss": 388.01,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Marathon Petroleum Corporation",
         "sector": "Energy",
@@ -162,20 +148,18 @@
         "market_cap": "$120.5B",
         "week_52_high": 493.98,
         "week_52_low": 161.93,
-        "pct_from_high": 6.1
+        "pct_from_high": 7.2
       }
     },
     {
       "symbol": "PLTR",
       "qty": 14,
       "avg_cost": 181.76,
-      "current_price": 196.65,
-      "market_value": 2753.03,
-      "unrealized_pnl": 208.39,
-      "unrealized_pnl_pct": 8.19,
+      "current_price": 197.69,
+      "market_value": 2767.66,
+      "unrealized_pnl": 223.02,
+      "unrealized_pnl_pct": 8.76,
       "stop_loss": 167.22,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Palantir Technologies Inc.",
         "sector": "Technology",
@@ -184,20 +168,18 @@
         "market_cap": "$443.9B",
         "week_52_high": 212.94,
         "week_52_low": 106.37,
-        "pct_from_high": 8.4
+        "pct_from_high": 7.2
       }
     },
     {
       "symbol": "PSX",
       "qty": 9,
       "avg_cost": 266.8,
-      "current_price": 285.63,
-      "market_value": 2570.67,
-      "unrealized_pnl": 169.51,
-      "unrealized_pnl_pct": 7.06,
+      "current_price": 283.57,
+      "market_value": 2552.13,
+      "unrealized_pnl": 150.97,
+      "unrealized_pnl_pct": 6.29,
       "stop_loss": 245.45,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Phillips 66",
         "sector": "Energy",
@@ -206,20 +188,18 @@
         "market_cap": "$106.3B",
         "week_52_high": 299.39,
         "week_52_low": 127.16,
-        "pct_from_high": 4.4
+        "pct_from_high": 5.3
       }
     },
     {
       "symbol": "SHOP",
       "qty": 26,
       "avg_cost": 149.99,
-      "current_price": 169.44,
-      "market_value": 4405.44,
-      "unrealized_pnl": 505.7,
-      "unrealized_pnl_pct": 12.97,
+      "current_price": 170.24,
+      "market_value": 4426.18,
+      "unrealized_pnl": 526.44,
+      "unrealized_pnl_pct": 13.5,
       "stop_loss": 137.99,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Shopify Inc.",
         "sector": "Technology",
@@ -228,20 +208,18 @@
         "market_cap": "$195.0B",
         "week_52_high": 182.19,
         "week_52_low": 94.0,
-        "pct_from_high": 7.1
+        "pct_from_high": 6.6
       }
     },
     {
       "symbol": "TEAM",
       "qty": 15,
       "avg_cost": 169.06,
-      "current_price": 226.78,
-      "market_value": 3401.78,
-      "unrealized_pnl": 865.88,
-      "unrealized_pnl_pct": 34.14,
+      "current_price": 226.12,
+      "market_value": 3391.88,
+      "unrealized_pnl": 855.98,
+      "unrealized_pnl_pct": 33.75,
       "stop_loss": 171.6,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Atlassian Corporation",
         "sector": "Technology",
@@ -250,20 +228,18 @@
         "market_cap": "$42.7B",
         "week_52_high": 229.96,
         "week_52_low": 56.01,
-        "pct_from_high": 2.8
+        "pct_from_high": 1.7
       }
     },
     {
       "symbol": "VLO",
       "qty": 5,
       "avg_cost": 267.28,
-      "current_price": 420.0,
-      "market_value": 2100.0,
-      "unrealized_pnl": 763.6,
-      "unrealized_pnl_pct": 57.14,
+      "current_price": 420.72,
+      "market_value": 2103.6,
+      "unrealized_pnl": 767.2,
+      "unrealized_pnl_pct": 57.41,
       "stop_loss": 385.34,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Valero Energy Corporation",
         "sector": "Energy",
@@ -272,68 +248,96 @@
         "market_cap": "$77.9B",
         "week_52_high": 461.52,
         "week_52_low": 159.9,
-        "pct_from_high": 7.6
+        "pct_from_high": 8.8
       }
     }
   ],
   "todays_run": {
     "mode": "EXECUTE",
-    "candidates_screened": 10,
-    "buy_signals": 0,
-    "orders_submitted": 0,
-    "total_invested": 0,
-    "signals": [],
-    "execution_details": []
+    "candidates_screened": 12,
+    "buy_signals": 2,
+    "orders_submitted": 1,
+    "total_invested": 4661.68,
+    "signals": [
+      {
+        "symbol": "OKTA",
+        "action": "BUY",
+        "shares": 11,
+        "limit_price": 227.84,
+        "stop_loss": 209.62,
+        "confidence": 0.85,
+        "signal_strength": 0.5,
+        "trend_score": 73,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 73/100 (STRONG_UP)",
+          "Uptrend confirmed (momentum score: 73/100)",
+          "RSI in healthy uptrend range (56)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Price above all VWAP levels (daily, weekly, monthly)"
+        ],
+        "executed": false
+      },
+      {
+        "symbol": "CRWD",
+        "action": "BUY",
+        "shares": 9,
+        "limit_price": 260.06,
+        "stop_loss": 239.25,
+        "confidence": 0.85,
+        "signal_strength": 0.5,
+        "trend_score": 71,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 71/100 (STRONG_UP)",
+          "Uptrend confirmed (momentum score: 71/100)",
+          "RSI in healthy uptrend range (56)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Price above all VWAP levels (daily, weekly, monthly)"
+        ],
+        "executed": true
+      }
+    ],
+    "execution_details": [
+      {
+        "symbol": "OKTA",
+        "status": "skipped",
+        "reason": "opened more than 5% above the previous close (ask $227.84, limit $223.70)"
+      },
+      {
+        "symbol": "CRWD",
+        "shares": 9,
+        "limit_price": 260.06,
+        "stop_loss": 239.25,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "d672719d-6875-45bf-8e75-00b137d26033",
+        "reason": null
+      }
+    ]
   },
   "persistent_performers": [],
   "exits": {
     "exits_triggered": [],
-    "stops_updated": [
-      {
-        "symbol": "TEAM",
-        "trigger": "TRAILING_STOP_UPDATE",
-        "new_stop": 171.6,
-        "pnl_pct": 32.07,
-        "current": 223.27,
-        "tier": "25%+ gain \u2192 break-even stop",
-        "executed": true,
-        "order_id": "9c817f3d-4439-4f17-b988-74c11b190ced"
-      },
-      {
-        "symbol": "VLO",
-        "trigger": "TRAILING_STOP_UPDATE",
-        "new_stop": 384.86,
-        "pnl_pct": 59.99,
-        "current": 427.62,
-        "tier": "50%+ gain \u2192 10% trail",
-        "executed": true,
-        "order_id": "b3603ee7-a851-409d-958b-2b631d6c7603"
-      }
-    ],
-    "positions_checked": 12,
+    "stops_updated": [],
+    "positions_checked": 0,
     "mode": "EXECUTE",
-    "unmanaged": [],
-    "sleeve": [],
-    "unchecked": [
-      "CTLP"
-    ]
+    "skipped": "opening run: exits are left to the 10:00 run and the intraday checks"
   },
   "risk_assessment": {
-    "timestamp": "2026-10-23T14:01:11.552823",
-    "portfolio_value": 111455.54,
+    "timestamp": "2026-10-26T13:16:22.322236",
+    "portfolio_value": 111169.83,
     "risk_metrics": {
       "drawdown": {
-        "current_value": 111455.54,
+        "current_value": 111169.83,
         "peak_value": 116590.55,
         "peak_date": "2026-10-06",
-        "drawdown_amount": 5135.01,
-        "drawdown_pct": 4.4,
+        "drawdown_amount": 5420.72,
+        "drawdown_pct": 4.65,
         "max_allowed_pct": 15.0,
         "status": "NORMAL",
         "action_required": false
       },
       "cash_allocation": {
-        "current_pct": 41.1,
+        "current_pct": 41.26,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
         "status": "OK"
@@ -341,32 +345,32 @@
     },
     "concentration_risk": {
       "largest_position": "CRL",
-      "largest_allocation_pct": 6.11,
-      "top_5_allocation_pct": 23.07,
+      "largest_allocation_pct": 6.21,
+      "top_5_allocation_pct": 22.91,
       "max_allowed_top_5_pct": 40.0,
       "num_positions": 12,
-      "herfindahl_index": 0.014977748367652404
+      "herfindahl_index": 0.014848478530167264
     },
     "position_risks": [
       {
         "symbol": "APA",
-        "allocation_pct": 4.17,
-        "unrealized_pnl_pct": 13.48,
+        "allocation_pct": 4.14,
+        "unrealized_pnl_pct": 12.23,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CRL",
-        "allocation_pct": 6.11,
-        "unrealized_pnl_pct": 10.87,
+        "allocation_pct": 6.21,
+        "unrealized_pnl_pct": 12.42,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CTLP",
-        "allocation_pct": 2.82,
+        "allocation_pct": 2.83,
         "unrealized_pnl_pct": 5.26,
         "has_stop_loss": false,
         "has_trailing_stop": false,
@@ -376,97 +380,81 @@
       },
       {
         "symbol": "EXPD",
-        "allocation_pct": 2.28,
-        "unrealized_pnl_pct": 1.79,
+        "allocation_pct": 2.29,
+        "unrealized_pnl_pct": 1.99,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "HUM",
-        "allocation_pct": 1.88,
-        "unrealized_pnl_pct": -1.58,
+        "allocation_pct": 1.9,
+        "unrealized_pnl_pct": -0.82,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "ILMN",
-        "allocation_pct": 2.17,
-        "unrealized_pnl_pct": -2.18,
+        "allocation_pct": 2.2,
+        "unrealized_pnl_pct": -1.19,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "MPC",
-        "allocation_pct": 5.82,
-        "unrealized_pnl_pct": 7.96,
+        "allocation_pct": 5.66,
+        "unrealized_pnl_pct": 4.55,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "PLTR",
-        "allocation_pct": 2.45,
-        "unrealized_pnl_pct": 7.22,
+        "allocation_pct": 2.49,
+        "unrealized_pnl_pct": 8.66,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "PSX",
-        "allocation_pct": 2.31,
-        "unrealized_pnl_pct": 7.24,
+        "allocation_pct": 2.26,
+        "unrealized_pnl_pct": 4.57,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "SHOP",
-        "allocation_pct": 3.95,
-        "unrealized_pnl_pct": 12.83,
+        "allocation_pct": 3.93,
+        "unrealized_pnl_pct": 12.14,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "TEAM",
-        "allocation_pct": 3.01,
-        "unrealized_pnl_pct": 32.18,
+        "allocation_pct": 2.97,
+        "unrealized_pnl_pct": 30.13,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "VLO",
-        "allocation_pct": 1.91,
-        "unrealized_pnl_pct": 59.58,
+        "allocation_pct": 1.86,
+        "unrealized_pnl_pct": 54.78,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       }
     ],
-    "overall_risk_score": 15.3,
+    "overall_risk_score": 15.8,
     "recommendations": [
       "CTLP: Untradable \u2014 ask the broker to close it"
     ],
     "risk_level": "LOW"
-  },
-  "sync_at": "2026-10-26T13:30:44.237907+00:00",
-  "sync_error": null,
-  "market_open": true,
-  "intraday_today": {
-    "date": "2026-10-26",
-    "points": [
-      {
-        "time": "13:00",
-        "value": 111130.31
-      },
-      {
-        "time": "13:30",
-        "value": 111655.22
-      }
-    ]
   }
 }

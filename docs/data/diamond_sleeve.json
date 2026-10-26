@@ -1,16 +1,87 @@
 {
-  "generated_at": "2026-10-23T14:30:48.492561",
+  "generated_at": "2026-10-26T14:30:43.735453",
   "mode": "EXECUTE",
   "holdings": [],
   "sells": [],
-  "buys": [],
-  "skipped": [],
+  "buys": [
+    {
+      "symbol": "WK",
+      "shares": 28,
+      "limit_price": 98.04,
+      "judgment": 12.0,
+      "judgment_rank": 1,
+      "name": "WORKIVA INC",
+      "status": "submitted",
+      "order_id": "8f0a84d6-69a2-4e76-b8d0-554cf6ba4390"
+    },
+    {
+      "symbol": "PCOR",
+      "shares": 44,
+      "limit_price": 62.85,
+      "judgment": 12.0,
+      "judgment_rank": 2,
+      "name": "PROCORE TECHNOLOGIES, INC.",
+      "status": "submitted",
+      "order_id": "1535e42d-7f12-4b46-8244-612e13dcef06"
+    },
+    {
+      "symbol": "VCYT",
+      "shares": 50,
+      "limit_price": 54.98,
+      "judgment": 12.0,
+      "judgment_rank": 3,
+      "name": "VERACYTE, INC.",
+      "status": "submitted",
+      "order_id": "5518ef55-add2-445b-9cff-9d10bcf91a79"
+    },
+    {
+      "symbol": "VCEL",
+      "shares": 64,
+      "limit_price": 43.23,
+      "judgment": 12.0,
+      "judgment_rank": 4,
+      "name": "Vericel Corp",
+      "status": "submitted",
+      "order_id": "be7c5d63-1efb-49b9-ab1a-2dde0615017b"
+    },
+    {
+      "symbol": "KVYO",
+      "shares": 133,
+      "limit_price": 20.95,
+      "judgment": 11.0,
+      "judgment_rank": 8,
+      "name": "Klaviyo, Inc.",
+      "status": "submitted",
+      "order_id": "70ae9e28-9b23-40ed-8622-52872a706cfe"
+    }
+  ],
+  "skipped": [
+    {
+      "symbol": "ALGM",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "KLIC",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "ESTA",
+      "reason": "below its 200-day average"
+    }
+  ],
   "failures": [],
   "alerts": [],
   "note": null,
-  "equity": 111293.84,
-  "budget": 22258.77,
-  "slot": 2782.35,
+  "equity": 112050.57,
+  "budget": 22410.11,
+  "slot": 2801.26,
   "invested": 0,
-  "list_date": "2026-10-17"
+  "list_date": "2026-10-24",
+  "stops_placed": [
+    "KVYO",
+    "PCOR",
+    "VCEL",
+    "VCYT",
+    "WK"
+  ]
 }

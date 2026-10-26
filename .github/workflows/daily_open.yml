@@ -28,6 +28,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run momentum screener
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}       # price history from Alpaca's data API
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: python screener.py
         # Writes docs/data/screener.json — RS-ranked candidates for the trading run.
         # If screener fails, trading run falls back to static DEFAULT_UNIVERSE.

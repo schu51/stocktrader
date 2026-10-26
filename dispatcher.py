@@ -52,6 +52,7 @@ TIMETABLE = [
     ("postmarket.yml",     WEEKDAYS,   "16:15", "16:15", None),
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30
     # Saturday chain — each step feeds the next
+    ("refresh_universe.yml",   [SATURDAY], "07:00", "07:00", None),  # S&P 500 + Nasdaq-100 list the screener scans
     ("diamond_screen.yml",     [SATURDAY], "07:30", "07:30", None),  # small/mid-cap inflection watchlist (no trades)
     ("candidate_outcomes.yml", [SATURDAY], "08:00", "08:00", None),  # evidence the learning agent checks
     ("experiments.yml",        [SATURDAY], "08:15", "08:15", None),  # promote / keep / drop technical trials

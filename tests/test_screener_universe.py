@@ -84,6 +84,7 @@ def test_scrape_reports_incomplete_when_a_page_keeps_failing(monkeypatch):
 
 def test_universe_falls_back_when_finviz_returns_too_few(monkeypatch):
     import screener
+    monkeypatch.setattr(screener, "_load_saved_universe", lambda: {})
     monkeypatch.setattr(screener, "_fetch_finviz_universe", lambda: {f"AB{c}": "technology" for c in "CDEFGHIJ"} )
     universe = screener.get_universe()
     assert all(sym in universe for sym in list(screener.FALLBACK_UNIVERSE)[:5])
@@ -91,6 +92,7 @@ def test_universe_falls_back_when_finviz_returns_too_few(monkeypatch):
 
 def test_universe_falls_back_when_scrape_is_incomplete(monkeypatch):
     import screener
+    monkeypatch.setattr(screener, "_load_saved_universe", lambda: {})
 
     def cut_short():
         raise screener.IncompleteScrape("page 12 failed")

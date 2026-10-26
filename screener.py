@@ -4,8 +4,8 @@ Momentum Screener
 Scans S&P 500 + Nasdaq 100 (~600 names) daily for momentum setups.
 
 Methodology:
-  1. Fetch universe (S&P 500 via Wikipedia + NDX supplement)
-  2. Batch-download 1-year price + volume history (single yfinance call)
+  1. Load universe (docs/data/universe.json, refreshed weekly + NDX supplement)
+  2. Download 1-year price + volume history (Alpaca market data; yfinance fallback)
   3. Calculate IBD-style Relative Strength score per stock
      RS = 0.40 × Q4_return + 0.20 × Q3_return + 0.20 × Q2_return + 0.20 × Q1_return
   4. Percentile-rank all RS scores (RS Rank 99 = top 1% of performers)
@@ -253,29 +253,60 @@ def _fetch_finviz_universe() -> Dict[str, str]:
     return merged
 
 
+UNIVERSE_PATH = Path(__file__).parent / "docs" / "data" / "universe.json"
+UNIVERSE_MAX_AGE_DAYS = 45   # refresh_universe.py runs weekly; older means the job has stopped
+
+
+def _load_saved_universe(path: Path = None) -> Dict[str, str]:
+    """
+    {ticker: sector} from docs/data/universe.json (written weekly by
+    refresh_universe.py), or {} if the file is missing, too small or stale.
+    """
+    path = path or UNIVERSE_PATH
+    try:
+        saved = json.loads(Path(path).read_text())
+        tickers = saved.get("tickers", {})
+        if len(tickers) < MIN_FINVIZ_UNIVERSE:
+            logger.warning(f"Saved universe has only {len(tickers)} tickers — ignoring it")
+            return {}
+        generated = datetime.fromisoformat(saved["generated_at"].replace("Z", "+00:00"))
+        age = (datetime.now(generated.tzinfo) - generated).days
+        if age > UNIVERSE_MAX_AGE_DAYS:
+            logger.warning(f"Saved universe is {age} days old — ignoring it")
+            return {}
+        return dict(tickers)
+    except FileNotFoundError:
+        return {}
+    except Exception as e:
+        logger.warning(f"Saved universe unreadable ({e})")
+        return {}
+
+
 def get_universe() -> Dict[str, str]:
     """
     Build the scan universe as {ticker: sector}.
 
-    Primary source: Finviz screener (S&P 500 + Nasdaq 100) — gives real sectors
-    for every stock so leadership scoring works across all 11 GICS sectors.
+    Sources, in order:
+      1. docs/data/universe.json — S&P 500 + Nasdaq-100 with GICS sectors,
+         refreshed weekly by refresh_universe.py
+      2. Finviz screener scrape (often blocked from GitHub's servers)
+      3. FALLBACK_UNIVERSE — tech-heavy hand-curated list
 
-    Falls back to FALLBACK_UNIVERSE (tech-heavy hand-curated list) if Finviz
-    is unreachable.
-
-    NDX growth names not already in the Finviz result are merged in after.
+    NDX growth names not already present are merged in after.
     """
-    universe: Dict[str, str] = {}
-
-    try:
-        universe = _fetch_finviz_universe()
-        if len(universe) >= MIN_FINVIZ_UNIVERSE:
-            logger.info(f"Finviz: fetched {len(universe)} tickers with sectors")
-        else:
-            raise ValueError(f"Finviz returned only {len(universe)} tickers — too few")
-    except Exception as e:
-        logger.error(f"Finviz fetch failed ({e}) — using fallback universe")
-        universe = dict(FALLBACK_UNIVERSE)
+    universe: Dict[str, str] = _load_saved_universe()
+    if universe:
+        logger.info(f"Saved universe: {len(universe)} tickers with sectors")
+    else:
+        try:
+            universe = _fetch_finviz_universe()
+            if len(universe) >= MIN_FINVIZ_UNIVERSE:
+                logger.info(f"Finviz: fetched {len(universe)} tickers with sectors")
+            else:
+                raise ValueError(f"Finviz returned only {len(universe)} tickers — too few")
+        except Exception as e:
+            logger.error(f"Finviz fetch failed ({e}) — using fallback universe")
+            universe = dict(FALLBACK_UNIVERSE)
 
     # NDX high-growth supplement — names sometimes missing from S&P 500 filter
     ndx_supplement: Dict[str, str] = {
@@ -305,17 +336,161 @@ def get_universe() -> Dict[str, str]:
     return universe
 
 
+ALPACA_BARS_URL = "https://data.alpaca.markets/v2/stocks/bars"
+ALPACA_CHUNK = 100          # symbols per request
+ALPACA_LOOKBACK_DAYS = 380  # calendar days ≈ 1 trading year + margin for the 252-day RS window
+ALPACA_ATTEMPTS = 3
+
+# Where the last batch_download got its prices ("alpaca" | "yfinance" | None)
+LAST_PRICE_SOURCE: Optional[str] = None
+
+
+def _alpaca_headers() -> Optional[Dict[str, str]]:
+    import os
+    key, secret = os.getenv("ALPACA_API_KEY", ""), os.getenv("ALPACA_SECRET_KEY", "")
+    if not key or not secret:
+        return None
+    return {"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}
+
+
+def _alpaca_symbol(ticker: str) -> str:
+    """Screener writes class shares as BRK-B; Alpaca expects BRK.B."""
+    return ticker.replace("-", ".")
+
+
+def _alpaca_daily_bars(tickers: List[str], session=None) -> Optional[Dict[str, object]]:
+    """
+    One year of split- and dividend-adjusted daily bars from Alpaca's market
+    data API, shaped like the parts of yf.download() the screener reads:
+    {"Close": DataFrame, "Volume": DataFrame}, dates down, tickers across.
+
+    Uses the consolidated (SIP) feed, which the free plan serves for anything
+    older than 15 minutes; the request ends 16 minutes ago to stay inside that.
+    IEX-only volume would be ~2% of real volume and fail the liquidity gate,
+    so there is no IEX fallback: on failure this returns None.
+    """
+    import pandas as pd
+    from datetime import timedelta, timezone
+
+    headers = _alpaca_headers()
+    if headers is None:
+        logger.info("Alpaca keys not set — skipping Alpaca price data")
+        return None
+    if not tickers:
+        return None
+
+    if session is None:
+        import requests
+        session = requests.Session()
+
+    now = datetime.now(timezone.utc)
+    start = (now - timedelta(days=ALPACA_LOOKBACK_DAYS)).strftime("%Y-%m-%d")
+    end = (now - timedelta(minutes=16)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    back = {_alpaca_symbol(t): t for t in tickers}
+
+    closes: Dict[str, Dict[str, float]] = {}
+    volumes: Dict[str, Dict[str, float]] = {}
+    symbols = list(back)
+
+    for i in range(0, len(symbols), ALPACA_CHUNK):
+        chunk = symbols[i:i + ALPACA_CHUNK]
+        page_token = None
+        while True:
+            params = {
+                "symbols": ",".join(chunk), "timeframe": "1Day",
+                "start": start, "end": end, "adjustment": "all",
+                "feed": "sip", "limit": 10000,
+            }
+            if page_token:
+                params["page_token"] = page_token
+
+            resp = None
+            for attempt in range(ALPACA_ATTEMPTS):
+                try:
+                    resp = session.get(ALPACA_BARS_URL, params=params, headers=headers, timeout=30)
+                except Exception as e:
+                    logger.warning(f"Alpaca bars request failed ({e}), attempt {attempt + 1}")
+                    resp = None
+                    time.sleep(2 * (attempt + 1))
+                    continue
+                if resp.status_code == 429 or resp.status_code >= 500:
+                    logger.warning(f"Alpaca bars HTTP {resp.status_code}, attempt {attempt + 1}")
+                    time.sleep(2 * (attempt + 1))
+                    continue
+                break
+            if resp is None or resp.status_code != 200:
+                code = getattr(resp, "status_code", "no response")
+                body = (getattr(resp, "text", "") or "")[:200]
+                logger.error(f"Alpaca bars failed: HTTP {code} {body}")
+                return None
+
+            payload = resp.json()
+            for sym, bars in (payload.get("bars") or {}).items():
+                t = back.get(sym, sym.replace(".", "-"))
+                for bar in bars or []:
+                    day = str(bar["t"])[:10]
+                    closes.setdefault(t, {})[day] = float(bar["c"])
+                    volumes.setdefault(t, {})[day] = float(bar["v"])
+
+            page_token = payload.get("next_page_token")
+            if not page_token:
+                break
+        time.sleep(0.3)   # free plan: 200 requests/minute
+
+    if not closes:
+        logger.error("Alpaca returned no bars")
+        return None
+
+    close_df = pd.DataFrame(closes)
+    close_df.index = pd.to_datetime(close_df.index)
+    close_df = close_df.sort_index()
+    volume_df = pd.DataFrame(volumes)
+    volume_df.index = pd.to_datetime(volume_df.index)
+    volume_df = volume_df.sort_index()
+    return {"Close": close_df, "Volume": volume_df}
+
+
+def _full_history_share(tickers: List[str], data) -> float:
+    """Share of tickers with the 200+ closes the RS score needs."""
+    if not tickers or data is None:
+        return 0.0
+    closes = data["Close"]
+    ok = sum(1 for t in tickers if t in closes.columns and closes[t].notna().sum() >= 200)
+    return ok / len(tickers)
+
+
 def batch_download(tickers: List[str]) -> Optional[object]:
     """
-    Download 1-year OHLCV for all tickers in a single yfinance call.
-    Returns the raw DataFrame or None on failure.
+    One year of daily prices and volume for every ticker.
+
+    Alpaca's market data API first (official, keyed, not blocked from cloud
+    servers); yfinance if Alpaca is unavailable or comes back thin.
+    Returns an object with data["Close"] and data["Volume"] DataFrames
+    (tickers as columns), or None on failure.
     """
-    import yfinance as yf
+    global LAST_PRICE_SOURCE
+    LAST_PRICE_SOURCE = None
 
     if not tickers:
         return None
 
-    logger.info(f"Batch downloading {len(tickers)} tickers (1 year)…")
+    logger.info(f"Downloading {len(tickers)} tickers from Alpaca (1 year)…")
+    try:
+        data = _alpaca_daily_bars(tickers)
+    except Exception as e:
+        logger.error(f"Alpaca download failed: {e}")
+        data = None
+    if data is not None:
+        share = _full_history_share(tickers, data)
+        if share >= MIN_DATA_COVERAGE:
+            logger.info(f"Alpaca download complete — {share:.0%} of tickers have a full year")
+            LAST_PRICE_SOURCE = "alpaca"
+            return data
+        logger.warning(f"Alpaca covered only {share:.0%} of tickers — falling back to yfinance")
+
+    import yfinance as yf
+
+    logger.info(f"Batch downloading {len(tickers)} tickers from yfinance (1 year)…")
     try:
         data = yf.download(
             tickers,
@@ -325,6 +500,7 @@ def batch_download(tickers: List[str]) -> Optional[object]:
             threads=True,
         )
         logger.info("Batch download complete")
+        LAST_PRICE_SOURCE = "yfinance"
         return data
     except Exception as e:
         logger.error(f"Batch download failed: {e}")
@@ -419,11 +595,17 @@ def get_market_regime() -> Dict:
         regime:        'bull' | 'neutral' | 'bear'
         rs_threshold:  minimum RS rank to qualify (raised in bear markets)
     """
-    import yfinance as yf
-
     try:
-        spy    = yf.Ticker("SPY").history(period="1y")
-        closes = spy["Close"].values
+        closes = None
+        try:
+            bars = _alpaca_daily_bars(["SPY"])
+            if bars is not None and "SPY" in bars["Close"].columns:
+                closes = bars["Close"]["SPY"].dropna().values
+        except Exception as e:
+            logger.warning(f"Alpaca SPY bars failed: {e}")
+        if closes is None or len(closes) < 200:
+            import yfinance as yf
+            closes = yf.Ticker("SPY").history(period="1y")["Close"].values
         price  = float(closes[-1])
         sma50  = float(closes[-50:].mean())
         sma200 = float(closes[-200:].mean())
@@ -543,7 +725,7 @@ def run_screener(
     if coverage < MIN_DATA_COVERAGE:
         logger.error(
             f"Only {coverage:.0%} of the universe has price history — the ticker "
-            f"list is probably corrupt (check the Finviz scraper)"
+            f"list is probably corrupt (check docs/data/universe.json)"
         )
 
     # 5 + 6 + 7. Quality gate + technical gate + sector boost
@@ -693,6 +875,7 @@ def run_screener(
         "quality_pass":    len(universe) - rejected["rs_rank"] - rejected["quality"],
         "tech_gate_pass":  len(candidates),
         "data_coverage":   round(coverage, 3),
+        "price_source":    LAST_PRICE_SOURCE,
         "final_count":     len(candidates),
         "sector_leaders":  sector_leaders[:6],
         "rejection_stats": rejected,

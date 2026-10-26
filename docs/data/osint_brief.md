@@ -1,86 +1,86 @@
 # OSINT brief — 2026-10-26
 
-**No clear edges; PLTR earnings Nov 2 and VLO diesel export ban risk top holdings watch**
+**PLTR earnings Nov 2 and MPC Nov 3 are the key holding catalysts; evidence is thin.**
 
-Nothing decisive today; most reads are low-conviction. Biggest threats to holdings: PLTR faces a binary earnings print Nov 2 amid a Burry short headline and a short-volume spike, and VLO carries a possible US diesel export ban despite a reported Oct 22 beat. MPC reports Nov 3 with a Raymond James target raise as a modest positive. Among candidates, PANW jumped about 7% on unexplained news with 64% short-volume share, so it is not a clean breakout. TXN filed a 424B5 offering on Oct 26, a possible dilution flag. FTNT reports Q3 after a run-up, and LLY short volume fell to 37% versus a 48% average, but neither is a confirmed edge.
+No decisive signals today; every read is low confidence. Biggest risk is event exposure in holdings: PLTR reports Nov 2 and MPC on Nov 3, with no clear direction for either. VLO's Oct 22 beat lacks numbers, and diesel policy risk is the watch item. HUM, PCOR and TEAM are neutral, with TEAM mildly supported by a BofA target raise and lower short volume. Among candidates, TXN has positive headlines but an unexplained 424B5 offering that could mean dilution, while FTNT and PANW rallied (6.4% and ~7%) on heavy short volume without a clear catalyst. LLY short volume dropped to 37% vs 48% average, which is worth a look but not actionable alone.
 
 **Today:**
-- Decide PLTR sizing or hedge before the Nov 2 earnings print; the setup is binary.
-- Check diesel export ban news and the details of VLO's Oct 22 print for thesis risk.
-- Pull TXN's 424B5 to see offering size and use of proceeds before considering entry.
+- Decide PLTR sizing or hedge before Nov 2 earnings; MPC similarly before Nov 3.
+- Read TXN's 424B5 to determine offering size and purpose before considering entry.
+- Check VLO's actual Oct 22 results and diesel policy news to confirm the beat.
 
 ## PLTR · score -1 · holding, candidate · unclear (low)
 
-Palantir heads into a binary earnings print on Nov 2 with mixed, low-quality signals: a short-volume spike and a Burry short headline against strong prior growth. No clear directional edge.
+Palantir's earnings on Nov 2 are the dominant near-term catalyst. Evidence is mostly headlines and one noisy short-volume flag, so the direction is unclear going in.
 
 - 2026-10-26 **finra** Short-volume spike: 69% of volume vs 58% 20-day average (z +2.2)
 
-Watch: Nov 2 results: revenue growth vs the roughly 93% prior-quarter pace, U.S. commercial growth, and guidance. A guidance miss would be the main bearish trigger.; Whether the short-volume spike persists, and whether FINRA short-interest data shows a real build-up.; Whether a 13F or other filing confirms the Burry position, and the options implied move into the print.
+Watch: Nov 2 results: U.S. commercial growth, guidance and the reaction versus the elevated bar. A guide-up with a muted reaction would argue for trimming.; Whether the Burry short claim is backed by a 13F or other filing rather than a headline.; Whether short-volume share keeps rising into earnings or reverts toward 58%.
 
 ## HUM · score +0 · holding · unclear (low)
 
-Evidence is thin and mixed: short volume dropped sharply and star-ratings coverage is positive, but there are no filings or insider data to confirm a directional edge.
+Evidence is thin and mixed: a short-volume drop and star-ratings coverage lean mildly positive, but nothing here is a hard catalyst, so no clear read on HUM over 2-8 weeks.
 
 - 2026-10-26 **finra** Short volume collapsed: 36% vs 55% average (z -2.3)
 
-Watch: Details of the star ratings story: which contracts improved, and the dollar or margin impact versus guidance.; Whether short volume stays low over several sessions or reverts to the 55% average.; Official CMS rating or rate notices and any company filing or guidance update.
+Watch: Details of the star ratings improvement: which contracts, and the estimated 2027 revenue and margin effect, ideally from company or CMS sources.; Whether short volume stays low over several sessions or snaps back to the ~55% average.; Next earnings date and any guidance update on Medicare Advantage medical cost trends, which would outweigh these signals.
 
 ## MPC · score +0 · holding · neutral (low)
 
-Mixed, low-conviction setup for MPC ahead of Nov 3 earnings: a Raymond James target raise and a drop in short volume are modest positives, but nothing here is decisive.
+Evidence is thin and mixed: a target raise and a drop in short volume lean mildly positive, but earnings on Nov 3 is the real catalyst and nothing here shows its direction.
 
 - 2026-10-26 **finra** Short volume collapsed: 40% vs 58% average (z -3.6)
 
-Watch: Nov 3 earnings: refining margins, throughput, capital returns/buybacks, and guidance versus expectations.; Whether short volume stays low or rebounds toward the 58% average, and whether price confirms it.; Primary-source confirmation of the Raymond James note, including rating and prior target, and any other analyst revisions before earnings.
+Watch: Nov 3 earnings: refining margins, throughput, capital returns and buyback pace versus consensus; Whether short volume stays low over several sessions or rebounds toward 58%; Further analyst target changes and the price reaction around earnings
 
-## PCOR · score +0 · holding · unclear (low)
+## PCOR · score +0 · holding · neutral (low)
 
-No decisive catalyst in the last 4 days; evidence is mostly routine filler, with modest insider selling and an unattributed FTC notice. Read is neutral-to-unclear.
+No decisive catalyst in the window; evidence is mostly routine institutional-holding headlines and AI-narrative commentary, with modest insider selling. Read is neutral with low confidence.
 
 - 2026-10-22 **federal_register** Federal Trade Commission: Granting of Requests for Early Termination of the Waiting Period under the Premerger Notification Rules ([link](https://www.federalregister.gov/documents/2026/10/22/2026-21630/granting-of-requests-for-early-termination-of-the-waiting-period-under-the-premerger-notification))
 
-Watch: Check whether the FTC early-termination notice names Procore as an acquirer or target, via the HSR filing and any 8-K.; Look for the next earnings date and any AI Go adoption or pricing details that could shift guidance.; Monitor Form 4 filings for new insider sales or discretionary buys over the next few weeks.
+Watch: Check whether the FTC early-termination notice names Procore as acquirer or target, which would make it the key signal.; Verify the AI Go launch via Procore's press release or 8-K, and look for customer adoption or pricing details.; Monitor Form 4 filings and the next earnings date for changes in insider activity or guidance.
 
 ## TEAM · score +0 · holding, candidate · neutral (low)
 
-Mildly constructive but thin: a BofA target raise and a reported 52-week high sit beside collapsed short volume. Nothing here is a primary-source catalyst, and several headlines are irrelevant.
+Mildly constructive but thin: short volume dropped sharply and a BofA target raise supports the tape, but evidence is mostly secondary headlines with no fundamental catalyst or insider buying.
 
 - 2026-10-26 **finra** Short volume collapsed: 28% vs 50% average (z -2.7)
 
-Watch: Verify the BofA target, rationale, and price level against the current quote; check for other analyst moves.; Check whether short volume stays low for several sessions and compare with actual short interest.; Look for the next earnings date and any SEC filings (8-K, Form 4) that could shift the read.
+Watch: Whether short volume stays low over several sessions or reverts to ~50%, and whether price holds the 52-week high area.; Primary-source BofA note details (new target, reasoning) and any other analyst moves ahead of the next earnings date.; Insider Form 4 filings for any change from the single small sale, and the 10b5-1 status of that sale.
 
 ## VLO · score +0 · holding · unclear (low)
 
-Valero reported results on Oct 22 and headlines call it a beat, but a possible US diesel export ban is the key risk to the thesis; details of the print are missing.
+Valero reported results Oct 22 and headlines call it a beat, but the evidence has no numbers, so the read is unclear. Policy risk on diesel is the main watch item.
 
 - 2026-10-22 **sec** 8-K: results announced ([link](https://www.sec.gov/Archives/edgar/data/1035002/000162828026066795/vlo-20261022.htm))
 
-Watch: Any formal White House or Commerce action on diesel exports, and how crack spreads and VLO react.; The actual Q3 numbers, guidance, and capital return details in the 8-K exhibit or earnings release.; Diesel crack spreads and VLO's price against the $379.94 average target to gauge how much good news is priced in.
+Watch: Read the 8-K and earnings release for refining margin, throughput, capex and buyback or dividend guidance.; Track any federal diesel action, such as export limits, reserve releases or windfall-profit proposals, and the response in crack spreads.; Check post-earnings price action and analyst target changes against the reported ~$379.94 average target.
 
 ## FTNT · score -1 · candidate · unclear (low)
 
-Fortinet heads into Q3 earnings with a recent price run-up and elevated short volume; the evidence gives no clear direction, so the read is unclear until results.
+Neutral-to-unclear into Q3 earnings: short volume spiked and the stock rose 6.4% in a week, but evidence is thin and mostly headlines, with no filings or earnings data.
 
 - 2026-10-26 **finra** Short-volume spike: 70% of volume vs 57% 20-day average (z +2.6)
 
-Watch: Q3 earnings results and guidance, especially billings and next-quarter outlook, which will likely drive the 2-8 week move.; Whether short volume stays elevated after earnings or normalizes, and any post-earnings analyst target changes.; Price action versus the recent one-week gain: a failure to hold it after the report would weaken the momentum case.
+Watch: Q3 earnings results and guidance: billings, firewall refresh trends, and the stock's reaction versus the implied move.; Whether short volume stays elevated after earnings or normalizes, and any change in reported short interest.
 
 ## PANW · score -1 · candidate · unclear (low)
 
-PANW jumped about 7% on unexplained news while short-volume share spiked to 64%; the evidence doesn't show whether this is a durable breakout or a fade, so the read is unclear.
+PANW reportedly jumped about 7% but evidence is thin and mixed: heavy short volume and small insider sales offset by no clear catalyst; read is unclear.
 
 - 2026-10-26 **finra** Short-volume spike: 64% of volume vs 45% 20-day average (z +3.7)
 
-Watch: Whether the stock holds the gain over the next few sessions and whether the short-volume ratio stays elevated or normalizes.; The catalyst for the move (company news, analyst action, sector rotation) and the date of the next earnings report.; Next FINRA short interest settlement data, to see whether actual short positions rose.
+Watch: Confirm the catalyst for the 7% move via 8-K, earnings, or news; a fundamental driver would change the read.; Check whether short volume stays elevated after the jump (squeeze fuel) or normalizes, and the Oct 30 options open interest.; Track price holding above recent breakout levels on volume versus reversal toward prior range.
 
 ## TXN · score -1 · candidate · unclear (low)
 
-Mixed picture: a new 424B5 securities offering filed Oct 26 is a possible dilution flag, while headlines are mildly positive; the filing's details are unknown, so conviction is low.
+Mostly positive headlines (upgrade, data center demand, breakout setup) are offset by an unexplained 424B5 offering filing; the offering's nature decides whether this is bullish or a dilution risk.
 
 - 2026-10-26 **sec** securities offering (possible dilution) ([link](https://www.sec.gov/Archives/edgar/data/97476/000119312526431173/d166196d424b5.htm))
 - 2026-10-23 **sec** periodic report filed ([link](https://www.sec.gov/Archives/edgar/data/97476/000009747626000169/txn-20260930.htm))
 
-Watch: Open the 424B5: determine whether it is debt or equity, size, use of proceeds, and pricing versus the current share price.; Check 10-Q and recent earnings guidance for margin, capex and free cash flow trends tied to the dividend and any funding need.; Price reaction to the filing over the next few sessions, and whether the options activity noted in headlines reflects real positioning.
+Watch: Read the 424B5: equity vs. debt, size, use of proceeds. Debt for capex is far less negative than a share issuance.; Price and volume reaction over the next few sessions, and whether the ChartMill breakout level holds.; 10-Q details: guidance, margins, free cash flow, capex, and the data center and industrial demand commentary.
 
 ## LLY · score +0 · candidate
 

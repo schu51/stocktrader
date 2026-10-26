@@ -58,6 +58,24 @@ GICS_SECTOR_NORM: Dict[str, str] = {
     "Utilities":              "utilities",
 }
 
+# ICB industry name (the Nasdaq-100 Wikipedia table) -> same sector keys
+ICB_SECTOR_NORM: Dict[str, str] = {
+    "Technology":             "technology",
+    "Telecommunications":     "communication_services",
+    "Health Care":            "healthcare",
+    "Financials":             "financials",
+    "Real Estate":            "real_estate",
+    "Consumer Discretionary": "consumer_cyclical",
+    "Consumer Staples":       "consumer_defensive",
+    "Industrials":            "industrials",
+    "Basic Materials":        "basic_materials",
+    "Energy":                 "energy",
+    "Utilities":              "utilities",
+}
+
+_SECTOR_COLUMNS = (("GICS Sector", GICS_SECTOR_NORM), ("ICB Industry", ICB_SECTOR_NORM),
+                   ("Industry", ICB_SECTOR_NORM), ("Sector", GICS_SECTOR_NORM))
+
 _HEADERS = {"User-Agent": "stocktrader-universe-refresh/1.0 (github.com/schu51/stocktrader)"}
 
 
@@ -66,17 +84,24 @@ def normalize_ticker(symbol: str) -> str:
     return str(symbol).strip().upper().replace(".", "-")
 
 
-def _members_from_table(df, ticker_cols=("Symbol", "Ticker"), sector_col="GICS Sector") -> Dict[str, str]:
+def _members_from_table(df, ticker_cols=("Symbol", "Ticker")) -> Dict[str, str]:
+    """
+    {ticker: sector key} from an index components table. The S&P 500 table
+    labels sectors with GICS, the Nasdaq-100 table with ICB; a table with no
+    recognised sector column still yields its tickers, as "other".
+    """
     cols = {str(c).strip(): c for c in df.columns}
     tcol = next((cols[c] for c in ticker_cols if c in cols), None)
-    scol = cols.get(sector_col)
-    if tcol is None or scol is None:
+    if tcol is None:
         return {}
+    scol, norm = next(((cols[c], m) for c, m in _SECTOR_COLUMNS if c in cols), (None, {}))
+    sectors = df[scol] if scol is not None else [None] * len(df)
     out = {}
-    for sym, sector in zip(df[tcol], df[scol]):
+    for sym, sector in zip(df[tcol], sectors):
         if not isinstance(sym, str) or not sym.strip():
             continue
-        out[normalize_ticker(sym)] = GICS_SECTOR_NORM.get(str(sector).strip(), "other")
+        name = str(sector).strip() if sector is not None else ""
+        out[normalize_ticker(sym)] = norm.get(name) or GICS_SECTOR_NORM.get(name) or "other"
     return out
 
 
@@ -124,11 +149,13 @@ def fetch_sp500() -> Dict[str, str]:
 
 def fetch_ndx() -> Dict[str, str]:
     try:
-        members = _best_table(_read_wiki_tables(NDX_WIKI), MIN_NDX)
+        tables = _read_wiki_tables(NDX_WIKI)
+        members = _best_table(tables, MIN_NDX)
         if members:
             logger.info(f"Nasdaq-100 from Wikipedia: {len(members)}")
             return members
-        logger.warning("Wikipedia Nasdaq-100 table too small or not found")
+        logger.warning("Wikipedia Nasdaq-100 table too small or not found "
+                       f"(tables seen: {[list(map(str, t.columns))[:6] for t in tables][:8]})")
     except Exception as e:
         logger.warning(f"Wikipedia Nasdaq-100 failed: {e}")
     return {}
@@ -153,6 +180,8 @@ def build(sp500: Dict[str, str], ndx: Dict[str, str], previous: Optional[dict]) 
         ndx = {t: prev_tickers.get(t, "other") for t in prev_ndx}
         ndx_source = "carried over" if ndx else "missing"
 
+    prev_tickers = (previous or {}).get("tickers", {})
+    ndx = {t: (prev_tickers.get(t, "other") if s == "other" else s) for t, s in ndx.items()}
     tickers = {**ndx, **sp500}          # S&P sector wins on overlap
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),

@@ -76,6 +76,15 @@ ICB_SECTOR_NORM: Dict[str, str] = {
 _SECTOR_COLUMNS = (("GICS Sector", GICS_SECTOR_NORM), ("ICB Industry", ICB_SECTOR_NORM),
                    ("Industry", ICB_SECTOR_NORM), ("Sector", GICS_SECTOR_NORM))
 
+# What went wrong in this run, written into the file (run logs are not always at hand)
+NOTES: list = []
+
+
+def _note(msg: str) -> None:
+    logger.warning(msg)
+    NOTES.append(msg[:300])
+
+
 _HEADERS = {"User-Agent": "stocktrader-universe-refresh/1.0 (github.com/schu51/stocktrader)"}
 
 
@@ -127,10 +136,11 @@ def fetch_sp500() -> Dict[str, str]:
         members = _best_table(_read_wiki_tables(SP500_WIKI), MIN_SP500)
         if members:
             logger.info(f"S&P 500 from Wikipedia: {len(members)}")
+            NOTES.append("S&P 500 from Wikipedia")
             return members
-        logger.warning("Wikipedia S&P 500 table too small or not found")
+        _note("Wikipedia S&P 500 table too small or not found")
     except Exception as e:
-        logger.warning(f"Wikipedia S&P 500 failed: {e}")
+        _note(f"Wikipedia S&P 500 failed: {e}")
 
     try:
         import pandas as pd
@@ -140,10 +150,11 @@ def fetch_sp500() -> Dict[str, str]:
         members = _members_from_table(pd.read_csv(io.StringIO(resp.text)))
         if len(members) >= MIN_SP500:
             logger.info(f"S&P 500 from GitHub datasets CSV: {len(members)}")
+            NOTES.append("S&P 500 from GitHub datasets CSV")
             return members
-        logger.warning(f"S&P 500 CSV had only {len(members)} rows")
+        _note(f"S&P 500 CSV had only {len(members)} rows")
     except Exception as e:
-        logger.warning(f"S&P 500 CSV failed: {e}")
+        _note(f"S&P 500 CSV failed: {e}")
     return {}
 
 
@@ -154,10 +165,10 @@ def fetch_ndx() -> Dict[str, str]:
         if members:
             logger.info(f"Nasdaq-100 from Wikipedia: {len(members)}")
             return members
-        logger.warning("Wikipedia Nasdaq-100 table too small or not found "
+        _note("Wikipedia Nasdaq-100 table too small or not found "
                        f"(tables seen: {[list(map(str, t.columns))[:6] for t in tables][:8]})")
     except Exception as e:
-        logger.warning(f"Wikipedia Nasdaq-100 failed: {e}")
+        _note(f"Wikipedia Nasdaq-100 failed: {e}")
     return {}
 
 
@@ -187,6 +198,7 @@ def build(sp500: Dict[str, str], ndx: Dict[str, str], previous: Optional[dict]) 
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "sources": {"sp500": len(sp500), "nasdaq100": len(ndx), "nasdaq100_source": ndx_source},
         "count": len(tickers),
+        "notes": list(NOTES),
         "nasdaq100": sorted(ndx),
         "tickers": dict(sorted(tickers.items())),
     }

@@ -270,3 +270,23 @@ def test_experiment_hook_reads_osint_flags(tmp_path, monkeypatch):
     assert ex._osint_signals("ACME", TODAY, log) == {"osint_positive": True, "osint_negative": False,
                                                        "osint_score": 2}
     assert ex._osint_signals("NOPE", TODAY, log)["osint_positive"] is None
+
+
+def test_pageview_titles_are_escaped():
+    import osint_collect as oc
+
+    class S:
+        def get(self, url, timeout=None):
+            self.url = url
+            raise RuntimeError("stop")
+    s = S()
+    try:
+        oc.fetch_pageviews("AT%26T", TODAY, s)
+    except RuntimeError:
+        pass
+    assert "/AT%26T/" in s.url
+    try:
+        oc.fetch_pageviews("Illumina,_Inc.", TODAY, s)
+    except RuntimeError:
+        pass
+    assert "/Illumina%2C_Inc./" in s.url

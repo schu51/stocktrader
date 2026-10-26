@@ -433,7 +433,8 @@ def fetch_wiki_titles(tickers: List[str], session) -> Dict[str, str]:
     values = " ".join(f'"{t.replace("-", ".")}"' for t in tickers)
     query = f"""SELECT ?ticker ?article WHERE {{
       VALUES ?ticker {{ {values} }}
-      ?item p:P414 ?listing . ?listing pq:P249 ?ticker .
+      VALUES ?exchange { wd:Q13677 wd:Q82059 }   # NYSE, Nasdaq: the same ticker can belong to a foreign company
+      ?item p:P414 ?listing . ?listing ps:P414 ?exchange ; pq:P249 ?ticker .
       ?article schema:about ?item ; schema:isPartOf <https://en.wikipedia.org/> .
     }}"""
     resp = session.get(WIKIDATA_URL, params={"query": query, "format": "json"}, timeout=60)
@@ -448,7 +449,9 @@ def fetch_wiki_titles(tickers: List[str], session) -> Dict[str, str]:
 def fetch_pageviews(title: str, today: date, session) -> List[int]:
     start = (today - timedelta(days=PAGEVIEW_DAYS)).strftime("%Y%m%d")
     end = (today - timedelta(days=1)).strftime("%Y%m%d")
-    resp = session.get(PAGEVIEWS_URL.format(title=title, start=start, end=end), timeout=20)
+    from urllib.parse import quote, unquote
+    safe_title = quote(unquote(title), safe="")        # "Illumina,_Inc." and "AT%26T" alike
+    resp = session.get(PAGEVIEWS_URL.format(title=safe_title, start=start, end=end), timeout=20)
     resp.raise_for_status()
     return [int(i["views"]) for i in resp.json().get("items") or []]
 

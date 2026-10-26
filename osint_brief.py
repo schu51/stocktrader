@@ -332,6 +332,10 @@ def run(symbols: Dict[str, List[str]], today: date, window_days: int, ask: Optio
         logger.error(f"SEC ticker index failed: {e}")
         index = {}
 
+    if cache.get("wiki_version") != 2:              # titles before the NYSE/Nasdaq filter can be wrong
+        cache.pop("wiki_titles", None)
+        cache.pop("wiki_none", None)
+        cache["wiki_version"] = 2
     titles = dict(cache.get("wiki_titles") or {})
     missing = [s for s in symbols if s not in titles and s not in (cache.get("wiki_none") or [])]
     if missing:

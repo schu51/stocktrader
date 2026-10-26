@@ -1,16 +1,16 @@
 {
  "date": "2026-10-26",
- "generated_at": "2026-10-26T16:34:40+00:00",
+ "generated_at": "2026-10-26T16:38:33+00:00",
  "window_days": 4,
  "covered": 27,
- "with_signals": 10,
+ "with_signals": 11,
  "summary": {
-  "headline": "PLTR earnings Nov 2 and MPC Nov 3 are the key holding catalysts; evidence is thin.",
-  "summary": "No decisive signals today; every read is low confidence. Biggest risk is event exposure in holdings: PLTR reports Nov 2 and MPC on Nov 3, with no clear direction for either. VLO's Oct 22 beat lacks numbers, and diesel policy risk is the watch item. HUM, PCOR and TEAM are neutral, with TEAM mildly supported by a BofA target raise and lower short volume. Among candidates, TXN has positive headlines but an unexplained 424B5 offering that could mean dilution, while FTNT and PANW rallied (6.4% and ~7%) on heavy short volume without a clear catalyst. LLY short volume dropped to 37% vs 48% average, which is worth a look but not actionable alone.",
+  "headline": "No decisive signals; PLTR earnings Nov 2 and TXN offering filing are the main risks.",
+  "summary": "Nothing clearly material today, and all reads are low-confidence. Biggest threat to a holding is PLTR (also a candidate): earnings around Nov 2 with elevated short-volume pressure and unclear direction, so event risk dominates. Other holdings are quiet: MPC reports Nov 3 with a mild positive tilt from an analyst target raise and falling short volume, PSX got a TD Cowen target raise to $308, TEAM got a BofA target raise, and VLO reported Oct 22 with thin detail. Among candidates, TXN's new 424B5 offering filing is a possible dilution risk worth reading, while LLY's short volume dropped to 37% vs a 48% average (z -2.4) but is not confirmed by a catalyst. FTNT and PANW show short-volume spikes after price jumps, with earnings the real catalyst.",
   "actions": [
-   "Decide PLTR sizing or hedge before Nov 2 earnings; MPC similarly before Nov 3.",
-   "Read TXN's 424B5 to determine offering size and purpose before considering entry.",
-   "Check VLO's actual Oct 22 results and diesel policy news to confirm the beat."
+   "Decide PLTR sizing or hedge ahead of Nov 2 earnings; event risk dominates.",
+   "Read TXN 424B5 for offering size and use of proceeds before considering entry.",
+   "Check LLY for a catalyst behind the short-volume drop before treating it as a signal."
   ],
   "generated_by": "claude"
  },
@@ -55,6 +55,11 @@
       "published": "2026-10-26T12:30"
      },
      {
+      "title": "Palantir (PLTR) Surges 15% After Blowout Q2: Revenue +93%, US Commercial +149%, Guidance Raised to $8.15B",
+      "publisher": "TradingKey",
+      "published": "2026-10-25T20:08"
+     },
+     {
       "title": "Palantir Q2 2026: Revenue $1.935B (+93%), U.S. Commercial Surge 149%, Rule of 40 Reaches 155%, Stock Extends Breakout",
       "publisher": "TradingKey",
       "published": "2026-10-25T20:05"
@@ -78,34 +83,29 @@
       "title": "I Said Palantir Stock Would Top $220 This Year. Here's What It Has to Prove on Nov. 2.",
       "publisher": "The Motley Fool",
       "published": "2026-10-25T17:43"
-     },
-     {
-      "title": "Is Palantir Stock Increasing Your Market Risk?",
-      "publisher": "Trefis",
-      "published": "2026-10-25T16:47"
      }
     ],
     "short_share_latest": 0.693
    },
    "failed": [],
    "read": {
-    "bluf": "Palantir's earnings on Nov 2 are the dominant near-term catalyst. Evidence is mostly headlines and one noisy short-volume flag, so the direction is unclear going in.",
+    "bluf": "Palantir heads into earnings around Nov 2 with mixed, partly inconsistent evidence; short-volume pressure is offset by strong prior results, so the direction is unclear and event risk dominates.",
     "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "Earnings are reported for Nov 2 (Motley Fool, 24/7 Wall St.). A gap move either way is likely within days, which outweighs everything else here.",
-     "FINRA short volume was 69% of volume vs a 58% average (z +2.2). It includes market-maker hedging, so it is a weak bearish sign, not proof of new shorts.",
-     "Insiders sold $8.2M across 4 people in 30 days, none bought, and none of the sales fell outside 10b5-1 plans. Plan sales are routine, so this is a mild negative at most.",
-     "Headlines cite 93% revenue growth, 149% U.S. commercial growth and a 155% Rule of 40, with the stock extended after a 30% run. High expectations raise the bar for a beat."
+     "Two headlines put earnings on Nov 2, about a week away. A binary event inside the 2-8 week window will likely outweigh other signals.",
+     "Short volume was 69% of volume vs a 58% average (z +2.2). It is not short interest and is often hedging, so it is weak bearish evidence.",
+     "A 24/7 Wall St headline says Michael Burry is short PLTR. No filing is cited, so it is unverified, though it could add sentiment pressure before earnings.",
+     "Insiders sold $8.2M across 4 people with zero outside 10b5-1 plans and no buys. Planned sales are routine, so this is mildly negative at most."
     ],
     "watch": [
-     "Nov 2 results: U.S. commercial growth, guidance and the reaction versus the elevated bar. A guide-up with a muted reaction would argue for trimming.",
-     "Whether the Burry short claim is backed by a 13F or other filing rather than a headline.",
-     "Whether short-volume share keeps rising into earnings or reverts toward 58%."
+     "Nov 2 earnings: revenue growth, US commercial growth and guidance versus the very high expectations that recent strength has set.",
+     "Whether a 13F or other filing confirms Burry's position, and whether short volume stays elevated into the print.",
+     "Price action versus the $188 level cited in headlines, and whether the post-surge consolidation holds or breaks."
     ],
     "unknowns": [
-     "The headlines label the 93% growth figures 'Q2 2026' yet earnings are due next week, so they may be stale or mislabeled. The latest reported quarter is unverifi",
-     "No SEC filings, options positioning or short-interest data were provided, so the Burry claim and the real short exposure are unconfirmed."
+     "The 'Q2 2026 blowout' TradingKey items are dated Oct 25, which conflicts with earnings still being ahead. They may be stale or republished, so the latest result",
+     "Actual price levels, options positioning and short interest are not in the evidence, so how much good news is priced in is unknown."
     ]
    }
   },
@@ -221,11 +221,6 @@
       "published": "2026-10-24T22:55"
      },
      {
-      "title": "Softlogic Finance PLC Estimates \u2013 CSELK:CRL.N0000",
-      "publisher": "TradingView",
-      "published": "2026-10-24T06:37"
-     },
-     {
       "title": "Charles River Laboratories International, Inc. (CRL) stock price, news, quote and history",
       "publisher": "Yahoo Finance UK",
       "published": "2026-10-24T04:40"
@@ -233,6 +228,11 @@
      {
       "title": "ICON Public Limited Company (ICLR) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-23T21:09"
+     },
+     {
+      "title": "Charles River Laboratories International Inc. stock outperforms competitors on strong trading day",
+      "publisher": "MarketWatch",
       "published": "2026-10-23T21:09"
      }
     ],
@@ -277,11 +277,6 @@
       "published": "2026-10-26T12:09"
      },
      {
-      "title": "CRWD Nov 2026 245.000 call (CRWD261113C00245000) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-26T09:24"
-     },
-     {
       "title": "Up Over 100% in 2026, Is CrowdStrike Still a Buy?",
       "publisher": "The Motley Fool",
       "published": "2026-10-25T19:42"
@@ -300,6 +295,11 @@
       "title": "Up Over 100% in 2026, Is CrowdStrike Still a Buy?",
       "publisher": "AOL.com",
       "published": "2026-10-25T19:02"
+     },
+     {
+      "title": "CRWD Stock Soars After Firm Lifts Full-Year Growth Outlook On AI Security Demand",
+      "publisher": "Stocktwits",
+      "published": "2026-10-25T17:11"
      }
     ],
     "short_share_latest": 0.608
@@ -429,9 +429,9 @@
       "published": "2026-10-26T08:33"
      },
      {
-      "title": "HUM Oct 2026 365.000 call (HUM261030C00365000) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-25T22:07"
+      "title": "HUM Oct 2026 480.000 put (HUM261030P00480000) stock price, news, quote and history",
+      "publisher": "Yahoo Finance Australia",
+      "published": "2026-10-25T20:32"
      },
      {
       "title": "HUM Nov 2026 320.000 put (HUM261106P00320000) stock price, news, quote and history",
@@ -463,23 +463,23 @@
    },
    "failed": [],
    "read": {
-    "bluf": "Evidence is thin and mixed: a short-volume drop and star-ratings coverage lean mildly positive, but nothing here is a hard catalyst, so no clear read on HUM over 2-8 weeks.",
+    "bluf": "Evidence is thin and mixed: short volume dropped sharply and star-ratings coverage is positive, but nothing here is a hard catalyst, so the read is unclear.",
     "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "FINRA short volume fell to 36% vs 55% average (z -2.3). Less shorting pressure can support price, but daily short volume is noisy and not a reliable signal alone.",
-     "Modern Healthcare reports a Medicare Advantage star ratings 'resurgence' (headline only). Better ratings can lift bonus revenue and margins, but the headline gives no detail or magnitude.",
-     "Wall Street Zen upgraded HUM to Buy and EULAV bought 5,765 shares. Both are low-weight, minor signals that add little to the read.",
-     "No insider buys or sells in 30 days, and no SEC filings in the evidence. Management is neither confirming nor contradicting the move."
+     "FINRA short volume fell to 36% vs 55% average (z -2.3). Less shorting pressure can support price, but short volume is a noisy daily indicator.",
+     "Modern Healthcare reports a Medicare Advantage star ratings resurgence. If accurate, better ratings can lift bonus payments and margins, but the headline gives no figures.",
+     "MarketBeat reports a Wall Street Zen upgrade to Buy and a small 5,765-share fund purchase. Both are low-quality, low-impact signals.",
+     "No insider buys or sells in 30 days. This gives no insider signal in either direction."
     ],
     "watch": [
-     "Details of the star ratings improvement: which contracts, and the estimated 2027 revenue and margin effect, ideally from company or CMS sources.",
-     "Whether short volume stays low over several sessions or snaps back to the ~55% average.",
-     "Next earnings date and any guidance update on Medicare Advantage medical cost trends, which would outweigh these signals."
+     "Primary sources: CMS star ratings and any Humana 8-K or guidance update, to size the bonus-payment impact.",
+     "Whether short volume stays low over several sessions or reverts to the ~55% average.",
+     "Upcoming Q3 earnings date and medical cost trend commentary for Medicare Advantage."
     ],
     "unknowns": [
-     "Price action, volume, and options positioning are absent; option contract listings carry no directional information.",
-     "No primary-source documents (SEC filings, CMS records) are included to verify the star ratings story."
+     "No SEC filings or CMS records in the evidence confirm the star ratings improvement or its financial effect.",
+     "Option headlines list only contract pages with no volume or open interest, so options positioning is unknown."
     ]
    }
   },
@@ -686,23 +686,23 @@
    },
    "failed": [],
    "read": {
-    "bluf": "Evidence is thin and mixed: a target raise and a drop in short volume lean mildly positive, but earnings on Nov 3 is the real catalyst and nothing here shows its direction.",
+    "bluf": "No decisive signal for MPC: an analyst target raise and a sharp drop in short volume lean mildly positive, but earnings on Nov 3 are the real catalyst and the evidence is thin.",
     "read": "neutral",
     "confidence": "low",
     "key_points": [
-     "Raymond James raised its target to $560 (headline). Analyst moves can support momentum, but the prior target and rating are not given, so the size of the change is unknown.",
-     "FINRA short volume fell to 40% vs a 58% average (z -3.6). Less shorting pressure is mildly supportive, but one day of data is noisy and not a trend.",
-     "Earnings are reported for Nov 3, 2026, within the window. This is the dominant event risk for the next 2 weeks, with gap risk either way.",
-     "Insider activity is $0 in 30 days, and ETFs were net sellers Oct 22. Small 13F-type buys and sells by advisers are routine and carry little signal."
+     "Raymond James raised its target to $560 (headline). Analyst upgrades can support momentum, but the prior target and rating are not given, so the size of the change is unclear.",
+     "FINRA short volume fell to 40% vs a 58% average (z -3.6). Less shorting pressure is mildly supportive, but one day of data is noisy.",
+     "Earnings are reportedly due Nov 3, 2026, inside the 2-8 week window. Results and refining margin commentary will likely outweigh the other items here.",
+     "No insider buys or sells in 30 days, and ETFs were net sellers Oct 22. Small 13F holder changes (MarketBeat) are routine and carry little weight."
     ],
     "watch": [
-     "Nov 3 earnings: refining margins, throughput, capital returns and buyback pace versus consensus",
-     "Whether short volume stays low over several sessions or rebounds toward 58%",
-     "Further analyst target changes and the price reaction around earnings"
+     "Q3 results Nov 3: refining margins, throughput, capital return/buyback pace, and Q4 guidance.",
+     "Whether short volume stays low for several sessions or rebounds toward the 58% average.",
+     "Sector read-through from peers like PSX and crack spread trends heading into earnings."
     ],
     "unknowns": [
-     "No price, volume or crack-spread data in the evidence, so the trend and the margin backdrop cannot be assessed",
-     "Raymond James's rating, prior target and rationale are not shown, and no SEC filings were provided"
+     "No SEC filings or primary company data in the evidence; the earnings date comes from a secondary headline and should be confirmed.",
+     "Raymond James's prior target and rating, and the stock's current price versus $560, are not provided."
     ]
    }
   },
@@ -779,23 +779,23 @@
    },
    "failed": [],
    "read": {
-    "bluf": "No decisive catalyst in the window; evidence is mostly routine institutional-holding headlines and AI-narrative commentary, with modest insider selling. Read is neutral with low confidence.",
+    "bluf": "No decisive catalyst in the window; evidence is thin and mixed, with modest insider selling and routine institutional buying headlines. Hold thesis unchanged pending better data.",
     "read": "neutral",
     "confidence": "low",
     "key_points": [
-     "Insiders sold $3.98M over 30 days, none bought; $0 outside 10b5-1 plans, so it looks pre-scheduled and is a weak bearish signal.",
-     "An FTC early-termination notice appeared 10/22, but no filer is tied to Procore in the evidence; relevance to PCOR is unconfirmed.",
-     "Small institutional purchases (Nisa 36,304 shares; Inspire 31,254) are routine MarketBeat items and carry little weight for a 2-8 week view.",
-     "Simply Wall Street pieces cite an AI product launch and a '9% undervalued' estimate; these are secondary commentary, not company-confirmed results."
+     "Insiders sold about $3.98M over 30 days across 2 people, none bought. Sales may be routine, but the evidence doesn't say whether they were planned; mild negative overhang.",
+     "An FTC early-termination notice appeared 2026-10-22, but the excerpt doesn't name Procore. It can't be tied to the company, so it carries no weight.",
+     "MarketBeat headlines report small institutional purchases (36,304 and 31,254 shares). These are tiny, low-quality, backward-looking filings and not a meaningful demand signal.",
+     "Simply Wall Street pieces discuss Procore's AI push and the 'AI Go' launch. This is commentary, not results; it suggests narrative interest but no confirmed revenue impact."
     ],
     "watch": [
-     "Check whether the FTC early-termination notice names Procore as acquirer or target, which would make it the key signal.",
-     "Verify the AI Go launch via Procore's press release or 8-K, and look for customer adoption or pricing details.",
-     "Monitor Form 4 filings and the next earnings date for changes in insider activity or guidance."
+     "Whether the FTC early-termination notice involves Procore as an acquirer or target; check the FTC docket and any 8-K.",
+     "Next earnings date and guidance, plus any AI product adoption or pricing detail in company disclosures.",
+     "Form 4 details: whether the insider sales were under 10b5-1 plans and whether more follow."
     ],
     "unknowns": [
-     "Whether the FTC notice involves Procore at all.",
-     "Price action, volume, and upcoming earnings timing are absent, so market reaction cannot be assessed."
+     "Who the FTC notice's parties are; the excerpt shows only the generic title, so any Procore link is unconfirmed.",
+     "Price action, volume, and valuation context are absent, so technical momentum can't be assessed."
     ]
    }
   },
@@ -808,7 +808,16 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [],
+   "events": [
+    {
+     "source": "news",
+     "kind": "velocity",
+     "date": "2026-10-26",
+     "polarity": 0,
+     "text": "News surge: 26 headlines in 24h vs 6.5/day, 9 outlets, tone +0.00",
+     "url": null
+    }
+   ],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
@@ -824,12 +833,22 @@
       "published": "2026-10-26T16:02"
      },
      {
+      "title": "DINT news: latest Din Textile Mills Ltd updates",
+      "publisher": "Investify",
+      "published": "2026-10-26T13:40"
+     },
+     {
       "title": "FML news: latest Feroze1888 Mills Ltd updates",
       "publisher": "Investify",
       "published": "2026-10-26T13:40"
      },
      {
       "title": "BFBIO news: latest BF Biosciences Ltd updates",
+      "publisher": "Investify",
+      "published": "2026-10-26T13:40"
+     },
+     {
+      "title": "EXIDE news: latest Exide Pakistan Ltd updates",
       "publisher": "Investify",
       "published": "2026-10-26T13:40"
      },
@@ -844,25 +863,34 @@
       "published": "2026-10-26T13:40"
      },
      {
-      "title": "BOK news: latest The Bank of Khyber updates",
-      "publisher": "Investify",
-      "published": "2026-10-26T13:40"
-     },
-     {
-      "title": "ATBA news: latest Atlas Battery Ltd updates",
-      "publisher": "Investify",
-      "published": "2026-10-26T13:40"
-     },
-     {
-      "title": "GEMMEL news: latest Mughal Energy Ltd updates",
+      "title": "DADX news: latest Dadex Eternit Ltd updates",
       "publisher": "Investify",
       "published": "2026-10-26T13:40"
      }
     ],
     "short_share_latest": 0.695
    },
-   "failed": [],
-   "read": null
+   "failed": [
+    "wikipedia"
+   ],
+   "read": {
+    "bluf": "Only one relevant item: TD Cowen raised its PSX target to $308 from $295. The 26-headline news surge looks mostly like unrelated noise, so the read is neutral-to-mildly positive at best.",
+    "read": "neutral",
+    "confidence": "low",
+    "key_points": [
+     "TD Cowen raised its target to $308 from $295 (headline, one source). A modest analyst vote of confidence, but target raises are often lagging and rarely move the stock alone.",
+     "The 26-headline surge is flagged at tone +0.00, and most sampled headlines are Pakistani-listed companies from Investify, unrelated to PSX. The surge likely overstates real PSX news flow.",
+     "No insider open-market buys or sells in 30 days. This gives no insider-conviction signal in either direction."
+    ],
+    "watch": [
+     "Confirm the TD Cowen note's rationale (refining margins, buybacks, asset sales) and whether other analysts follow with target changes.",
+     "Check SEC filings and the next earnings release for guidance, capital returns, and refining margin trends that would confirm or undercut the upgrade."
+    ],
+    "unknowns": [
+     "What drove the headline surge, since the sampled items are mostly irrelevant and no PSX-specific catalyst beyond the target raise is shown.",
+     "Current share price versus the $308 target, and the TD Cowen rating, since the evidence gives neither."
+    ]
+   }
   },
   {
    "symbol": "SHOP",
@@ -926,7 +954,9 @@
     ],
     "short_share_latest": 0.37
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": null
   },
   {
@@ -1001,25 +1031,27 @@
     ],
     "short_share_latest": 0.277
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": {
-    "bluf": "Mildly constructive but thin: short volume dropped sharply and a BofA target raise supports the tape, but evidence is mostly secondary headlines with no fundamental catalyst or insider buying.",
+    "bluf": "Modestly constructive but thin: short volume dropped sharply and BofA raised its target, but insider activity is minor and most headlines are irrelevant or low quality.",
     "read": "neutral",
     "confidence": "low",
     "key_points": [
-     "FINRA short volume fell to 28% vs 50% average (z -2.7). Less short pressure can aid momentum, but daily short volume is noisy and not a clear positioning signal.",
-     "BofA raised its TEAM target and kept Buy (ad-hoc-news.de, secondary source). Analyst support can sustain a bid, but the new target level and rationale aren't given.",
-     "Stocktwits headline says TEAM hit a 52-week high last week. Trend is positive, but it also raises pullback risk for a swing entry near highs.",
-     "Insider activity: one sale of $70,770 and no open-market buys in 30 days. Size is small, so it is a minor signal, not a warning."
+     "FINRA short volume fell to 28% vs a 50% average (z -2.7). Less short selling pressure may support momentum, but daily short volume is noisy and not a clean signal.",
+     "BofA reportedly raised its TEAM target and kept Buy (ad-hoc-news.de, secondary source). Supports sentiment, but the new target and rationale are not given.",
+     "Stocktwits headline says TEAM hit a 52-week high last week. This suggests strong momentum, but it is a crowd-sourced headline and not verified here.",
+     "Insiders sold $70,770 in 30 days with no open-market buys; $0 was outside 10b5-1 plans. Small and planned, so likely not a negative signal."
     ],
     "watch": [
-     "Whether short volume stays low over several sessions or reverts to ~50%, and whether price holds the 52-week high area.",
-     "Primary-source BofA note details (new target, reasoning) and any other analyst moves ahead of the next earnings date.",
-     "Insider Form 4 filings for any change from the single small sale, and the 10b5-1 status of that sale."
+     "Verify price versus the 52-week high and volume on any pullback; confirm the BofA target figure and rationale.",
+     "Check whether short volume stays low for several sessions or reverts to about 50%.",
+     "Look for the next earnings date and any guidance or cloud-migration news that could break the momentum."
     ],
     "unknowns": [
-     "No SEC filing, earnings, guidance, or company news in the window explains the move; the catalyst is unidentified.",
-     "Current price, volume, and the exact 52-week high level are not provided, so extension from the breakout can't be judged."
+     "No SEC filings, earnings details, or company news in the window explain the price move; several headlines are unrelated to Atlassian.",
+     "The IBD 'early software sell' and Stock Traders Daily items have no visible content, so their relevance to TEAM is unknown."
     ]
    }
   },
@@ -1085,7 +1117,9 @@
     ],
     "short_share_latest": 0.625
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": null
   },
   {
@@ -1224,25 +1258,27 @@
     ],
     "short_share_latest": 0.588
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": {
-    "bluf": "Valero reported results Oct 22 and headlines call it a beat, but the evidence has no numbers, so the read is unclear. Policy risk on diesel is the main watch item.",
+    "bluf": "Valero reported results on Oct 22 with headlines calling it a beat, but the evidence has no numbers, guidance, or insider activity, so the read is unclear.",
     "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "8-K on Oct 22 announced results; the filing text gives no figures. Without revenue, margin or guidance details, the size of the beat can't be verified.",
-     "Headlines (Simply Wall Street, MarketBeat) describe an earnings beat and a 'windfall quarter'. These are secondary sources, so they suggest strength but don't confirm it.",
-     "MarketBeat links the windfall to Washington's push for cheaper diesel. That could mean political or regulatory pressure on refiner margins over the next 2-8 weeks.",
-     "No open-market insider buys or sells in 30 days. This is a neutral signal and says nothing about management's view after earnings."
+     "8-K on Oct 22 says results announced, with no figures. Primary source confirms the event but gives no basis to judge size of the beat.",
+     "Headlines call it a 'windfall quarter' and an 'earnings beat'. These are secondary sources, so the beat is plausible but unquantified.",
+     "MarketBeat flags Washington's push for cheaper diesel. Policy pressure on fuel prices could squeeze refining margins over the next 2-8 weeks, but no specific action is cited.",
+     "Average analyst price target is $379.94 per MarketBeat. Without the current share price, upside or downside cannot be judged."
     ],
     "watch": [
-     "Read the 8-K and earnings release for refining margin, throughput, capex and buyback or dividend guidance.",
-     "Track any federal diesel action, such as export limits, reserve releases or windfall-profit proposals, and the response in crack spreads.",
-     "Check post-earnings price action and analyst target changes against the reported ~$379.94 average target."
+     "Earnings release details: refining margins, throughput, buybacks, and Q4 guidance versus consensus.",
+     "Any concrete federal diesel measures, such as export limits or reserve releases, and their effect on crack spreads.",
+     "Current share price against the $379.94 target and the Oct 30 option strikes ($427.50 call, $450 put) for positioning."
     ],
     "unknowns": [
-     "Actual earnings figures, guidance and the stock's reaction are absent from the evidence.",
-     "The substance and likelihood of the diesel policy push are unclear from a headline alone."
+     "Actual earnings figures, guidance, and market reaction since Oct 22 are absent from the evidence.",
+     "Insider activity shows $0 in buys and sells over 30 days, so it gives no signal either way."
     ]
    }
   },
@@ -1271,14 +1307,14 @@
       "published": "2026-10-26T14:32"
      },
      {
+      "title": "Nifty Bank Live | NSE Nifty Bank Index Today - S&P CNX Nifty Bank",
+      "publisher": "The Economic Times",
+      "published": "2026-10-26T14:27"
+     },
+     {
       "title": "A deeper well in Indonesia is being drilled to test for oil and possible natural gas.",
       "publisher": "Stock Titan",
       "published": "2026-10-26T12:00"
-     },
-     {
-      "title": "Workiva Inc. (WK) stock price, news, quote and history",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-26T02:45"
      },
      {
       "title": "Workiva (WK) Could Be 4% Undervalued On Its Return To Profit",
@@ -1384,22 +1420,22 @@
    },
    "failed": [],
    "read": {
-    "bluf": "Neutral-to-unclear into Q3 earnings: short volume spiked and the stock rose 6.4% in a week, but evidence is thin and mostly headlines, with no filings or earnings data.",
-    "read": "unclear",
+    "bluf": "Fortinet heads into Q3 earnings with a stock up about 6% on the week and a short-volume spike; the evidence is thin and mixed, so earnings is the real catalyst.",
+    "read": "neutral",
     "confidence": "low",
     "key_points": [
-     "FINRA short volume hit 70% of volume vs 57% 20-day average (z +2.6). Could mean hedging or positioning ahead of earnings; short volume is not short interest.",
-     "Stock reportedly up 6.42% in one week (Yahoo headline). Run-up into earnings raises the bar for results and the risk of a sell-the-news move.",
-     "Zacks and Cantor headlines frame the setup as pre-earnings; Cantor reportedly kept its rating citing solid demand. Low-quality sourcing, no rating or target details given.",
-     "No insider open-market buys or sells in 30 days. Gives no directional signal from insiders."
+     "FINRA short volume hit 70% of volume vs 57% 20-day average (z +2.6); this may mean hedging or bearish positioning ahead of earnings, but short volume is not short interest.",
+     "Stock reportedly up 6.42% in one week; the run-up raises the bar for earnings and raises downside risk if results or guidance disappoint.",
+     "Cantor Fitzgerald maintained its rating citing solid demand, while MarketBeat shows a consensus 'Hold'; this suggests a split, not strong, analyst conviction.",
+     "No insider open-market buys or sells in the last 30 days; insiders give no directional signal before the report."
     ],
     "watch": [
-     "Q3 earnings results and guidance: billings, firewall refresh trends, and the stock's reaction versus the implied move.",
-     "Whether short volume stays elevated after earnings or normalizes, and any change in reported short interest."
+     "Q3 results and Q4 guidance, especially billings and firewall refresh demand, which will likely drive the post-earnings move.",
+     "Whether elevated short volume persists or fades into the report; a continued rise would add to bearish positioning evidence."
     ],
     "unknowns": [
-     "Earnings date, consensus expectations, and options-implied move are not in the evidence.",
-     "No SEC filings, guidance details, or primary-source news explain the weekly gain or the short-volume spike."
+     "Actual short interest, options positioning and consensus estimates are not in the evidence, so the setup versus expectations is unclear.",
+     "Cantor's rating level, price target and reasoning are not given; headline only, not verified against the source."
     ]
    }
   },
@@ -1432,6 +1468,11 @@
     },
     "headlines": [
      {
+      "title": "PANW Jun 2027 650.000 call (PANW270617C00650000) stock price, news, quote and history",
+      "publisher": "Yahoo Finance Australia",
+      "published": "2026-10-26T12:05"
+     },
+     {
       "title": "Investors Heavily Search Palo Alto Networks, Inc. (PANW): Here is What You Need to Know",
       "publisher": "Yahoo Finance",
       "published": "2026-10-26T12:00"
@@ -1447,9 +1488,9 @@
       "published": "2026-10-26T10:51"
      },
      {
-      "title": "PANW Oct 2026 345.000 call (PANW261030C00345000) stock price, news, quote and history",
+      "title": "PANW Oct 2026 150.000 put (PANW261030P00150000) interactive stock chart",
       "publisher": "Yahoo Finance UK",
-      "published": "2026-10-26T08:32"
+      "published": "2026-10-26T03:36"
      },
      {
       "title": "PANW Oct 2026 272.500 put (PANW261030P00272500) stock price, news, quote and history",
@@ -1465,34 +1506,29 @@
       "title": "PANW Oct 2026 347.500 put (PANW261030P00347500) stock price, news, quote and history",
       "publisher": "Yahoo Finance UK",
       "published": "2026-10-25T11:48"
-     },
-     {
-      "title": "PANW Oct 2026 302.500 put (PANW261030P00302500) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-25T11:06"
      }
     ],
     "short_share_latest": 0.636
    },
    "failed": [],
    "read": {
-    "bluf": "PANW reportedly jumped about 7% but evidence is thin and mixed: heavy short volume and small insider sales offset by no clear catalyst; read is unclear.",
+    "bluf": "Evidence is thin and mixed: a short-volume spike and small insider selling lean negative, but a reported 7% price jump and no catalyst detail leave the direction unclear.",
     "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "FINRA short volume hit 64% of volume vs 45% 20-day average (z +3.7); could mean bearish positioning or hedging/market-making flow, not necessarily conviction shorting.",
-     "TradingKey headline says PANW jumped 7% toward $387.09; a sharp move on unverified cause raises squeeze or fade risk over coming weeks.",
-     "Insiders sold $261,350 over 30 days (2 sellers, $103,070 outside 10b5-1 plans) with zero buys; small size, so weak signal.",
-     "GuruFocus says ETFs were net sellers on Oct. 22, and options pages for Oct 30 expiry appear; both are low-quality, with no flow detail."
+     "FINRA short volume hit 64% of volume vs 45% 20-day average (z +3.7). Heavy shorting can signal bearish positioning, or hedging/market-making flow after a rally.",
+     "A TradingKey headline says PANW jumped 7% toward $387.09. Unverified secondary source; the cause isn't given, so the move's durability is unknown.",
+     "Insiders sold $261,350 over 30 days (2 sellers, $103,070 outside 10b5-1 plans) with zero open-market buys. Small size, so only a mild negative.",
+     "ETFs were net sellers on Oct 22 (GuruFocus), and several option-quote pages appeared. These show attention, not direction or conviction."
     ],
     "watch": [
-     "Confirm the catalyst for the 7% move via 8-K, earnings, or news; a fundamental driver would change the read.",
-     "Check whether short volume stays elevated after the jump (squeeze fuel) or normalizes, and the Oct 30 options open interest.",
-     "Track price holding above recent breakout levels on volume versus reversal toward prior range."
+     "Whether price holds the post-jump level on normal volume, and whether short volume stays elevated over the next several sessions.",
+     "The catalyst behind the 7% move: an 8-K, earnings, guidance or analyst action would outrank these headlines.",
+     "Actual options flow (volume, open interest) in the Oct 30 expiry puts and Jun 2027 calls; quote pages alone show nothing."
     ],
     "unknowns": [
-     "Cause of the reported 7% move is not established by any filing or primary source.",
-     "Actual options volume, open interest, and ETF flow figures are not provided, only quote page titles."
+     "Cause of the reported 7% rise; no filing or primary-source news in the evidence explains it.",
+     "Whether the short-volume spike reflects directional bets or hedging/market-making, since short volume is not short interest."
     ]
    }
   },
@@ -1553,11 +1589,6 @@
       "published": "2026-10-26T09:20"
      },
      {
-      "title": "TXN Dec 2026 235.000 put (TXN261218P00235000) interactive stock chart",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-25T07:44"
-     },
-     {
       "title": "TXN Oct 2026 310.000 call (TXN261030C00310000) stock price, news, quote and history",
       "publisher": "Yahoo Finance UK",
       "published": "2026-10-25T05:35"
@@ -1571,29 +1602,33 @@
       "title": "TXN Nov 2026 245.000 put (TXN261106P00245000) Interactive Stock Chart - Yahoo Finance",
       "publisher": "Yahoo! Finance Canada",
       "published": "2026-10-24T16:48"
+     },
+     {
+      "title": "Is Texas Instruments Incorporated (NASDAQ:TXN) Potentially Undervalued?",
+      "publisher": "Moomoo",
+      "published": "2026-10-24T13:24"
      }
     ],
     "short_share_latest": 0.567
    },
    "failed": [],
    "read": {
-    "bluf": "Mostly positive headlines (upgrade, data center demand, breakout setup) are offset by an unexplained 424B5 offering filing; the offering's nature decides whether this is bullish or a dilution risk.",
+    "bluf": "Mixed picture: a new 424B5 offering filing is a possible dilution risk, while the analyst upgrade and data center commentary are supportive but lower-quality evidence; read is unclear pending offering details.",
     "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "A 424B5 prospectus supplement was filed 2026-10-26. It could mean new shares or debt; the evidence doesn't say which, and equity dilution would pressure the stock.",
-     "10-Q was filed 2026-10-23 with no polarity flag. Earnings detail isn't in the evidence, so the fundamental trend can't be verified from it.",
-     "Freedom Broker upgraded TXN to Buy and the CEO reportedly sees growing data center demand. Supportive sentiment, but analyst upgrades and CEO comments are lower-quality signals than filings.",
-     "No insider buying or selling in 30 days. Insiders give no confirming or contradicting signal for either side."
+     "A 424B5 prospectus supplement was filed 10/26 (SEC). It signals a securities offering; if equity, it means dilution, if debt, little share impact.",
+     "10-Q filed 10/23 with no polarity flag in the evidence. Results and guidance details are not provided, so the earnings read is unknown.",
+     "CEO reportedly sees growing data center demand (headline, 10/24). Supportive for the growth narrative, but management commentary is not verified in filings here.",
+     "Freedom Broker upgrade to Buy and breakout-setup headlines (10/26) add mild positive sentiment; these are low-weight sources versus SEC filings."
     ],
     "watch": [
-     "Read the 424B5: equity vs. debt, size, use of proceeds. Debt for capex is far less negative than a share issuance.",
-     "Price and volume reaction over the next few sessions, and whether the ChartMill breakout level holds.",
-     "10-Q details: guidance, margins, free cash flow, capex, and the data center and industrial demand commentary."
+     "Open the 424B5: is it debt or equity, size, and use of proceeds? Equity would raise bearish weight.",
+     "Check 10-Q and earnings guidance for margin, capex and free cash flow trends versus the dividend."
     ],
     "unknowns": [
-     "Type, size, and purpose of the 424B5 offering are not stated in the evidence.",
-     "Stock price reaction and 10-Q financial results are not included, so the net market read is unknown."
+     "Offering type, size and purpose are not stated in the evidence.",
+     "No insider activity in 30 days, and no price or volume data to confirm the breakout claim."
     ]
    }
   },
@@ -1756,11 +1791,6 @@
     },
     "headlines": [
      {
-      "title": "Anthropic reveals $80 billion loss, huge spending spree ahead of IPO",
-      "publisher": "NBC News",
-      "published": "2026-10-26T15:16"
-     },
-     {
       "title": "Deposits rose $6.2 million as loans fell $19.9 million at Endeavor Bank.",
       "publisher": "Stock Titan",
       "published": "2026-10-26T13:00"
@@ -1794,6 +1824,11 @@
       "title": "Global Net Lease (GNL) Stock Could Be Undervalued After Its 34% 3 Year Gain",
       "publisher": "Yahoo Finance",
       "published": "2026-10-25T11:08"
+     },
+     {
+      "title": "Issuance/retirement of stock (net) of PT Darma Henwa Tbk \u2013 SWB:0DH",
+      "publisher": "TradingView",
+      "published": "2026-10-25T05:58"
      }
     ],
     "short_share_latest": 0.582
@@ -1911,11 +1946,6 @@
       "published": "2026-10-25T22:36"
      },
      {
-      "title": "REGN Oct 2026 812.500 call (REGN261030C00812500) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-25T22:33"
-     },
-     {
       "title": "Regeneron Pharmaceuticals, Inc. (REGN) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
       "published": "2026-10-25T13:35"
@@ -1924,6 +1954,11 @@
       "title": "What Regeneron Pharmaceuticals Buyers Were Betting On",
       "publisher": "Simply Wall Street",
       "published": "2026-10-25T10:31"
+     },
+     {
+      "title": "Evergreen Capital Management LLC Sells 3,547 Shares of Regeneron Pharmaceuticals, Inc. $REGN",
+      "publisher": "MarketBeat",
+      "published": "2026-10-25T08:47"
      }
     ],
     "short_share_latest": 0.435

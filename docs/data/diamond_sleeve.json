@@ -1,60 +1,35 @@
 {
-  "generated_at": "2026-10-26T14:30:43.735453",
+  "generated_at": "2026-10-27T14:30:49.081113",
   "mode": "EXECUTE",
-  "holdings": [],
-  "sells": [],
-  "buys": [
+  "holdings": [
     {
-      "symbol": "WK",
-      "shares": 28,
-      "limit_price": 98.04,
-      "judgment": 12.0,
-      "judgment_rank": 1,
-      "name": "WORKIVA INC",
-      "status": "submitted",
-      "order_id": "8f0a84d6-69a2-4e76-b8d0-554cf6ba4390"
+      "symbol": "KVYO",
+      "market_value": 2678.62,
+      "pnl_pct": -3.87
     },
     {
       "symbol": "PCOR",
-      "shares": 44,
-      "limit_price": 62.85,
-      "judgment": 12.0,
-      "judgment_rank": 2,
-      "name": "PROCORE TECHNOLOGIES, INC.",
-      "status": "submitted",
-      "order_id": "1535e42d-7f12-4b46-8244-612e13dcef06"
-    },
-    {
-      "symbol": "VCYT",
-      "shares": 50,
-      "limit_price": 54.98,
-      "judgment": 12.0,
-      "judgment_rank": 3,
-      "name": "VERACYTE, INC.",
-      "status": "submitted",
-      "order_id": "5518ef55-add2-445b-9cff-9d10bcf91a79"
+      "market_value": 2711.28,
+      "pnl_pct": -1.94
     },
     {
       "symbol": "VCEL",
-      "shares": 64,
-      "limit_price": 43.23,
-      "judgment": 12.0,
-      "judgment_rank": 4,
-      "name": "Vericel Corp",
-      "status": "submitted",
-      "order_id": "be7c5d63-1efb-49b9-ab1a-2dde0615017b"
+      "market_value": 2749.44,
+      "pnl_pct": -0.62
     },
     {
-      "symbol": "KVYO",
-      "shares": 133,
-      "limit_price": 20.95,
-      "judgment": 11.0,
-      "judgment_rank": 8,
-      "name": "Klaviyo, Inc.",
-      "status": "submitted",
-      "order_id": "70ae9e28-9b23-40ed-8622-52872a706cfe"
+      "symbol": "VCYT",
+      "market_value": 2425.0,
+      "pnl_pct": -0.74
+    },
+    {
+      "symbol": "WK",
+      "market_value": 2323.44,
+      "pnl_pct": -3.61
     }
   ],
+  "sells": [],
+  "buys": [],
   "skipped": [
     {
       "symbol": "ALGM",
@@ -72,16 +47,9 @@
   "failures": [],
   "alerts": [],
   "note": null,
-  "equity": 112050.57,
-  "budget": 22410.11,
-  "slot": 2801.26,
-  "invested": 0,
-  "list_date": "2026-10-24",
-  "stops_placed": [
-    "KVYO",
-    "PCOR",
-    "VCEL",
-    "VCYT",
-    "WK"
-  ]
+  "equity": 110880.56,
+  "budget": 22176.11,
+  "slot": 2772.01,
+  "invested": 12887.78,
+  "list_date": "2026-10-24"
 }

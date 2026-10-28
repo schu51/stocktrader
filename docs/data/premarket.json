@@ -1,89 +1,99 @@
 {
-  "generated_at": "2026-10-27T06:00:40.874643-07:00",
+  "generated_at": "2026-10-28T06:00:42.103375-07:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
     "strong": 29,
-    "mixed": 6,
-    "weak": 40
+    "mixed": 8,
+    "weak": 38
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-10-27T09:00:47-04:00",
-  "premarket_quotes": 71,
+  "premarket_as_of": "2026-10-28T09:00:50-04:00",
+  "premarket_quotes": 73,
   "no_premarket_quote": [
-    "PCOR",
-    "APPF",
-    "DUOL",
-    "PODD"
+    "PODD",
+    "TDOC"
   ],
   "gap_alerts": [
     {
-      "ticker": "NU",
-      "prev_close": 12.59,
-      "current": 12.77,
-      "pct_chg": 1.41,
-      "ma50": 14.52,
+      "ticker": "HOOD",
+      "prev_close": 94.56,
+      "current": 88.88,
+      "pct_chg": -6.01,
+      "ma50": 108.78,
       "reasons": [
-        "volume spike 4.0x avg (prior session)"
+        "gap down -6.0%"
       ]
-    }
-  ],
-  "avoids": [],
-  "gap_up_priority": [],
-  "top_candidates": [
-    {
-      "ticker": "ZS",
-      "price": 260.45,
-      "ma50": 198.76,
-      "ret_5d": 22.5,
-      "ret_20d": 30.6,
-      "score": 0.2569,
-      "gap_up": false,
-      "thesis_grade": "C",
-      "thesis_score": 46.0
     },
     {
       "ticker": "NCNO",
-      "price": 23.42,
-      "ma50": 20.88,
-      "ret_5d": 15.1,
-      "ret_20d": 25.9,
-      "score": 0.1715,
-      "gap_up": false,
-      "thesis_grade": "D",
-      "thesis_score": 21.0
+      "prev_close": 22.92,
+      "current": 22.2,
+      "pct_chg": -3.14,
+      "ma50": 20.93,
+      "reasons": [
+        "gap down -3.1%"
+      ]
     },
     {
-      "ticker": "TEAM",
-      "price": 223.41,
-      "ma50": 191.93,
-      "ret_5d": 4.0,
-      "ret_20d": 25.1,
-      "score": 0.1531,
-      "gap_up": false,
-      "thesis_grade": "C",
-      "thesis_score": 47.0
+      "ticker": "PYPL",
+      "prev_close": 56.09,
+      "current": 55.25,
+      "pct_chg": -1.5,
+      "ma50": 55.59,
+      "reasons": [
+        "crossed BELOW 50MA (55.59)"
+      ]
     },
+    {
+      "ticker": "SOFI",
+      "prev_close": 16.4,
+      "current": 16.41,
+      "pct_chg": 0.06,
+      "ma50": 16.63,
+      "reasons": [
+        "volume spike 3.6x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "META",
+      "prev_close": 620.19,
+      "current": 621.34,
+      "pct_chg": 0.19,
+      "ma50": 665.43,
+      "reasons": [
+        "volume spike 2.6x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "APH",
+      "prev_close": 78.21,
+      "current": 83.5,
+      "pct_chg": 6.76,
+      "ma50": 81.19,
+      "reasons": [
+        "gap UP 6.8% above 50MA \u2014 momentum alert"
+      ]
+    }
+  ],
+  "avoids": [
+    "HOOD",
+    "NCNO",
+    "PYPL"
+  ],
+  "gap_up_priority": [
+    "APH"
+  ],
+  "top_candidates": [
     {
       "ticker": "PCOR",
-      "price": 62.77,
-      "ma50": 56.64,
-      "ret_5d": 8.2,
-      "ret_20d": 27.9,
-      "score": 0.1517,
+      "price": 61.73,
+      "ma50": 56.71,
+      "ret_5d": 1.6,
+      "ret_20d": 24.6,
+      "score": 0.1142,
       "gap_up": false,
-      "thesis_grade": "C",
-      "thesis_score": 49.0
-    },
-    {
-      "ticker": "NOW",
-      "price": 158.18,
-      "ma50": 138.17,
-      "ret_5d": 8.8,
-      "ret_20d": 20.3,
-      "score": 0.1454,
-      "gap_up": false,
-      "thesis_grade": "D",
-      "thesis_score": 32.0
+      "thesis_grade": "B",
+      "thesis_score": 57.0
     }
   ]
 }

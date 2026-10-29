@@ -1,30 +1,26 @@
 {
-  "date": "2026-10-28",
-  "generated_at": "2026-10-28T20:15:39.412538",
+  "date": "2026-10-29",
+  "generated_at": "2026-10-29T20:15:42.011808",
   "portfolio": {
-    "value": 111324.71,
-    "cash": 44331.91,
-    "total_unrealized": 3524.78,
-    "positions": 20,
-    "winners": 12,
+    "value": 111273.9,
+    "cash": 31380.62,
+    "total_unrealized": 3473.98,
+    "positions": 24,
+    "winners": 16,
     "losers": 8,
     "risk_level": "LOW",
-    "risk_score": 15.8
+    "risk_score": 16.0
   },
   "execution": {
-    "signals_generated": 5,
-    "orders_executed": 2,
-    "orders_skipped": 3,
-    "skip_reasons": [
-      "opened more than 5% above the previous close (ask $422.87, limit $421.79)",
-      "opened more than 5% above the previous close (ask $90.18, limit $89.75)",
-      "opened more than 5% above the previous close (ask $241.20, limit $238.96)"
-    ],
+    "signals_generated": 4,
+    "orders_executed": 4,
+    "orders_skipped": 0,
+    "skip_reasons": [],
     "candidates_screened": 30
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 1,
+    "stops_updated": 0,
     "detail": []
   },
   "closed_today": [],

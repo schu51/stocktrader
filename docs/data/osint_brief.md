@@ -1,88 +1,87 @@
-# OSINT brief — 2026-10-28
+# OSINT brief — 2026-10-29
 
-**ACN insider buying is the one clear signal; MPC's 7.5% drop is unexplained**
+**Earnings Nov. 3 hit SHOP, MPC; ACN insider buying is the one clear positive**
 
-Biggest threat to a holding is MPC, which fell about 7.5% on 10/27 with no identified cause and only a small pre-market bounce, so find the driver before the open. SHOP reports Nov 3, so earnings risk dominates the coming week with no directional edge. The strongest new signal is ACN, where the chair/CEO and a director bought about $3.2M after a ~4.9% drop, a modest bullish read. PSX filed Q3 results (headline $5.6B earnings) but adjusted figures, guidance and price reaction are not yet known. CRWD shows heavy 10b5-1 insider selling against a rising stock; CRL, ILMN and TEAM are largely unchanged, and ADI and VLO had only routine filings.
+No holding shows a clear breakdown, but SHOP and MPC both report Nov. 3 with no directional edge, so size risk before then. ACN is the strongest signal: the CEO and a director bought about $3.2M and the stock rose ~4%, though it has already run hard and the federal award link is loose. MRVL dropped 8-10% on an unconfirmed Lumentum deal report, so wait for confirmation and terms before acting. FTNT fell after its Oct 28 earnings on slowing product growth, with downgrades, so momentum is negative. ILMN, PLTR, PSX and TEAM show no actionable change; PLTR had only insider selling and PSX lacks actual figures.
 
 **Today:**
-- Find why MPC dropped 7.5% on 10/27 before deciding to hold or trim.
-- Check PSX adjusted EPS, guidance and pre-market reaction against the $5.6B headline.
-- Decide SHOP sizing ahead of the Nov 3 earnings report.
+- Decide SHOP and MPC sizing or hedges before Nov. 3 earnings.
+- ACN: check entry versus extension; decide whether to add after the run or hold.
+- MRVL: look for confirmation or denial of the Lumentum deal before considering a dip entry.
 
 ## ACN · score +3 · holding · bullish (medium)
 
-Insider cluster buying by the chair/CEO and a director, about $3.2M after a ~4.9% drop, is a modest bullish signal; the other evidence is weaker or unverified.
+CEO and a director bought about $3.2M of ACN on the open market and the stock rose roughly 4%, but the federal award spike is loosely matched and the stock has already run hard.
 
 - 2026-10-26 **sec** Insider CLUSTER BUY: 2 buyer(s), $3,200,889 open-market in 30 days
-- 2026-10-28 **usaspending** Federal awards spike: $4,587M in 30 days vs $302M/month pace; largest from Department of Education (name match is loose)
-- 2026-10-28 **news** News surge: 15 headlines in 24h vs 2.8/day, 10 outlets, tone +0.00
-- 2026-10-28 **finra** Short volume collapsed: 40% vs 65% average (z -4.4)
+- 2026-10-29 **usaspending** Federal awards spike: $5,265M in 30 days vs $303M/month pace; largest from Department of Education (name match is loose)
 
-Watch: Whether the stock holds above recent lows after the 4.9% drop, and whether more insiders buy or sell.; Form 4 details: who sold, at what price, and whether sales were planned or discretionary.; Whether the federal award spike is verified as Accenture's, and the next guidance or earnings commentary.
-
-## CRWD · score -1 · holding, candidate · unclear (low)
-
-Evidence leans mildly cautious: heavy insider selling, all under 10b5-1 plans, against a rising stock and neutral headlines. No catalyst in the window changes the picture, so the read is unclear.
-
-- 2026-10-28 **stocktwits** StockTwits crowd sour: 56% bullish of 9 tagged posts
-
-Watch: Next Form 4 filings: any sales outside 10b5-1 plans, or sales that grow in size, would strengthen the bearish read.; Price action against the recent rally highs, and whether volume holds up on advances.; Next earnings date and guidance, the likeliest catalyst inside the 2-8 week window.
+Watch: Confirm the Form 4 filings on SEC for buyer identities, prices, and dates, and details of the sells.; Verify the awards on USAspending (recipient entity, award size) and the cited $151M contract against Accenture Federal Services.; Price action holding above the Oct 28 breakout level on steady volume versus a fade back into the gap.
 
 ## SHOP · score -1 · holding · unclear (low)
 
-Shopify reports Nov 3, so the next week is dominated by earnings risk; the evidence shows no clear directional edge, only thin sentiment and low-quality headlines.
+Earnings on Nov. 3 is the dominant near-term event; the evidence shows no clear directional edge, only a debate over AI-driven growth versus margin pressure.
 
-- 2026-10-28 **stocktwits** StockTwits crowd sour: 55% bullish of 11 tagged posts
+- 2026-10-29 **stocktwits** StockTwits crowd sour: 55% bullish of 11 tagged posts
 
-Watch: Nov 3 results: revenue growth, gross merchandise volume (GMV), operating margin, and Q4 guidance versus consensus, plus the stock's reaction.; Whether Shopify Plus wins and the checkout-agent documentation turn into measurable merchant or GMV growth.; Primary-source confirmation (company press release or SEC filing) of the earnings date and any preliminary figures.
+Watch: Nov. 3 results: gross profit growth, operating margin, and next-quarter guidance versus consensus.; Management commentary on AI spending and its effect on margins, plus the stock's reaction to it.; Position sizing or hedging ahead of the print, given the gap risk on a holding.
 
-## CRL · score +0 · holding · neutral (low)
+## ILMN · score +0 · holding · unclear (low)
 
-Mixed, leaning neutral: a large director sale under a 10b5-1 plan offsets a sector-positive read from IQVIA and a stock uptick; no decisive catalyst is visible in the evidence.
-
-- 2026-10-28 **finra** Short volume collapsed: 44% vs 65% average (z -2.7)
-
-Watch: Whether short volume stays below average over the next several sessions, or reverts to 65%.; Further Form 4 filings showing additional sales by Foster or other insiders, and the remaining 10b5-1 schedule.; CRL's own earnings date and guidance, and any read-through on biopharma R&D demand from peers.
-
-## ILMN · score +0 · holding · neutral (low)
-
-No material new catalyst in the last 4 days; only routine passive-holder filings and earnings previews, so the read is neutral until Illumina's Q3 results.
+Evidence shows a 3.3% price rise and routine passive-holder filings, but no catalyst, insider activity, or fundamental change is documented; the read is neutral to unclear.
 
 - 2026-10-27 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1110803/000201238326003908/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-Watch: Q3 earnings date, results, and guidance versus consensus, especially revenue trend and margin commentary.; Options positioning in the Nov 350/410 calls (volume, open interest) for any unusual activity before earnings.; Whether the BlackRock 13G/A shows an increase or decrease in stake versus the prior filing.
+Watch: Identify the cause of the 3.3% move: BioInsight product details, earnings date, guidance, or analyst actions.; Check whether volume confirms the rise and whether price holds above recent support over the next few sessions.; Review the actual BlackRock 13G/A for the change in percent ownership versus the prior filing.
 
-## MPC · score +0 · holding, candidate · unclear (low)
+## MPC · score +0 · holding, candidate · neutral (low)
 
-MPC fell about 7.5% on 10/27 with no explained cause in the evidence; a small pre-market bounce followed. Direction is unclear until the driver of the drop is identified.
+No decisive signal yet; MPC is a pre-earnings setup (Nov. 3) with a dividend hike and mixed commentary, so the earnings print is the real catalyst.
 
 - 2026-10-27 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1510295/000201238326003815/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-Watch: Find the catalyst: earnings release, guidance, refining margin or crack spread moves, or peer (PBF, PSX) price action on 10/27.; Whether price holds or reclaims the 10/27 close in the next few sessions, and whether volume stays elevated.; Any 8-K, analyst rating changes, or insider purchases following the drop.
+Watch: Nov. 3 results: refining margins, throughput, capital return, and guidance versus consensus.; 13G/A details: whether the holder's stake rose or fell, and who the holder is.; Dividend declaration details (amount, record date) from an 8-K or company release.
+
+## PLTR · score +0 · holding, candidate · neutral (low)
+
+Fundamentals look strong on reported Q2 growth, but short-term evidence is mixed: insiders only sold, the stock dipped on 10/28, and short volume fell. No clear catalyst; lean neutral.
+
+- 2026-10-29 **finra** Short volume collapsed: 49% vs 59% average (z -2.1)
+
+Watch: Cause of the 10/28 decline in Benzinga's article, and whether price holds support after the breakout.; Whether short volume stays below average for several sessions or snaps back.; Confirm Q2 figures against the SEC filing or company release, and look for new insider Form 4 filings.
 
 ## PSX · score +0 · holding, candidate · unclear (low)
 
-Phillips 66 filed an 8-K with Q3 results, and headlines cite $5.6B earnings, but the evidence lacks adjusted figures, guidance and price reaction, so the read is unclear.
+Phillips 66 filed its 10-Q and reported results with a record-profit narrative and a Wells Fargo target raise, but the evidence lacks actual figures, so the read is modestly positive at best.
 
+- 2026-10-28 **sec** periodic report filed ([link](https://www.sec.gov/Archives/edgar/data/1534701/000153470126000037/psx-20260930.htm))
 - 2026-10-28 **sec** 8-K: results announced ([link](https://www.sec.gov/Archives/edgar/data/1534701/000153470126000035/psx-20261028.htm))
 
-Watch: Read the 8-K and earnings release for adjusted EPS, special items or asset-sale gains, refining capture rate, and buyback or capex guidance.; Check the post-earnings price and volume reaction, and whether consensus estimates are revised up over the next 1-2 weeks.; Track refining crack spreads and product inventories, which drive near-term earnings power.
+Watch: Read the 8-K and 10-Q: refining margins, cash from operations, buybacks/dividend, and guidance versus consensus.; Price and volume reaction after the results, and whether other analysts follow Wells Fargo with target changes.; Details of the capital allocation outlook: buyback pace, debt reduction, and any activist or portfolio-sale developments.
 
 ## TEAM · score +0 · holding, candidate · unclear (low)
 
-Evidence is thin and mixed: short volume dropped sharply and Oppenheimer raised its target, but a down-day headline and no insider buying keep the read unclear.
+Evidence is thin and mostly irrelevant; the only TEAM-specific signals are a short-volume drop and a tiny insider sale, so no directional read is supported.
 
-- 2026-10-28 **finra** Short volume collapsed: 26% vs 48% average (z -2.4)
+- 2026-10-29 **finra** Short volume collapsed: 18% vs 47% average (z -2.8)
 
-Watch: Whether low short volume persists over several sessions or reverts toward the 48% average.; Price reaction versus the Oppenheimer target raise and whether other analysts follow.; Any SEC filings or company news explaining the 10-26 drop, plus upcoming earnings date.
+Watch: Whether short volume stays low over several sessions or reverts to ~47%, and how price reacts.; Any 8-K, guidance change, or earnings date announcement from Atlassian.; Rate and Fed moves affecting high-multiple software names, as the headline suggests.
 
-## ADI · score +0 · candidate
+## MRVL · score -1 · candidate · unclear (low)
 
-- 2026-10-27 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/6281/000201238326003874/xslSCHEDULE_13G_X02/primary_doc.xml))
+MRVL fell roughly 8-10% on an unconfirmed report it may buy Lumentum; the deal is unverified, so the direction depends on confirmation and terms.
 
-## VLO · score +0 · candidate
+- 2026-10-29 **stocktwits** StockTwits crowd sour: 40% bullish of 10 tagged posts
 
-- 2026-10-28 **sec** periodic report filed ([link](https://www.sec.gov/Archives/edgar/data/1035002/000162828026067679/vlo-20260930.htm))
-- 2026-10-28 **finra** Short volume collapsed: 41% vs 58% average (z -2.8)
+Watch: Any Marvell or Lumentum statement, 8-K, or major-outlet confirmation or denial of talks, including price, structure, and financing.; Whether MRVL holds post-drop lows or rebounds if talks are denied; Lumentum's move would show how much deal premium is priced in.; Form 4 filings beyond the 28 October one for any unplanned insider selling or buying.
 
-_No new signals: APA, CTLP, EXPD, HUM, KVYO, PCOR, PLTR, VCEL, VCYT, WK, DDOG, FTNT, NTAP, PANW, SNOW, TRGP, TWLO_
+## FTNT · score +0 · candidate · bearish (medium)
+
+Fortinet fell sharply after its Oct 28 earnings on slowing product growth and services concerns, with analyst downgrades and cuts; near-term momentum is negative despite the reported earnings beat.
+
+- 2026-10-29 **news** News surge: 46 headlines in 24h vs 9.0/day, 21 outlets, tone -0.05
+- 2026-10-28 **sec** 8-K: results announced ([link](https://www.sec.gov/Archives/edgar/data/1262039/000126203926000024/ftnt-20261028.htm))
+
+Watch: Whether the stock holds the post-earnings low or keeps making lower lows on volume over the next 1-2 weeks.; Further analyst downgrades or target cuts versus any upgrades calling the selloff overdone.; The 8-K and earnings release details: billings, product revenue and services growth, and full-year guidance.
+
+_No new signals: APA, CRL, CRWD, CTLP, EOG, EXPD, HPQ, HUM, KVYO, PCOR, VCEL, VCYT, WK, AMD, DVN, HPE, NTAP, PANW, SNOW, TRGP_

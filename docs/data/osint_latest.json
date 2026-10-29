@@ -1,16 +1,16 @@
 {
- "date": "2026-10-28",
- "generated_at": "2026-10-28T12:03:16+00:00",
+ "date": "2026-10-29",
+ "generated_at": "2026-10-29T12:02:59+00:00",
  "window_days": 4,
- "covered": 27,
- "with_signals": 10,
+ "covered": 29,
+ "with_signals": 9,
  "summary": {
-  "headline": "ACN insider buying is the one clear signal; MPC's 7.5% drop is unexplained",
-  "summary": "Biggest threat to a holding is MPC, which fell about 7.5% on 10/27 with no identified cause and only a small pre-market bounce, so find the driver before the open. SHOP reports Nov 3, so earnings risk dominates the coming week with no directional edge. The strongest new signal is ACN, where the chair/CEO and a director bought about $3.2M after a ~4.9% drop, a modest bullish read. PSX filed Q3 results (headline $5.6B earnings) but adjusted figures, guidance and price reaction are not yet known. CRWD shows heavy 10b5-1 insider selling against a rising stock; CRL, ILMN and TEAM are largely unchanged, and ADI and VLO had only routine filings.",
+  "headline": "Earnings Nov. 3 hit SHOP, MPC; ACN insider buying is the one clear positive",
+  "summary": "No holding shows a clear breakdown, but SHOP and MPC both report Nov. 3 with no directional edge, so size risk before then. ACN is the strongest signal: the CEO and a director bought about $3.2M and the stock rose ~4%, though it has already run hard and the federal award link is loose. MRVL dropped 8-10% on an unconfirmed Lumentum deal report, so wait for confirmation and terms before acting. FTNT fell after its Oct 28 earnings on slowing product growth, with downgrades, so momentum is negative. ILMN, PLTR, PSX and TEAM show no actionable change; PLTR had only insider selling and PSX lacks actual figures.",
   "actions": [
-   "Find why MPC dropped 7.5% on 10/27 before deciding to hold or trim.",
-   "Check PSX adjusted EPS, guidance and pre-market reaction against the $5.6B headline.",
-   "Decide SHOP sizing ahead of the Nov 3 earnings report."
+   "Decide SHOP and MPC sizing or hedges before Nov. 3 earnings.",
+   "ACN: check entry versus extension; decide whether to add after the run or hold.",
+   "MRVL: look for confirmation or denial of the Lumentum deal before considering a dip entry."
   ],
   "generated_by": "claude"
  },
@@ -36,25 +36,9 @@
     {
      "source": "usaspending",
      "kind": "awards",
-     "date": "2026-10-28",
+     "date": "2026-10-29",
      "polarity": 1,
-     "text": "Federal awards spike: $4,587M in 30 days vs $302M/month pace; largest from Department of Education (name match is loose)",
-     "url": null
-    },
-    {
-     "source": "news",
-     "kind": "velocity",
-     "date": "2026-10-28",
-     "polarity": 0,
-     "text": "News surge: 15 headlines in 24h vs 2.8/day, 10 outlets, tone +0.00",
-     "url": null
-    },
-    {
-     "source": "finra",
-     "kind": "short_volume",
-     "date": "2026-10-28",
-     "polarity": 0,
-     "text": "Short volume collapsed: 40% vs 65% average (z -4.4)",
+     "text": "Federal awards spike: $5,265M in 30 days vs $303M/month pace; largest from Department of Education (name match is loose)",
      "url": null
     }
    ],
@@ -71,161 +55,67 @@
     },
     "headlines": [
      {
-      "title": "Accenture Chair, CEO Purchased Shares Worth Over $3M",
-      "publisher": "TradingView",
-      "published": "2026-10-28T10:50"
+      "title": "Accenture shares gain almost 4% after major insider purchase and $151 million government contract win",
+      "publisher": "Traders Union",
+      "published": "2026-10-28T20:04"
      },
      {
-      "title": "After buying 800 shares, Accenture (ACN) director Price directly holds 9,361 shares.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-28T10:46"
+      "title": "Insider Stock Purchases: October 28, 2026",
+      "publisher": "Quiver Quantitative",
+      "published": "2026-10-28T18:45"
      },
      {
-      "title": "The chair and CEO buys Accenture (ACN) shares in two direct purchases.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-28T10:45"
+      "title": "ACN climbs as upward price move continues despite reversal setup risk",
+      "publisher": "Traders Union",
+      "published": "2026-10-28T15:47"
      },
      {
-      "title": "Accenture signs three-year AI partnership, and Accenture stock costs EUR 209.65",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-10-28T08:09"
+      "title": "Bullish Move: Julie Spellman Sweet Shows Confidence, Acquires $3.00M In Accenture Stock",
+      "publisher": "Benzinga",
+      "published": "2026-10-28T15:00"
      },
      {
-      "title": "Accenture (ACN) Secures $151.46M Task Order for ICBM Engineering Services",
-      "publisher": "GuruFocus",
-      "published": "2026-10-28T00:38"
+      "title": "Paula A Price Boosts Confidence With $199K Purchase Of Accenture Stock",
+      "publisher": "Benzinga",
+      "published": "2026-10-28T15:00"
      },
      {
-      "title": "Is Accenture PLC (ACN) a Bargain After 4.9% Drop? GF Value Says Undervalued",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T23:01"
+      "title": "Accenture PLC Stock (ACN) Moved Up by 4.43% on Oct 28: A Full Analysis",
+      "publisher": "TradingKey",
+      "published": "2026-10-28T14:15"
      },
      {
-      "title": "Accenture (ACN) Secures $151.46M Task Order for Missile Engineering Services",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T22:36"
+      "title": "Accenture CEO Julie Sweet Buys $3 Million in Stock as Director Also Purchases Shares",
+      "publisher": "Quiver Quantitative",
+      "published": "2026-10-28T13:33"
      },
      {
-      "title": "Accenture (ACN) Launches Physical AI Safety Suite For Factories And Warehouses",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-27T22:09"
+      "title": "Accenture CEO Buys $3 Million of Stock After Shares Double Off June Lows",
+      "publisher": "Barron's",
+      "published": "2026-10-28T13:20"
      }
     ],
-    "short_share_latest": 0.397
+    "short_share_latest": 0.631
    },
    "failed": [],
    "read": {
-    "bluf": "Insider cluster buying by the chair/CEO and a director, about $3.2M after a ~4.9% drop, is a modest bullish signal; the other evidence is weaker or unverified.",
+    "bluf": "CEO and a director bought about $3.2M of ACN on the open market and the stock rose roughly 4%, but the federal award spike is loosely matched and the stock has already run hard.",
     "read": "bullish",
     "confidence": "medium",
     "key_points": [
-     "Two insiders, including the chair/CEO, bought $3.2M on the open market in 30 days. Insiders buying after a pullback can support a rebound over 2-8 weeks.",
-     "Two insiders also sold $1.63M ($1.43M outside 10b5-1 plans). This dilutes the buy signal, though buys outweigh sells about 2:1.",
-     "Federal awards hit $4.59M-scale spike vs $302M/month pace, but the Dept of Education name match is loose. Treat as unconfirmed, not a catalyst.",
-     "A $151.46M missile engineering task order and AI partnership headlines are small relative to Accenture's size. Short volume fell to 40% from 65%, which is mildly supportive but not decisive."
+     "CEO Sweet bought ~$3.0M and a director ~$199K in the open market; insider cluster buying is a credible confidence signal over a multi-week horizon.",
+     "Insiders also sold $1.63M ($1.43M outside 10b5-1 plans), so insider flow is not purely one-sided and tempers the signal.",
+     "Federal awards hit $5,265M in 30 days vs a $303M/month pace, but the Dept. of Education name match is loose; treat as unverified.",
+     "Barron's says shares have doubled off June lows and a 4%+ move on Oct 28 came with 'reversal setup risk' noted, so some of the news is priced in."
     ],
     "watch": [
-     "Whether the stock holds above recent lows after the 4.9% drop, and whether more insiders buy or sell.",
-     "Form 4 details: who sold, at what price, and whether sales were planned or discretionary.",
-     "Whether the federal award spike is verified as Accenture's, and the next guidance or earnings commentary."
+     "Confirm the Form 4 filings on SEC for buyer identities, prices, and dates, and details of the sells.",
+     "Verify the awards on USAspending (recipient entity, award size) and the cited $151M contract against Accenture Federal Services.",
+     "Price action holding above the Oct 28 breakout level on steady volume versus a fade back into the gap."
     ],
     "unknowns": [
-     "The cause of the recent 4.9% drop and whether it reflects a fundamental problem; no price or earnings context was provided.",
-     "Whether the $4,587M federal awards figure actually belongs to Accenture, given the loose name match."
-    ]
-   }
-  },
-  {
-   "symbol": "CRWD",
-   "name": "CrowdStrike Holdings, Inc.",
-   "why": [
-    "holding",
-    "candidate"
-   ],
-   "score": -1,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [
-    {
-     "source": "stocktwits",
-     "kind": "crowd",
-     "date": "2026-10-28",
-     "polarity": -1,
-     "text": "StockTwits crowd sour: 56% bullish of 9 tagged posts",
-     "url": null
-    }
-   ],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 66356620,
-     "sellers": 4,
-     "discretionary_sell_value": 0
-    },
-    "headlines": [
-     {
-      "title": "CrowdStrike CEO George Kurtz sells $5.11 million in company stock",
-      "publisher": "Investing.com",
-      "published": "2026-10-28T00:29"
-     },
-     {
-      "title": "CRWD Feb 2027 135.000 put (CRWD270219P00135000) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T21:37"
-     },
-     {
-      "title": "CrowdStrike Holdings Inc. Cl A stock rises Tuesday, outperforms market",
-      "publisher": "MarketWatch",
-      "published": "2026-10-27T20:32"
-     },
-     {
-      "title": "CrowdStrike vs. Fastly: Which Technology Stock Is a Better Buy in 2026?",
-      "publisher": "The Motley Fool",
-      "published": "2026-10-27T19:25"
-     },
-     {
-      "title": "CrowdStrike CEO George Kurtz sells $5.06M in shares in September",
-      "publisher": "Investing.com",
-      "published": "2026-10-27T12:36"
-     },
-     {
-      "title": "Is Crowdstrike\u2019s Rally a Sign of a Sustainable Shift Toward Increased AI Cybersecurity?",
-      "publisher": "24/7 Wall St.",
-      "published": "2026-10-27T12:15"
-     },
-     {
-      "title": "CrowdStrike Holdings, Inc. (CRWD) Stock Forecasts",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T11:50"
-     },
-     {
-      "title": "Black October Is Changing How Companies Buy Cybersecurity. 5 Stocks in the Line of Fire",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-27T11:20"
-     }
-    ],
-    "short_share_latest": 0.522
-   },
-   "failed": [],
-   "read": {
-    "bluf": "Evidence leans mildly cautious: heavy insider selling, all under 10b5-1 plans, against a rising stock and neutral headlines. No catalyst in the window changes the picture, so the read is unclear.",
-    "read": "unclear",
-    "confidence": "low",
-    "key_points": [
-     "Insiders sold $66.4M over 30 days across 4 people, with $0 bought. All sales were in 10b5-1 plans, so they are pre-scheduled and carry weaker signal.",
-     "CEO Kurtz sold about $5.11M, reported Oct 28. A separate report covers $5.06M sold in September. This looks routine, but it adds supply while the stock rallies.",
-     "MarketWatch says the stock rose and outperformed the market on Oct 27. Momentum is intact, but the headline gives no size or cause.",
-     "StockTwits shows 56% bullish on only 9 posts. The sample is too small to carry weight; treat it as noise."
-    ],
-    "watch": [
-     "Next Form 4 filings: any sales outside 10b5-1 plans, or sales that grow in size, would strengthen the bearish read.",
-     "Price action against the recent rally highs, and whether volume holds up on advances.",
-     "Next earnings date and guidance, the likeliest catalyst inside the 2-8 week window."
-    ],
-    "unknowns": [
-     "Cause and size of the recent rally, and any fundamental catalyst. Headlines are generic and the AI cybersecurity piece is opinion.",
-     "Valuation, earnings timing and analyst estimate changes are not in the evidence."
+     "Whether the large federal award spike actually belongs to Accenture or is a name-match error.",
+     "Reasons for the insider sales and whether further selling follows the buys."
     ]
    }
   },
@@ -242,7 +132,7 @@
     {
      "source": "stocktwits",
      "kind": "crowd",
-     "date": "2026-10-28",
+     "date": "2026-10-29",
      "polarity": -1,
      "text": "StockTwits crowd sour: 55% bullish of 11 tagged posts",
      "url": null
@@ -258,6 +148,36 @@
     },
     "headlines": [
      {
+      "title": "Tommy Hilfiger Online Outlet Store - Tommy Hilfiger designer outlet shop Stock Photo Alamy",
+      "publisher": "www.auroradesio.it",
+      "published": "2026-10-29T10:08"
+     },
+     {
+      "title": "AI Boom or Margin Bust? The Hidden Catalysts Set to Move Shopify Stock Nov. 3",
+      "publisher": "24/7 Wall St.",
+      "published": "2026-10-29T09:43"
+     },
+     {
+      "title": "AI Boom or Margin Bust? The Hidden Catalysts Set to Move Shopify Stock Nov. 3",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T09:27"
+     },
+     {
+      "title": "Shopify\u2019s booming sales come with a costly catch",
+      "publisher": "TheStreet",
+      "published": "2026-10-29T02:07"
+     },
+     {
+      "title": "Local Cycle Repair Shop - Bicycle repair shop in Vancouver Stock Photo Alamy",
+      "publisher": "auroradesio.it",
+      "published": "2026-10-28T21:13"
+     },
+     {
+      "title": "Eco-Shop hits four-month low after 1Q miss; price revision looms",
+      "publisher": "The Edge Malaysia",
+      "published": "2026-10-28T02:56"
+     },
+     {
       "title": "Shopify (SHOP) Stock Dips While Market Gains: Key Facts",
       "publisher": "Yahoo Finance",
       "published": "2026-10-27T20:45"
@@ -266,59 +186,29 @@
       "title": "Shopify Just Gave Us a Glimpse Into Its Numbers: Is It a Good Stock to Buy Now?",
       "publisher": "The Motley Fool Canada",
       "published": "2026-10-27T19:45"
-     },
-     {
-      "title": "Shopify schedules November 3 results. Shopify stock costs EUR 149.07",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-10-27T16:01"
-     },
-     {
-      "title": "SHOP Q2 2026 Earnings: EPS Tops Estimates by 2.5% Despite Modest Stock Pullback - Revenue Growth Report",
-      "publisher": "https://www.dars.gov.et/",
-      "published": "2026-10-27T13:42"
-     },
-     {
-      "title": "Shopify (SHOP) Earnings Expected to Grow: Should You Buy?",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-27T13:00"
-     },
-     {
-      "title": "Shopify documents checkout agents as Shopify stock costs EUR 150.02",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-10-27T11:32"
-     },
-     {
-      "title": "Shopify stock pre-market: commerce platform at EUR 149.96",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-10-27T06:36"
-     },
-     {
-      "title": "Shopify (SHOP) Stock Could Trade At A Premium As Shopify Plus Wins Grow",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-26T21:07"
      }
     ],
-    "short_share_latest": 0.365
+    "short_share_latest": 0.317
    },
    "failed": [],
    "read": {
-    "bluf": "Shopify reports Nov 3, so the next week is dominated by earnings risk; the evidence shows no clear directional edge, only thin sentiment and low-quality headlines.",
+    "bluf": "Earnings on Nov. 3 is the dominant near-term event; the evidence shows no clear directional edge, only a debate over AI-driven growth versus margin pressure.",
     "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "Shopify scheduled results for Nov 3, per ad-hoc-news.de. A guidance or growth surprise would likely outweigh everything else here and could gap the stock either way.",
-     "Headlines describe a modest pullback (Yahoo: stock dips while market gains), with the stock near EUR 150. This shows mild softness into earnings, not a trend break.",
-     "The StockTwits label says 'sour', but 55% of 11 posts were bullish. The sample is tiny, so this is noise, not a signal.",
-     "No insider buys or sells in the last 30 days. That gives no information on management's view ahead of the print."
+     "Headlines flag Shopify earnings around Nov. 3. A binary event inside the 2-8 week window can gap the stock either way for a holder.",
+     "Headlines (24/7 Wall St., TheStreet) frame growth against margin cost. This is commentary, not filings, so it signals the debate rather than the outcome.",
+     "StockTwits shows 55% bullish on only 11 posts. The sample is too small and low-quality to be a meaningful sentiment signal.",
+     "Insider activity over 30 days is zero buys and zero sells. This gives no conviction signal in either direction."
     ],
     "watch": [
-     "Nov 3 results: revenue growth, gross merchandise volume (GMV), operating margin, and Q4 guidance versus consensus, plus the stock's reaction.",
-     "Whether Shopify Plus wins and the checkout-agent documentation turn into measurable merchant or GMV growth.",
-     "Primary-source confirmation (company press release or SEC filing) of the earnings date and any preliminary figures."
+     "Nov. 3 results: gross profit growth, operating margin, and next-quarter guidance versus consensus.",
+     "Management commentary on AI spending and its effect on margins, plus the stock's reaction to it.",
+     "Position sizing or hedging ahead of the print, given the gap risk on a holding."
     ],
     "unknowns": [
-     "Consensus expectations and recent guidance are not in the evidence, so the bar for a beat or miss is unknown.",
-     "One item, 'Q2 2026 EPS tops estimates' from dars.gov.et, is an unreliable source and conflicts with the Nov 3 upcoming report. Treat it as unverified."
+     "Actual consensus expectations and the underlying figures behind the 'costly catch' headline are not in the evidence.",
+     "Several headlines (stock photo and Eco-Shop items) are irrelevant to Shopify; the Motley Fool and Yahoo pieces lack detail on the 'glimpse into numbers'."
     ]
    }
   },
@@ -343,47 +233,47 @@
     },
     "headlines": [
      {
-      "title": "APA (APA) Stock Sinks As Market Gains: Here's Why",
+      "title": "APA Corporation $APA Shares Purchased by Bokf Na",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T07:49"
+     },
+     {
+      "title": "APA (APA) Stock Could Be 44% Undervalued Based On Cash Flow",
       "publisher": "Yahoo Finance",
-      "published": "2026-10-27T21:15"
+      "published": "2026-10-28T21:07"
      },
      {
-      "title": "APA Corp. stock underperforms Tuesday when compared to competitors",
-      "publisher": "MarketWatch",
-      "published": "2026-10-27T21:07"
+      "title": "APA (APA) Earnings Loom As Its Valuation Story Gets Harder To Ignore",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T20:08"
      },
      {
-      "title": "APA Nov 2026 43.000 put (APA261113P00043000) Interactive Stock Chart",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T21:01"
+      "title": "APA Corporation (APA) Advances as Higher Oil Prices and Free Cash Flow Strengthen Its Outlook",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T16:48"
      },
      {
-      "title": "Susquehanna lifts target to USD 58.00 for APA Corporation stock",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-10-27T20:55"
+      "title": "Does Upcoming Earnings Change The Bull Case For APA Stock (APA)?",
+      "publisher": "Simply Wall St",
+      "published": "2026-10-28T16:25"
      },
      {
-      "title": "APA Oct 2026 50.000 put (APA261030P00050000) interactive stock chart",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-27T15:56"
+      "title": "Earnings Preview Might Change The Case For Investing In APA Stock (APA)",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T16:11"
      },
      {
-      "title": "APA Nov 2026 34.000 put (APA261127P00034000) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-27T15:09"
+      "title": "Is Innovex International, Inc. (INVX) Stock Outpacing Its Oils-Energy Peers This Year?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T12:40"
      },
      {
-      "title": "APA Nov 2026 53.000 call (APA261127C00053000) interactive stock chart \u2013 Yahoo Finance",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-27T12:21"
-     },
-     {
-      "title": "APA Nov 2026 50.000 put (APA261127P00050000) interactive stock chart \u2013 Yahoo Finance",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-27T11:10"
+      "title": "APA Group (ASX:APA): What Is Included in Its FY26 Energy Infrastructure Update?",
+      "publisher": "Kalkine",
+      "published": "2026-10-28T10:04"
      }
     ],
-    "short_share_latest": 0.358
+    "short_share_latest": 0.396
    },
    "failed": [],
    "read": null
@@ -397,16 +287,7 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [
-    {
-     "source": "finra",
-     "kind": "short_volume",
-     "date": "2026-10-28",
-     "polarity": 0,
-     "text": "Short volume collapsed: 44% vs 65% average (z -2.7)",
-     "url": null
-    }
-   ],
+   "events": [],
    "detail": {
     "insiders_30d": {
      "buy_value": 2974,
@@ -419,69 +300,116 @@
     },
     "headlines": [
      {
-      "title": "CRL Nov 2026 430.000 call (CRL261120C00430000) stock price, news, quote and history",
+      "title": "Charles River Laboratories International Inc (CRL) Stock Up 4.2% but GF Value Says Overvalued -- GF Score: 64/100",
+      "publisher": "GuruFocus",
+      "published": "2026-10-28T23:15"
+     },
+     {
+      "title": "Missed Carel Industries' Gain? Here's What Holders Saw",
+      "publisher": "Simply Wall St",
+      "published": "2026-10-28T21:26"
+     },
+     {
+      "title": "Charles River Laboratories rises as new Ipsen study collaboration boosts focus on VCG platform",
+      "publisher": "Quiver Quantitative",
+      "published": "2026-10-28T17:35"
+     },
+     {
+      "title": "Charles River (CRL) Rises on Strong Earnings and Improving Biopharma Demand",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T16:49"
+     },
+     {
+      "title": "Kaplan Fox Encourages Unicycive Therapeutics, Inc. (NASDAQ: UNCY) Investors With Significant Losses to Contact the Firm Before November 2, 2026",
+      "publisher": "The Globe and Mail",
+      "published": "2026-10-28T10:15"
+     },
+     {
+      "title": "CRL Nov 2026 440.000 call (CRL261120C00440000) interactive stock chart",
       "publisher": "Yahoo Finance UK",
-      "published": "2026-10-27T15:15"
+      "published": "2026-10-28T09:52"
+     },
+     {
+      "title": "Charles River Laboratories International, Inc. (CRL) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-10-28T08:29"
      },
      {
       "title": "Charles River Laboratories International, Inc. (CRL) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T14:25"
-     },
-     {
-      "title": "IQVIA gains as R&D Solutions drive Q3 beat",
-      "publisher": "Seeking Alpha",
-      "published": "2026-10-27T12:48"
-     },
-     {
-      "title": "An approach could cut animal use by up to 12%; Charles River will supply data for an Ipsen study.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-27T12:00"
-     },
-     {
-      "title": "Charles River Laboratories International, Inc. (NYSE:CRL) Rises 3.45%",
-      "publisher": "Kalkine India",
-      "published": "2026-10-27T10:50"
-     },
-     {
-      "title": "Form 4 Charles River Laboratories International, Inc: James C. Foster (Director) For: 22 October",
-      "publisher": "Investing.com Canada",
-      "published": "2026-10-27T03:52"
-     },
-     {
-      "title": "Charles River director James Foster sells $8.4 million in shares By Investing.com",
-      "publisher": "Investing.com South Africa",
-      "published": "2026-10-27T03:32"
-     },
-     {
-      "title": "A Look at Charles River Laboratories International Inc (CRL) Aft",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T00:19"
+      "published": "2026-10-28T05:23"
      }
     ],
-    "short_share_latest": 0.439
+    "short_share_latest": 0.558
    },
    "failed": [],
-   "read": {
-    "bluf": "Mixed, leaning neutral: a large director sale under a 10b5-1 plan offsets a sector-positive read from IQVIA and a stock uptick; no decisive catalyst is visible in the evidence.",
-    "read": "neutral",
-    "confidence": "low",
-    "key_points": [
-     "Director James Foster sold about $8.4M of shares (Form 4, Oct 22); total 30-day insider sells were $9.46M, all under 10b5-1 plans. Planned sales are weaker bearish signals.",
-     "Insider buying was only $2,974 by one person, which is negligible and gives no conviction signal for the stock.",
-     "Short volume fell to 44% from a 65% average (z -2.7). Less shorting pressure is mildly supportive, but a single day of FINRA data is noisy.",
-     "IQVIA beat Q3 on R&D Solutions strength, and CRL rose 3.45%. This hints at a supportive sector backdrop, though it is indirect for CRL."
+   "read": null
+  },
+  {
+   "symbol": "CRWD",
+   "name": "CrowdStrike Holdings, Inc.",
+   "why": [
+    "holding",
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 66356620,
+     "sellers": 4,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "3 Glorious Growth Stocks to Buy Hand Over Fist If the Stock Market Crashes",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T11:32"
+     },
+     {
+      "title": "CrowdStrike (CRWD) Stock Looks Overvalued On Its 5x Three Year Run",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T00:16"
+     },
+     {
+      "title": "Cybersecurity Stocks Drop After Hours: Here's Why",
+      "publisher": "Benzinga",
+      "published": "2026-10-28T21:43"
+     },
+     {
+      "title": "CrowdStrike Stocks Rise With New Legal-Sector Threat Findings",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T19:38"
+     },
+     {
+      "title": "BB vs. CRWD: Which Cybersecurity Stock Is the Smarter Buy Now?",
+      "publisher": "Zacks Investment Research",
+      "published": "2026-10-28T16:25"
+     },
+     {
+      "title": "BB vs. CRWD: Which Cybersecurity Stock Is the Smarter Buy Now?",
+      "publisher": "TradingView",
+      "published": "2026-10-28T15:15"
+     },
+     {
+      "title": "Axon Enterprise vs. CrowdStrike: Which Security Stock Is a Better Buy?",
+      "publisher": "The Motley Fool",
+      "published": "2026-10-28T13:55"
+     },
+     {
+      "title": "CrowdStrike 2026 Legal Threat Landscape Report: Cybercriminals Blur Digital and Physical Lines in Attacks on U.S. Law Firms",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T12:00"
+     }
     ],
-    "watch": [
-     "Whether short volume stays below average over the next several sessions, or reverts to 65%.",
-     "Further Form 4 filings showing additional sales by Foster or other insiders, and the remaining 10b5-1 schedule.",
-     "CRL's own earnings date and guidance, and any read-through on biopharma R&D demand from peers."
-    ],
-    "unknowns": [
-     "No CRL earnings, guidance, or demand data is in the evidence, so the fundamental driver for the next 2-8 weeks is unclear.",
-     "Headline content on the Ipsen animal-use study and the 3.45% rise is only title-level, so the size and cause of any impact is unknown."
-    ]
-   }
+    "short_share_latest": 0.501
+   },
+   "failed": [],
+   "read": null
   },
   {
    "symbol": "CTLP",
@@ -499,6 +427,71 @@
    "failed": [
     "sec_company_lookup"
    ],
+   "read": null
+  },
+  {
+   "symbol": "EOG",
+   "name": "EOG RESOURCES INC",
+   "why": [
+    "holding"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 0,
+     "sellers": 0,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "EOG Resources, Inc. $EOG Stock Bought by D.A. Davidson & CO.",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T08:56"
+     },
+     {
+      "title": "EOG Resources (EOG) Set to Announce Quarterly Earnings on Thursday",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T08:25"
+     },
+     {
+      "title": "EOG Nov 2026 147.000 put (EOG261113P00147000) interactive stock chart",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-10-28T21:43"
+     },
+     {
+      "title": "EOG Resources Inc. stock underperforms Tuesday when compared to competitors",
+      "publisher": "MarketWatch",
+      "published": "2026-10-27T20:41"
+     },
+     {
+      "title": "EOG Oct 2026 170.000 call (EOG261030C00170000) interactive stock chart",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-10-27T12:12"
+     },
+     {
+      "title": "EOG Resources (EOG) Gets Fresh Earnings Backing On A Valuation That Still Looks Fair",
+      "publisher": "Simply Wall Street",
+      "published": "2026-10-27T09:21"
+     },
+     {
+      "title": "EOG Resources, Inc. $EOG Stock: Sterling Capital Management LLC Cuts Position",
+      "publisher": "MarketBeat",
+      "published": "2026-10-27T09:10"
+     },
+     {
+      "title": "Diamondback Energy (FANG) vs. EOG and COP: Can Its Permian Advantage Drive Long-Term Shareholder Returns?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-26T21:40"
+     }
+    ],
+    "short_share_latest": 0.599
+   },
+   "failed": [],
    "read": null
   },
   {
@@ -521,9 +514,19 @@
     },
     "headlines": [
      {
+      "title": "Expeditors International of Was (EXPD) Stock Forecasts",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T03:04"
+     },
+     {
+      "title": "Should Earnings Estimate Upgrades Require Action From Expeditors International Of Washington (EXPD) Investors?",
+      "publisher": "Simply Wall St",
+      "published": "2026-10-28T18:22"
+     },
+     {
       "title": "Expeditors International of Washington, Inc. (EXPD) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-28T00:40"
+      "published": "2026-10-28T06:44"
      },
      {
       "title": "Expeditors Gears Up for Q3 Earnings: What's in Store for the Stock?",
@@ -546,22 +549,77 @@
       "published": "2026-10-25T03:06"
      },
      {
-      "title": "Expeditors International of Washington, Inc. Estimates \u2013 NYSE:EXPD",
-      "publisher": "TradingView",
-      "published": "2026-10-23T17:41"
-     },
-     {
-      "title": "Gap honored Expeditors, its supply-chain partner for more than 40 years.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-22T20:09"
-     },
-     {
-      "title": "Expeditors International of Was (EXPD) Stock Forecasts",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-22T13:38"
+      "title": "EXPD270219P00135000 Interactive Stock Chart | EXPD Feb 2027 135.000 put Stock",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-23T19:26"
      }
     ],
-    "short_share_latest": 0.574
+    "short_share_latest": 0.527
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "HPQ",
+   "name": "HP INC",
+   "why": [
+    "holding"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 1014093,
+     "sellers": 1,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "HP (NYSE:HPQ) Stock Gets Downgrade from Zacks Research",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T11:22"
+     },
+     {
+      "title": "HP Inc. $HPQ Stock Sold by Maj Invest Holding A S",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T10:24"
+     },
+     {
+      "title": "BMW adds 44 hp to X3 M50 and BMW stock costs EUR 57.79",
+      "publisher": "ad-hoc-news.de",
+      "published": "2026-10-29T09:36"
+     },
+     {
+      "title": "Helmerich & Payne (NYSE:HP) Shares Cross Above 50 Day Moving Average - Should You Sell?",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T09:26"
+     },
+     {
+      "title": "Helmerich & Payne Inc (HP) Shares Surge 5.3% -- What GF Score of 75 Tells Investors",
+      "publisher": "GuruFocus",
+      "published": "2026-10-28T23:19"
+     },
+     {
+      "title": "HP Inc (HPQ) Stock Down 3.4% -- Now Undervalued? GF Score: 80/100",
+      "publisher": "GuruFocus",
+      "published": "2026-10-28T21:49"
+     },
+     {
+      "title": "HP Inc. stock underperforms Wednesday when compared to competitors",
+      "publisher": "MarketWatch",
+      "published": "2026-10-28T20:58"
+     },
+     {
+      "title": "HP stock forecast: Consolidation likely with downside risk toward $30.86 support",
+      "publisher": "Traders Union",
+      "published": "2026-10-28T18:24"
+     }
+    ],
+    "short_share_latest": 0.624
    },
    "failed": [],
    "read": null
@@ -586,47 +644,47 @@
     },
     "headlines": [
      {
-      "title": "Humana Inc. (HUM) Interactive Stock Chart",
+      "title": "Humana Inc. $HUM Shares Newly Acquired by Simplify Asset Management Inc.",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T10:00"
+     },
+     {
+      "title": "Humana Inc. $HUM Stock Sold by Generali Asset Management SPA SGR",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T08:27"
+     },
+     {
+      "title": "HUM261030P00377500 interactive stock chart | HUM Oct 2026 377.500 put stock - Yahoo Finance",
+      "publisher": "Yahoo Finance Singapore",
+      "published": "2026-10-29T03:16"
+     },
+     {
+      "title": "HUM Oct 2026 412.500 put (HUM261030P00412500) stock price, news, quote and history",
+      "publisher": "Yahoo Finance Singapore",
+      "published": "2026-10-29T00:13"
+     },
+     {
+      "title": "What Humana Holders Saw Early",
+      "publisher": "Simply Wall St",
+      "published": "2026-10-28T19:28"
+     },
+     {
+      "title": "HUM May 2027 460.000 call (HUM270521C00460000) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T20:06"
+      "published": "2026-10-28T07:55"
+     },
+     {
+      "title": "Humana Inc. (HUM) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-27T19:46"
      },
      {
       "title": "Humana's Q3 2026 Earnings: What to Expect",
       "publisher": "Barchart.com",
       "published": "2026-10-27T10:22"
-     },
-     {
-      "title": "HUM Nov 2026 330.000 call (HUM261113C00330000) interactive stock chart \u2013 Yahoo Finance",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-27T04:23"
-     },
-     {
-      "title": "HUM261030C00360000 interactive stock chart | HUM Oct 2026 360.000 call stock - Yahoo Finance",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-27T00:22"
-     },
-     {
-      "title": "HUM Oct 2026 452.500 call (HUM261030C00452500) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-26T22:13"
-     },
-     {
-      "title": "HUM270521C00450000 interactive stock chart | HUM May 2027 450.000 call stock - Yahoo Finance",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-26T21:46"
-     },
-     {
-      "title": "Humana Inc. stock outperforms competitors despite losses on the day",
-      "publisher": "MarketWatch",
-      "published": "2026-10-26T20:49"
-     },
-     {
-      "title": "HUM270219C00410000 interactive stock chart | HUM Feb 2027 410.000 call stock - Yahoo Finance",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-26T20:08"
      }
     ],
-    "short_share_latest": 0.606
+    "short_share_latest": 0.391
    },
    "failed": [],
    "read": null
@@ -660,14 +718,34 @@
     },
     "headlines": [
      {
-      "title": "Illumina, Inc. (ILMN) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-28T06:10"
+      "title": "Illumina Inc (ILMN) Stock Up 3.3% but GF Value Says Overvalued -- GF Score: 63/100",
+      "publisher": "GuruFocus",
+      "published": "2026-10-28T21:49"
      },
      {
-      "title": "What to expect from Illumina\u2019s (ILMN) Q3 earnings",
-      "publisher": "TradingView",
-      "published": "2026-10-28T03:13"
+      "title": "Illumina (ILMN) BioInsight Debut Puts Its Undervalued Narrative To The Test",
+      "publisher": "Simply Wall St",
+      "published": "2026-10-28T21:26"
+     },
+     {
+      "title": "Why Illumina (ILMN) Stock Is Up Today | ILMN Stock News",
+      "publisher": "Quiver Quantitative",
+      "published": "2026-10-28T18:33"
+     },
+     {
+      "title": "Illumina, Inc. (ILMN) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-10-28T18:10"
+     },
+     {
+      "title": "ILMN Jan 2028 340.000 call (ILMN280121C00340000) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-28T07:50"
+     },
+     {
+      "title": "ILMN Nov 2026 370.000 call (ILMN261120C00370000) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-10-28T07:12"
      },
      {
       "title": "BlackRock reports sole voting power over 12M Illumina (ILMN) shares in an amended stake report.",
@@ -675,52 +753,32 @@
       "published": "2026-10-27T21:29"
      },
      {
-      "title": "Illumina, Inc. (ILMN) Latest Stock News & Headlines",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T20:36"
-     },
-     {
       "title": "Fund Update: New $2.0M $ILMN Stock Position Opened by J. Safra Sarasin Holding AG",
       "publisher": "Moomoo",
       "published": "2026-10-27T10:08"
-     },
-     {
-      "title": "ILMN,GS | Stock Prices | Quote Comparison",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-26T23:06"
-     },
-     {
-      "title": "ILMN Nov 2026 410.000 call (ILMN261120C00410000) Stock Historical Prices & Data",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-26T22:09"
-     },
-     {
-      "title": "ILMN Nov 2026 350.000 call (ILMN261120C00350000) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-26T18:07"
      }
     ],
-    "short_share_latest": 0.487
+    "short_share_latest": 0.38
    },
    "failed": [],
    "read": {
-    "bluf": "No material new catalyst in the last 4 days; only routine passive-holder filings and earnings previews, so the read is neutral until Illumina's Q3 results.",
-    "read": "neutral",
+    "bluf": "Evidence shows a 3.3% price rise and routine passive-holder filings, but no catalyst, insider activity, or fundamental change is documented; the read is neutral to unclear.",
+    "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "BlackRock filed a 13G/A showing sole voting power over ~12M shares. Routine passive filing; no sign of active accumulation or exit.",
-     "No insider open-market buys or sells in 30 days. Gives no insider signal on sentiment ahead of earnings.",
-     "TradingView ran a Q3 earnings preview. Earnings are the likely near-term catalyst, but the evidence gives no date, estimates, or guidance.",
-     "Small new fund position ($2.0M, J. Safra Sarasin) and Nov 350/410 call quote pages are minor. Too small or uninformative to infer direction."
+     "BlackRock filed an amended 13G/A (~12M shares sole voting power). Passive routine filing; it signals no new conviction or change in the thesis.",
+     "No insider open-market buys or sells in 30 days. Insiders give no confirming or contradicting signal for the move.",
+     "GuruFocus notes a 3.3% rise but rates the stock overvalued (GF Score 63/100). Valuation screen is third-party and low-weight; it hints at limited upside cushion.",
+     "Simply Wall St cites a 'BioInsight' debut testing the undervalued narrative. Details are not in the evidence, so its significance is unverified."
     ],
     "watch": [
-     "Q3 earnings date, results, and guidance versus consensus, especially revenue trend and margin commentary.",
-     "Options positioning in the Nov 350/410 calls (volume, open interest) for any unusual activity before earnings.",
-     "Whether the BlackRock 13G/A shows an increase or decrease in stake versus the prior filing."
+     "Identify the cause of the 3.3% move: BioInsight product details, earnings date, guidance, or analyst actions.",
+     "Check whether volume confirms the rise and whether price holds above recent support over the next few sessions.",
+     "Review the actual BlackRock 13G/A for the change in percent ownership versus the prior filing."
     ],
     "unknowns": [
-     "Current share price, recent trend, and consensus expectations are not in the evidence.",
-     "The 13G/A direction (change in stake size) and any actual Q3 data or guidance are not provided."
+     "Underlying catalyst for the price move; headlines don't state it and no primary source (8-K, earnings) is provided.",
+     "Nature and commercial impact of the BioInsight launch, and the BlackRock stake change direction."
     ]
    }
   },
@@ -744,14 +802,29 @@
     },
     "headlines": [
      {
-      "title": "Klaviyo (KVYO) Expected to Release Earnings on Wednesday",
+      "title": "Klaviyo (NYSE:KVYO) Given New $24.00 Price Target at Wells Fargo & Company",
       "publisher": "MarketBeat",
-      "published": "2026-10-28T12:00"
+      "published": "2026-10-28T15:02"
+     },
+     {
+      "title": "Wells Fargo & Company Issues Positive Forecast for Klaviyo (NYSE:KVYO) Stock Price",
+      "publisher": "MarketBeat",
+      "published": "2026-10-28T15:02"
+     },
+     {
+      "title": "Why Klaviyo (KVYO) Could Be the Standout AI Beneficiary in Software?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T13:53"
      },
      {
       "title": "Klaviyo, Inc. (KVYO) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T18:25"
+      "published": "2026-10-28T12:29"
+     },
+     {
+      "title": "Klaviyo (KVYO) Expected to Release Earnings on Wednesday",
+      "publisher": "MarketBeat",
+      "published": "2026-10-28T12:00"
      },
      {
       "title": "(KVYO) Movement Within Algorithmic Entry Frameworks",
@@ -767,24 +840,9 @@
       "title": "Digital Marketing Leader Klaviyo Deserves A Strong Buy (NYSE:KVYO)",
       "publisher": "Seeking Alpha",
       "published": "2026-10-25T13:01"
-     },
-     {
-      "title": "Klaviyo, Inc. Series A Estimates \u2013 NYSE:KVYO",
-      "publisher": "TradingView",
-      "published": "2026-10-24T02:13"
-     },
-     {
-      "title": "KVYO Nov 2026 12.500 put (KVYO261120P00012500) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-23T12:01"
-     },
-     {
-      "title": "Klaviyo (KVYO) Insider Trading Activity 2026",
-      "publisher": "MarketBeat",
-      "published": "2026-10-23T07:00"
      }
     ],
-    "short_share_latest": 0.605
+    "short_share_latest": 0.569
    },
    "failed": [],
    "read": null
@@ -819,67 +877,69 @@
     },
     "headlines": [
      {
-      "title": "What Is Behind The Move In Marathon Petroleum Stock?",
+      "title": "How Upcoming Earnings Will Impact Marathon Petroleum Stock",
       "publisher": "Yahoo Finance",
-      "published": "2026-10-28T10:11"
+      "published": "2026-10-29T11:17"
      },
      {
-      "title": "Zacks Industry Outlook Highlights Marathon Petroleum, PBF Energy and Phillips 66",
-      "publisher": "TradingView",
-      "published": "2026-10-28T07:22"
-     },
-     {
-      "title": "Marathon Petroleum stock at EUR 394.00 pre-market: refining group rises 1.51 percent",
+      "title": "Marathon Petroleum declares dividend per Marathon Petroleum stock",
       "publisher": "ad-hoc-news.de",
-      "published": "2026-10-28T07:03"
+      "published": "2026-10-29T10:20"
      },
      {
-      "title": "Marathon Petroleum (NYSE:MPC) Stock Falls 7.5% - Time to Sell?",
+      "title": "36,440 Marathon Petroleum Corporation $MPC Shares Sold by Smith Group Asset Management LLC",
       "publisher": "MarketBeat",
-      "published": "2026-10-27T21:51"
+      "published": "2026-10-29T09:46"
      },
      {
-      "title": "(MPC.C) Risk-Controlled Trading Report (MPC.C:CA)",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-10-27T21:47"
+      "title": "Marathon Petroleum's Nov. 3 Earnings: 3 Red Flags That Could Crash The Refining Giant's Party",
+      "publisher": "24/7 Wall St.",
+      "published": "2026-10-29T09:42"
      },
      {
-      "title": "Marathon Petroleum Corp (MPC) Shares Fall 7.4% -- GF Value Says Still Overvalued",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T21:36"
+      "title": "Marathon Petroleum Corporation $MPC Stock: Park Avenue Securities LLC Raises Holdings",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T09:26"
      },
      {
-      "title": "BlackRock\u2019s stake in Marathon Petroleum (MPC) exceeds the 20.7M shares it alone can vote.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-27T21:27"
-     },
-     {
-      "title": "Marathon Petroleum (MPC) Stock Falls Amid Market Uptick: What Investors Need to Know",
+      "title": "Marathon Petroleum\u2019s Nov. 3 Earnings: 3 Red Flags That Could Crash The Refining Giant\u2019s Party",
       "publisher": "Yahoo Finance",
-      "published": "2026-10-27T20:45"
+      "published": "2026-10-29T09:20"
+     },
+     {
+      "title": "Is Marathon Petroleum (MPC) A Bargain After Its Dividend Hike?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T09:15"
+     },
+     {
+      "title": "Marathon Petroleum Corporation $MPC Shares Sold by Convergence Financial LLC",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T08:13"
      }
     ],
-    "short_share_latest": 0.438
+    "short_share_latest": 0.416
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": {
-    "bluf": "MPC fell about 7.5% on 10/27 with no explained cause in the evidence; a small pre-market bounce followed. Direction is unclear until the driver of the drop is identified.",
-    "read": "unclear",
+    "bluf": "No decisive signal yet; MPC is a pre-earnings setup (Nov. 3) with a dividend hike and mixed commentary, so the earnings print is the real catalyst.",
+    "read": "neutral",
     "confidence": "low",
     "key_points": [
-     "Headlines report MPC fell roughly 7.4-7.5% on 2026-10-27 while the broader market rose. A stock-specific drop of this size can mean a fundamental or sector catalyst.",
-     "A pre-market headline on 10/28 shows a 1.51% rise (quoted in EUR). A small bounce does not confirm the selloff is over.",
-     "A BlackRock 13G/A was filed 10/27, a routine passive-holder update. It shows no change in conviction and is unlikely to be the cause of the drop.",
-     "Zero insider open-market buys or sells in 30 days. Management is giving no signal either way on the selloff."
+     "Earnings are due Nov. 3, per headlines. This is the main event inside the 2-8 week window and likely drives near-term price action.",
+     "Dividend increase reported via headlines only, not a filing seen here. Supports shareholder-return story but is likely already priced in.",
+     "A Schedule 13G/A was filed Oct. 27 showing a passive 5%+ holder. It is routine and gives no direction without the stake change.",
+     "No insider open-market buys or sells in 30 days. Insiders give no confirming or contradicting signal ahead of earnings."
     ],
     "watch": [
-     "Find the catalyst: earnings release, guidance, refining margin or crack spread moves, or peer (PBF, PSX) price action on 10/27.",
-     "Whether price holds or reclaims the 10/27 close in the next few sessions, and whether volume stays elevated.",
-     "Any 8-K, analyst rating changes, or insider purchases following the drop."
+     "Nov. 3 results: refining margins, throughput, capital return, and guidance versus consensus.",
+     "13G/A details: whether the holder's stake rose or fell, and who the holder is.",
+     "Dividend declaration details (amount, record date) from an 8-K or company release."
     ],
     "unknowns": [
-     "The cause of the 10/27 decline is not stated in any provided headline.",
-     "No primary-source detail on the 13G/A (holder, percentage, change) or on company fundamentals."
+     "Headline content is unseen: the '3 red flags' are not specified, and MarketBeat posts on small institutional buys and sells are noise.",
+     "No consensus estimates, margin data, or price action were provided, so setup versus expectations is unknown."
     ]
    }
   },
@@ -903,14 +963,24 @@
     },
     "headlines": [
      {
-      "title": "(PCOR) Comprehensive Trading Strategy Report (PCOR:CA)",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-10-28T11:01"
+      "title": "PCOR Apr 2027 47.500 call (PCOR270416C00047500) Interactive Stock Chart - Yahoo Finance",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-29T07:39"
      },
      {
       "title": "Procore Technologies, Inc. (PCOR) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T16:30"
+      "published": "2026-10-28T14:38"
+     },
+     {
+      "title": "Procore Technologies (NYSE:PCOR) Stock Picked Up by Analysts at Griffin Securities",
+      "publisher": "MarketBeat",
+      "published": "2026-10-28T13:17"
+     },
+     {
+      "title": "PCOR Dec 2027 80.000 call (PCOR271217C00080000) Interactive Stock Chart - Yahoo Finance",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-28T08:50"
      },
      {
       "title": "Procore Technologies (PCOR) Set to Post Earnings on Tuesday",
@@ -931,21 +1001,13 @@
       "title": "Inspire Investing LLC Purchases 31,254 Shares of Procore Technologies, Inc. $PCOR",
       "publisher": "MarketBeat",
       "published": "2026-10-26T07:50"
-     },
-     {
-      "title": "Procore Technologies (NYSE:PCOR) Stock Forecast & Analyst Predictions",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-25T07:00"
-     },
-     {
-      "title": "Procore Technologies (PCOR) Expands Its AI Push, Is The Stock Still 9% Undervalued?",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-25T06:18"
      }
     ],
-    "short_share_latest": 0.509
+    "short_share_latest": 0.458
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": null
   },
   {
@@ -958,7 +1020,16 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [],
+   "events": [
+    {
+     "source": "finra",
+     "kind": "short_volume",
+     "date": "2026-10-29",
+     "polarity": 0,
+     "text": "Short volume collapsed: 49% vs 59% average (z -2.1)",
+     "url": null
+    }
+   ],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
@@ -969,50 +1040,71 @@
     },
     "headlines": [
      {
-      "title": "ETFs Are Net Sellers of Palantir (PLTR) on Oct. 26",
+      "title": "Palantir expands its Surf Air partnership as five operators sign software contracts.",
+      "publisher": "Stock Titan",
+      "published": "2026-10-29T10:30"
+     },
+     {
+      "title": "Why Is Everybody Paying A Premium For Palantir Stock?",
+      "publisher": "Trefis",
+      "published": "2026-10-29T09:46"
+     },
+     {
+      "title": "Palantir Q2 2026: Revenue $1.935B (+93%), U.S. Commercial Surge 149%, Rule of 40 Reaches 155%, Stock Extends Breakout",
+      "publisher": "TradingKey",
+      "published": "2026-10-28T22:55"
+     },
+     {
+      "title": "Palantir Technologies Inc. (PLTR) Stock Sinks As Market Gains: Here's Why",
       "publisher": "Yahoo Finance",
-      "published": "2026-10-28T11:03"
+      "published": "2026-10-28T20:45"
      },
      {
-      "title": "Palantir: The Trust Layer For Agentic AI Heading Into Q3 Earnings (NASDAQ:PLTR)",
-      "publisher": "Seeking Alpha",
-      "published": "2026-10-28T10:43"
+      "title": "Palantir Technologies vs. SentinelOne: Which Technology Stock Is a Better Buy in 2026?",
+      "publisher": "The Motley Fool",
+      "published": "2026-10-28T19:28"
      },
      {
-      "title": "Palantir Technologies Inc. (PLTR.VI) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-28T10:11"
+      "title": "Palantir Technologies vs. SentinelOne: Which Technology Stock Is a Better Buy in 2026?",
+      "publisher": "The Globe and Mail",
+      "published": "2026-10-28T18:58"
      },
      {
-      "title": "Palantir Technologies and Yum! Brands have been highlighted as Zacks Bull and Bear of the Day",
-      "publisher": "TradingView",
-      "published": "2026-10-28T07:43"
+      "title": "PLTR 261030 310.00P (PLTR261030P310000) Stock Options Chain | Quotes & News",
+      "publisher": "Moomoo",
+      "published": "2026-10-28T17:50"
      },
      {
-      "title": "Palantir (PLTR) Stock Could Be 5% Above Fair Value Despite Sovereign AI Expansion",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-28T05:16"
-     },
-     {
-      "title": "Form 4 Palantir Technologies Inc For: 27 October By Investing.com",
-      "publisher": "Investing.com UK",
-      "published": "2026-10-28T02:16"
-     },
-     {
-      "title": "Rosenblatt maintains Buy rating on Palantir Technologies, $260 price target",
-      "publisher": "TradingView",
-      "published": "2026-10-27T19:51"
-     },
-     {
-      "title": "10 Information Technology Stocks Whale Activity In Today\u2019s Session",
+      "title": "Why Is Palantir Stock Falling on Wednesday?",
       "publisher": "Benzinga",
-      "published": "2026-10-27T17:35"
+      "published": "2026-10-28T17:42"
      }
     ],
-    "short_share_latest": 0.53
+    "short_share_latest": 0.49
    },
-   "failed": [],
-   "read": null
+   "failed": [
+    "wikipedia"
+   ],
+   "read": {
+    "bluf": "Fundamentals look strong on reported Q2 growth, but short-term evidence is mixed: insiders only sold, the stock dipped on 10/28, and short volume fell. No clear catalyst; lean neutral.",
+    "read": "neutral",
+    "confidence": "low",
+    "key_points": [
+     "Headline cites Q2 revenue $1.935B (+93%) and US commercial +149%. Secondary source, but strong growth supports the bull case and may sustain momentum.",
+     "Insiders sold $8.2M across 4 sellers in 30 days, none outside 10b5-1 plans and no buys. Scheduled sales are weak signal, but no insider conviction buying.",
+     "FINRA short volume fell to 49% vs 59% average (z -2.1). Less shorting pressure may be mildly supportive, but daily short volume is noisy.",
+     "Yahoo and Benzinga headlines note the stock fell 10/28 despite market gains. Cause not shown; suggests profit-taking or valuation concern after the breakout."
+    ],
+    "watch": [
+     "Cause of the 10/28 decline in Benzinga's article, and whether price holds support after the breakout.",
+     "Whether short volume stays below average for several sessions or snaps back.",
+     "Confirm Q2 figures against the SEC filing or company release, and look for new insider Form 4 filings."
+    ],
+    "unknowns": [
+     "Reason for the 10/28 drop and current price versus valuation are not in the evidence.",
+     "No primary-source (SEC filing) confirmation of earnings numbers or the Surf Air contract size."
+    ]
+   }
   },
   {
    "symbol": "PSX",
@@ -1025,6 +1117,14 @@
    "osint_positive": false,
    "osint_negative": false,
    "events": [
+    {
+     "source": "sec",
+     "kind": "10-Q",
+     "date": "2026-10-28",
+     "polarity": 0,
+     "text": "periodic report filed",
+     "url": "https://www.sec.gov/Archives/edgar/data/1534701/000153470126000037/psx-20260930.htm"
+    },
     {
      "source": "sec",
      "kind": "8-K",
@@ -1044,67 +1144,67 @@
     },
     "headlines": [
      {
-      "title": "Phillips 66 Reports Stellar Q3 Earnings of $5.6 Billion or $14.0",
-      "publisher": "GuruFocus",
-      "published": "2026-10-28T11:10"
+      "title": "Phillips 66 reports USD 5.6 billion earnings. Dividend per Phillips 66 stock is USD 1.33",
+      "publisher": "ad-hoc-news.de",
+      "published": "2026-10-29T11:00"
      },
      {
-      "title": "Phillips 66 Reports $5.6 Billion Third-Quarter Earnings",
-      "publisher": "Quiver Quantitative",
-      "published": "2026-10-28T10:50"
+      "title": "Wells Fargo raises Phillips 66 stock price target on capital allocation outlook",
+      "publisher": "Investing.com",
+      "published": "2026-10-29T10:22"
      },
      {
-      "title": "Phillips 66 $PSX Stock Purchased by Roman Butler Fullerton & Co.",
+      "title": "Phillips 66 $PSX Stock: VestGen Advisors LLC Boosts Position",
       "publisher": "MarketBeat",
-      "published": "2026-10-28T10:04"
+      "published": "2026-10-29T10:11"
      },
      {
-      "title": "Phillips 66 $PSX Shares Purchased by Oppenheimer & Co. Inc.",
-      "publisher": "MarketBeat",
-      "published": "2026-10-28T09:39"
-     },
-     {
-      "title": "SAZEW Share Price Today - Sazgar Engineering Works Ltd",
+      "title": "PSX Market Indices, KSE100, KSE30, KMI30 & KMIALL",
       "publisher": "Investify",
-      "published": "2026-10-28T09:15"
+      "published": "2026-10-29T09:04"
      },
      {
-      "title": "PSX climbs nearly 400 points amid sustained buying interest",
-      "publisher": "The Express Tribune",
-      "published": "2026-10-28T08:29"
+      "title": "Phillips 66 (PSX) Record Profit Puts Undervalued Narrative To The Test",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T08:24"
      },
      {
-      "title": "Zacks Industry Outlook Highlights Marathon Petroleum, PBF Energy and Phillips 66",
-      "publisher": "TradingView",
-      "published": "2026-10-28T07:22"
+      "title": "Phillips 66 $PSX Stock Sold by Convergence Financial LLC",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T08:13"
      },
      {
-      "title": "Is Phillips 66 (PSX) Undervalued Following Higher EPS Forecasts And Stronger Refining Margins?",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-28T06:42"
+      "title": "First Fiduciary Investment Counsel Inc. Sells 24,434 Shares of Phillips 66 $PSX",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T08:13"
+     },
+     {
+      "title": "22,519 Phillips 66 $PSX Shares Purchased by Bokf Na",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T07:27"
      }
     ],
-    "short_share_latest": 0.51
+    "short_share_latest": 0.571
    },
    "failed": [],
    "read": {
-    "bluf": "Phillips 66 filed an 8-K with Q3 results, and headlines cite $5.6B earnings, but the evidence lacks adjusted figures, guidance and price reaction, so the read is unclear.",
+    "bluf": "Phillips 66 filed its 10-Q and reported results with a record-profit narrative and a Wells Fargo target raise, but the evidence lacks actual figures, so the read is modestly positive at best.",
     "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "8-K on 10/28 confirms results were announced, but the evidence gives no figures from the filing. Headline numbers are unverified against the primary source.",
-     "GuruFocus and Quiver cite $5.6B earnings, or $14.0 per share. That is large and may include one-time gains, so it may not reflect core refining strength.",
-     "Simply Wall Street and Zacks mention higher EPS forecasts and stronger refining margins. These are secondary, low-weight sources, but they point to a supportive margin backdrop.",
-     "No insider buys or sells in 30 days, and MarketBeat institutional-buy items are routine filings. Neither adds signal."
+     "10-Q and 8-K (results) filed 2026-10-28; the filings' content isn't provided, so earnings quality and guidance can't be verified here.",
+     "Wells Fargo raised its price target citing capital allocation outlook; sell-side upgrades can support near-term momentum, but the new target level is not given.",
+     "Headlines cite 'record profit' and USD 5.6B earnings from secondary outlets; unclear if this is quarterly or annual, adjusted or GAAP, so treat cautiously.",
+     "No insider open-market buys or sells in 30 days; no insider signal either way. Institutional 13F items in MarketBeat are mixed and low-value."
     ],
     "watch": [
-     "Read the 8-K and earnings release for adjusted EPS, special items or asset-sale gains, refining capture rate, and buyback or capex guidance.",
-     "Check the post-earnings price and volume reaction, and whether consensus estimates are revised up over the next 1-2 weeks.",
-     "Track refining crack spreads and product inventories, which drive near-term earnings power."
+     "Read the 8-K and 10-Q: refining margins, cash from operations, buybacks/dividend, and guidance versus consensus.",
+     "Price and volume reaction after the results, and whether other analysts follow Wells Fargo with target changes.",
+     "Details of the capital allocation outlook: buyback pace, debt reduction, and any activist or portfolio-sale developments."
     ],
     "unknowns": [
-     "Whether the $5.6B / $14.0 figure is GAAP including one-time items, and how it compares with consensus and adjusted earnings.",
-     "Stock reaction and forward guidance are absent. Two headlines (Express Tribune, Investify) concern unrelated Pakistani tickers and are noise."
+     "Actual results versus expectations and the size of the Wells Fargo target change are not in the evidence.",
+     "Whether the USD 5.6B and 'record profit' claims are accurate, and what period they cover."
     ]
    }
   },
@@ -1122,9 +1222,9 @@
     {
      "source": "finra",
      "kind": "short_volume",
-     "date": "2026-10-28",
+     "date": "2026-10-29",
      "polarity": 0,
-     "text": "Short volume collapsed: 26% vs 48% average (z -2.4)",
+     "text": "Short volume collapsed: 18% vs 47% average (z -2.8)",
      "url": null
     }
    ],
@@ -1138,67 +1238,67 @@
     },
     "headlines": [
      {
+      "title": "Skydance (NYSE:SKYD) Stock Slides With New Finance Team",
+      "publisher": "TipRanks",
+      "published": "2026-10-28T19:48"
+     },
+     {
+      "title": "Fundstrat Direct 3Q26 Daily Earnings (EPS) Update \u2013 10/28/2026",
+      "publisher": "Fundstrat Direct",
+      "published": "2026-10-28T19:30"
+     },
+     {
+      "title": "PODCAST: Penn State updates from team facilities and a Player Stock Report",
+      "publisher": "247Sports",
+      "published": "2026-10-28T16:43"
+     },
+     {
+      "title": "Team Lease Services Ltd Falls to 52-Week Low of Rs 1032.9 as Sell-Off Deepens",
+      "publisher": "MarketsMojo",
+      "published": "2026-10-28T12:03"
+     },
+     {
+      "title": "Massive state buying can\u2019t reverse China\u2019s stock slide, analysts warn",
+      "publisher": "South China Morning Post",
+      "published": "2026-10-28T06:00"
+     },
+     {
+      "title": "TEAM 261030 182.50P (TEAM261030P182500) Stock Options Chain | Quotes & News",
+      "publisher": "Moomoo",
+      "published": "2026-10-28T01:17"
+     },
+     {
+      "title": "New York Knicks, Rangers officially split into separate publicly traded companies",
+      "publisher": "New York Post",
+      "published": "2026-10-27T23:49"
+     },
+     {
       "title": "Atlassian Stock And 2 Tech Names Sensitive To Fed Rate Signals",
       "publisher": "Simply Wall Street",
       "published": "2026-10-27T22:42"
-     },
-     {
-      "title": "After 25,293 shares vest, TEAM Inc. (TISI) director holds 116,984 shares directly.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-27T14:23"
-     },
-     {
-      "title": "China Steps In to Rescue Stocks, But the Market Continues to Fall",
-      "publisher": "The New York Times",
-      "published": "2026-10-27T14:15"
-     },
-     {
-      "title": "Oppenheimer raises target for Atlassian stock to USD 275",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-10-27T13:36"
-     },
-     {
-      "title": "Chinese Stocks\u2019 Final-Hour Slide Shows Reliance on National Team",
-      "publisher": "Bloomberg.com",
-      "published": "2026-10-27T08:56"
-     },
-     {
-      "title": "TEAM 261023 227.50C (TEAM261023C227500) Stock Options Chain | Quotes & News",
-      "publisher": "Moomoo",
-      "published": "2026-10-27T06:42"
-     },
-     {
-      "title": "Atlassian Corporation (TEAM) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T02:39"
-     },
-     {
-      "title": "Why Atlassian (TEAM) Stock Is Down Today",
-      "publisher": "Quiver Quantitative",
-      "published": "2026-10-26T18:33"
      }
     ],
-    "short_share_latest": 0.258
+    "short_share_latest": 0.179
    },
    "failed": [],
    "read": {
-    "bluf": "Evidence is thin and mixed: short volume dropped sharply and Oppenheimer raised its target, but a down-day headline and no insider buying keep the read unclear.",
+    "bluf": "Evidence is thin and mostly irrelevant; the only TEAM-specific signals are a short-volume drop and a tiny insider sale, so no directional read is supported.",
     "read": "unclear",
     "confidence": "low",
     "key_points": [
-     "FINRA short volume fell to 26% vs a 48% average (z -2.4). Less shorting pressure may help near-term, but it can reflect one-day noise.",
-     "Oppenheimer raised its target to $275 (headline only). Analyst support can aid momentum, but the prior rating and current price are not given.",
-     "Insiders sold $70,770 in 30 days, none outside 10b5-1 plans, with no open-market buys. Small and likely routine, so weak signal.",
-     "A 10-26 headline says TEAM fell that day, with no cause given. Price action context is missing, so the trend is unconfirmed."
+     "FINRA short volume fell to 18% versus a 47% average (z -2.8). That could mean less shorting pressure, but it is one day and not a verified trend.",
+     "Insider activity over 30 days: one seller, $70,770, none outside 10b5-1 plans. Small and likely routine, so weak signal either way.",
+     "A Simply Wall Street headline links Atlassian to Fed rate sensitivity. That is a macro framing, not company news, and adds little for 2-8 weeks.",
+     "Most other headlines (Skydance, Team Lease, Knicks, Penn State) are keyword matches unrelated to Atlassian and should be discarded."
     ],
     "watch": [
-     "Whether low short volume persists over several sessions or reverts toward the 48% average.",
-     "Price reaction versus the Oppenheimer target raise and whether other analysts follow.",
-     "Any SEC filings or company news explaining the 10-26 drop, plus upcoming earnings date."
+     "Whether short volume stays low over several sessions or reverts to ~47%, and how price reacts.",
+     "Any 8-K, guidance change, or earnings date announcement from Atlassian.",
+     "Rate and Fed moves affecting high-multiple software names, as the headline suggests."
     ],
     "unknowns": [
-     "Cause and size of the 10-26 decline, and current price level versus trend.",
-     "Oppenheimer's prior target and rating; the source is a low-tier aggregator and the TISI vesting headline is a different company."
+     "No fundamental, earnings, analyst, or price data on Atlassian in this window.",
+     "Short volume does not show short interest, so whether positioning actually changed is unknown."
     ]
    }
   },
@@ -1252,9 +1352,9 @@
       "published": "2026-10-23T12:23"
      },
      {
-      "title": "VCEL Apr 2027 30.000 put (VCEL270416P00030000) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-23T09:01"
+      "title": "VCEL Nov 2026 45.000 call (VCEL261120C00045000) interactive stock chart",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-10-22T23:01"
      },
      {
       "title": "VCEL Nov 2026 45.000 call (VCEL261120C00045000) interactive stock chart \u2013 Yahoo Finance",
@@ -1262,7 +1362,7 @@
       "published": "2026-10-22T22:55"
      }
     ],
-    "short_share_latest": 0.721
+    "short_share_latest": 0.666
    },
    "failed": [],
    "read": null
@@ -1281,11 +1381,26 @@
     "insiders_30d": {
      "buy_value": 0,
      "buyers": [],
-     "sell_value": 81457,
-     "sellers": 1,
+     "sell_value": 1199030,
+     "sellers": 3,
      "discretionary_sell_value": 0
     },
     "headlines": [
+     {
+      "title": "A director exercised $35.30 options and sold Veracyte (VCYT) shares at $47 and $50.",
+      "publisher": "Stock Titan",
+      "published": "2026-10-28T20:06"
+     },
+     {
+      "title": "Veracyte (VCYT) Expected to Beat Earnings Estimates: Can the Stock Move Higher?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T13:00"
+     },
+     {
+      "title": "Clinical Trial Data Might Change The Case For Investing In Veracyte Stock (VCYT)",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T12:09"
+     },
      {
       "title": "Veracyte (VCYT) Could Be 16% Undervalued On Decipher And Prosigna Progress",
       "publisher": "Simply Wall Street",
@@ -1310,24 +1425,9 @@
       "title": "How Investors May Respond To Veracyte (VCYT) Expanded Test Coverage",
       "publisher": "Simply Wall Street",
       "published": "2026-10-26T21:41"
-     },
-     {
-      "title": "VCYT Nov 2026 50.000 put (VCYT261120P00050000) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-25T09:45"
-     },
-     {
-      "title": "Responsive Playbooks and the VCYT Inflection",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-10-25T04:00"
-     },
-     {
-      "title": "Veracyte stock: Veracyte presents 401-patient Decipher evidence for Veracyte stock",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-10-23T22:41"
      }
     ],
-    "short_share_latest": 0.699
+    "short_share_latest": 0.593
    },
    "failed": [],
    "read": null
@@ -1352,128 +1452,147 @@
     },
     "headlines": [
      {
+      "title": "Workiva (WK) Projected to Release Earnings on Thursday",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T07:21"
+     },
+     {
+      "title": "Workiva's Margin Surge Lifted The Stock 37%; Now Growth Must Hold Up As Deals Slow",
+      "publisher": "Finviz",
+      "published": "2026-10-29T02:03"
+     },
+     {
+      "title": "Conestoga SMid Cap Composite Q3 2026 Portfolio Activity",
+      "publisher": "Seeking Alpha",
+      "published": "2026-10-28T18:42"
+     },
+     {
+      "title": "BofA clients dump communication services stocks at record pace after Meta slump",
+      "publisher": "StreetInsider",
+      "published": "2026-10-28T14:46"
+     },
+     {
+      "title": "Workiva Inc. (WK) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-28T14:44"
+     },
+     {
       "title": "Potential natural gas is among the targets as Indonesia Energy (INDO) starts WK-5 drilling.",
       "publisher": "Stock Titan",
       "published": "2026-10-27T20:15"
      },
      {
-      "title": "Workiva Inc. (WK) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-26T23:34"
+      "title": "QUICK SPARK: VanEck\u2019s New ETF Blends Bitcoin, Gold and Global Stocks in One Fund",
+      "publisher": "Benzinga",
+      "published": "2026-10-27T16:25"
      },
      {
       "title": "How Investors Are Reacting To Workiva Stock After Its Return To Profit",
-      "publisher": "Simply Wall Street",
+      "publisher": "Simply Wall St",
       "published": "2026-10-26T21:35"
-     },
-     {
-      "title": "Buyers Step In, As Lynas Rare Earths Shares Make 52 Wk Low",
-      "publisher": "TheBull.com.au",
-      "published": "2026-10-26T19:02"
-     },
-     {
-      "title": "SEC Stock Report: Whose stock is up, down after Week 8",
-      "publisher": "Louisiana Sports",
-      "published": "2026-10-26T15:30"
-     },
-     {
-      "title": "Preserving the Past, Inspiring the Future: WK Kellogg Co Celebrates More Than a Century of Nutrition Innovation During American Archives Month",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-26T14:32"
-     },
-     {
-      "title": "A deeper well in Indonesia is being drilled to test for oil and possible natural gas.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-26T12:00"
-     },
-     {
-      "title": "Workiva Inc. (WK) stock price, news, quote and history",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-26T02:22"
      }
     ],
-    "short_share_latest": 0.51
+    "short_share_latest": 0.562
    },
    "failed": [],
    "read": null
   },
   {
-   "symbol": "ADI",
-   "name": "ANALOG DEVICES INC",
+   "symbol": "MRVL",
+   "name": "Marvell Technology, Inc.",
    "why": [
     "candidate"
    ],
-   "score": 0,
+   "score": -1,
    "osint_positive": false,
    "osint_negative": false,
    "events": [
     {
-     "source": "sec",
-     "kind": "SCHEDULE 13G/A",
-     "date": "2026-10-27",
-     "polarity": 0,
-     "text": "passive 5%+ stake (13G) filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/6281/000201238326003874/xslSCHEDULE_13G_X02/primary_doc.xml"
+     "source": "stocktwits",
+     "kind": "crowd",
+     "date": "2026-10-29",
+     "polarity": -1,
+     "text": "StockTwits crowd sour: 40% bullish of 10 tagged posts",
+     "url": null
     }
    ],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
      "buyers": [],
-     "sell_value": 9852197,
-     "sellers": 5,
-     "discretionary_sell_value": 3495355
+     "sell_value": 5553338,
+     "sellers": 4,
+     "discretionary_sell_value": 300949
     },
     "headlines": [
      {
-      "title": "Analog Devices (ADI) Sees $25.3 Million in Net ETF Buying on Mon",
-      "publisher": "GuruFocus",
-      "published": "2026-10-28T11:37"
+      "title": "Marvell expands AI supply commitments: what it means for Marvell Technology stock",
+      "publisher": "ad-hoc-news.de",
+      "published": "2026-10-29T11:09"
      },
      {
-      "title": "Analog Devices, Inc. (ADI) latest stock news and headlines",
-      "publisher": "Yahoo Finance Australia",
-      "published": "2026-10-28T10:13"
+      "title": "Lumentum Jumps On Marvell Buyout Report",
+      "publisher": "Investor's Business Daily",
+      "published": "2026-10-29T11:02"
      },
      {
-      "title": "Analog Devices, Inc. (ADI) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-28T09:21"
+      "title": "Is Marvell (MRVL) stock a Buy after 10% overnight crash?",
+      "publisher": "Finbold",
+      "published": "2026-10-29T10:03"
      },
      {
-      "title": "When Management and the Chart Say the Same Thing, Pay Attention",
-      "publisher": "Trefis",
-      "published": "2026-10-28T08:25"
+      "title": "Marvell Stock (MRVL) Drops 8% as Lumentum Jumps 9% on Reported Deal Talks",
+      "publisher": "TipRanks",
+      "published": "2026-10-29T09:54"
      },
      {
-      "title": "Why Analog Devices Doubters Were Wrong Before A 80% Gain",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-28T07:40"
+      "title": "Why is Marvell Technology stock tumbling today?",
+      "publisher": "Investing.com",
+      "published": "2026-10-29T09:04"
      },
      {
-      "title": "Analog Devices, Inc. $ADI Stake Lessened by Asset Management One Co. Ltd.",
-      "publisher": "MarketBeat",
-      "published": "2026-10-28T07:19"
+      "title": "2 Reasons I'd Buy Marvell Stock More Than 20% Below Its Record, and 1 Reason I'd Wait",
+      "publisher": "The Globe and Mail",
+      "published": "2026-10-29T06:16"
      },
      {
-      "title": "Analog Devices Inc (ADI) Stock Up 4.3% but GF Value Says Overvalued -- GF Score: 95/100",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T21:32"
+      "title": "Lumentum Stock Surges 15% as Hot Money Piles In Despite Unconfirmed Marvell Acquisition",
+      "publisher": "TradingKey",
+      "published": "2026-10-29T03:23"
      },
      {
-      "title": "BlackRock can vote 39.4M Analog Devices (ADI) shares but reports a larger stake.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-27T21:28"
+      "title": "Form 4 Marvell Technology Inc For: 28 October By Investing.com",
+      "publisher": "Investing.com India",
+      "published": "2026-10-29T03:04"
      }
     ],
-    "short_share_latest": 0.493
+    "short_share_latest": 0.411
    },
    "failed": [],
-   "read": null
+   "read": {
+    "bluf": "MRVL fell roughly 8-10% on an unconfirmed report it may buy Lumentum; the deal is unverified, so the direction depends on confirmation and terms.",
+    "read": "unclear",
+    "confidence": "low",
+    "key_points": [
+     "Headlines report MRVL dropped 8-10% while Lumentum rose 9-15% on reported buyout talks. Market is pricing MRVL as the acquirer, which usually pressures the buyer's stock.",
+     "Coverage calls the Lumentum acquisition 'unconfirmed' and 'reported'; no company statement or SEC filing is in evidence. The move rests on a rumor and could reverse on a denial.",
+     "Insiders sold $5.55M over 30 days across 4 people, with only $300,949 outside 10b5-1 plans, and no open-market buys. Mostly pre-planned, so a weak signal.",
+     "StockTwits crowd is 40% bullish on only 10 posts; the sample is too small to carry weight. One headline says the stock is over 20% below its record."
+    ],
+    "watch": [
+     "Any Marvell or Lumentum statement, 8-K, or major-outlet confirmation or denial of talks, including price, structure, and financing.",
+     "Whether MRVL holds post-drop lows or rebounds if talks are denied; Lumentum's move would show how much deal premium is priced in.",
+     "Form 4 filings beyond the 28 October one for any unplanned insider selling or buying."
+    ],
+    "unknowns": [
+     "Original source, reliability, and terms of the buyout report; no primary filing confirms it.",
+     "Content of the 28 October Form 4 and the AI supply commitments headline; details are not in the evidence."
+    ]
+   }
   },
   {
-   "symbol": "DDOG",
-   "name": "Datadog, Inc.",
+   "symbol": "AMD",
+   "name": "ADVANCED MICRO DEVICES INC",
    "why": [
     "candidate"
    ],
@@ -1485,60 +1604,62 @@
     "insiders_30d": {
      "buy_value": 0,
      "buyers": [],
-     "sell_value": 14750067,
+     "sell_value": 9333585,
      "sellers": 1,
      "discretionary_sell_value": 0
     },
     "headlines": [
      {
-      "title": "How Analyst Upgrades At Datadog (DDOG) Have Changed Its Investment Story",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-28T05:07"
-     },
-     {
-      "title": "Analysts Offer Insights on Technology Companies: Datadog (DDOG), Trimble (TRMB) and Oracle (ORCL)",
-      "publisher": "The Globe and Mail",
-      "published": "2026-10-28T01:06"
-     },
-     {
-      "title": "DDOG Maintained by UBS -- Price Target Raised to $320",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T23:17"
-     },
-     {
-      "title": "Datadog Shares Double This Year as UBS, Oppenheimer Raise Price Targets on AI Monitoring Demand",
-      "publisher": "BigGo Finance",
-      "published": "2026-10-27T18:30"
-     },
-     {
-      "title": "UBS raises target for Datadog stock to USD 320 from USD 280",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-10-27T15:56"
-     },
-     {
-      "title": "DDOG Stock Has Doubled This Year: Analysts Still See Upside, List AI Catalysts",
-      "publisher": "Menafn",
-      "published": "2026-10-27T15:15"
-     },
-     {
-      "title": "Datadog Gets $320 Target, but UBS Prefers Palantir and Snowflake",
+      "title": "AMD Regaining Its $1 Trillion Valuation Faces the Ultimate Test on Nov. 3",
       "publisher": "Yahoo Finance",
-      "published": "2026-10-27T12:59"
+      "published": "2026-10-29T09:34"
      },
      {
-      "title": "Datadog Eases as High Valuation, Insider Sales Focus",
-      "publisher": "TradingPedia",
-      "published": "2026-10-27T11:05"
+      "title": "Not Nvidia. Not AMD. This Is the Best Artificial Intelligence (AI) Stock to Buy in November",
+      "publisher": "The Motley Fool",
+      "published": "2026-10-29T07:15"
+     },
+     {
+      "title": "INTC, AMD, AVGO, MU Decline On Samsung\u2019s Profit Miss, Lighter Capex From Microsoft, Alphabet",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T07:02"
+     },
+     {
+      "title": "Dear AMD Stock Fans, Mark Your Calendar for November 3",
+      "publisher": "Barchart.com",
+      "published": "2026-10-28T23:08"
+     },
+     {
+      "title": "AMD stock price forecast: Wall Street analysts target $800 before earnings",
+      "publisher": "Beinsure",
+      "published": "2026-10-28T20:52"
+     },
+     {
+      "title": "Meta\u2019s Raising $97.5 Billion. Nvidia and AMD Are Buying In.",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T20:20"
+     },
+     {
+      "title": "AMD Stocks Gain With Meta Partnership and Planned $1 Billion Investment",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T20:09"
+     },
+     {
+      "title": "Nvidia Rival AMD Scores Major Win in Meta's AI Race",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T19:57"
      }
     ],
-    "short_share_latest": 0.61
+    "short_share_latest": 0.56
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": null
   },
   {
-   "symbol": "FTNT",
-   "name": "Fortinet, Inc.",
+   "symbol": "DVN",
+   "name": "DEVON ENERGY CORP/DE",
    "why": [
     "candidate"
    ],
@@ -1556,47 +1677,213 @@
     },
     "headlines": [
      {
-      "title": "What Fortinet (FTNT)'s AI Security Launch Means For Shareholders",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-28T07:40"
+      "title": "Devon Energy Corporation $DVN Stock: Oppenheimer & Co. Inc. Cuts Holdings",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T09:19"
      },
      {
-      "title": "The Bet Fortinet Holders Made Before A 138% Jump",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-28T02:08"
+      "title": "Devon Energy (DVN) Projected to Release Quarterly Earnings on Thursday",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T07:21"
      },
      {
-      "title": "FTNT Nov 2026 140.000 put (FTNT261127P00140000) interactive stock chart",
+      "title": "DVN Oct 2026 38.000 put (DVN261030P00038000) stock price, news, quote and history",
       "publisher": "Yahoo Finance UK",
-      "published": "2026-10-27T17:23"
+      "published": "2026-10-29T03:51"
      },
      {
-      "title": "Fortinet (FTNT) Could Be 46% Above Fair Value On Its AI Security Launch",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-27T17:07"
+      "title": "DVN Nov 2026 59.000 call (DVN261127C00059000) Interactive Stock Chart",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-28T19:27"
      },
      {
-      "title": "Fortinet (FTNT) Set to Report Q3 Earnings Amid Elevated Valuatio",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T16:32"
+      "title": "Devon Energy Corporation (DVN) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-10-28T11:52"
      },
      {
-      "title": "Printers and cameras can get security without an on-site firewall through Fortinet's new service.",
-      "publisher": "Stock Titan",
-      "published": "2026-10-27T13:00"
+      "title": "Devon Energy Is Winning The Macro Lottery With Higher Prices And Production (DVN)",
+      "publisher": "Seeking Alpha",
+      "published": "2026-10-28T11:30"
      },
      {
-      "title": "FTNT DCF Analysis: Intrinsic Value $87 vs Price $183",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T12:33"
+      "title": "DVN Dec 2026 53.000 call (DVN261204C00053000) Interactive Stock Chart",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-28T09:40"
      },
      {
-      "title": "Fortinet (FTNT) Receives a Hold from Barclays",
-      "publisher": "The Globe and Mail",
-      "published": "2026-10-27T09:10"
+      "title": "DVN Nov 2026 58.000 call (DVN261127C00058000) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-28T08:25"
      }
     ],
-    "short_share_latest": 0.554
+    "short_share_latest": 0.382
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "FTNT",
+   "name": "Fortinet, Inc.",
+   "why": [
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [
+    {
+     "source": "news",
+     "kind": "velocity",
+     "date": "2026-10-29",
+     "polarity": 0,
+     "text": "News surge: 46 headlines in 24h vs 9.0/day, 21 outlets, tone -0.05",
+     "url": null
+    },
+    {
+     "source": "sec",
+     "kind": "8-K",
+     "date": "2026-10-28",
+     "polarity": 0,
+     "text": "8-K: results announced",
+     "url": "https://www.sec.gov/Archives/edgar/data/1262039/000126203926000024/ftnt-20261028.htm"
+    }
+   ],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 0,
+     "sellers": 0,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "Fortinet Plummets 25%: Jim Cramer Says the 'Hardware Business' Is 'Getting Killed' by Palo Alto",
+      "publisher": "Benzinga",
+      "published": "2026-10-29T11:44"
+     },
+     {
+      "title": "Why Is Fortinet Stock Falling Thursday?",
+      "publisher": "Benzinga",
+      "published": "2026-10-29T11:41"
+     },
+     {
+      "title": "Fortinet Stock Forecast: FTNT Set to Gap Toward $129 as Price-Driven Growth Fades",
+      "publisher": "TradingKey",
+      "published": "2026-10-29T11:39"
+     },
+     {
+      "title": "Software Stocks Are Getting Crushed Again After Hours",
+      "publisher": "24/7 Wall St.",
+      "published": "2026-10-29T11:38"
+     },
+     {
+      "title": "Cantor Fitzgerald cuts Fortinet stock price target on service growth concerns",
+      "publisher": "Investing.com UK",
+      "published": "2026-10-29T11:28"
+     },
+     {
+      "title": "FTNT Stock On Track To Revisit May Levels Despite Strong Earnings \u2014 Analysts Flag Slowing Product Growth, Services Headwinds",
+      "publisher": "TradingView",
+      "published": "2026-10-29T11:20"
+     },
+     {
+      "title": "Fortinet stock downgraded by BofA on slowing product growth",
+      "publisher": "Investing.com",
+      "published": "2026-10-29T11:13"
+     },
+     {
+      "title": "First F5, Now Fortinet: Wall Street Has Stopped Paying Security Stocks for Beating Earnings",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T11:02"
+     }
+    ],
+    "short_share_latest": 0.634
+   },
+   "failed": [],
+   "read": {
+    "bluf": "Fortinet fell sharply after its Oct 28 earnings on slowing product growth and services concerns, with analyst downgrades and cuts; near-term momentum is negative despite the reported earnings beat.",
+    "read": "bearish",
+    "confidence": "medium",
+    "key_points": [
+     "46 headlines in 24h versus a 9/day baseline across 21 outlets; the market is reacting heavily to earnings, so volatility will likely stay elevated.",
+     "Headlines report a drop of roughly 25% (Benzinga, via Cramer); this is unverified by price data here, but implies a large gap-down and broken momentum.",
+     "BofA downgraded and Cantor cut its target, citing slowing product growth and services headwinds; estimate revisions typically pressure shares for weeks.",
+     "Yahoo frames F5 then Fortinet as security names not rewarded for beating earnings; sector-wide de-rating risk could limit rebounds."
+    ],
+    "watch": [
+     "Whether the stock holds the post-earnings low or keeps making lower lows on volume over the next 1-2 weeks.",
+     "Further analyst downgrades or target cuts versus any upgrades calling the selloff overdone.",
+     "The 8-K and earnings release details: billings, product revenue and services growth, and full-year guidance."
+    ],
+    "unknowns": [
+     "Actual price, volume, and guidance figures are not in the evidence; the 25% drop comes from a headline only.",
+     "No insider activity in the last 30 days, so there is no management signal on the selloff."
+    ]
+   }
+  },
+  {
+   "symbol": "HPE",
+   "name": "Hewlett Packard Enterprise Co",
+   "why": [
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 21192827,
+     "sellers": 2,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "HPE unifies SASE tools. Hewlett Packard Enterprise stock falls 2.40 percent",
+      "publisher": "ad-hoc-news.de",
+      "published": "2026-10-29T10:26"
+     },
+     {
+      "title": "\"Hewlett Packard Enterprise Tokenized Stock (Ondo)\" price data",
+      "publisher": "CryptoDaily",
+      "published": "2026-10-29T03:32"
+     },
+     {
+      "title": "HPE selects ServiceNow to transform support services for Cloud & AI business",
+      "publisher": "TipRanks",
+      "published": "2026-10-28T20:17"
+     },
+     {
+      "title": "HP Inc. (HPQ) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-28T18:20"
+     },
+     {
+      "title": "Is HPE Stock Undervalued?",
+      "publisher": "Trefis",
+      "published": "2026-10-28T17:33"
+     },
+     {
+      "title": "NYSE volume runs 44.00 percent below average for Hewlett Packard Enterprise stock",
+      "publisher": "ad-hoc-news.de",
+      "published": "2026-10-28T15:58"
+     },
+     {
+      "title": "HPE Benefits From AI Infrastructure Demand: What's Ahead?",
+      "publisher": "TradingView",
+      "published": "2026-10-28T15:05"
+     },
+     {
+      "title": "HPE Oct 2026 48.000 call (HPE261030C00048000) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-10-28T04:48"
+     }
+    ],
+    "short_share_latest": 0.394
    },
    "failed": [],
    "read": null
@@ -1621,49 +1908,51 @@
     },
     "headlines": [
      {
+      "title": "A distributor is first to pair pay-as-you-use storage with ongoing management",
+      "publisher": "Stock Titan",
+      "published": "2026-10-29T10:00"
+     },
+     {
+      "title": "6,410 Shares of NetApp, Inc. $NTAP Bought by Sigma Planning Corp",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T09:20"
+     },
+     {
+      "title": "Why Everyone Is Watching NetApp (NTAP) Right Now",
+      "publisher": "Simply Wall St",
+      "published": "2026-10-29T07:44"
+     },
+     {
+      "title": "NetApp Inc. stock outperforms competitors despite losses on the day",
+      "publisher": "MarketWatch",
+      "published": "2026-10-28T20:52"
+     },
+     {
+      "title": "NetApp (NASDAQ:NTAP) Offers Dividend Investors Strong Profitability and a Sustainable Payout",
+      "publisher": "ChartMill",
+      "published": "2026-10-28T10:30"
+     },
+     {
+      "title": "NTAP Jan 2028 165.000 put (NTAP280121P00165000) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-10-28T03:42"
+     },
+     {
       "title": "How AI Coverage At NetApp (NTAP) Has Changed Its Investment Story",
       "publisher": "Yahoo Finance",
       "published": "2026-10-27T23:15"
      },
      {
-      "title": "NetApp (NTAP) Exceeds Market Returns: Some Facts to Consider",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-27T20:50"
-     },
-     {
-      "title": "What Did NetApp Do That HP Did Not?",
-      "publisher": "Trefis",
-      "published": "2026-10-27T18:36"
-     },
-     {
-      "title": "Earnings Preview: What to Expect From NetApp\u2019s Report",
-      "publisher": "Yahoo Finance",
-      "published": "2026-10-27T12:27"
-     },
-     {
-      "title": "Did AI Product Push Just Shift NetApp (NTAP) Stock's Investment Narrative?",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-27T12:18"
-     },
-     {
-      "title": "NetApp Pricing Gains: Can Higher Prices Support Revenue Growth?",
-      "publisher": "Zacks Investment Research",
-      "published": "2026-10-27T12:01"
-     },
-     {
-      "title": "NetApp Pricing Gains: Can Higher Prices Support Revenue Growth?",
-      "publisher": "TradingView",
-      "published": "2026-10-27T11:59"
-     },
-     {
-      "title": "NetApp, Inc. (NTAP) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-27T11:43"
+      "title": "NetApp Inc. stock outperforms competitors on strong trading day",
+      "publisher": "MarketWatch",
+      "published": "2026-10-27T20:51"
      }
     ],
-    "short_share_latest": 0.559
+    "short_share_latest": 0.481
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": null
   },
   {
@@ -1686,49 +1975,51 @@
     },
     "headlines": [
      {
-      "title": "Palo Alto Networks CEO Compensation Declines Amid Shareholder Pu",
-      "publisher": "GuruFocus",
-      "published": "2026-10-28T08:25"
+      "title": "Palo Alto Networks (PANW) Stock May Be Fully Priced After Its 379% Run",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T02:13"
      },
      {
-      "title": "Palo Alto Networks CEO Gets Smaller Pay Package After Pushback",
-      "publisher": "Bloomberg.com",
-      "published": "2026-10-27T23:24"
+      "title": "Oracle vs. Palo Alto Networks: Which Tech Stock Is the Better Buy in 2026?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-29T01:27"
      },
      {
-      "title": "PANW Nov 2026 415.000 call (PANW261106C00415000) stock price, news, quote and history",
+      "title": "PANW Nov 2026 500.000 call (PANW261127C00500000) interactive stock chart",
       "publisher": "Yahoo Finance UK",
-      "published": "2026-10-27T22:55"
+      "published": "2026-10-29T01:25"
      },
      {
-      "title": "PANW 261030 385.00P (PANW261030P385000) Stock Options Chain | Quotes & News",
+      "title": "Cybersecurity Stocks Drop After Hours: Here's Why",
+      "publisher": "Benzinga",
+      "published": "2026-10-28T21:43"
+     },
+     {
+      "title": "PANW 261030 317.50C (PANW261030C317500) Stock Options Chain | Quotes & News",
       "publisher": "Moomoo",
-      "published": "2026-10-27T22:52"
+      "published": "2026-10-28T21:26"
      },
      {
-      "title": "Palo Alto Networks Inc Stock (PANW) Moved Up by 3.06% on Oct 27: Drivers Behind the Movement",
-      "publisher": "TradingKey",
-      "published": "2026-10-27T16:15"
+      "title": "PANW 261030 267.50P (PANW261030P267500) Stock Options Chain | Quotes & News",
+      "publisher": "Moomoo",
+      "published": "2026-10-28T20:49"
      },
      {
-      "title": "Palo Alto Networks, Inc. (PANW) Stock Forecasts",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-27T16:03"
+      "title": "PANW 261030 680.00P (PANW261030P680000) Stock Options Chain | Quotes & News",
+      "publisher": "Moomoo",
+      "published": "2026-10-28T20:47"
      },
      {
-      "title": "PANW Oct 2026 210.000 put (PANW261030P00210000) interactive stock chart",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-10-27T14:24"
-     },
-     {
-      "title": "Can PANW Turn Frontier AI Defense Into a Key Growth Driver?",
-      "publisher": "Zacks Investment Research",
-      "published": "2026-10-27T14:04"
+      "title": "Palo Alto Networks Stocks Move Lower With More PHP2Shell Fixes Released",
+      "publisher": "Yahoo Finance",
+      "published": "2026-10-28T19:41"
      }
     ],
-    "short_share_latest": 0.574
+    "short_share_latest": 0.588
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": null
   },
   {
@@ -1751,49 +2042,51 @@
     },
     "headlines": [
      {
+      "title": "Snowflake Inc. $SNOW Shares Purchased by Motley Fool Asset Management LLC",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T11:22"
+     },
+     {
+      "title": "15,812 Shares of Snowflake Inc. $SNOW Bought by Heritage Wealth Management Inc. CA",
+      "publisher": "MarketBeat",
+      "published": "2026-10-29T08:27"
+     },
+     {
+      "title": "Snowflake Is Up 55% in 2026 After AI\u2019s \u201cClear Inflection Point\u201d: Take Profits, or Buy More?",
+      "publisher": "TIKR.com",
+      "published": "2026-10-28T21:33"
+     },
+     {
+      "title": "Snowflake: This Growing AI Stock Is Ripe For Bullish Exposure",
+      "publisher": "Investor's Business Daily",
+      "published": "2026-10-28T16:40"
+     },
+     {
+      "title": "What Is Snowflake Stock\u2019s Biggest Opportunity?",
+      "publisher": "Trefis",
+      "published": "2026-10-28T12:01"
+     },
+     {
       "title": "Snowflake (SNOW) Stock Could Be Trading At A Premium After Its 132% Run",
       "publisher": "Yahoo Finance",
       "published": "2026-10-28T05:13"
      },
      {
+      "title": "Snowflake CRO Beaulier sells $253,953 in SNOW shares By Investing.com",
+      "publisher": "Investing.com South Africa",
+      "published": "2026-10-28T00:47"
+     },
+     {
       "title": "Snowflake Cortex AI integrates OpenAI GPT-6.1 Terra: Can SNOW break above $337.99?",
       "publisher": "Traders Union",
       "published": "2026-10-28T00:24"
-     },
-     {
-      "title": "Oracle\u2019s Snowflake OCI deal lands as stock slides 8.68%",
-      "publisher": "ABC Money",
-      "published": "2026-10-28T00:10"
-     },
-     {
-      "title": "Snowflake stock rises 1.2% after partnership expansion with Oracle for AI Data Cloud",
-      "publisher": "Traders Union",
-      "published": "2026-10-27T19:06"
-     },
-     {
-      "title": "Oracle Stock (ORCL) Jumps on Expanded AI Push with Nvidia, OpenAI, and Snowflake",
-      "publisher": "TipRanks",
-      "published": "2026-10-27T18:31"
-     },
-     {
-      "title": "SNOW Rides on Strong Enterprise AI Push: Can It Outpace AVGO and ORCL?",
-      "publisher": "Zacks Investment Research",
-      "published": "2026-10-27T17:31"
-     },
-     {
-      "title": "SNOW Rides on Strong Enterprise AI Push: Can It Outpace AVGO and ORCL?",
-      "publisher": "TradingView",
-      "published": "2026-10-27T17:25"
-     },
-     {
-      "title": "Oracle will let customers pay for Snowflake through one bill",
-      "publisher": "Stock Titan",
-      "published": "2026-10-27T16:06"
      }
     ],
-    "short_share_latest": 0.587
+    "short_share_latest": 0.563
    },
-   "failed": [],
+   "failed": [
+    "wikipedia"
+   ],
    "read": null
   },
   {
@@ -1816,194 +2109,47 @@
     },
     "headlines": [
      {
-      "title": "Targa Resources, Inc. $TRGP Stock: Miller Howard Investments Inc. NY Raises Holdings",
+      "title": "Q3 EPS Forecast for Targa Resources Boosted by Analyst",
       "publisher": "MarketBeat",
-      "published": "2026-10-27T10:12"
+      "published": "2026-10-29T10:52"
      },
      {
-      "title": "Targa Resources, Inc. $TRGP Shares Sold by CUSHING ASSET MANAGEMENT LP dba NXG INVESTMENT MANAGEMENT",
+      "title": "Targa Resources, Inc. $TRGP Shares Sold by Generali Asset Management SPA SGR",
       "publisher": "MarketBeat",
-      "published": "2026-10-27T08:31"
+      "published": "2026-10-29T08:27"
      },
      {
-      "title": "Targa Resources, Inc. $TRGP Shares Acquired by Apollon Wealth Management LLC",
+      "title": "Targa Resources (TRGP) Expected to Release Earnings on Thursday",
       "publisher": "MarketBeat",
-      "published": "2026-10-27T07:10"
+      "published": "2026-10-29T07:22"
      },
      {
-      "title": "Oil Is Surging: 3 Energy Stocks Wall Street Is Bullish On \u2013 LNG, TRGP, INSW",
-      "publisher": "TipRanks",
-      "published": "2026-10-26T17:18"
+      "title": "Targa Resources Corp. stock underperforms Wednesday when compared to competitors despite daily gains",
+      "publisher": "MarketWatch",
+      "published": "2026-10-28T20:46"
      },
      {
-      "title": "Targa Resources (TRGP) Dividend Hike Keeps Fair Value In Focus",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-26T11:46"
-     },
-     {
-      "title": "TRGP Nov 2026 230.000 put (TRGP261120P00230000) Interactive Stock Chart - Yahoo Finance",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-26T08:27"
-     },
-     {
-      "title": "Why (TRGP) Price Action Is Critical for Tactical Trading",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-10-24T22:50"
-     },
-     {
-      "title": "Does Infrastructure Expansion Change The Bull Case For Targa Resources (TRGP)?",
-      "publisher": "Simply Wall Street",
-      "published": "2026-10-24T19:33"
-     }
-    ],
-    "short_share_latest": 0.63
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "TWLO",
-   "name": "TWILIO INC",
-   "why": [
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 10966877,
-     "sellers": 2,
-     "discretionary_sell_value": 6763757
-    },
-    "headlines": [
-     {
-      "title": "Twilio Inc. (TWLO) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-28T10:11"
-     },
-     {
-      "title": "Twilio (TWLO) reports earnings tomorrow: what to expect",
-      "publisher": "TradingView",
-      "published": "2026-10-28T03:24"
-     },
-     {
-      "title": "TWLO Oct 2026 352.500 call (TWLO261030C00352500) interactive stock chart \u2013 Yahoo Finance",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-27T21:52"
-     },
-     {
-      "title": "Why Twilio Stock Fell 3.7% Today",
-      "publisher": "Quiver Quantitative",
-      "published": "2026-10-27T16:22"
-     },
-     {
-      "title": "Wells Fargo & Company Issues Positive Forecast for Twilio (NYSE:TWLO) Stock Price",
+      "title": "Targa Resources (NYSE:TRGP) Reaches New 12-Month High - Here's What Happened",
       "publisher": "MarketBeat",
-      "published": "2026-10-27T15:54"
+      "published": "2026-10-28T17:13"
      },
      {
-      "title": "TWLO 261023 240.00P (TWLO261023P240000) Stock Options Chain | Quotes & News",
-      "publisher": "Moomoo",
-      "published": "2026-10-27T12:32"
+      "title": "Targa Resources stock hits all-time high at 307.99 USD",
+      "publisher": "Investing.com",
+      "published": "2026-10-28T16:13"
      },
      {
-      "title": "TWLO Oct 2026 342.500 call (TWLO261030C00342500) stock historical prices and data",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-27T09:36"
-     },
-     {
-      "title": "TWLO Oct 2026 202.500 put (TWLO261030P00202500) stock price, news, quote and history",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-10-27T09:36"
-     }
-    ],
-    "short_share_latest": 0.459
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "VLO",
-   "name": "VALERO ENERGY CORP/TX",
-   "why": [
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [
-    {
-     "source": "sec",
-     "kind": "10-Q",
-     "date": "2026-10-28",
-     "polarity": 0,
-     "text": "periodic report filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/1035002/000162828026067679/vlo-20260930.htm"
-    },
-    {
-     "source": "finra",
-     "kind": "short_volume",
-     "date": "2026-10-28",
-     "polarity": 0,
-     "text": "Short volume collapsed: 41% vs 58% average (z -2.8)",
-     "url": null
-    }
-   ],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 0,
-     "sellers": 0,
-     "discretionary_sell_value": 0
-    },
-    "headlines": [
-     {
-      "title": "VLO Nov 2026 437.500 put (VLO261106P00437500) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-10-28T07:48"
-     },
-     {
-      "title": "Valero Energy Corporation Declares Regular Cash Dividend on Common Stock",
+      "title": "Are You Looking for a Top Momentum Pick? Why Targa Resources, Inc. (TRGP) is a Great Choice",
       "publisher": "Yahoo Finance",
-      "published": "2026-10-27T22:31"
+      "published": "2026-10-28T15:00"
      },
      {
-      "title": "Valero Energy (NYSE:VLO) Stock Price Down 9.4% - Time to Sell?",
+      "title": "FY2026 EPS Forecast for Targa Resources Raised by Analyst",
       "publisher": "MarketBeat",
-      "published": "2026-10-27T22:05"
-     },
-     {
-      "title": "Valero Energy Corp (VLO) Stock Down 9.2% but Still Overvalued -- GF Score: 66/100",
-      "publisher": "GuruFocus",
-      "published": "2026-10-27T21:48"
-     },
-     {
-      "title": "Valero Energy Corp Stock (VLO) Moved Down by 7.93% on Oct 27: Drivers Behind the Movement",
-      "publisher": "TradingKey",
-      "published": "2026-10-27T17:15"
-     },
-     {
-      "title": "Why is Valero Energy stock down 7.9% today?",
-      "publisher": "Traders Union",
-      "published": "2026-10-27T17:10"
-     },
-     {
-      "title": "Valero Energy Shares Fall as Traders Reassess Refining Tailwinds",
-      "publisher": "Quiver Quantitative",
-      "published": "2026-10-27T14:52"
-     },
-     {
-      "title": "Valero Energy (NYSE:VLO) Breakout Setup Backed by 10/10 Technical Strength",
-      "publisher": "ChartMill",
-      "published": "2026-10-27T13:10"
+      "published": "2026-10-28T12:18"
      }
     ],
-    "short_share_latest": 0.408
+    "short_share_latest": 0.702
    },
    "failed": [],
    "read": null

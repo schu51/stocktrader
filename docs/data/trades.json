@@ -2715,7 +2715,7 @@
   {
     "trade_id": "TRD-20260921190257-PLTR",
     "symbol": "PLTR",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-09-21",
     "entry_ts": "2026-09-21T19:02:57.080675",
     "entry_price": 181.76,
@@ -2729,14 +2729,15 @@
     "sector": "technology",
     "weight_version": 2,
     "order_id": "c6d7c3b2-6ba9-4b0a-8302-3b4c734dc2e4",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-30",
+    "exit_price": 185.55,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": 52.93,
+    "pnl_pct": 2.08,
+    "hold_days": 39,
     "entry_limit": 182.35,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-30T15:45:42.677492"
   },
   {
     "trade_id": "TRD-20260921190257-MDB",

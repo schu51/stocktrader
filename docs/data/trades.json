@@ -3695,7 +3695,7 @@
   {
     "trade_id": "TRD-20261014140314-ILMN",
     "symbol": "ILMN",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-14",
     "entry_ts": "2026-10-14T14:03:14.864825",
     "entry_price": 275.15,
@@ -3727,14 +3727,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.127475,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-30",
+    "exit_price": 249.34,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -232.28,
+    "pnl_pct": -9.38,
+    "hold_days": 16,
     "entry_limit": 275.23,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-30T14:45:54.608933"
   },
   {
     "trade_id": "TRD-20261016140304-HUM",

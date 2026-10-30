@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-10-30T13:45:58.145629",
-  "positions_checked": 18,
+  "generated_at": "2026-10-30T14:15:53.738941",
+  "positions_checked": 16,
   "exits_triggered": [
     {
-      "symbol": "DDOG",
+      "symbol": "TEAM",
       "trigger": "PRICE_BELOW_50MA",
-      "reason": "$244.44 is 2.7% below 50MA $251.21",
-      "qty": 8,
-      "price": 244.445,
-      "pnl_pct": -8.88,
+      "reason": "$194.55 is 0.2% below 50MA $194.89",
+      "qty": 15,
+      "price": 194.55,
+      "pnl_pct": 15.08,
       "executed": true,
-      "order_id": "db85aa74-8e2e-43c2-9fa0-a13e9899c486",
+      "order_id": "954f30e4-8160-4e65-bcbd-89b088c35559",
       "confirmed": true,
       "sale": "filled"
     }
@@ -20,10 +20,10 @@
   "stop_failures": [],
   "broker_exits": [
     {
-      "symbol": "HPQ",
+      "symbol": "NTAP",
       "trigger": "BROKER_STOP",
-      "price": 28.03,
-      "pnl_pct": -15.52,
+      "price": 199.57,
+      "pnl_pct": -10.46,
       "exit_date": "2026-10-30"
     }
   ],

@@ -4077,7 +4077,7 @@
   {
     "trade_id": "TRD-20261028133030-HPQ",
     "symbol": "HPQ",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-28",
     "entry_ts": "2026-10-28T13:30:30.697859",
     "entry_price": 33.18,
@@ -4112,14 +4112,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.0952,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-30",
+    "exit_price": 28.03,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": -607.82,
+    "pnl_pct": -15.52,
+    "hold_days": 2,
     "entry_limit": 33.31,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-30T13:34:58.152885"
   },
   {
     "trade_id": "TRD-20261028133031-EOG",
@@ -4312,7 +4313,7 @@
   {
     "trade_id": "TRD-20261029133031-DDOG",
     "symbol": "DDOG",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-29",
     "entry_ts": "2026-10-29T13:30:31.392740",
     "entry_price": 268.26,
@@ -4347,13 +4348,14 @@
     "stop_arm": "atr",
     "stop_dist": 0.142525,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-30",
+    "exit_price": 244.44,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -190.57,
+    "pnl_pct": -8.88,
+    "hold_days": 1,
     "entry_limit": 284.01,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-30T13:45:57.976241"
   }
 ]

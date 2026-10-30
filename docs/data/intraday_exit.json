@@ -1,11 +1,32 @@
 {
-  "generated_at": "2026-10-29T19:45:40.721634",
-  "positions_checked": 19,
-  "exits_triggered": [],
+  "generated_at": "2026-10-30T13:45:58.145629",
+  "positions_checked": 18,
+  "exits_triggered": [
+    {
+      "symbol": "DDOG",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$244.44 is 2.7% below 50MA $251.21",
+      "qty": 8,
+      "price": 244.445,
+      "pnl_pct": -8.88,
+      "executed": true,
+      "order_id": "db85aa74-8e2e-43c2-9fa0-a13e9899c486",
+      "confirmed": true,
+      "sale": "filled"
+    }
+  ],
   "stops_updated": [],
   "stops_placed": [],
   "stop_failures": [],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "HPQ",
+      "trigger": "BROKER_STOP",
+      "price": 28.03,
+      "pnl_pct": -15.52,
+      "exit_date": "2026-10-30"
+    }
+  ],
   "sleeve_positions": [
     "KVYO",
     "PCOR",

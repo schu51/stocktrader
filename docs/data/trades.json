@@ -4174,7 +4174,7 @@
   {
     "trade_id": "TRD-20261029133030-PANW",
     "symbol": "PANW",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-29",
     "entry_ts": "2026-10-29T13:30:30.544772",
     "entry_price": 374.72,
@@ -4209,14 +4209,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.121325,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-10-30",
+    "exit_price": 370.77,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -55.08,
+    "pnl_pct": -1.05,
+    "hold_days": 1,
     "entry_limit": 389.55,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-10-30T15:15:45.963389"
   },
   {
     "trade_id": "TRD-20261029133030-ZS",

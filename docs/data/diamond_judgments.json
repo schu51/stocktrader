@@ -40,21 +40,21 @@
     }
   },
   "ETON": {
-    "basis": "0001437749-26-009059|0001437749-26-027684|11",
-    "judged_at": "2026-10-17",
+    "basis": "0001437749-26-009059|0001437749-26-027684|9",
+    "judged_at": "2026-10-31",
     "judgment": {
       "edge": 5.0,
       "demand": 5.0,
-      "confidence": "low",
-      "thesis": "Eton is a rare-disease roll-up with FDA-approved niche products (INCRELEX, ALKINDI SPRINKLE, KHINDIVI, GALZIN), and its 81% revenue growth and 15% operating margin are real. However, much of the growth comes from acquired products rather than organic demand, several products are generics or face ordinary competition, and the evidence offers no named customers, backlog or prepaid revenue to show demand building beyond the acquisitions.",
-      "breaks_if": "Revenue growth from the acquired products (INCRELEX, GALZIN) stalls once the acquisitions annualize, or the ET-600 FDA decision (PDUFA 25 Feb 2026) is negative or the launch is slow, leaving growth dependent on further deal-making.",
-      "customers": "Patients reach the products through specialty pharmacies, so the buyers are rare-disease patients and prescribing pediatric endocrinologists. Specialty pharmacy concentration is likely but not disclosed in the supplied material.",
+      "confidence": "medium",
+      "thesis": "Eton is a rare-disease roll-up with real growth (+81% revenue, operating margin moving from -1% to +15%) and a handful of niche, FDA-approved products, but much of the growth comes from acquired products (INCRELEX, GALZIN) rather than organic demand. The edge is moderate: some products are sole-source or patent-protected, while several others are generics of existing drugs, and the pipeline is mostly in-licensed. Frequent deal-making signals a pipeline of additions, not necessarily visible custo",
+      "breaks_if": "ET-600 is rejected or delayed at its February 2026 PDUFA date, or organic sales of the acquired products (INCRELEX, ALKINDI/KHINDIVI) stall once acquisition effects lap, so growth falls well below 30% and operating margin slips back toward zero.",
+      "customers": "Patients reached via specialty pharmacies; pediatric endocrinologists are the prescribers. Specialty pharmacy concentration is likely but not disclosed in the supplied material.",
       "red_flags": [
-        "Growth is largely acquisition-driven (INCRELEX and GALZIN acquired Dec 2024), not clearly organic",
-        "Several products are generics (carglumic acid, betaine, nitisinone) that face competition",
-        "No backlog or deferred revenue reported; no named customers or contract evidence",
-        "Gross margin down 2 points on the year; share count up 3% and cashless warrant exercises add dilution",
-        "Market value of $1.4B is high for a company with a 12-person R&D team, and it carries SWK credit-facility debt (a sixth amendment was signed)"
+        "Growth is largely acquisition-driven (INCRELEX and GALZIN bought Dec 2024), so organic demand is unproven",
+        "Several products are generics of existing drugs (Carglumic Acid, Betaine, Nitisinone) with limited protection from competition",
+        "No backlog or deferred revenue data; news and sentiment data are essentially empty",
+        "Gross margin slipped 2 points and the debt facility with SWK was amended again, and shares and warrants keep being issued (+3% share count)",
+        "Pipeline is in-licensed and depends on binary FDA outcomes; only 12 R&D staff"
       ],
       "instructions_found": false
     }
@@ -200,21 +200,21 @@
     }
   },
   "CVI": {
-    "basis": "0001376139-26-000014|0001376139-26-000039|6",
-    "judged_at": "2026-10-17",
+    "basis": "0001376139-26-000014|0001376139-26-000039|5",
+    "judged_at": "2026-10-31",
     "judgment": {
-      "edge": 1.0,
+      "edge": 1.5,
       "demand": 2.0,
       "confidence": "high",
-      "thesis": "This is not a diamond: CVR is a two-refinery independent whose margin swing from -5% to +4% tracks crack spreads, now boosted by Iran War supply disruption, which is a cyclical and price-driven recovery rather than a durable advantage. The +256% jump in prepaid/deferred revenue is the only demand-like signal, and it is unexplained and probably a fertilizer prepay timing effect.",
-      "breaks_if": "Crack spreads and nitrogen fertilizer prices normalize as Middle East supply returns, and operating margin falls back to roughly zero or negative without any contract-backed volume gains.",
-      "customers": "Not disclosed; the products are commodity fuels and fertilizer sold to wholesale, retail and farm customers, with no named customers or contracts supplied.",
+      "thesis": "This is a two-refinery independent refiner plus a nitrogen fertilizer stake, so margins follow crack spreads and nitrogen prices, not any product advantage. The swing to profit and the +55% quarterly revenue growth line up with the Iran War price spike, which is a cyclical, price-driven recovery rather than an inflection in demand.",
+      "breaks_if": "Crack spreads and fertilizer prices normalize after the Iran War disruption and operating margin falls back toward or below zero while throughput stays flat.",
+      "customers": "Not disclosed; the products are commodity fuels and fertilizer sold to wholesale and farm markets. Icahn Enterprises controls about 71% of the stock.",
       "red_flags": [
-        "Margin recovery tracks commodity prices and the Iran War disruption, not a company-specific advantage",
-        "Commodity refining and fertilizer with no switching costs or proprietary technology",
-        "Coffeyville crude throughput fell about 20% in 2025 (123.8k to 98.8k bpd)",
-        "Renewable diesel unit reverted in December 2025 because the economics were unfavorable",
-        "Icahn controls about 71% and is weighing strategic transactions; the +256% deferred revenue is unexplained and there is no backlog or named-customer evidence"
+        "Margin recovery tracks commodity prices and a geopolitical shock, not a competitive advantage",
+        "Coffeyville crude throughput fell about 20% in 2025 (98.8k bpd vs 123.8k)",
+        "Renewable diesel unit abandoned in Dec 2025 as uneconomic",
+        "The +256% prepaid/deferred revenue is probably fertilizer seasonal prepayments or a small base, with no backlog or named customers",
+        "About 71% held by Icahn; strategic deals are unspecified and may dilute or distract"
       ],
       "instructions_found": false
     }
@@ -260,21 +260,21 @@
     }
   },
   "VCEL": {
-    "basis": "0001628280-26-012013|0001628280-26-050836|4",
-    "judged_at": "2026-10-17",
+    "basis": "0001628280-26-012013|0001628280-26-050836|3",
+    "judged_at": "2026-10-31",
     "judgment": {
       "edge": 7.0,
       "demand": 5.0,
       "confidence": "medium",
-      "thesis": "Vericel has FDA-approved autologous cell therapies (MACI, Epicel) that are hard to replicate, with 75% gross margins, steady 22-23% growth, and operating income just turning positive (Q2 operating income $0.4M vs a $2.0M loss a year ago). It is not clearly a diamond: profitability is thin, SBC absorbs most of the cash profit, and the evidence of demand building beyond current growth is missing.",
-      "breaks_if": "MACI growth decelerates well below 20% or operating margin fails to stay positive as SG&A keeps growing near revenue growth, or the Burlington facility validation slips or Matricel supply is disrupted.",
-      "customers": "Orthopedic surgeons and burn centers in the US, paid mostly through insurers and hospitals; concentration not disclosed in the supplied text.",
+      "thesis": "Vericel sells FDA-approved autologous cell therapies (MACI, Epicel) that are hard to replicate, with a 75% gross margin, steady 22% growth and a swing to quarterly operating profit. It looks like a real franchise, but it is not clearly inflecting: operating income is only $0.4M on $77M of quarterly revenue, stock comp is heavy, and the evidence of new demand is thin.",
+      "breaks_if": "MACI growth slows well below 20% or MACI Arthro adoption stalls, so that SG&A keeps absorbing gross profit and operating margin stays near zero.",
+      "customers": "Orthopedic surgeons and burn centers in the US, paid mainly through insurers and hospitals; no customer concentration disclosed in the excerpts.",
       "red_flags": [
-        "No backlog or deferred revenue data; demand signals rely on reported growth only",
-        "Six-month operating loss of $7.6M; the profit turn is one quarter at a 0.6% margin",
-        "Stock-based comp of $20M in six months is large relative to cash earnings",
-        "Single-source Matricel membrane and NexoBrid made by MediWound in Israel create supply dependence",
-        "Federal award match ($36M) is unverified and may be an unrelated recipient"
+        "Six-month operating loss of $7.6M; the quarterly profit of $0.4M is marginal",
+        "Stock-based comp of $20M in six months is large relative to revenue and operating income",
+        "No backlog or deferred revenue data, and no named customer contracts",
+        "Single-source dependence on Matricel membranes and on MediWound for NexoBrid",
+        "$36M federal awards match is name-based and unverified, and is not meaningful for this business"
       ],
       "instructions_found": false
     }
@@ -300,61 +300,61 @@
     }
   },
   "ALGM": {
-    "basis": "0001193125-26-233537|0001193125-26-327128|5",
-    "judged_at": "2026-10-17",
+    "basis": "0001193125-26-233537|0001193125-26-439990|6",
+    "judged_at": "2026-10-31",
     "judgment": {
-      "edge": 6.5,
+      "edge": 7.0,
       "demand": 5.0,
       "confidence": "medium",
-      "thesis": "Allegro is the world's largest magnetic sensor IC supplier with proprietary 120V BCD and TMR technology and long automotive design-in cycles, which gives real switching costs. Revenue growth of 24-29% and a swing to a 5% operating margin (about 10% in the latest quarter) are encouraging, but the evidence is thin on named wins, backlog or prepaid revenue, and part of the move looks like a recovery from a cyclical trough in automotive and industrial chips.",
-      "breaks_if": "Gross margin stops expanding or growth falls back to single digits as automotive and industrial inventory restocking fades, with no named AI data center or robotics wins appearing.",
-      "customers": "Over 15,000 customers, including virtually all major automakers and tier-one suppliers, plus a growing data center and robotics base; no concentration figures disclosed in the supplied text.",
+      "thesis": "Allegro is the market-share leader in magnetic sensor ICs, with proprietary 120V BCD and TMR technology designed into long-lifecycle automotive platforms. That gives real switching costs, and operating income rose from $6M to $35M in a quarter on 29% growth. Demand evidence is still mostly management narrative and the numbers: no backlog, named customers or signed agreements are disclosed, and the recovery follows an automotive/industrial inventory downcycle.",
+      "breaks_if": "Revenue growth fades to single digits or gross margin stops expanding (it is now about 49%) as the automotive and industrial restocking cycle ends. AI data center and robotics revenue not showing up as a disclosed, growing segment would also undercut the thesis.",
+      "customers": "More than 15,000 customers, including virtually all major automotive OEMs and tier-one suppliers, plus a growing data center and robotics base. No single-customer concentration is given in the excerpts, and distributors are likely a large share of sales.",
       "red_flags": [
-        "Backlog and deferred revenue not reported, so forward demand is unverified",
-        "Growth may be partly a cyclical rebound from a 2025 trough (operating loss a year ago)",
-        "AI data center and robotics claims are management narrative with no named customers or contracts",
-        "Operating margin of 5% is still thin and R&D takes 23% of revenue",
-        "Inventory of $188M and $286M of long-term debt; social sentiment is the only tone signal and carries little weight"
+        "No backlog or deferred revenue data reported, so demand rests on revenue growth alone",
+        "AI data center and robotics claims are unquantified, with no named customers or contracts",
+        "Growth partly reflects recovery from a 2024-25 cyclical trough in automotive and industrial chips",
+        "Operating margin of 8% is still thin, and R&D is 22% of revenue",
+        "Related-party ties to Polar, and a $285M long-term debt load"
       ],
       "instructions_found": false
     }
   },
   "IRTC": {
-    "basis": "0001388658-26-000011|0001388658-26-000072|9",
-    "judged_at": "2026-10-17",
+    "basis": "0001388658-26-000011|0001388658-26-000072|8",
+    "judged_at": "2026-10-31",
     "judgment": {
-      "edge": 6.0,
+      "edge": 5.0,
       "demand": 5.0,
-      "confidence": "medium",
-      "thesis": "iRhythm is a real growth business: 20-27% revenue growth, 73% gross margin in Q2 2026, operating loss narrowed to about -1% in the quarter, and a Zio service that has 510(k) clearance and an established reimbursement footprint. It is not clearly a diamond, though: it has a single service line, a Baxter/Bardy patent fight just settled, and an operating margin that is being flattered by growth rather than proven by a durable moat, so the edge is good but not overwhelming.",
-      "breaks_if": "Revenue growth falls below about 15%, or Medicare/commercial reimbursement for the Zio services is cut, or competitors such as Baxter/Bardy take share, so that the operating margin goes back to negative.",
-      "customers": "Not disclosed in the supplied text; revenue comes from Medicare, commercial payors and healthcare providers who order the tests. The filings point to payor concentration and reimbursement dependence, not to named customers.",
+      "confidence": "low",
+      "thesis": "iRhythm is a real growth business: revenue is up 26%, gross margin is 71%, and the operating loss has nearly closed (-$2.5M in Q2 2026, which includes a $14M litigation charge). But it sells a single service (Zio) into a competitive remote cardiac monitoring market, with Baxter/Bardy a direct rival, and growth is decelerating (27% to 20%). The evidence supplied shows no named customers, backlog or contracts, so this reads as a decent business on a reimbursement-dependent path to profit rather th",
+      "breaks_if": "Quarterly revenue growth slips below mid-teens, or Medicare/commercial reimbursement rates for ambulatory ECG monitoring are cut, so that gross margin falls and operating profit does not materialize without the litigation and acquisition charges.",
+      "customers": "Not disclosed in the supplied text. Orders come from licensed healthcare providers and physicians, and revenue is paid largely by Medicare and commercial payors, so payor concentration is likely but not quantified.",
       "red_flags": [
-        "Single service line (Zio) with revenue dependent on Medicare and commercial payor reimbursement",
-        "Still loss-making: Q2 2026 operating loss of $2.5M, including a $14M litigation settlement charge",
-        "$651M of convertible notes against $591M of cash and securities",
-        "Share count up 3% a year, with heavy stock compensation dilution",
-        "No backlog, named customer wins or contracts disclosed; deferred revenue is tiny ($4M), and its 20% growth is not meaningful"
+        "Single product line (iRhythm Services) and reimbursement dependence on Medicare and commercial payors",
+        "Direct competitor Baxter/Bardy; patent litigation settled via an agreement on 2026-07-31, with a $13.95M litigation charge in Q2",
+        "Growth decelerating from +27% to +20% in the latest quarter",
+        "$651M convertible notes against about $591M cash and securities; share count +3% a year",
+        "Pending Vital Connect acquisition adds integration risk; no backlog, R&D or named-customer evidence supplied"
       ],
       "instructions_found": false
     }
   },
   "SLAB": {
-    "basis": "0001038074-26-000005|0001038074-26-000029|4",
-    "judged_at": "2026-10-24",
+    "basis": "0001038074-26-000005|0001038074-26-000029|3",
+    "judged_at": "2026-10-31",
     "judgment": {
       "edge": 5.0,
       "demand": 4.0,
       "confidence": "medium",
-      "thesis": "Silicon Labs is a credible IoT wireless chip designer with 61% gross margins and revenue up 18-22%, but it is still loss-making at -5% operating margin and its moat is ordinary: customers design in its chips, yet Nordic, TI, NXP, Qualcomm and others compete in the same protocols. The market value is effectively pinned to Texas Instruments' $231/share cash takeover, so the equity is a merger-arbitrage situation and offers no independent upside from an inflection.",
-      "breaks_if": "The Texas Instruments merger fails on regulatory or shareholder grounds and growth stalls, or gross margin falls back while operating expenses keep rising faster than revenue.",
-      "customers": "not disclosed; broad IoT base across industrial, commercial, home and life applications, with no concentration data in the supplied text",
+      "thesis": "Silicon Labs has real IoT wireless SoC design-in stickiness and 61% gross margins, with revenue up about 20% and the operating loss narrowing. But it faces ordinary competition from Nordic, TI, NXP, Espressif and others, and the stock is pinned near the $231 cash takeout by Texas Instruments, so there is no independent upside to find.",
+      "breaks_if": "The TI merger fails or is delayed by regulators and revenue growth stalls, or gross margin falls back below mid-50s while opex keeps rising, which would show the recovery was an inventory-cycle rebound.",
+      "customers": "not disclosed; the supplied text names no customers or concentration. It describes broad IoT end markets (home, industrial, commercial, life) sold largely through design-ins.",
       "red_flags": [
-        "Pending $231/share cash acquisition by Texas Instruments caps upside and makes market value a deal price, not an operating signal",
-        "Still operating-loss-making: -$10.7M in the latest quarter and -$27.7M over six months",
-        "Operating cash flow was -$9.6M for six months versus +$53.0M a year earlier, with inventory up $27.7M, which may signal channel build-up",
-        "Backlog and deferred revenue not reported; deferred revenue is tiny ($5.2M) and falling, so no contracted-demand evidence",
-        "Stock-based compensation of $46.7M over six months and a 2% share count increase dilute holders; revenue growth may partly reflect a recovery from a cyclical tr"
+        "Pending $231/share cash acquisition by Texas Instruments caps upside and makes the market price a deal spread, not a business signal",
+        "Still loss-making: operating margin -5%, net loss, and operating cash flow of -$9.6M in the first half of 2026",
+        "Growth looks like a cyclical rebound from a 2024-25 inventory downturn; no backlog or deferred revenue data, and deferred revenue is only $5M and falling",
+        "Inventory up 29% in six months (to $123M) and receivables up 24%, which could mean channel stuffing or a demand overestimate",
+        "Stock-based compensation of about $47M in six months exceeds the operating loss, and R&D at 42% of revenue is heavy; SG&A is rising faster than revenue"
       ],
       "instructions_found": false
     }
@@ -420,21 +420,21 @@
     }
   },
   "REAL": {
-    "basis": "0001573221-26-000010|0001573221-26-000053|4",
-    "judged_at": "2026-10-17",
+    "basis": "0001573221-26-000010|0001573221-26-000066|5",
+    "judged_at": "2026-10-31",
     "judgment": {
       "edge": 5.0,
-      "demand": 4.0,
+      "demand": 5.0,
       "confidence": "medium",
-      "thesis": "TheRealReal is the largest authenticated luxury resale marketplace, with a real supply-side network effect (over 80% of GMV from repeat consignors, 74% gross margin) and revenue growing 17-18% as operating margin approaches breakeven. It is probably not a diamond: the moat is service-based rather than hard to replace, the operating loss is still there, and the balance sheet carries heavy debt and a stockholders' deficit.",
-      "breaks_if": "Revenue growth falls below about 10%, or the operating margin fails to turn positive on a sustained basis while the new $150M Fortress term loan adds to interest costs.",
-      "customers": "Consumer consignors and buyers (over 1 million active buyers); no single-customer concentration. Supply depends on consignors of third-party luxury brands such as Chanel, Herm s and Rolex.",
+      "thesis": "TheRealReal has a real niche position as the largest authenticated luxury resale marketplace, with network effects, over 80% of GMV from repeat consignors, and steady growth of about 19%. It is probably not a diamond: operating income is only just breakeven, the balance sheet is heavily indebted with a stockholders' deficit, and its net profit is flattered by non-cash warrant gains.",
+      "breaks_if": "Revenue growth falls below the low teens, or operating margin slips back to negative, while debt service on the roughly $380M of convertible and term notes (including the new $150M Fortress loan) keeps absorbing cash.",
+      "customers": "Consumer consignors and buyers: over 1 million active buyers, and over 80% of GMV from repeat consignors. No concentration, but supply depends on luxury-brand goods that the company does not control.",
       "red_flags": [
-        "Stockholders' deficit of about $378M, with convertible notes, non-convertible notes and a warrant liability outstanding",
-        "New $150M Fortress senior secured term loan on 2026-10-15 points to refinancing or a need for capital",
-        "Cash fell from $151M to $119M in H1 2026",
-        "Net income is driven by warrant fair-value gains, not operations; operating loss is still -$4.6M for H1",
-        "Competitors are low-barrier: luxury brands, eBay, Vestiaire, Fashionphile, and consignment shops; the +223% deferred revenue figure is unexplained and unverifie"
+        "Operating income is only $1.5M in Q3 2026 and -$3.1M for nine months; breakeven is not yet profit",
+        "Net income is boosted by a $50M non-cash warrant fair-value gain; the accumulated deficit is $1.27B",
+        "Stockholders' deficit of $354M, about $380M of notes, and a new $150M Fortress secured term loan in Oct 2026",
+        "Cash fell to $130M from $151M while shares rose 5%; dilution continues",
+        "Competition is broad and low-barrier (brands, auction houses, other resale platforms); no backlog or contract evidence; news tone negative"
       ],
       "instructions_found": false
     }
@@ -520,21 +520,21 @@
     }
   },
   "ZG": {
-    "basis": "0001617640-26-000015|0001617640-26-000052|5",
-    "judged_at": "2026-10-17",
+    "basis": "0001617640-26-000015|0001617640-26-000052|6",
+    "judged_at": "2026-10-31",
     "judgment": {
       "edge": 6.0,
       "demand": 4.0,
       "confidence": "medium",
-      "thesis": "Zillow has a dominant consumer audience (the most visited US real estate app and site), a proprietary 173M-home database and the Zestimate, which together give it a real, hard-to-copy advantage in residential listings traffic. But operating margin is only about 0% after a -6% year ago, deferred revenue is falling, and there are no named contracts or backlog, so this looks like steady 18% growth in a rate-sensitive housing market rather than a visible inflection.",
-      "breaks_if": "Revenue growth falls below mid-teens, or operating margin stays near zero for another two to three quarters. Enhanced Markets lead share stalling around 40% or Zillow Preferred agent adoption flattening would also break it. So would an MLS, NAR or listing-data rule change that cuts Zillow's access t",
-      "customers": "Real estate agents and teams (Premier Agent, Preferred, Flex), rental property managers and landlords, mortgage borrowers via Zillow Home Loans, and advertisers. No customer concentration disclosed; dependence on listing and data providers is a risk.",
+      "thesis": "Zillow has a dominant consumer audience (most visited real estate app, a 173M-home database, the patented Zestimate), and revenue is growing a steady 18% with operating margin reaching breakeven from -6%. However, the profit turn is modest and the growth is not accelerating. The monetization model relies on agents and on listing data from MLS/NAR, and the evidence shows no named contracts, backlog or prepaid growth that would show demand building beyond the numbers.",
+      "breaks_if": "Revenue growth slips below the high-teens, operating margin falls back below zero, or agents/listing providers (via NAR/MLS rule changes, litigation or syndication terms) cut Zillow's access to listings or lead flow.",
+      "customers": "Real estate agents (Premier Agent/Preferred, pay-at-close), rental property managers and landlords, mortgage borrowers via Zillow Home Loans, and advertisers; consumer traffic is broad. Concentration not disclosed.",
       "red_flags": [
-        "Operating margin only about 0%, with no demonstrated operating leverage yet",
-        "Prepaid and deferred revenue down 7% year on year, which cuts against building demand",
-        "No backlog, signed contracts or named customer wins in the evidence",
-        "Heavily exposed to mortgage rates, housing turnover and NAR/MLS rule and litigation changes",
-        "R&D at 22% of revenue and gross margin down 3 points, so costs are absorbing the growth"
+        "Prepaid and deferred revenue down 7% on the year; backlog not reported",
+        "Operating margin only 0%, so profitability is unproven",
+        "Gross margin down 3 points on the year",
+        "Dependence on MLS/NAR listing data and agent relationships, with ongoing litigation and regulatory exposure",
+        "Growth steady at 18% for three quarters, so no visible acceleration; the 2026-10-28 8-K is a securities class action settlement, not a customer win"
       ],
       "instructions_found": false
     }
@@ -575,6 +575,26 @@
         "Inventory up 46% and receivables up 59% since December, which could signal channel stuffing or a restocking cycle; prepaid and other current assets also rose 14",
         "Nine-month net loss of $14M after a $17M tax charge; debt rose to $164M with another credit amendment; share count up 4%",
         "Terminated Silicon Motion merger, with arbitration and class action and potential damages; auditor change in June 2026"
+      ],
+      "instructions_found": false
+    }
+  },
+  "PBF": {
+    "basis": "0001534504-26-000010|0001534504-26-000041|11",
+    "judged_at": "2026-10-31",
+    "judgment": {
+      "edge": 2.0,
+      "demand": 2.0,
+      "confidence": "high",
+      "thesis": "This is not a diamond. PBF is a merchant refiner whose margin swing from -2% to +10% looks like a cyclical and commodity-price recovery, helped by a rebound from the 2025 Martinez fire outage, and its fuels have no switching costs. The material agreements are debt financings (a revolver, 7.25% senior notes and 0% exchangeable notes), not customer wins, and they signal a capital-hungry business that is diluting shareholders.",
+      "breaks_if": "The thesis that this is a cyclical, price-driven recovery would be wrong only if margins held at current levels after crack spreads normalize and Martinez and Chalmette are fully running, which would be evidence of a structural advantage. A fall in refining margins or another outage would confirm it",
+      "customers": "not disclosed; sells unbranded fuels and petrochemical feedstocks to the wholesale market across the US, Canada and Mexico. Logistics revenue is mostly intercompany with PBF Holding.",
+      "red_flags": [
+        "Commodity refiner: margins follow crack spreads and crude prices, not pricing power",
+        "Revenue growth (+32% over twelve months, +59% in the latest quarter) likely reflects fuel prices and recovery from the Martinez fire shutdown",
+        "Operational and regulatory risk: Martinez fire (federal and state investigations, unknown penalties) and a Chalmette fire in May 2026",
+        "Heavy new debt issuance in 2026 (a revolver plus 7.25% and exchangeable notes), and share count up 4%",
+        "No backlog, R&D or named customer evidence; the +11% deferred revenue figure is not meaningful for a refiner"
       ],
       "instructions_found": false
     }

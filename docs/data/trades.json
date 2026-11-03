@@ -3115,7 +3115,7 @@
   {
     "trade_id": "TRD-20261006140413-MPC",
     "symbol": "MPC",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-06",
     "entry_ts": "2026-10-06T14:04:13.594986",
     "entry_price": 429.55,
@@ -3147,14 +3147,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.0967,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-03",
+    "exit_price": 419.33,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -143.13,
+    "pnl_pct": -2.38,
+    "hold_days": 28,
     "entry_limit": 429.55,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-03T15:46:30.282967"
   },
   {
     "trade_id": "TRD-20261006140414-CAH",

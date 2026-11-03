@@ -1,9 +1,35 @@
 {
-  "generated_at": "2026-11-02T20:45:45.666795",
-  "positions_checked": 13,
-  "exits_triggered": [],
+  "generated_at": "2026-11-03T14:45:52.342382",
+  "positions_checked": 15,
+  "exits_triggered": [
+    {
+      "symbol": "SHOP",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$140.77 is 7.9% below 50MA $152.92",
+      "qty": 26,
+      "price": 140.77,
+      "pnl_pct": -6.15,
+      "executed": true,
+      "order_id": "87a1116f-db98-4481-b0c3-23eca45931a2",
+      "confirmed": true,
+      "sale": "filled"
+    }
+  ],
   "stops_updated": [],
-  "stops_placed": [],
+  "stops_placed": [
+    {
+      "symbol": "MO",
+      "stop": 71.93,
+      "tier": "ATR stop \u2192 5.9% below entry",
+      "status": "placed"
+    },
+    {
+      "symbol": "PM",
+      "stop": 192.59,
+      "tier": "ATR stop \u2192 7.1% below entry",
+      "status": "placed"
+    }
+  ],
   "stop_failures": [],
   "broker_exits": [],
   "sleeve_positions": [

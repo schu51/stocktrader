@@ -2820,7 +2820,7 @@
   {
     "trade_id": "TRD-20261001191502-SHOP",
     "symbol": "SHOP",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-01",
     "entry_ts": "2026-10-01T19:15:02.720417",
     "entry_price": 149.99,
@@ -2834,14 +2834,15 @@
     "sector": "consumer_cyclical",
     "weight_version": 2,
     "order_id": "3002e6f1-8b93-4d28-8ece-258286f02969",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-03",
+    "exit_price": 140.77,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -239.83,
+    "pnl_pct": -6.15,
+    "hold_days": 33,
     "entry_limit": 150.02,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-03T14:45:51.278912"
   },
   {
     "trade_id": "TRD-20261005142006-BE",
@@ -4416,7 +4417,7 @@
     "status": "OPEN",
     "entry_date": "2026-11-03",
     "entry_ts": "2026-11-03T14:30:30.762087",
-    "entry_price": 76.79,
+    "entry_price": 76.44,
     "shares": 49,
     "stop_loss": 70.65,
     "trend_score": 81,
@@ -4453,7 +4454,9 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 76.79,
+    "entry_filled": true
   },
   {
     "trade_id": "TRD-20261103143031-PM",
@@ -4461,7 +4464,7 @@
     "status": "OPEN",
     "entry_date": "2026-11-03",
     "entry_ts": "2026-11-03T14:30:31.375268",
-    "entry_price": 215.05,
+    "entry_price": 207.23,
     "shares": 18,
     "stop_loss": 197.85,
     "trend_score": 81,
@@ -4498,6 +4501,8 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 215.05,
+    "entry_filled": true
   }
 ]

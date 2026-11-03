@@ -1,186 +1,132 @@
 {
-  "generated_at": "2026-11-02T06:00:47.612382-08:00",
+  "generated_at": "2026-11-03T06:00:49.598024-08:00",
   "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
   "trend_buckets": {
-    "strong": 19,
+    "strong": 18,
     "mixed": 6,
-    "weak": 50
+    "weak": 51
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-11-02T08:29:32-05:00",
-  "premarket_quotes": 73,
+  "premarket_as_of": "2026-11-03T09:00:54-05:00",
+  "premarket_quotes": 74,
   "no_premarket_quote": [
-    "PCOR",
     "PODD"
   ],
   "gap_alerts": [
     {
+      "ticker": "SHOP",
+      "prev_close": 156.22,
+      "current": 130.8,
+      "pct_chg": -16.27,
+      "ma50": 152.92,
+      "reasons": [
+        "gap down -16.3%",
+        "crossed BELOW 50MA (152.92)"
+      ]
+    },
+    {
+      "ticker": "PLTR",
+      "prev_close": 178.34,
+      "current": 167.2,
+      "pct_chg": -6.25,
+      "ma50": 186.87,
+      "reasons": [
+        "gap down -6.2%"
+      ]
+    },
+    {
+      "ticker": "AAPL",
+      "prev_close": 338.32,
+      "current": 324.12,
+      "pct_chg": -4.2,
+      "ma50": 333.62,
+      "reasons": [
+        "gap down -4.2%",
+        "crossed BELOW 50MA (333.62)"
+      ]
+    },
+    {
+      "ticker": "UPST",
+      "prev_close": 21.31,
+      "current": 21.2,
+      "pct_chg": -0.52,
+      "ma50": 25.15,
+      "reasons": [
+        "volume spike 3.3x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "FTNT",
+      "prev_close": 126.21,
+      "current": 128.49,
+      "pct_chg": 1.81,
+      "ma50": 170.8,
+      "reasons": [
+        "volume spike 2.4x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "APH",
+      "prev_close": 79.84,
+      "current": 82.24,
+      "pct_chg": 3.01,
+      "ma50": 81.39,
+      "reasons": [
+        "gap UP 3.0% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "RXRX",
+      "prev_close": 3.83,
+      "current": 3.97,
+      "pct_chg": 3.66,
+      "ma50": 3.75,
+      "reasons": [
+        "gap UP 3.7% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
       "ticker": "MRVL",
-      "prev_close": 196.4,
-      "current": 190.43,
-      "pct_chg": -3.04,
-      "ma50": 242.58,
-      "reasons": [
-        "gap down -3.0%"
-      ]
-    },
-    {
-      "ticker": "COIN",
-      "prev_close": 143.54,
-      "current": 140.4,
-      "pct_chg": -2.19,
-      "ma50": 179.74,
+      "prev_close": 171.41,
+      "current": 178.1,
+      "pct_chg": 3.91,
+      "ma50": 241.26,
       "reasons": [
         "volume spike 2.7x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "RDDT",
-      "prev_close": 91.73,
-      "current": 91.32,
-      "pct_chg": -0.45,
-      "ma50": 150.37,
-      "reasons": [
-        "volume spike 6.8x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "RBLX",
-      "prev_close": 42.99,
-      "current": 42.95,
-      "pct_chg": -0.09,
-      "ma50": 46.36,
-      "reasons": [
-        "volume spike 3.0x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "PINS",
-      "prev_close": 19.36,
-      "current": 19.35,
-      "pct_chg": -0.05,
-      "ma50": 20.64,
-      "reasons": [
-        "volume spike 2.6x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "AMZN",
-      "prev_close": 240.35,
-      "current": 241.17,
-      "pct_chg": 0.34,
-      "ma50": 254.28,
-      "reasons": [
-        "volume spike 2.7x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "NOW",
-      "prev_close": 105.12,
-      "current": 105.6,
-      "pct_chg": 0.46,
-      "ma50": 138.68,
-      "reasons": [
-        "volume spike 2.2x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "GOOGL",
-      "prev_close": 279.84,
-      "current": 281.9,
-      "pct_chg": 0.74,
-      "ma50": 339.03,
-      "reasons": [
-        "volume spike 2.1x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "QCOM",
-      "prev_close": 164.79,
-      "current": 166.13,
-      "pct_chg": 0.81,
-      "ma50": 177.67,
-      "reasons": [
-        "volume spike 2.4x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "ARM",
-      "prev_close": 205.97,
-      "current": 208.11,
-      "pct_chg": 1.04,
-      "ma50": 258.73,
-      "reasons": [
-        "volume spike 2.3x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "AMD",
-      "prev_close": 504.8,
-      "current": 510.25,
-      "pct_chg": 1.08,
-      "ma50": 548.29,
-      "reasons": [
-        "volume spike 2.0x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "KLAC",
-      "prev_close": 157.91,
-      "current": 160.0,
-      "pct_chg": 1.32,
-      "ma50": 178.62,
-      "reasons": [
-        "volume spike 2.0x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "DDOG",
-      "prev_close": 235.27,
-      "current": 238.41,
-      "pct_chg": 1.33,
-      "ma50": 251.27,
-      "reasons": [
-        "volume spike 2.2x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "APP",
-      "prev_close": 228.5,
-      "current": 234.96,
-      "pct_chg": 2.83,
-      "ma50": 294.2,
-      "reasons": [
-        "volume spike 2.4x avg (prior session)"
       ]
     }
   ],
   "avoids": [
-    "MRVL"
+    "SHOP",
+    "PLTR",
+    "AAPL"
   ],
-  "gap_up_priority": [],
+  "gap_up_priority": [
+    "APH",
+    "RXRX"
+  ],
   "top_candidates": [
     {
       "ticker": "PCOR",
-      "price": 61.38,
-      "ma50": 56.68,
-      "ret_5d": -2.6,
-      "ret_20d": 20.5,
-      "score": 0.0869,
+      "price": 62.57,
+      "ma50": 56.66,
+      "ret_5d": -0.3,
+      "ret_20d": 15.5,
+      "score": 0.0872,
       "gap_up": false,
       "thesis_grade": "B",
       "thesis_score": 57.0
     },
     {
       "ticker": "RTX",
-      "price": 199.8,
-      "ma50": 194.79,
-      "ret_5d": 4.6,
-      "ret_20d": 8.2,
-      "score": 0.0486,
+      "price": 202.79,
+      "ma50": 194.65,
+      "ret_5d": 2.7,
+      "ret_20d": 10.0,
+      "score": 0.0548,
       "gap_up": false,
       "thesis_grade": "B",
-      "thesis_score": 66.0
+      "thesis_score": 58.0
     }
   ]
 }

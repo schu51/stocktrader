@@ -1,51 +1,11 @@
 {
-  "generated_at": "2026-11-04T14:46:11.683747",
-  "positions_checked": 13,
-  "exits_triggered": [
-    {
-      "symbol": "APA",
-      "trigger": "PRICE_BELOW_50MA",
-      "reason": "$45.41 is 0.5% below 50MA $45.66",
-      "qty": 90,
-      "price": 45.41,
-      "pnl_pct": -0.31,
-      "executed": true,
-      "order_id": "77d59155-b694-4356-9f98-864f7736a51f",
-      "confirmed": true,
-      "sale": "filled"
-    },
-    {
-      "symbol": "PSX",
-      "trigger": "PRICE_BELOW_50MA",
-      "reason": "$263.44 is 1.7% below 50MA $268.02",
-      "qty": 9,
-      "price": 263.445,
-      "pnl_pct": -1.26,
-      "executed": true,
-      "order_id": "77306b38-4e9c-418e-bfb8-17181a91d9a4",
-      "confirmed": true,
-      "sale": "filled"
-    }
-  ],
+  "generated_at": "2026-11-04T15:30:48.603104",
+  "positions_checked": 11,
+  "exits_triggered": [],
   "stops_updated": [],
-  "stops_placed": [
-    {
-      "symbol": "CBOE",
-      "stop": 313.9,
-      "tier": "ATR stop \u2192 9.5% below entry",
-      "status": "placed"
-    }
-  ],
+  "stops_placed": [],
   "stop_failures": [],
-  "broker_exits": [
-    {
-      "symbol": "EOG",
-      "trigger": "BROKER_STOP",
-      "price": 149.04,
-      "pnl_pct": -7.8,
-      "exit_date": "2026-11-04"
-    }
-  ],
+  "broker_exits": [],
   "sleeve_positions": [
     "KVYO",
     "PCOR",

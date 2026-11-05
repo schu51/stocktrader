@@ -1,16 +1,37 @@
 {
-  "generated_at": "2026-11-04T20:45:42.299769",
+  "generated_at": "2026-11-05T14:45:48.561974",
   "positions_checked": 10,
   "exits_triggered": [],
   "stops_updated": [],
-  "stops_placed": [],
+  "stops_placed": [
+    {
+      "symbol": "TXN",
+      "stop": 275.1,
+      "tier": "ATR stop \u2192 9.0% below entry",
+      "status": "placed"
+    }
+  ],
   "stop_failures": [],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "VCYT",
+      "trigger": "BROKER_STOP",
+      "price": 27.63,
+      "pnl_pct": -43.45,
+      "exit_date": "2026-11-05"
+    },
+    {
+      "symbol": "ZS",
+      "trigger": "BROKER_STOP",
+      "price": 206.99,
+      "pnl_pct": -12.99,
+      "exit_date": "2026-11-05"
+    }
+  ],
   "sleeve_positions": [
     "KVYO",
     "PCOR",
     "VCEL",
-    "VCYT",
     "WK"
   ],
   "mode": "EXECUTE"

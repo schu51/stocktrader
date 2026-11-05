@@ -3072,7 +3072,7 @@
   {
     "trade_id": "TRD-20261005142011-EXPD",
     "symbol": "EXPD",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-05",
     "entry_ts": "2026-10-05T14:20:11.146979",
     "entry_price": 192.39,
@@ -3104,14 +3104,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.0542,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-05",
+    "exit_price": 192.34,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -0.75,
+    "pnl_pct": -0.03,
+    "hold_days": 31,
     "entry_limit": 192.5,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-05T17:45:47.692485"
   },
   {
     "trade_id": "TRD-20261006140413-MPC",

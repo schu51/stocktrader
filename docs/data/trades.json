@@ -4374,7 +4374,7 @@
   {
     "trade_id": "TRD-20261102143031-ADI",
     "symbol": "ADI",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-11-02",
     "entry_ts": "2026-11-02T14:30:31.497611",
     "entry_price": 424.81,
@@ -4409,14 +4409,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.094575,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-05",
+    "exit_price": 391.04,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -168.86,
+    "pnl_pct": -7.95,
+    "hold_days": 3,
     "entry_limit": 425.74,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-05T15:00:56.753039"
   },
   {
     "trade_id": "TRD-20261103143030-MO",

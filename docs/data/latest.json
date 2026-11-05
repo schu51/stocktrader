@@ -3,21 +3,21 @@
   "run_id": "20261105_150051",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 105618.69,
+    "portfolio_value": 105602.47,
     "cash": 64463.57,
     "buying_power": 61240.3915,
-    "long_market_value": 41155.12,
-    "unrealized_pnl": 1272.29
+    "long_market_value": 41138.9,
+    "unrealized_pnl": 1256.07
   },
   "positions": [
     {
       "symbol": "ACN",
       "qty": 10,
       "avg_cost": 244.66,
-      "current_price": 263.11,
-      "market_value": 2631.1,
-      "unrealized_pnl": 184.51,
-      "unrealized_pnl_pct": 7.54,
+      "current_price": 263.29,
+      "market_value": 2632.9,
+      "unrealized_pnl": 186.31,
+      "unrealized_pnl_pct": 7.61,
       "stop_loss": 220.54,
       "side": "long",
       "asset_class": "us_equity",
@@ -103,10 +103,10 @@
       "symbol": "HUM",
       "qty": 5,
       "avg_cost": 425.57,
-      "current_price": 411.79,
-      "market_value": 2058.95,
-      "unrealized_pnl": -68.9,
-      "unrealized_pnl_pct": -3.24,
+      "current_price": 411.38,
+      "market_value": 2056.9,
+      "unrealized_pnl": -70.95,
+      "unrealized_pnl_pct": -3.33,
       "stop_loss": 376.61,
       "side": "long",
       "asset_class": "us_equity",
@@ -147,10 +147,10 @@
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 77.5,
-      "market_value": 3797.5,
-      "unrealized_pnl": 52.04,
-      "unrealized_pnl_pct": 1.39,
+      "current_price": 77.45,
+      "market_value": 3795.05,
+      "unrealized_pnl": 49.59,
+      "unrealized_pnl_pct": 1.32,
       "stop_loss": 71.93,
       "side": "long",
       "asset_class": "us_equity",
@@ -169,10 +169,10 @@
       "symbol": "PCOR",
       "qty": 44,
       "avg_cost": 62.84,
-      "current_price": 75.6,
-      "market_value": 3326.4,
-      "unrealized_pnl": 561.44,
-      "unrealized_pnl_pct": 20.31,
+      "current_price": 75.3,
+      "market_value": 3313.2,
+      "unrealized_pnl": 548.24,
+      "unrealized_pnl_pct": 19.83,
       "stop_loss": 47.13,
       "side": "long",
       "asset_class": "us_equity",
@@ -213,10 +213,10 @@
       "symbol": "TXN",
       "qty": 8,
       "avg_cost": 302.21,
-      "current_price": 277.84,
-      "market_value": 2222.72,
-      "unrealized_pnl": -195.0,
-      "unrealized_pnl_pct": -8.06,
+      "current_price": 277.8,
+      "market_value": 2222.4,
+      "unrealized_pnl": -195.32,
+      "unrealized_pnl_pct": -8.08,
       "stop_loss": 275.1,
       "side": "long",
       "asset_class": "us_equity",
@@ -591,7 +591,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-11-05T21:30:43.623001+00:00",
+  "sync_at": "2026-11-05T22:00:48.648331+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -652,6 +652,10 @@
       {
         "time": "21:30",
         "value": 105618.69
+      },
+      {
+        "time": "22:00",
+        "value": 105602.47
       }
     ]
   }

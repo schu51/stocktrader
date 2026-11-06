@@ -1,52 +1,22 @@
 {
-  "generated_at": "2026-11-06T14:45:52.891676",
+  "generated_at": "2026-11-06T15:15:49.636969",
   "positions_checked": 15,
-  "exits_triggered": [],
-  "stops_updated": [],
-  "stops_placed": [
+  "exits_triggered": [
     {
-      "symbol": "DG",
-      "stop": 121.8,
-      "tier": "ATR stop \u2192 10.0% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "EBAY",
-      "stop": 112.31,
-      "tier": "ATR stop \u2192 7.8% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "FDS",
-      "stop": 300.83,
-      "tier": "ATR stop \u2192 9.5% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "GILD",
-      "stop": 152.28,
-      "tier": "ATR stop \u2192 8.2% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "HLT",
-      "stop": 342.76,
-      "tier": "ATR stop \u2192 6.7% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "KO",
-      "stop": 89.28,
-      "tier": "ATR stop \u2192 4.8% below entry",
-      "status": "placed"
-    },
-    {
-      "symbol": "SJM",
-      "stop": 121.83,
-      "tier": "ATR stop \u2192 6.9% below entry",
-      "status": "placed"
+      "symbol": "TXN",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$277.59 is 0.1% below 50MA $277.94",
+      "qty": 8,
+      "price": 277.59,
+      "pnl_pct": -8.15,
+      "executed": true,
+      "order_id": "8ee62c28-d938-4767-8ccc-58248c693a6c",
+      "confirmed": true,
+      "sale": "filled"
     }
   ],
+  "stops_updated": [],
+  "stops_placed": [],
   "stop_failures": [],
   "broker_exits": [],
   "sleeve_positions": [

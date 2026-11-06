@@ -4564,7 +4564,7 @@
   {
     "trade_id": "TRD-20261105143031-TXN",
     "symbol": "TXN",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-11-05",
     "entry_ts": "2026-11-05T14:30:31.391872",
     "entry_price": 302.21,
@@ -4599,14 +4599,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.089725,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-06",
+    "exit_price": 277.59,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -197.04,
+    "pnl_pct": -8.15,
+    "hold_days": 1,
     "entry_limit": 307.36,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-06T15:15:49.434668"
   },
   {
     "trade_id": "TRD-20261106143030-DG",

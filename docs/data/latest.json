@@ -1,26 +1,24 @@
 {
-  "generated_at": "2026-11-05T15:01:00.077016",
-  "run_id": "20261105_150051",
+  "generated_at": "2026-11-06T14:31:35.772323",
+  "run_id": "20261106_141709",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 104860.54,
-    "cash": 64463.38,
-    "buying_power": 61240.210999999996,
-    "long_market_value": 40397.16,
-    "unrealized_pnl": 514.33
+    "portfolio_value": 105208.67,
+    "cash": 55249.335999999996,
+    "buying_power": 52486.869199999994,
+    "long_market_value": 40745.29,
+    "unrealized_pnl": 597.39
   },
   "positions": [
     {
       "symbol": "ACN",
       "qty": 10,
       "avg_cost": 244.66,
-      "current_price": 257.75,
-      "market_value": 2577.5,
-      "unrealized_pnl": 130.91,
-      "unrealized_pnl_pct": 5.35,
+      "current_price": 257.71,
+      "market_value": 2577.15,
+      "unrealized_pnl": 130.56,
+      "unrealized_pnl_pct": 5.34,
       "stop_loss": 220.54,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Accenture plc",
         "sector": "Technology",
@@ -29,20 +27,18 @@
         "market_cap": "$148.0B",
         "week_52_high": 291.09,
         "week_52_low": 118.15,
-        "pct_from_high": 7.5
+        "pct_from_high": 11.5
       }
     },
     {
       "symbol": "CBOE",
       "qty": 16,
       "avg_cost": 347.02,
-      "current_price": 347.43,
-      "market_value": 5558.88,
-      "unrealized_pnl": 6.6,
-      "unrealized_pnl_pct": 0.12,
+      "current_price": 347.7,
+      "market_value": 5563.2,
+      "unrealized_pnl": 10.92,
+      "unrealized_pnl_pct": 0.2,
       "stop_loss": 313.9,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Cboe Global Markets, Inc.",
         "sector": "Financial Services",
@@ -51,20 +47,18 @@
         "market_cap": "$35.7B",
         "week_52_high": 371.18,
         "week_52_low": 227.15,
-        "pct_from_high": 4.5
+        "pct_from_high": 6.3
       }
     },
     {
       "symbol": "CRL",
       "qty": 20,
       "avg_cost": 307.22,
-      "current_price": 316.65,
-      "market_value": 6333.0,
-      "unrealized_pnl": 188.6,
-      "unrealized_pnl_pct": 3.07,
+      "current_price": 322.25,
+      "market_value": 6445.0,
+      "unrealized_pnl": 300.6,
+      "unrealized_pnl_pct": 4.89,
       "stop_loss": 278.86,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Charles River Laboratories International, Inc.",
         "sector": "Healthcare",
@@ -73,7 +67,7 @@
         "market_cap": "$14.7B",
         "week_52_high": 379.63,
         "week_52_low": 146.2,
-        "pct_from_high": 16.5
+        "pct_from_high": 15.1
       }
     },
     {
@@ -85,8 +79,6 @@
       "unrealized_pnl": 157.36,
       "unrealized_pnl_pct": 5.26,
       "stop_loss": null,
-      "side": "long",
-      "asset_class": "us_equity",
       "untradable": "asset is inactive on Alpaca (delisted or acquired)",
       "company": {
         "name": "Cantaloupe Inc",
@@ -103,13 +95,11 @@
       "symbol": "HUM",
       "qty": 5,
       "avg_cost": 425.57,
-      "current_price": 416.3,
-      "market_value": 2081.47,
-      "unrealized_pnl": -46.38,
-      "unrealized_pnl_pct": -2.18,
+      "current_price": 415.67,
+      "market_value": 2078.35,
+      "unrealized_pnl": -49.5,
+      "unrealized_pnl_pct": -2.33,
       "stop_loss": 376.61,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Humana Inc.",
         "sector": "Healthcare",
@@ -118,20 +108,18 @@
         "market_cap": "$48.0B",
         "week_52_high": 456.5,
         "week_52_low": 163.11,
-        "pct_from_high": 7.7
+        "pct_from_high": 8.9
       }
     },
     {
       "symbol": "KVYO",
       "qty": 133,
       "avg_cost": 20.95,
-      "current_price": 20.45,
-      "market_value": 2720.42,
-      "unrealized_pnl": -65.93,
-      "unrealized_pnl_pct": -2.37,
+      "current_price": 20.6,
+      "market_value": 2739.8,
+      "unrealized_pnl": -46.55,
+      "unrealized_pnl_pct": -1.67,
       "stop_loss": 15.71,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Klaviyo, Inc.",
         "sector": "Technology",
@@ -140,64 +128,58 @@
         "market_cap": "$6.1B",
         "week_52_high": 33.35,
         "week_52_low": 12.53,
-        "pct_from_high": 35.6
+        "pct_from_high": 38.2
       }
     },
     {
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 75.42,
-      "market_value": 3695.82,
-      "unrealized_pnl": -49.63,
-      "unrealized_pnl_pct": -1.32,
+      "current_price": 75.09,
+      "market_value": 3679.41,
+      "unrealized_pnl": -66.05,
+      "unrealized_pnl_pct": -1.76,
       "stop_loss": 71.93,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Altria Group, Inc.",
         "sector": "Consumer Defensive",
         "industry": "Tobacco",
         "summary": "Altria Group, Inc., through its subsidiaries, manufactures and sells smokeable and oral tobacco products in the United States. It offers cigarettes primarily under the Marlboro brand; large cigars and pipe tobacco under the Black & Mild\u2026",
         "market_cap": "$127.5B",
-        "week_52_high": 79.81,
+        "week_52_high": 79.87,
         "week_52_low": 54.7,
-        "pct_from_high": 0.2
+        "pct_from_high": 6.0
       }
     },
     {
       "symbol": "PCOR",
       "qty": 44,
       "avg_cost": 62.84,
-      "current_price": 73.99,
-      "market_value": 3255.56,
-      "unrealized_pnl": 490.6,
-      "unrealized_pnl_pct": 17.74,
+      "current_price": 74.19,
+      "market_value": 3264.14,
+      "unrealized_pnl": 499.18,
+      "unrealized_pnl_pct": 18.05,
       "stop_loss": 47.13,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Procore Technologies, Inc.",
         "sector": "Technology",
         "industry": "Software - Application",
         "summary": "Procore Technologies, Inc., together with its subsidiaries, provides a cloud-based construction management platform and related products and services in the United States and internationally. Its platform enables owners, general and\u2026",
         "market_cap": "$9.5B",
-        "week_52_high": 82.32,
+        "week_52_high": 80.4,
         "week_52_low": 38.03,
-        "pct_from_high": 4.4
+        "pct_from_high": 7.7
       }
     },
     {
       "symbol": "PM",
       "qty": 18,
       "avg_cost": 207.23,
-      "current_price": 195.21,
-      "market_value": 3513.78,
-      "unrealized_pnl": -216.36,
-      "unrealized_pnl_pct": -5.8,
+      "current_price": 194.69,
+      "market_value": 3504.51,
+      "unrealized_pnl": -225.63,
+      "unrealized_pnl_pct": -6.05,
       "stop_loss": 192.59,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Philip Morris International Inc.",
         "sector": "Consumer Defensive",
@@ -206,20 +188,18 @@
         "market_cap": "$324.4B",
         "week_52_high": 214.35,
         "week_52_low": 146.35,
-        "pct_from_high": 2.0
+        "pct_from_high": 9.2
       }
     },
     {
       "symbol": "TXN",
       "qty": 8,
       "avg_cost": 302.21,
-      "current_price": 284.56,
-      "market_value": 2276.44,
-      "unrealized_pnl": -141.28,
-      "unrealized_pnl_pct": -5.84,
+      "current_price": 281.19,
+      "market_value": 2249.54,
+      "unrealized_pnl": -168.18,
+      "unrealized_pnl_pct": -6.96,
       "stop_loss": 275.1,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Texas Instruments Incorporated",
         "sector": "Technology",
@@ -228,231 +208,304 @@
         "market_cap": "$280.1B",
         "week_52_high": 334.03,
         "week_52_low": 152.73,
-        "pct_from_high": 11.2
+        "pct_from_high": 15.8
       }
     },
     {
       "symbol": "VCEL",
       "qty": 64,
       "avg_cost": 43.23,
-      "current_price": 51.48,
-      "market_value": 3294.72,
-      "unrealized_pnl": 528.0,
-      "unrealized_pnl_pct": 19.08,
+      "current_price": 51.47,
+      "market_value": 3293.76,
+      "unrealized_pnl": 527.04,
+      "unrealized_pnl_pct": 19.05,
       "stop_loss": 32.42,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Vericel Corporation",
         "sector": "Healthcare",
         "industry": "Biotechnology",
         "summary": "Vericel Corporation, a commercial-stage biopharmaceutical company, engages in the research, development, manufacture, and distribution of cellular therapies and specialty biologic products for sports medicine and severe burn care markets\u2026",
         "market_cap": "$2.2B",
-        "week_52_high": 49.32,
+        "week_52_high": 55.6,
         "week_52_low": 28.95,
-        "pct_from_high": -12.4
+        "pct_from_high": 7.4
       }
     },
     {
       "symbol": "WK",
       "qty": 28,
       "avg_cost": 86.09,
-      "current_price": 69.37,
-      "market_value": 1942.36,
-      "unrealized_pnl": -468.16,
-      "unrealized_pnl_pct": -19.42,
+      "current_price": 69.22,
+      "market_value": 1938.16,
+      "unrealized_pnl": -472.36,
+      "unrealized_pnl_pct": -19.6,
       "stop_loss": 64.57,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Workiva Inc.",
         "sector": "Technology",
         "industry": "Software - Application",
         "summary": "Workiva Inc., together with its subsidiaries, provides cloud-based reporting solutions in the United States and internationally. The company provides Workiva platform, a multi-tenant cloud software that provides data-linking capabilities;\u2026",
         "market_cap": "$4.5B",
-        "week_52_high": 97.1,
+        "week_52_high": 95.0,
         "week_52_low": 43.34,
-        "pct_from_high": 10.9
+        "pct_from_high": 27.1
       }
     }
   ],
   "todays_run": {
     "mode": "EXECUTE",
     "candidates_screened": 30,
-    "buy_signals": 5,
-    "orders_submitted": 1,
-    "total_invested": 21371.48,
+    "buy_signals": 8,
+    "orders_submitted": 7,
+    "total_invested": 31926.9,
     "signals": [
+      {
+        "symbol": "DG",
+        "action": "BUY",
+        "shares": 40,
+        "limit_price": 142.61,
+        "stop_loss": 131.2,
+        "confidence": 0.85,
+        "signal_strength": 1.0,
+        "trend_score": 82,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 82/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 82/100)",
+          "MACD histogram expanding bullish",
+          "RSI in healthy uptrend range (58)",
+          "Golden Cross (50>200 MA) 9 days ago"
+        ],
+        "executed": true
+      },
       {
         "symbol": "BBY",
         "action": "BUY",
         "shares": 56,
-        "limit_price": 106.61,
-        "stop_loss": 98.08,
+        "limit_price": 104.42,
+        "stop_loss": 96.07,
         "confidence": 0.85,
         "signal_strength": 1.0,
-        "trend_score": 85,
+        "trend_score": 82,
         "reasons": [
-          "\ud83d\udcca Trend Score: 85/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 85/100)",
-          "MACD bullish crossover",
+          "\ud83d\udcca Trend Score: 82/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 82/100)",
           "MACD histogram expanding bullish",
-          "RSI in healthy uptrend range (62)"
+          "RSI in healthy uptrend range (58)",
+          "Price above 50 & 200 MA with bullish alignment"
         ],
         "executed": false
       },
       {
-        "symbol": "BALL",
+        "symbol": "SJM",
         "action": "BUY",
-        "shares": 56,
-        "limit_price": 71.89,
-        "stop_loss": 66.14,
+        "shares": 28,
+        "limit_price": 137.12,
+        "stop_loss": 126.15,
         "confidence": 0.85,
         "signal_strength": 1.0,
-        "trend_score": 81,
+        "trend_score": 82,
         "reasons": [
-          "\ud83d\udcca Trend Score: 81/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 81/100)",
+          "\ud83d\udcca Trend Score: 82/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 82/100)",
           "MACD histogram expanding bullish",
           "RSI in healthy uptrend range (62)",
           "Price above 50 & 200 MA with bullish alignment"
         ],
-        "executed": false
+        "executed": true
       },
       {
-        "symbol": "BIIB",
+        "symbol": "FDS",
         "action": "BUY",
-        "shares": 22,
-        "limit_price": 270.36,
-        "stop_loss": 248.73,
+        "shares": 11,
+        "limit_price": 333.39,
+        "stop_loss": 306.72,
         "confidence": 0.85,
         "signal_strength": 1.0,
-        "trend_score": 81,
+        "trend_score": 79,
         "reasons": [
-          "\ud83d\udcca Trend Score: 81/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 81/100)",
-          "MACD histogram expanding bullish",
+          "\ud83d\udcca Trend Score: 79/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 79/100)",
           "RSI in healthy uptrend range (65)",
-          "Price above 50 & 200 MA with bullish alignment"
+          "Price above 50 & 200 MA with bullish alignment",
+          "Strong uptrend confirmed (score: 79)"
         ],
-        "executed": false
+        "executed": true
+      },
+      {
+        "symbol": "HLT",
+        "action": "BUY",
+        "shares": 10,
+        "limit_price": 382.01,
+        "stop_loss": 351.45,
+        "confidence": 0.85,
+        "signal_strength": 1.0,
+        "trend_score": 76,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 76/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 76/100)",
+          "RSI in healthy uptrend range (67)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Strong uptrend confirmed (score: 75)"
+        ],
+        "executed": true
       },
       {
         "symbol": "KO",
         "action": "BUY",
-        "shares": 40,
-        "limit_price": 101.35,
-        "stop_loss": 93.25,
+        "shares": 38,
+        "limit_price": 93.77,
+        "stop_loss": 86.27,
         "confidence": 0.85,
         "signal_strength": 1.0,
-        "trend_score": 80,
+        "trend_score": 75,
         "reasons": [
-          "\ud83d\udcca Trend Score: 80/100 (STRONG_UP)",
-          "Strong uptrend (momentum score: 80/100)",
-          "MACD histogram expanding bullish",
+          "\ud83d\udcca Trend Score: 75/100 (STRONG_UP)",
+          "Strong uptrend (momentum score: 75/100)",
           "RSI in healthy uptrend range (65)",
-          "Price above 50 & 200 MA with bullish alignment"
+          "Price above 50 & 200 MA with bullish alignment",
+          "Strong uptrend confirmed (score: 75)"
         ],
-        "executed": false
+        "executed": true
       },
       {
-        "symbol": "TXN",
+        "symbol": "GILD",
         "action": "BUY",
-        "shares": 8,
-        "limit_price": 307.36,
-        "stop_loss": 282.77,
+        "shares": 22,
+        "limit_price": 172.96,
+        "stop_loss": 159.12,
         "confidence": 0.85,
         "signal_strength": 0.5,
-        "trend_score": 72,
+        "trend_score": 75,
         "reasons": [
-          "\ud83d\udcca Trend Score: 72/100 (STRONG_UP)",
-          "Uptrend confirmed (momentum score: 72/100)",
-          "RSI in healthy uptrend range (66)",
+          "\ud83d\udcca Trend Score: 75/100 (STRONG_UP)",
+          "Uptrend confirmed (momentum score: 75/100)",
+          "RSI in healthy uptrend range (61)",
           "Price above 50 & 200 MA with bullish alignment",
-          "Price above all VWAP levels (daily, weekly, monthly)"
+          "Strong uptrend confirmed (score: 75)"
+        ],
+        "executed": true
+      },
+      {
+        "symbol": "EBAY",
+        "action": "BUY",
+        "shares": 19,
+        "limit_price": 129.09,
+        "stop_loss": 118.76,
+        "confidence": 0.85,
+        "signal_strength": 0.5,
+        "trend_score": 74,
+        "reasons": [
+          "\ud83d\udcca Trend Score: 74/100 (STRONG_UP)",
+          "Uptrend confirmed (momentum score: 74/100)",
+          "RSI in healthy uptrend range (62)",
+          "Price above 50 & 200 MA with bullish alignment",
+          "Strong uptrend confirmed (score: 74)"
         ],
         "executed": true
       }
     ],
     "execution_details": [
       {
+        "symbol": "DG",
+        "shares": 40,
+        "limit_price": 142.61,
+        "stop_loss": 131.2,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "85c3c605-4cd3-4609-8cbb-f82c26b63892",
+        "reason": null
+      },
+      {
         "symbol": "BBY",
         "status": "skipped",
-        "reason": "opened more than 5% above the previous close (ask $106.61, limit $106.43)"
+        "reason": "opened more than 5% above the previous close (ask $104.42, limit $104.37)"
       },
       {
-        "symbol": "BALL",
-        "status": "skipped",
-        "reason": "opened more than 5% above the previous close (ask $71.89, limit $70.75)"
+        "symbol": "SJM",
+        "shares": 28,
+        "limit_price": 137.12,
+        "stop_loss": 126.15,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "2adea783-c032-4a61-88d1-ae750e02d40d",
+        "reason": null
       },
       {
-        "symbol": "BIIB",
-        "status": "skipped",
-        "reason": "opened more than 5% above the previous close (ask $270.36, limit $267.18)"
+        "symbol": "FDS",
+        "shares": 11,
+        "limit_price": 333.39,
+        "stop_loss": 306.72,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "146aa4f0-efaa-4e7b-8857-a6b9673f2ed4",
+        "reason": null
+      },
+      {
+        "symbol": "HLT",
+        "shares": 10,
+        "limit_price": 382.01,
+        "stop_loss": 351.45,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "876e7eed-6a2b-48c5-934b-b646c7132bc5",
+        "reason": null
       },
       {
         "symbol": "KO",
-        "status": "skipped",
-        "reason": "opened more than 5% above the previous close (ask $101.35, limit $100.59)"
-      },
-      {
-        "symbol": "TXN",
-        "shares": 8,
-        "limit_price": 307.36,
-        "stop_loss": 282.77,
+        "shares": 38,
+        "limit_price": 93.77,
+        "stop_loss": 86.27,
         "confidence": 0.85,
         "status": "submitted",
-        "order_id": "f8b39da5-df58-4e91-939c-1e29584a90e7",
+        "order_id": "c201c6be-f65a-4ee5-bd33-c179afc24f4d",
+        "reason": null
+      },
+      {
+        "symbol": "GILD",
+        "shares": 22,
+        "limit_price": 172.96,
+        "stop_loss": 159.12,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "bdb562ed-eeb7-46f6-b212-e1f04c8fd7cb",
+        "reason": null
+      },
+      {
+        "symbol": "EBAY",
+        "shares": 19,
+        "limit_price": 129.09,
+        "stop_loss": 118.76,
+        "confidence": 0.85,
+        "status": "submitted",
+        "order_id": "11dd9b68-9734-43a2-91ce-965c58533c0e",
         "reason": null
       }
     ]
   },
   "persistent_performers": [],
   "exits": {
-    "exits_triggered": [
-      {
-        "symbol": "ADI",
-        "trigger": "PRICE_BELOW_50MA",
-        "current": 391.04,
-        "sma50": 391.28,
-        "pct_below": 0.06,
-        "pnl_pct": -7.95,
-        "qty": 5,
-        "executed": true,
-        "reason": "Price $391.04 is 0.1% below 50MA $391.28",
-        "order_id": "d855a45f-72e1-4bc4-99a3-9058f6454d74"
-      }
-    ],
+    "exits_triggered": [],
     "stops_updated": [],
-    "positions_checked": 10,
+    "positions_checked": 0,
     "mode": "EXECUTE",
-    "unmanaged": [],
-    "sleeve": [
-      "KVYO",
-      "PCOR",
-      "VCEL",
-      "WK"
-    ],
-    "unchecked": [
-      "CTLP"
-    ]
+    "skipped": "opening run: exits are left to the 10:00 run and the intraday checks"
   },
   "risk_assessment": {
-    "timestamp": "2026-11-05T15:00:59.182235",
-    "portfolio_value": 106838.77,
+    "timestamp": "2026-11-06T14:17:10.618338",
+    "portfolio_value": 105208.67,
     "risk_metrics": {
       "drawdown": {
-        "current_value": 106838.77,
+        "current_value": 105208.67,
         "peak_value": 116590.55,
         "peak_date": "2026-10-06",
-        "drawdown_amount": 9751.78,
-        "drawdown_pct": 8.36,
+        "drawdown_amount": 11381.88,
+        "drawdown_pct": 9.76,
         "max_allowed_pct": 15.0,
         "status": "CAUTION",
         "action_required": false
       },
       "cash_allocation": {
-        "current_pct": 47.68,
+        "current_pct": 52.51,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
         "status": "OK"
@@ -460,50 +513,40 @@
     },
     "concentration_risk": {
       "largest_position": "CRL",
-      "largest_allocation_pct": 5.94,
-      "top_5_allocation_pct": 21.76,
+      "largest_allocation_pct": 5.93,
+      "top_5_allocation_pct": 21.59,
       "max_allowed_top_5_pct": 40.0,
-      "num_positions": 14,
-      "herfindahl_index": 0.01560571003034887
+      "num_positions": 12,
+      "herfindahl_index": 0.014195922948000178
     },
     "position_risks": [
       {
         "symbol": "ACN",
-        "allocation_pct": 2.52,
-        "unrealized_pnl_pct": 10.11,
+        "allocation_pct": 2.45,
+        "unrealized_pnl_pct": 5.54,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
-        "symbol": "ADI",
-        "allocation_pct": 1.83,
-        "unrealized_pnl_pct": -8.16,
-        "has_stop_loss": false,
-        "has_trailing_stop": false,
-        "risk_flags": [
-          "NO_STOP_LOSS"
-        ]
-      },
-      {
         "symbol": "CBOE",
-        "allocation_pct": 5.31,
-        "unrealized_pnl_pct": 2.14,
+        "allocation_pct": 5.13,
+        "unrealized_pnl_pct": -2.75,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CRL",
-        "allocation_pct": 5.94,
-        "unrealized_pnl_pct": 3.22,
+        "allocation_pct": 5.93,
+        "unrealized_pnl_pct": 1.55,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CTLP",
-        "allocation_pct": 2.95,
+        "allocation_pct": 2.99,
         "unrealized_pnl_pct": 5.26,
         "has_stop_loss": false,
         "has_trailing_stop": false,
@@ -512,99 +555,77 @@
         ]
       },
       {
-        "symbol": "EXPD",
-        "allocation_pct": 2.39,
-        "unrealized_pnl_pct": 2.23,
-        "has_stop_loss": true,
-        "has_trailing_stop": false,
-        "risk_flags": []
-      },
-      {
         "symbol": "HUM",
-        "allocation_pct": 1.97,
-        "unrealized_pnl_pct": -0.96,
+        "allocation_pct": 1.95,
+        "unrealized_pnl_pct": -3.81,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "KVYO",
-        "allocation_pct": 2.68,
-        "unrealized_pnl_pct": 2.72,
+        "allocation_pct": 2.56,
+        "unrealized_pnl_pct": -3.15,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "MO",
-        "allocation_pct": 3.65,
-        "unrealized_pnl_pct": 4.2,
+        "allocation_pct": 3.53,
+        "unrealized_pnl_pct": -0.97,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "PCOR",
-        "allocation_pct": 3.24,
-        "unrealized_pnl_pct": 25.22,
+        "allocation_pct": 3.16,
+        "unrealized_pnl_pct": 20.31,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "PM",
-        "allocation_pct": 3.54,
-        "unrealized_pnl_pct": 1.41,
+        "allocation_pct": 3.35,
+        "unrealized_pnl_pct": -5.39,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "TXN",
-        "allocation_pct": 2.22,
-        "unrealized_pnl_pct": -1.82,
+        "allocation_pct": 2.15,
+        "unrealized_pnl_pct": -6.36,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "VCEL",
-        "allocation_pct": 3.32,
-        "unrealized_pnl_pct": 28.2,
+        "allocation_pct": 3.65,
+        "unrealized_pnl_pct": 38.77,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "WK",
-        "allocation_pct": 2.27,
-        "unrealized_pnl_pct": 0.45,
+        "allocation_pct": 1.87,
+        "unrealized_pnl_pct": -18.55,
         "has_stop_loss": true,
         "has_trailing_stop": false,
-        "risk_flags": []
+        "risk_flags": [
+          "LARGE_LOSS"
+        ]
       }
     ],
-    "overall_risk_score": 28.3,
+    "overall_risk_score": 25.9,
     "recommendations": [
-      "ADI: Add stop-loss protection",
+      "WK: Review thesis - down 18.6%",
       "CTLP: Untradable \u2014 ask the broker to close it"
     ],
     "risk_level": "LOW"
-  },
-  "sync_at": "2026-11-06T14:30:50.832134+00:00",
-  "sync_error": null,
-  "market_open": true,
-  "intraday_today": {
-    "date": "2026-11-06",
-    "points": [
-      {
-        "time": "14:00",
-        "value": 105298.77
-      },
-      {
-        "time": "14:30",
-        "value": 104860.54
-      }
-    ]
   }
 }

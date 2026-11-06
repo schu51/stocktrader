@@ -1,0 +1,116 @@
+{
+  "date": "2026-11-06",
+  "generated_at": "2026-11-06T21:08:04.442933",
+  "type": "weekly_review",
+  "thesis_health": {
+    "intact": 15,
+    "weakening": 2,
+    "broken": 0,
+    "untradable": 1,
+    "weakening_detail": [
+      "KVYO: 39% below 52-week high ($20.71 vs high $33.35). Stop at $15.71 provides 24% cushion.",
+      "WK: -15.5% unrealized, 25.6% below 52-week high. LARGE_LOSS risk flag active. Stop at $64.57."
+    ],
+    "note": "Live MA data unavailable (yfinance proxy-blocked). Assessment based on SMA50 cache, P&L, and distance from 52w high. All 15 non-WEAKENING positions are trading above their cached SMA50 values."
+  },
+  "weekly_summary": {
+    "week": "2026-11-02 to 2026-11-06",
+    "entries": 12,
+    "entries_executed": 12,
+    "closes": 11,
+    "closes_wins": 0,
+    "closes_losses": 11,
+    "win_rate_pct": 0,
+    "closes_detail": [
+      "SHOP -6.2% (33d, PRICE_BELOW_50MA)",
+      "PSX -1.3% (30d, PRICE_BELOW_50MA)",
+      "EXPD -0.0% (31d, PRICE_BELOW_50MA)",
+      "MPC -2.4% (28d, PRICE_BELOW_50MA)",
+      "APA -0.3% (27d, PRICE_BELOW_50MA)",
+      "CRWD -6.2% (9d, PRICE_BELOW_50MA)",
+      "VCYT -43.5% (10d, BROKER_STOP)",
+      "EOG -7.8% (7d, BROKER_STOP)",
+      "ZS -13.0% (7d, BROKER_STOP)",
+      "ADI -8.0% (3d, PRICE_BELOW_50MA)",
+      "TXN -8.2% (1d, PRICE_BELOW_50MA)"
+    ],
+    "portfolio_value": 105848.33,
+    "unrealized_pnl": 1700.18,
+    "cash_pct": 38.5,
+    "drawdown_from_peak_pct": 9.54,
+    "drawdown_status": "CAUTION (peak $116,590 on 2026-10-06, within 15% max)",
+    "market_regime": "NEUTRAL - SPY at $733 is above 200MA ($727) but below 50MA ($766). Elevated RS threshold (80) active.",
+    "todays_entries": [
+      "DG",
+      "SJM",
+      "FDS",
+      "HLT",
+      "KO",
+      "GILD",
+      "EBAY"
+    ],
+    "notable": "Worst week of the system: 0 wins from 11 closes. VCYT -43.5% gap-down (broker stop). Three stops triggered in 7 days (EOG, ZS, VCYT). SPY entered correction (below 50MA) coincides with deteriorating results."
+  },
+  "pattern_findings": {
+    "sample_size": 90,
+    "win_rate_pct": 20.0,
+    "avg_win_pct": 14.24,
+    "avg_loss_pct": -5.34,
+    "profit_factor": 0.667,
+    "profit_factor_2w_ago": 0.98,
+    "hold_days_wins": 48.1,
+    "hold_days_losses": 13.0,
+    "rs_rank_analysis": {
+      "rs_90_plus": {
+        "trades": 47,
+        "win_rate": "13%",
+        "avg_pnl": "-3.2%",
+        "finding": "COUNTERINTUITIVE: Higher RS rank associated with WORSE outcomes"
+      },
+      "rs_below_90": {
+        "trades": 31,
+        "win_rate": "26%",
+        "avg_pnl": "-1.1%"
+      }
+    },
+    "trend_score_analysis": {
+      "score_80_plus": {
+        "trades": 14,
+        "win_rate": "7%",
+        "avg_pnl": "-4.5%",
+        "finding": "COUNTERINTUITIVE: Higher trend scores producing WORST outcomes"
+      },
+      "score_below_80": {
+        "trades": 75,
+        "win_rate": "23%",
+        "avg_pnl": "-0.3%"
+      }
+    },
+    "sector_analysis": {
+      "best": "Energy (+2.8% avg, 11% WR, driven by VLO +51.6% outlier)",
+      "worst": "Industrials (-4.3% avg, 6% WR, 16 trades)"
+    },
+    "regime_correlation": "All 18 wins occurred during June-July 2026 bull phase. Since SPY entered neutral/correction (Oct), win rate near 0%.",
+    "recommendation": "FLAG FOR HUMAN REVIEW: Profit factor dropped from 0.98 to 0.67 in 2 weeks. 90-trade sample now statistically meaningful. Suggest reviewing whether entry frequency in neutral market regime should be reduced. The model is selecting stocks with correct momentum signals but broader market headwinds are overwhelming individual momentum."
+  },
+  "screener_alignment": {
+    "market_regime": "neutral",
+    "sector_leaders": [
+      "healthcare",
+      "energy",
+      "consumer_defensive",
+      "basic_materials",
+      "technology",
+      "financials"
+    ],
+    "portfolio_rs_ranks": {
+      "ACN": 97,
+      "CBOE": 95,
+      "CRL": 98,
+      "DG": 92
+    },
+    "alignment_note": "Top 4 portfolio positions by RS rank are all screener leaders. Today model re-screened DG, SJM \u2014 consistent with internal thesis validation.",
+    "opportunity_gaps": "BIIB (RS 96), CRWD (RS 96), BDX (RS 96), CPAY (RS 97) all qualify but not in portfolio."
+  },
+  "action_taken": "No parameter changes. No positions closed. Weekly review written and committed. KVYO and WK flagged for continued monitoring. Profit factor deterioration flagged for human review."
+}

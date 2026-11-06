@@ -1,396 +1,344 @@
 {
-  "generated_at": "2026-11-05T06:00:49.230894-08:00",
-  "recommendation": "NORMAL RUN \u2014 healthy trend environment, good signal candidates expected.",
+  "generated_at": "2026-11-06T06:00:48.626705-08:00",
+  "recommendation": "LIGHT DAY \u2014 moderate trend universe, expect 1-3 BUY signals.",
   "trend_buckets": {
-    "strong": 19,
-    "mixed": 11,
-    "weak": 44
+    "strong": 14,
+    "mixed": 6,
+    "weak": 55
   },
   "gap_basis": "premarket",
-  "premarket_as_of": "2026-11-05T09:00:55-05:00",
+  "premarket_as_of": "2026-11-06T09:00:51-05:00",
   "premarket_quotes": 73,
   "no_premarket_quote": [
+    "APPF",
     "PODD"
   ],
   "gap_alerts": [
     {
-      "ticker": "QCOM",
-      "prev_close": 173.19,
-      "current": 152.8,
-      "pct_chg": -11.77,
-      "ma50": 178.12,
+      "ticker": "TEAM",
+      "prev_close": 183.29,
+      "current": 155.0,
+      "pct_chg": -15.43,
+      "ma50": 196.69,
       "reasons": [
-        "gap down -11.8%",
+        "gap down -15.4%",
         "volume spike 2.1x avg (prior session)"
       ]
     },
     {
-      "ticker": "ARM",
-      "prev_close": 191.8,
-      "current": 176.72,
-      "pct_chg": -7.86,
-      "ma50": 256.08,
+      "ticker": "AXON",
+      "prev_close": 382.56,
+      "current": 328.01,
+      "pct_chg": -14.26,
+      "ma50": 447.49,
       "reasons": [
-        "gap down -7.9%"
+        "gap down -14.3%",
+        "volume spike 3.9x avg (prior session)"
       ]
     },
     {
-      "ticker": "AMD",
-      "prev_close": 488.78,
-      "current": 459.25,
-      "pct_chg": -6.04,
-      "ma50": 548.9,
-      "reasons": [
-        "gap down -6.0%",
-        "volume spike 2.3x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "AMAT",
-      "prev_close": 369.4,
-      "current": 351.38,
-      "pct_chg": -4.88,
-      "ma50": 451.05,
-      "reasons": [
-        "gap down -4.9%"
-      ]
-    },
-    {
-      "ticker": "APLD",
-      "prev_close": 16.61,
-      "current": 15.81,
-      "pct_chg": -4.82,
-      "ma50": 23.41,
-      "reasons": [
-        "gap down -4.8%"
-      ]
-    },
-    {
-      "ticker": "MRVL",
-      "prev_close": 159.8,
-      "current": 152.17,
-      "pct_chg": -4.77,
-      "ma50": 238.51,
-      "reasons": [
-        "gap down -4.8%"
-      ]
-    },
-    {
-      "ticker": "KLAC",
-      "prev_close": 149.79,
-      "current": 143.15,
-      "pct_chg": -4.43,
-      "ma50": 176.82,
-      "reasons": [
-        "gap down -4.4%"
-      ]
-    },
-    {
-      "ticker": "ANET",
-      "prev_close": 178.48,
-      "current": 170.84,
-      "pct_chg": -4.28,
-      "ma50": 194.12,
-      "reasons": [
-        "gap down -4.3%",
-        "volume spike 2.9x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "OKTA",
-      "prev_close": 191.05,
-      "current": 182.92,
-      "pct_chg": -4.25,
-      "ma50": 196.16,
-      "reasons": [
-        "gap down -4.3%"
-      ]
-    },
-    {
-      "ticker": "CRWV",
-      "prev_close": 48.42,
-      "current": 46.44,
-      "pct_chg": -4.09,
-      "ma50": 77.26,
-      "reasons": [
-        "gap down -4.1%"
-      ]
-    },
-    {
-      "ticker": "VRT",
-      "prev_close": 205.55,
-      "current": 197.6,
-      "pct_chg": -3.87,
-      "ma50": 240.45,
-      "reasons": [
-        "gap down -3.9%"
-      ]
-    },
-    {
-      "ticker": "NET",
-      "prev_close": 266.58,
-      "current": 256.36,
-      "pct_chg": -3.83,
-      "ma50": 319.81,
-      "reasons": [
-        "gap down -3.8%"
-      ]
-    },
-    {
-      "ticker": "SMCI",
-      "prev_close": 29.6,
-      "current": 28.48,
-      "pct_chg": -3.8,
-      "ma50": 37.84,
-      "reasons": [
-        "gap down -3.8%",
-        "volume spike 2.3x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "S",
-      "prev_close": 23.49,
-      "current": 22.67,
-      "pct_chg": -3.48,
-      "ma50": 23.08,
-      "reasons": [
-        "gap down -3.5%",
-        "crossed BELOW 50MA (23.08)"
-      ]
-    },
-    {
-      "ticker": "ON",
-      "prev_close": 71.24,
-      "current": 68.95,
-      "pct_chg": -3.21,
-      "ma50": 74.66,
-      "reasons": [
-        "gap down -3.2%"
-      ]
-    },
-    {
-      "ticker": "ZS",
-      "prev_close": 224.44,
-      "current": 217.3,
-      "pct_chg": -3.18,
-      "ma50": 207.14,
-      "reasons": [
-        "gap down -3.2%"
-      ]
-    },
-    {
-      "ticker": "SNOW",
-      "prev_close": 290.6,
-      "current": 281.8,
-      "pct_chg": -3.03,
-      "ma50": 330.1,
-      "reasons": [
-        "gap down -3.0%"
-      ]
-    },
-    {
-      "ticker": "VST",
-      "prev_close": 120.29,
-      "current": 116.66,
-      "pct_chg": -3.02,
-      "ma50": 144.67,
-      "reasons": [
-        "gap down -3.0%",
-        "volume spike 3.2x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "PLTR",
-      "prev_close": 171.7,
-      "current": 166.51,
-      "pct_chg": -3.02,
-      "ma50": 186.84,
-      "reasons": [
-        "gap down -3.0%"
-      ]
-    },
-    {
-      "ticker": "PWR",
-      "prev_close": 580.44,
-      "current": 563.99,
-      "pct_chg": -2.83,
-      "ma50": 632.82,
-      "reasons": [
-        "volume spike 2.6x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "DDOG",
-      "prev_close": 188.72,
-      "current": 184.15,
-      "pct_chg": -2.42,
-      "ma50": 250.09,
-      "reasons": [
-        "volume spike 4.0x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "ETN",
-      "prev_close": 353.08,
-      "current": 344.74,
-      "pct_chg": -2.36,
-      "ma50": 408.61,
-      "reasons": [
-        "volume spike 2.2x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "SHOP",
-      "prev_close": 153.03,
-      "current": 152.04,
-      "pct_chg": -0.65,
-      "ma50": 152.75,
-      "reasons": [
-        "crossed BELOW 50MA (152.75)"
-      ]
-    },
-    {
-      "ticker": "DUOL",
-      "prev_close": 161.27,
-      "current": 161.0,
-      "pct_chg": -0.17,
-      "ma50": 144.95,
-      "reasons": [
-        "volume spike 10.0x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "PCOR",
-      "prev_close": 75.6,
-      "current": 76.1,
-      "pct_chg": 0.66,
-      "ma50": 56.98,
-      "reasons": [
-        "volume spike 2.9x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "TOST",
-      "prev_close": 35.37,
-      "current": 35.66,
-      "pct_chg": 0.82,
-      "ma50": 31.9,
-      "reasons": [
-        "volume spike 2.5x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "AAPL",
-      "prev_close": 349.51,
-      "current": 353.71,
-      "pct_chg": 1.2,
-      "ma50": 334.84,
-      "reasons": [
-        "volume spike 2.1x avg (prior session)"
-      ]
-    },
-    {
-      "ticker": "AMZN",
-      "prev_close": 266.03,
-      "current": 270.84,
-      "pct_chg": 1.81,
-      "ma50": 253.89,
+      "ticker": "V",
+      "prev_close": 422.59,
+      "current": 415.0,
+      "pct_chg": -1.8,
+      "ma50": 384.98,
       "reasons": [
         "volume spike 2.2x avg (prior session)"
       ]
     },
     {
       "ticker": "APP",
-      "prev_close": 271.75,
-      "current": 337.16,
-      "pct_chg": 24.07,
-      "ma50": 290.82,
+      "prev_close": 356.1,
+      "current": 351.05,
+      "pct_chg": -1.42,
+      "ma50": 291.78,
       "reasons": [
-        "gap UP 24.1% above 50MA \u2014 momentum alert",
-        "volume spike 3.7x avg (prior session)"
+        "volume spike 5.1x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "PCOR",
+      "prev_close": 75.6,
+      "current": 75.6,
+      "pct_chg": 0.0,
+      "ma50": 57.28,
+      "reasons": [
+        "volume spike 2.8x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "KTOS",
+      "prev_close": 33.39,
+      "current": 33.81,
+      "pct_chg": 1.25,
+      "ma50": 43.85,
+      "reasons": [
+        "volume spike 2.2x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "TSLA",
+      "prev_close": 343.69,
+      "current": 353.3,
+      "pct_chg": 2.8,
+      "ma50": 372.07,
+      "reasons": [
+        "volume spike 2.1x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "CEG",
+      "prev_close": 239.65,
+      "current": 246.88,
+      "pct_chg": 3.02,
+      "ma50": 270.67,
+      "reasons": [
+        "volume spike 2.1x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "QCOM",
+      "prev_close": 156.75,
+      "current": 161.65,
+      "pct_chg": 3.13,
+      "ma50": 178.0,
+      "reasons": [
+        "volume spike 3.5x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "ZS",
+      "prev_close": 203.88,
+      "current": 211.0,
+      "pct_chg": 3.49,
+      "ma50": 207.81,
+      "reasons": [
+        "gap UP 3.5% above 50MA \u2014 momentum alert"
+      ]
+    },
+    {
+      "ticker": "DDOG",
+      "prev_close": 174.6,
+      "current": 181.6,
+      "pct_chg": 4.01,
+      "ma50": 249.02,
+      "reasons": [
+        "volume spike 2.6x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "NVDA",
+      "prev_close": 181.6,
+      "current": 189.72,
+      "pct_chg": 4.47,
+      "ma50": 220.59,
+      "reasons": [
+        "volume spike 2.9x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "ON",
+      "prev_close": 63.01,
+      "current": 66.22,
+      "pct_chg": 5.09,
+      "ma50": 74.45,
+      "reasons": [
+        "volume spike 2.5x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "PANW",
+      "prev_close": 314.67,
+      "current": 331.08,
+      "pct_chg": 5.21,
+      "ma50": 371.68,
+      "reasons": [
+        "volume spike 2.4x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "ETN",
+      "prev_close": 327.02,
+      "current": 344.7,
+      "pct_chg": 5.41,
+      "ma50": 406.76,
+      "reasons": [
+        "volume spike 2.3x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "PWR",
+      "prev_close": 509.06,
+      "current": 537.46,
+      "pct_chg": 5.58,
+      "ma50": 630.67,
+      "reasons": [
+        "volume spike 3.5x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "AVGO",
+      "prev_close": 291.53,
+      "current": 308.35,
+      "pct_chg": 5.77,
+      "ma50": 349.23,
+      "reasons": [
+        "volume spike 2.5x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "VST",
+      "prev_close": 112.89,
+      "current": 119.4,
+      "pct_chg": 5.77,
+      "ma50": 144.13,
+      "reasons": [
+        "volume spike 2.2x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "ANET",
+      "prev_close": 159.16,
+      "current": 169.48,
+      "pct_chg": 6.48,
+      "ma50": 193.25,
+      "reasons": [
+        "volume spike 2.1x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "VRT",
+      "prev_close": 176.73,
+      "current": 190.0,
+      "pct_chg": 7.51,
+      "ma50": 238.71,
+      "reasons": [
+        "volume spike 2.5x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "ARM",
+      "prev_close": 166.72,
+      "current": 180.0,
+      "pct_chg": 7.97,
+      "ma50": 254.39,
+      "reasons": [
+        "volume spike 2.9x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "AMD",
+      "prev_close": 404.4,
+      "current": 438.53,
+      "pct_chg": 8.44,
+      "ma50": 547.37,
+      "reasons": [
+        "volume spike 3.0x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "KLAC",
+      "prev_close": 129.8,
+      "current": 140.99,
+      "pct_chg": 8.62,
+      "ma50": 175.74,
+      "reasons": [
+        "volume spike 2.7x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "AMAT",
+      "prev_close": 319.25,
+      "current": 348.17,
+      "pct_chg": 9.06,
+      "ma50": 447.84,
+      "reasons": [
+        "volume spike 2.2x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "MRVL",
+      "prev_close": 133.55,
+      "current": 146.5,
+      "pct_chg": 9.7,
+      "ma50": 236.28,
+      "reasons": [
+        "volume spike 2.5x avg (prior session)"
+      ]
+    },
+    {
+      "ticker": "NET",
+      "prev_close": 244.51,
+      "current": 293.61,
+      "pct_chg": 20.08,
+      "ma50": 319.0,
+      "reasons": [
+        "volume spike 2.6x avg (prior session)"
       ]
     }
   ],
   "avoids": [
-    "QCOM",
-    "ARM",
-    "AMD",
-    "AMAT",
-    "APLD",
-    "MRVL",
-    "KLAC",
-    "ANET",
-    "OKTA",
-    "CRWV",
-    "VRT",
-    "NET",
-    "SMCI",
-    "S",
-    "ON",
-    "ZS",
-    "SNOW",
-    "VST",
-    "PLTR",
-    "SHOP"
+    "TEAM",
+    "AXON"
   ],
   "gap_up_priority": [
-    "APP"
+    "ZS"
   ],
   "top_candidates": [
     {
       "ticker": "PCOR",
       "price": 75.6,
-      "ma50": 56.98,
-      "ret_5d": 21.8,
+      "ma50": 57.28,
+      "ret_5d": 23.7,
       "ret_20d": 38.0,
-      "score": 0.2789,
+      "score": 0.279,
       "gap_up": false,
       "thesis_grade": "C",
       "thesis_score": 53.0
     },
     {
       "ticker": "SPOT",
-      "price": 627.66,
-      "ma50": 534.54,
-      "ret_5d": 16.6,
-      "ret_20d": 22.4,
-      "score": 0.1818,
+      "price": 614.41,
+      "ma50": 535.83,
+      "ret_5d": 10.3,
+      "ret_20d": 16.7,
+      "score": 0.1396,
       "gap_up": false,
       "thesis_grade": "D",
-      "thesis_score": 26.0
+      "thesis_score": 29.0
     },
     {
       "ticker": "APPF",
-      "price": 236.85,
-      "ma50": 212.4,
-      "ret_5d": 15.5,
-      "ret_20d": 20.2,
-      "score": 0.1518,
+      "price": 233.22,
+      "ma50": 212.61,
+      "ret_5d": 12.6,
+      "ret_20d": 18.1,
+      "score": 0.1311,
       "gap_up": false,
       "thesis_grade": "C",
-      "thesis_score": 44.0
+      "thesis_score": 50.0
     },
     {
-      "ticker": "MA",
-      "price": 672.68,
-      "ma50": 590.16,
-      "ret_5d": 10.2,
-      "ret_20d": 18.2,
-      "score": 0.1411,
+      "ticker": "TOST",
+      "price": 35.16,
+      "ma50": 31.86,
+      "ret_5d": 11.6,
+      "ret_20d": 15.2,
+      "score": 0.1218,
       "gap_up": false,
       "thesis_grade": "D",
       "thesis_score": 34.0
     },
     {
-      "ticker": "V",
-      "price": 436.57,
-      "ma50": 384.21,
-      "ret_5d": 9.0,
-      "ret_20d": 17.3,
-      "score": 0.1334,
+      "ticker": "NCNO",
+      "price": 23.21,
+      "ma50": 21.23,
+      "ret_5d": 3.4,
+      "ret_20d": 17.9,
+      "score": 0.1012,
       "gap_up": false,
       "thesis_grade": "D",
-      "thesis_score": 23.0
+      "thesis_score": 32.0
     }
   ]
 }

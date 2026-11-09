@@ -1,94 +1,126 @@
 {
-  "date": "2026-11-06",
-  "generated_at": "2026-11-06T21:15:38.088858",
-  "portfolio": {
-    "value": 105848.33,
-    "cash": 40750.91,
-    "total_unrealized": 1700.18,
-    "positions": 18,
-    "winners": 10,
-    "losers": 8,
-    "risk_level": "LOW",
-    "risk_score": 26.4
-  },
-  "execution": {
-    "signals_generated": 8,
-    "orders_executed": 7,
-    "orders_skipped": 1,
-    "skip_reasons": [
-      "opened more than 5% above the previous close (ask $104.42, limit $104.37)"
+  "date": "2026-11-09",
+  "generated_at": "2026-11-09T21:11:04.344424",
+  "type": "post_market_review",
+  "thesis_health": {
+    "intact": 15,
+    "weakening": 2,
+    "broken": 0,
+    "untradable": 1,
+    "intact_symbols": [
+      "ACN",
+      "CBOE",
+      "CRL",
+      "DG",
+      "EBAY",
+      "FDS",
+      "GILD",
+      "HLT",
+      "HUM",
+      "KDP",
+      "KO",
+      "MAR",
+      "MO",
+      "SJM",
+      "PCOR"
     ],
-    "candidates_screened": 30
+    "weakening_detail": [
+      "KVYO: 37.1% below 52-week high ($20.82 vs high $33.35). Stop at $15.71. Sleeve-managed.",
+      "WK: -18.95% unrealized (-19% from avg cost $86.09, current $69.78). 24.4% from 52w high. LARGE_LOSS flag active. Stop at $64.57 (~8% cushion). Sleeve-managed."
+    ],
+    "note": "yfinance unavailable (proxy constraints). Thesis assessment via screener.json SMA data (run 2026-11-09 14:15). All 15 intact positions confirmed strong_up trend in screener."
   },
-  "exits": {
-    "triggered": 0,
-    "stops_updated": 0,
-    "detail": []
-  },
-  "closed_today": [
-    {
-      "trade_id": "TRD-20261105143031-TXN",
-      "symbol": "TXN",
-      "status": "CLOSED",
-      "entry_date": "2026-11-05",
-      "entry_ts": "2026-11-05T14:30:31.391872",
-      "entry_price": 302.21,
-      "shares": 8,
-      "stop_loss": 282.77,
-      "trend_score": 72,
-      "confidence": 0.85,
-      "rs_rank": 96,
-      "thesis_score": 37.0,
-      "thesis_grade": "D",
-      "sector": "technology",
-      "weight_version": 3,
-      "order_id": "f8b39da5-df58-4e91-939c-1e29584a90e7",
-      "signals": {
-        "macd_cross": false,
-        "ema21_reclaim": false,
-        "breakout": false,
-        "adx25": false,
-        "ma50_room": true,
-        "adx": 23.7,
-        "atr_pct": 0.03589,
-        "news_positive": null,
-        "news_negative": null,
-        "social_bullish": null,
-        "social_bearish": null,
-        "news_score": -1.0,
-        "st_bull_ratio": 1.0,
-        "osint_positive": false,
-        "osint_negative": false,
-        "osint_score": 0
+  "pattern_findings": {
+    "closed_trades_analyzed": 91,
+    "win_rate_pct": 19.8,
+    "avg_win_pct": 14.2,
+    "avg_loss_pct": -5.4,
+    "expected_value_per_trade_pct": -1.48,
+    "avg_hold_days_wins": 48,
+    "avg_hold_days_losses": 12,
+    "trend_score_analysis": {
+      "score_80_plus": {
+        "count": 15,
+        "avg_pnl": -4.6,
+        "note": "underperforms lower-scored entries"
       },
-      "stop_arm": "atr",
-      "stop_dist": 0.089725,
-      "news_arm": "control",
-      "exit_date": "2026-11-06",
-      "exit_price": 277.59,
-      "exit_reason": "PRICE_BELOW_50MA",
-      "pnl_usd": -197.04,
-      "pnl_pct": -8.15,
-      "hold_days": 1,
-      "entry_limit": 307.36,
-      "entry_filled": true,
-      "exit_ts": "2026-11-06T15:15:49.434668"
-    }
-  ],
-  "positions_at_risk": [
-    {
-      "symbol": "WK",
-      "pnl_pct": -15.48,
-      "value": 2037.28,
-      "has_stop": true,
-      "risk": "deep_loss"
+      "score_70_79": {
+        "count": 63,
+        "avg_pnl": 0.4
+      }
     },
-    {
-      "symbol": "CTLP",
-      "pnl_pct": 5.26,
-      "value": 3147.2,
-      "has_stop": false,
-      "risk": "untradable"
-    }
-  ]
+    "rs_rank_analysis": {
+      "rank_90_plus": {
+        "count": 47,
+        "avg_pnl": -3.2,
+        "note": "higher RS underperforming - possible overextension at entry"
+      },
+      "rank_70_89": {
+        "count": 32,
+        "avg_pnl": -1.3
+      }
+    },
+    "sector_leaders": {
+      "energy": {
+        "count": 9,
+        "avg_pnl": 2.8
+      },
+      "financials": {
+        "count": 3,
+        "avg_pnl": -0.6
+      },
+      "technology": {
+        "count": 35,
+        "avg_pnl": -2.5
+      },
+      "industrials": {
+        "count": 16,
+        "avg_pnl": -4.3
+      },
+      "healthcare": {
+        "count": 8,
+        "avg_pnl": -4.2
+      }
+    },
+    "note": "Negative expected value (-1.48%/trade) driven by 80% loss rate. The system's profitability depends entirely on infrequent large winners (avg +14.2%). Mathematically viable only if winners remain above ~27% avg for the win rate to break even at -5.4% avg loss. PATTERN FLAG: Review this with 10+ additional trades before any threshold changes."
+  },
+  "screener_alignment": {
+    "market_regime": "NEUTRAL (SPY above 200MA but below 50MA, elevated RS threshold 80)",
+    "top_screener_picks": [
+      "DG",
+      "MO",
+      "KDP",
+      "KO",
+      "EBAY",
+      "CPAY",
+      "EL",
+      "HAS",
+      "SWK",
+      "ACN"
+    ],
+    "in_portfolio": [
+      "DG",
+      "MO",
+      "KDP",
+      "KO",
+      "EBAY",
+      "ACN"
+    ],
+    "opportunity_gaps": [
+      "CPAY",
+      "EL",
+      "HAS",
+      "SWK"
+    ],
+    "confirmation": "Strong - 6 of top 10 screener picks are current holdings. Model finding same names the screener confirms."
+  },
+  "model_health": "OK - config and signals modules import cleanly",
+  "action_taken": "No parameter changes. No positions closed. Post-market review written. WK and KVYO continue monitoring. EV calculation flagged for human review \u2014 consistent with Friday pattern findings.",
+  "drawdown_status": {
+    "current_pct": 8.74,
+    "peak_value": 116590.55,
+    "peak_date": "2026-10-06",
+    "status": "CAUTION",
+    "note": "Drawdown recovering slightly from 9.54% last Friday to 8.74% today"
+  }
 }

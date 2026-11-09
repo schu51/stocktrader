@@ -1,7 +1,20 @@
 {
-  "generated_at": "2026-11-09T15:15:48.077681",
+  "generated_at": "2026-11-09T15:45:53.520153",
   "positions_checked": 16,
-  "exits_triggered": [],
+  "exits_triggered": [
+    {
+      "symbol": "PM",
+      "trigger": "PRICE_BELOW_50MA",
+      "reason": "$194.18 is 0.3% below 50MA $194.84",
+      "qty": 18,
+      "price": 194.18,
+      "pnl_pct": -6.3,
+      "executed": true,
+      "order_id": "930975e4-e75a-482e-b5fa-b1390664a778",
+      "confirmed": true,
+      "sale": "filled"
+    }
+  ],
   "stops_updated": [],
   "stops_placed": [],
   "stop_failures": [],

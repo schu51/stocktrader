@@ -4470,7 +4470,7 @@
   {
     "trade_id": "TRD-20261103143031-PM",
     "symbol": "PM",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-11-03",
     "entry_ts": "2026-11-03T14:30:31.375268",
     "entry_price": 207.23,
@@ -4505,14 +4505,15 @@
     "stop_arm": "atr",
     "stop_dist": 0.07065,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-09",
+    "exit_price": 194.18,
+    "exit_reason": "PRICE_BELOW_50MA",
+    "pnl_usd": -235.0,
+    "pnl_pct": -6.3,
+    "hold_days": 6,
     "entry_limit": 215.05,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-09T15:45:52.393683"
   },
   {
     "trade_id": "TRD-20261104143030-CBOE",

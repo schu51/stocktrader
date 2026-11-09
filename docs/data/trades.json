@@ -4981,7 +4981,9 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 36.66,
+    "entry_filled": true
   },
   {
     "trade_id": "TRD-20261109143031-MAR",
@@ -4989,7 +4991,7 @@
     "status": "OPEN",
     "entry_date": "2026-11-09",
     "entry_ts": "2026-11-09T14:30:31.551378",
-    "entry_price": 426.0,
+    "entry_price": 425.06,
     "shares": 5,
     "stop_loss": 391.92,
     "trend_score": 72,
@@ -5026,6 +5028,8 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 426.0,
+    "entry_filled": true
   }
 ]

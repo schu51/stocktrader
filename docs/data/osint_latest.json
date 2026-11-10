@@ -1,12 +1,12 @@
 {
- "date": "2026-11-09",
- "generated_at": "2026-11-09T13:06:49+00:00",
+ "date": "2026-11-10",
+ "generated_at": "2026-11-10T13:09:49+00:00",
  "window_days": 4,
- "covered": 25,
- "with_signals": 12,
+ "covered": 26,
+ "with_signals": 11,
  "summary": {
   "headline": "OSINT: 5 companies with new signals",
-  "summary": "ACN +1: Federal awards spike: $2,920M in 30 days vs $315M/month pace; largest from Department of Health and Human Services (name match is loose) | SWK -1: securities offering (possible dilution) | CRL +0: passive 5%+ stake (13G) filed | GILD +0: passive 5%+ stake (13G) filed | HUM +0: periodic report filed",
+  "summary": "EBAY -1: Short-volume spike: 66% of volume vs 47% 20-day average (z +2.2) | ACN +1: Federal awards spike: $2,920M in 30 days vs $315M/month pace; largest from Department of Health and Human Services (name match is loose) | EL -1: Heavy discretionary insider selling: $12,612,191 outside 10b5-1 plans, 4 seller(s) | GILD +0: Justice Department, Antitrust Division: Notice Pursuant to the National Cooperative Research and Production Act of 1993-R Consortium, Inc. | HLT +0: Short volume collapsed: 14% vs 37% average (z -3.1)",
   "actions": [],
   "generated_by": "rules"
  },
@@ -25,9 +25,25 @@
     {
      "source": "usaspending",
      "kind": "awards",
-     "date": "2026-11-09",
+     "date": "2026-11-10",
      "polarity": 1,
      "text": "Federal awards spike: $2,920M in 30 days vs $315M/month pace; largest from Department of Health and Human Services (name match is loose)",
+     "url": null
+    },
+    {
+     "source": "sec",
+     "kind": "SCHEDULE 13G",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "passive 5%+ stake (13G) filed",
+     "url": "https://www.sec.gov/Archives/edgar/data/1467373/000009375126000604/xslSCHEDULE_13G_X02/primary_doc.xml"
+    },
+    {
+     "source": "news",
+     "kind": "velocity",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "News surge: 11 headlines in 24h vs 3.3/day, 8 outlets, tone -0.09",
      "url": null
     }
    ],
@@ -38,53 +54,136 @@
       "Price Paula A",
       "Sweet Julie Spellman"
      ],
-     "sell_value": 4333576,
-     "sellers": 3,
-     "discretionary_sell_value": 1430826
+     "sell_value": 2700000,
+     "sellers": 1,
+     "discretionary_sell_value": 0
     },
     "headlines": [
      {
-      "title": "Take the Zacks Approach to Beat the Markets: Ulta Beauty, Accenture, HCA in Focus",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-09T11:03"
+      "title": "Accenture Stock Rallied 31.5% Since October 6. Is Cognizant Now the Better Buy?",
+      "publisher": "TIKR.com",
+      "published": "2026-11-10T12:36"
      },
      {
-      "title": "39 ETFs Add to Accenture (ACN) on Thursday",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-09T11:02"
-     },
-     {
-      "title": "Accenture stock heads toward BMO technology conference",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-11-09T09:29"
-     },
-     {
-      "title": "Accenture (ACN), Why Is It Getting Attention Today?",
+      "title": "Accenture (ACN) Cut Employer Registration Times To Minutes In Ontario Overhaul",
       "publisher": "Simply Wall St",
-      "published": "2026-11-09T08:32"
+      "published": "2026-11-10T12:24"
      },
      {
-      "title": "ACN Nov 2026 255.000 call (ACN261113C00255000) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-09T06:33"
+      "title": "Accenture (ACN) Following WSIB Win Has An Undervalued Narrative To Defend",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-10T12:11"
      },
      {
-      "title": "Why Is Accenture (NYSE:ACN) Expanding Its AI Capabilities?",
-      "publisher": "Kalkine Media",
-      "published": "2026-11-09T03:39"
-     },
-     {
-      "title": "Accenture stock: BMO conference puts AI services in focus",
+      "title": "Accenture stock heads to BMO conference with AI in focus",
       "publisher": "ad-hoc-news.de",
-      "published": "2026-11-08T17:08"
+      "published": "2026-11-10T09:53"
      },
      {
-      "title": "Accenture (ACN) Crashed 18% After Earnings \u2014 Is a Forward P/E Below 10 a Buying Opportunity?",
-      "publisher": "TradingKey",
-      "published": "2026-11-08T14:39"
+      "title": "Australia\u2019s Qantas to axe 850 jobs in offshoring deal with Accenture By Reuters",
+      "publisher": "Investing.com",
+      "published": "2026-11-10T04:27"
+     },
+     {
+      "title": "Qantas Shares Rise as Airline Cuts 850 Jobs in Accenture Deal",
+      "publisher": "JournalArta",
+      "published": "2026-11-10T04:10"
+     },
+     {
+      "title": "Qantas to cut 850 jobs in Australia with Accenture deal; shares jump 4%",
+      "publisher": "Investing.com",
+      "published": "2026-11-10T02:19"
+     },
+     {
+      "title": "China Petrochemical Development stock faces ACN maintenance halt",
+      "publisher": "ad-hoc-news.de",
+      "published": "2026-11-10T02:08"
      }
     ],
-    "short_share_latest": 0.628
+    "short_share_latest": 0.46
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "EBAY",
+   "name": "EBAY INC",
+   "why": [
+    "holding",
+    "candidate"
+   ],
+   "score": -1,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [
+    {
+     "source": "finra",
+     "kind": "short_volume",
+     "date": "2026-11-10",
+     "polarity": -1,
+     "text": "Short-volume spike: 66% of volume vs 47% 20-day average (z +2.2)",
+     "url": null
+    },
+    {
+     "source": "news",
+     "kind": "velocity",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "News surge: 16 headlines in 24h vs 3.5/day, 7 outlets, tone +0.00",
+     "url": null
+    }
+   ],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 3013561,
+     "sellers": 2,
+     "discretionary_sell_value": 288321
+    },
+    "headlines": [
+     {
+      "title": "eBay Inc. $EBAY Shares Sold by M&G PLC",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T11:43"
+     },
+     {
+      "title": "eBay Inc. $EBAY Stake Cut by Retirement Systems of Alabama",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T10:51"
+     },
+     {
+      "title": "16,891 Shares of eBay Inc. $EBAY Bought by M Holdings Securities Inc.",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T10:44"
+     },
+     {
+      "title": "Alps Advisors Inc. Acquires 19,684 Shares of eBay Inc. $EBAY",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T09:46"
+     },
+     {
+      "title": "eBay Inc. $EBAY Stock: Beutel Goodman & Co Ltd. Lowers Stake",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T09:22"
+     },
+     {
+      "title": "eBay Earnings Call Shows Broad Growth and Strong Momentum",
+      "publisher": "TipRanks",
+      "published": "2026-11-10T00:55"
+     },
+     {
+      "title": "eBay Inc. (EBA.DE) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-10T00:36"
+     },
+     {
+      "title": "eBay Inc. (EBAY) latest stock news and headlines",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-11-09T23:30"
+     }
+    ],
+    "short_share_latest": 0.659
    },
    "failed": [],
    "read": null
@@ -110,9 +209,34 @@
     },
     "headlines": [
      {
+      "title": "Cboe Global Markets (CBOE) Stock: Rises 0.93% as Company Launches Russell 2000 Binary Options",
+      "publisher": "Blockonomi",
+      "published": "2026-11-09T18:50"
+     },
+     {
+      "title": "Cboe Global Markets, Inc. (CBOE) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-11-09T17:40"
+     },
+     {
+      "title": "Looking for a Growth Stock? 3 Reasons Why CBOE (CBOE) is a Solid Choice",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-09T16:45"
+     },
+     {
+      "title": "Cboe Expands Prediction Markets Suite to Small-Caps with Launch of Mini-Russell 2000 Index Binary Options",
+      "publisher": "Quantisnow",
+      "published": "2026-11-09T15:47"
+     },
+     {
+      "title": "Kalshi's $300 Million Stock-Perps Debut Was Led by SpaceX, But a Cboe-Citadel Lawsuit Could Rewrite the Rules",
+      "publisher": "Barchart.com",
+      "published": "2026-11-09T14:49"
+     },
+     {
       "title": "CFTC turns Cboe\u2019s own words against it in stock perpetuals lawsuit",
       "publisher": "Ledger Insights",
-      "published": "2026-11-09T11:46"
+      "published": "2026-11-09T12:14"
      },
      {
       "title": "Cboe Global Markets stock trades at EUR 317.10 on Lang & Schwarz",
@@ -120,37 +244,12 @@
       "published": "2026-11-09T02:54"
      },
      {
-      "title": "Learn Why The Bull Case For Cboe Stock Could Change Following Strong Earnings Report",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-08T09:37"
-     },
-     {
-      "title": "Cboe Global Markets, Inc. (CBOE) latest stock news and headlines",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-08T08:49"
-     },
-     {
-      "title": "Cboe Global Markets, Inc. (CBOE) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-07T18:04"
-     },
-     {
-      "title": "Cboe Global Markets, Inc. (CBOE) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-07T08:46"
-     },
-     {
-      "title": "In Stormy Market, This Stock Provides One Option For Investors. And Wall Street Is Buying In.",
-      "publisher": "Investor's Business Daily",
-      "published": "2026-11-06T21:04"
-     },
-     {
-      "title": "Cboe, Citadel Sue CFTC Over Stock Perps; Judge Denies Halt",
-      "publisher": "FinanceFeeds",
-      "published": "2026-11-06T18:41"
+      "title": "A Popular New Bet Hailing From Cryptoland Sets Off a Wall Street Turf War",
+      "publisher": "WSJ",
+      "published": "2026-11-08T20:00"
      }
     ],
-    "short_share_latest": 0.626
+    "short_share_latest": 0.517
    },
    "failed": [],
    "read": null
@@ -164,16 +263,7 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [
-    {
-     "source": "sec",
-     "kind": "SCHEDULE 13G/A",
-     "date": "2026-11-05",
-     "polarity": 0,
-     "text": "passive 5%+ stake (13G) filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/1100682/000031506626002705/xslSCHEDULE_13G_X02/primary_doc.xml"
-    }
-   ],
+   "events": [],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
@@ -184,14 +274,24 @@
     },
     "headlines": [
      {
+      "title": "Overseas lab services may be sold as Tigermed keeps Frontage's China business",
+      "publisher": "Stock Titan",
+      "published": "2026-11-10T08:55"
+     },
+     {
+      "title": "649 shares cover vesting taxes for Charles River (CRL) finance executive Michael Gunnar Knell.",
+      "publisher": "Stock Titan",
+      "published": "2026-11-09T21:33"
+     },
+     {
       "title": "Charles River Laboratories (CRL) to Acquire Frontage Holdings' B",
       "publisher": "GuruFocus",
       "published": "2026-11-09T12:15"
      },
      {
-      "title": "Is Charles River Laboratories International (CRL) Fully Valued After Raised EPS Guidance?",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-09T11:18"
+      "title": "About 340 people work at the two labs Charles River (CRL) has agreed to acquire.",
+      "publisher": "Stock Titan",
+      "published": "2026-11-09T11:14"
      },
      {
       "title": "Technical Reactions to CRL Trends in Macro Strategies",
@@ -204,31 +304,19 @@
       "published": "2026-11-08T10:28"
      },
      {
+      "title": "Charles River Laboratories International, Inc. (CRL) stock price, news, quote and history",
+      "publisher": "Yahoo Finance Australia",
+      "published": "2026-11-07T19:08"
+     },
+     {
       "title": "CRL May 2027 210.000 call (CRL270521C00210000) interactive stock chart",
       "publisher": "Yahoo Finance UK",
       "published": "2026-11-07T16:02"
-     },
-     {
-      "title": "Charles River Laboratories International, Inc. (CRL) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-07T06:53"
-     },
-     {
-      "title": "Charles River Laboratories International Inc (CRL) Shares Surge 7.8% -- What GF Score of 65 Tells Investors",
-      "publisher": "GuruFocus",
-      "published": "2026-11-07T01:17"
-     },
-     {
-      "title": "Charles River Laboratories Inte (CRL) Stock Forecasts",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-06T22:41"
      }
     ],
-    "short_share_latest": 0.546
+    "short_share_latest": 0.585
    },
-   "failed": [
-    "usaspending"
-   ],
+   "failed": [],
    "read": null
   },
   {
@@ -272,113 +360,45 @@
      {
       "title": "Vinci SA (DG.PA) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-09T11:01"
+      "published": "2026-11-10T11:41"
      },
      {
-      "title": "Trading the Move, Not the Narrative: (DG) Edition",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-11-09T01:46"
-     },
-     {
-      "title": "Dollar General xStock Price | DGX Price Today, Live Chart, USD converter, Market Capitalization",
-      "publisher": "CryptoRank",
-      "published": "2026-11-08T08:44"
-     },
-     {
-      "title": "Dollar General Corporation (NYSE:DG) Stock Has Average Price Target of $137.96",
+      "title": "Dollar General Corporation $DG Shares Acquired by Fulcrum Asset Management LLP",
       "publisher": "MarketBeat",
-      "published": "2026-11-07T10:00"
+      "published": "2026-11-10T09:10"
      },
      {
-      "title": "Dollar General Corp (DG) Stock Down 3.1% but Still Overvalued -- GF Score: 83/100",
-      "publisher": "GuruFocus",
-      "published": "2026-11-07T01:23"
-     },
-     {
-      "title": "Dollar General says shoppers can stock up on holiday sides for under $20",
-      "publisher": "ConsumerAffairs",
-      "published": "2026-11-06T21:06"
-     },
-     {
-      "title": "Dollar Tree (DLTR) Stock Stays Cheap After Its 30% One Year Run",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-06T20:14"
-     },
-     {
-      "title": "An EVP surrenders 1,647 Dollar General (DG) shares for taxes, retaining 43,656 directly held shares.",
-      "publisher": "Stock Titan",
-      "published": "2026-11-06T17:06"
-     }
-    ],
-    "short_share_latest": 0.335
-   },
-   "failed": [
-    "usaspending"
-   ],
-   "read": null
-  },
-  {
-   "symbol": "EBAY",
-   "name": "EBAY INC",
-   "why": [
-    "holding",
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 288321,
-     "sellers": 1,
-     "discretionary_sell_value": 288321
-    },
-    "headlines": [
-     {
-      "title": "Hohimer Wealth Management LLC Buys New Stake in eBay Inc. $EBAY",
+      "title": "127,592 Shares in Dollar General Corporation $DG Purchased by AEGON ASSET MANAGEMENT UK Plc",
       "publisher": "MarketBeat",
-      "published": "2026-11-09T11:53"
+      "published": "2026-11-10T08:48"
      },
      {
-      "title": "(EBAY) and the Role of Price-Sensitive Allocations",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-11-08T18:04"
-     },
-     {
-      "title": "eBay (EBAY) Q3 Results Put Its Valuation Back In Focus",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-08T14:21"
-     },
-     {
-      "title": "CenterBook Partners LP Acquires 36,455 Shares of eBay Inc. $EBAY",
+      "title": "Commonwealth Equity Services LLC Buys 38,093 Shares of Dollar General Corporation $DG",
       "publisher": "MarketBeat",
-      "published": "2026-11-08T09:00"
+      "published": "2026-11-10T08:47"
      },
      {
-      "title": "eBay Inc. (EBAY) stock price, news, quote and history",
-      "publisher": "Yahoo Finance Australia",
-      "published": "2026-11-07T12:04"
-     },
-     {
-      "title": "Earnings And Guidance Update Could Be A Game Changer For eBay (EBAY)",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-07T09:31"
-     },
-     {
-      "title": "Ebay Stock Price Forecast. Should You Buy EBAY?",
-      "publisher": "StockInvest.us",
-      "published": "2026-11-06T22:20"
-     },
-     {
-      "title": "eBay Inc. stock underperforms Friday when compared to competitors",
+      "title": "Dollar General Corp. stock rises Monday, still underperforms market",
       "publisher": "MarketWatch",
-      "published": "2026-11-06T21:49"
+      "published": "2026-11-09T21:59"
+     },
+     {
+      "title": "How Much Growth Can Dollar General Unlock From Store Remodels?",
+      "publisher": "TradingView",
+      "published": "2026-11-09T16:25"
+     },
+     {
+      "title": "DG vs. ROST: Which Stock Is the Better Value Option?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-09T15:40"
+     },
+     {
+      "title": "11 Dollar General Favorites So Popular They Rarely Stay in Stock",
+      "publisher": "FinanceBuzz",
+      "published": "2026-11-09T14:00"
      }
     ],
-    "short_share_latest": 0.406
+    "short_share_latest": 0.411
    },
    "failed": [],
    "read": null
@@ -403,51 +423,49 @@
     },
     "headlines": [
      {
-      "title": "AU Small Finance Bank offers up to 7.4% on FDs; senior citizens get 7.9%",
-      "publisher": "Business Standard",
-      "published": "2026-11-09T07:43"
+      "title": "FDS Nov 2026 270.000 call (FDS261120C00270000) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-11-10T02:11"
      },
      {
-      "title": "Dow Jones and S&P 500 Outlook: Stock Market News To Watch This Week - State Street SPDR Dow Jones Industr",
-      "publisher": "Benzinga",
-      "published": "2026-11-08T18:30"
+      "title": "FactSet Research Systems Inc. (FDS) latest stock news and headlines",
+      "publisher": "Yahoo Finance Australia",
+      "published": "2026-11-10T00:59"
+     },
+     {
+      "title": "FactSet Research Systems Inc. (FDS) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-11-09T18:17"
+     },
+     {
+      "title": "FactSet Research Systems Inc. (FDS) latest stock news and headlines",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-11-09T15:16"
+     },
+     {
+      "title": "FDS Jun 2027 360.000 call (FDS270617C00360000) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-09T13:43"
+     },
+     {
+      "title": "(FDS) Movement Within Algorithmic Entry Frameworks",
+      "publisher": "Stock Traders Daily",
+      "published": "2026-11-09T03:30"
+     },
+     {
+      "title": "FDS Nov 2026 280.000 put (FDS261120P00280000) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-11-09T00:34"
      },
      {
       "title": "FactSet Research Systems Inc. (FDS) Stock Forecasts",
       "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-08T17:23"
-     },
-     {
-      "title": "FDS Nov 2026 220.000 put (FDS261120P00220000) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-08T14:39"
-     },
-     {
-      "title": "FDS261120P00210000 Interactive Stock Chart | FDS Nov 2026 210.000 put Stock",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-08T09:50"
-     },
-     {
-      "title": "FDS Nov 2026 200.000 call (FDS261120C00200000) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-08T08:23"
-     },
-     {
-      "title": "FDS Nov 2026 210.000 put (FDS261120P00210000) interactive stock chart",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-08T07:27"
-     },
-     {
-      "title": "FactSet (FDS) Stock May Trade At A Discount Following Its 27% Gain",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-08T03:16"
+      "published": "2026-11-08T17:21"
      }
     ],
-    "short_share_latest": 0.504
+    "short_share_latest": 0.593
    },
-   "failed": [
-    "usaspending"
-   ],
+   "failed": [],
    "read": null
   },
   {
@@ -461,6 +479,14 @@
    "osint_negative": false,
    "events": [
     {
+     "source": "federal_register",
+     "kind": "Notice",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "Justice Department, Antitrust Division: Notice Pursuant to the National Cooperative Research and Production Act of 1993-R Consortium, Inc.",
+     "url": "https://www.federalregister.gov/documents/2026/11/10/2026-22894/notice-pursuant-to-the-national-cooperative-research-and-production-act-of-1993-r-consortium-inc"
+    },
+    {
      "source": "sec",
      "kind": "SCHEDULE 13G",
      "date": "2026-11-06",
@@ -473,57 +499,55 @@
     "insiders_30d": {
      "buy_value": 0,
      "buyers": [],
-     "sell_value": 25959936,
-     "sellers": 3,
+     "sell_value": 26517746,
+     "sellers": 4,
      "discretionary_sell_value": 0
     },
     "headlines": [
      {
-      "title": "Gilead Sciences, Inc. (GIS.F) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-08T17:52"
+      "title": "Gilead Sciences, Inc. $GILD Stock Bought by M&G PLC",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T11:38"
      },
      {
-      "title": "Gilead Sciences, Inc. (GILD) interactive stock chart",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-11-08T17:29"
+      "title": "Gilead Sciences Stock Hits a New All-Time High: Is it Still a Good Buy?",
+      "publisher": "The Globe and Mail",
+      "published": "2026-11-10T11:33"
      },
      {
-      "title": "Gilead Sciences stock: Wolfe conference puts pipeline in focus",
+      "title": "Gilead Sciences Stock Hits a New All-Time High: Is it Still a Good Buy?",
+      "publisher": "The Motley Fool",
+      "published": "2026-11-10T10:49"
+     },
+     {
+      "title": "Alps Advisors Inc. Sells 45,008 Shares of Gilead Sciences, Inc. $GILD",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T08:40"
+     },
+     {
+      "title": "Gilead Sciences stock slips to EUR 150.26, down 0.58% premarket",
       "publisher": "ad-hoc-news.de",
-      "published": "2026-11-08T16:31"
+      "published": "2026-11-10T06:55"
      },
      {
-      "title": "Gilead Sciences, Inc. $GILD Shares Sold by Pictet Asset Management Holding SA",
+      "title": "GILD Nov 2026 177.500 put (GILD261113P00177500) stock price, news, quote and history",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-11-10T03:08"
+     },
+     {
+      "title": "Gilead Sciences (NASDAQ:GILD) Stock: Insider Wettan Keeley Cain Sells 3,399 Shares",
       "publisher": "MarketBeat",
-      "published": "2026-11-08T11:18"
+      "published": "2026-11-10T02:20"
      },
      {
-      "title": "Gilead Sciences, Inc. $GILD Stock: Candriam S.C.A. Raises Holdings",
-      "publisher": "MarketBeat",
-      "published": "2026-11-08T09:59"
-     },
-     {
-      "title": "Ethic Inc. Buys 9,688 Shares of Gilead Sciences, Inc. $GILD",
-      "publisher": "MarketBeat",
-      "published": "2026-11-08T09:25"
-     },
-     {
-      "title": "Gilead Sciences, Inc. $GILD Stock Sold by Calamos Advisors LLC",
-      "publisher": "MarketBeat",
-      "published": "2026-11-07T15:40"
-     },
-     {
-      "title": "Gilead Sciences, Inc. (GILD) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-07T10:48"
+      "title": "Gilead Sciences EVP sells $557,809 in company stock By Investing.com",
+      "publisher": "Investing.com India",
+      "published": "2026-11-10T00:52"
      }
     ],
-    "short_share_latest": 0.424
+    "short_share_latest": 0.52
    },
-   "failed": [
-    "usaspending"
-   ],
+   "failed": [],
    "read": null
   },
   {
@@ -535,7 +559,16 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [],
+   "events": [
+    {
+     "source": "finra",
+     "kind": "short_volume",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "Short volume collapsed: 14% vs 37% average (z -3.1)",
+     "url": null
+    }
+   ],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
@@ -545,6 +578,11 @@
      "discretionary_sell_value": 53802435
     },
     "headlines": [
+     {
+      "title": "Kornitzer Capital Management Inc. KS Sells 20,619 Shares of Hilton Worldwide Holdings Inc. $HLT",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T10:15"
+     },
      {
       "title": "Hilton Worldwide Holdings Inc. $HLT Stock: Pictet Asset Management Holding SA Reduces Holdings",
       "publisher": "MarketBeat",
@@ -566,27 +604,22 @@
       "published": "2026-11-07T19:10"
      },
      {
-      "title": "META_TITLE_QUOTE",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-07T12:11"
-     },
-     {
       "title": "Hilton Worldwide Holdings Inc. (HLT) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-07T10:34"
+      "publisher": "Yahoo Finance Singapore",
+      "published": "2026-11-07T09:53"
      },
      {
       "title": "Hilton Worldwide Holdings Inc. (HLT) Stock Price, News, Quote & History",
       "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-07T03:16"
+      "published": "2026-11-07T07:17"
      },
      {
-      "title": "A Hilton (NYSE: HLT) officer proposes selling shares acquired by exercising stock options for cash.",
-      "publisher": "Stock Titan",
-      "published": "2026-11-06T17:12"
+      "title": "Hilton Worldwide Holdings Stock Price Forecast. Should You Buy HLT?",
+      "publisher": "StockInvest.us",
+      "published": "2026-11-06T22:49"
      }
     ],
-    "short_share_latest": 0.372
+    "short_share_latest": 0.144
    },
    "failed": [],
    "read": null
@@ -595,13 +628,28 @@
    "symbol": "HUM",
    "name": "HUMANA INC",
    "why": [
-    "holding",
-    "candidate"
+    "holding"
    ],
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
    "events": [
+    {
+     "source": "finra",
+     "kind": "short_volume",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "Short volume collapsed: 20% vs 46% average (z -2.2)",
+     "url": null
+    },
+    {
+     "source": "sec",
+     "kind": "8-K",
+     "date": "2026-11-09",
+     "polarity": 0,
+     "text": "8-K: other event",
+     "url": "https://www.sec.gov/Archives/edgar/data/49071/000004907126000068/hum-20261109.htm"
+    },
     {
      "source": "sec",
      "kind": "10-Q",
@@ -629,47 +677,122 @@
     },
     "headlines": [
      {
-      "title": "Humana Inc. $HUM Shares Sold by Compass Financial Management LLC",
+      "title": "HUM Network credits final cash dividend of Rs. 0.50 per share",
+      "publisher": "Investify",
+      "published": "2026-11-10T07:17"
+     },
+     {
+      "title": "Humana Commences Tender Offers for Eight Senior Note Series",
+      "publisher": "TipRanks",
+      "published": "2026-11-09T23:10"
+     },
+     {
+      "title": "HUM Maintained by Piper Sandler -- Price Target Raised to $526",
+      "publisher": "GuruFocus",
+      "published": "2026-11-09T18:20"
+     },
+     {
+      "title": "Humana Analysts Raise Their Forecasts After Q3 Results",
+      "publisher": "Benzinga",
+      "published": "2026-11-09T17:17"
+     },
+     {
+      "title": "HUM Maintains Buy Rating by Guggenheim -- Price Target Raised to $521",
+      "publisher": "GuruFocus",
+      "published": "2026-11-09T16:27"
+     },
+     {
+      "title": "HUM Maintained by Barclays -- Price Target Raised to $587",
+      "publisher": "GuruFocus",
+      "published": "2026-11-09T16:27"
+     },
+     {
+      "title": "Humana (NYSE:HUM) Stock Price Expected to Rise, Guggenheim Analyst Says",
       "publisher": "MarketBeat",
-      "published": "2026-11-09T08:48"
+      "published": "2026-11-09T16:03"
      },
      {
-      "title": "Humana (NYSE:HUM) Stock Rating Raised to Buy at Wall Street Zen",
+      "title": "Barclays Issues Positive Forecast for Humana (NYSE:HUM) Stock Price",
       "publisher": "MarketBeat",
-      "published": "2026-11-09T06:17"
-     },
-     {
-      "title": "Discipline and Rules-Based Execution in HUM Response",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-11-09T05:32"
-     },
-     {
-      "title": "HUM Nov 2026 355.000 put (HUM261127P00355000) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-09T01:15"
-     },
-     {
-      "title": "HUM Nov 2026 355.000 put (HUM261127P00355000) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-08T17:53"
-     },
-     {
-      "title": "Can Humana (NYSE:HUM) Use Medicare Growth To Power A Turnaround?",
-      "publisher": "Kalkine Media",
-      "published": "2026-11-08T16:33"
-     },
-     {
-      "title": "Humana Inc. $HUM Stock: Calamos Advisors LLC Cuts Position",
-      "publisher": "MarketBeat",
-      "published": "2026-11-08T09:00"
-     },
-     {
-      "title": "Humana xStock Price | HUMX Price Today, Live Chart, USD converter, Market Capitalization",
-      "publisher": "CryptoRank",
-      "published": "2026-11-08T08:26"
+      "published": "2026-11-09T16:03"
      }
     ],
-    "short_share_latest": 0.289
+    "short_share_latest": 0.198
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "KDP",
+   "name": "Keurig Dr Pepper Inc.",
+   "why": [
+    "holding",
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [
+    {
+     "source": "sec",
+     "kind": "10-Q",
+     "date": "2026-11-09",
+     "polarity": 0,
+     "text": "periodic report filed",
+     "url": "https://www.sec.gov/Archives/edgar/data/1418135/000141813526000066/kdp-20260930.htm"
+    }
+   ],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 0,
+     "sellers": 0,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "Keurig Dr Pepper, Inc $KDP Stock Holdings Lifted by Retirement Systems of Alabama",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T10:44"
+     },
+     {
+      "title": "Q3 profit rose at Keurig Dr Pepper (KDP), with a $400M investment-sale gain in the mix.",
+      "publisher": "Stock Titan",
+      "published": "2026-11-09T12:06"
+     },
+     {
+      "title": "Keurig Dr Pepper (KDP) After Strong Q3 And Alta Launch Looks Near Fair Value",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-08T08:27"
+     },
+     {
+      "title": "Keurig Dr Pepper Inc. (KDP) Stock forecasts",
+      "publisher": "Yahoo Finance Singapore",
+      "published": "2026-11-06T14:43"
+     },
+     {
+      "title": "Keurig Dr Pepper Inc. (KDP) Stock Forecasts",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-06T13:14"
+     },
+     {
+      "title": "If You Invested $300,000 in Coca-Cola, PepsiCo and Keurig Dr Pepper, Here's What They'd Pay",
+      "publisher": "24/7 Wall St.",
+      "published": "2026-11-06T12:37"
+     },
+     {
+      "title": "Keurig Dr Pepper (KDP) Stock Sees Modest Fair Value Lift As Analysts Weigh Split Plans",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-06T10:18"
+     },
+     {
+      "title": "Keurig Dr Pepper (KDP) Stock Looks Rich After A 47% Run",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-06T09:28"
+     }
+    ],
+    "short_share_latest": 0.502
    },
    "failed": [],
    "read": null
@@ -689,57 +812,55 @@
     "insiders_30d": {
      "buy_value": 0,
      "buyers": [],
-     "sell_value": 6411051,
-     "sellers": 1,
-     "discretionary_sell_value": 6411051
+     "sell_value": 8379457,
+     "sellers": 2,
+     "discretionary_sell_value": 8379457
     },
     "headlines": [
      {
-      "title": "Coca-Cola FEMSA stock: Barclays raises target to USD 125",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-11-09T12:43"
-     },
-     {
-      "title": "Coca-Cola stock: Q3 growth supports higher 2026 outlook",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-11-09T12:04"
-     },
-     {
-      "title": "Kremlin not aware of request to seize Coca-Cola HBC's Russian assets, spokesman says",
-      "publisher": "Reuters",
-      "published": "2026-11-09T11:42"
-     },
-     {
-      "title": "3 Top Dividend Stocks to Buy in November for a Lifetime of Passive Income",
+      "title": "Coca-Cola's Dividend Has Grown 64 Years in a Row. I'd Buy It in November and Never Sell.",
       "publisher": "The Motley Fool",
-      "published": "2026-11-09T11:25"
+      "published": "2026-11-10T12:55"
      },
      {
-      "title": "M Holdings Securities Inc. Acquires 48,193 Shares of Coca-Cola Company (The) $KO",
+      "title": "Coca-Cola (KO) Stock: $96.03, Up 0.38% Nov 9",
+      "publisher": "JournalArta",
+      "published": "2026-11-10T11:58"
+     },
+     {
+      "title": "Coca-Cola Company (The) $KO Stock Position Decreased by Lockheed Martin Investment Management Co.",
       "publisher": "MarketBeat",
-      "published": "2026-11-09T11:00"
+      "published": "2026-11-10T11:40"
      },
      {
-      "title": "Coca-Cola Company (The) $KO Stock Position Raised by StoneX Group Inc.",
+      "title": "Coca-Cola Company (The) $KO Stock Sold by Retirement Systems of Alabama",
       "publisher": "MarketBeat",
-      "published": "2026-11-09T10:48"
+      "published": "2026-11-10T10:44"
      },
      {
-      "title": "Coca-Cola HBC Shares Jump in Early Trade",
-      "publisher": "AskTraders.com",
-      "published": "2026-11-09T10:24"
+      "title": "Coca-Cola Europacific Partners $CCEP Shares Purchased by Ethic Inc.",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T09:46"
      },
      {
-      "title": "Coca-Cola Stock Keeps Setting Records. I'm Still Not Buying It.",
-      "publisher": "The Globe and Mail",
-      "published": "2026-11-09T09:44"
+      "title": "151,722 Coca-Cola Company (The) $KO Shares Acquired by Allspring Global Investments Holdings LLC",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T08:41"
+     },
+     {
+      "title": "PepsiCo Has Raised Its Dividend 54 Straight Years, but $1,000 in Coca-Cola Finished $1,296 Ahead Over the Past Decade",
+      "publisher": "24/7 Wall St.",
+      "published": "2026-11-09T20:05"
+     },
+     {
+      "title": "Insider Selling: Coca-Cola (NYSE:KO) EVP Sells $1,968,337.70 in Stock",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T18:11"
      }
     ],
-    "short_share_latest": 0.589
+    "short_share_latest": 0.484
    },
-   "failed": [
-    "usaspending"
-   ],
+   "failed": [],
    "read": null
   },
   {
@@ -751,25 +872,26 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [
-    {
-     "source": "sec",
-     "kind": "SCHEDULE 13G",
-     "date": "2026-11-05",
-     "polarity": 0,
-     "text": "passive 5%+ stake (13G) filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/1835830/000031506626002786/xslSCHEDULE_13G_X02/primary_doc.xml"
-    }
-   ],
+   "events": [],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
      "buyers": [],
-     "sell_value": 0,
-     "sellers": 0,
+     "sell_value": 2393458,
+     "sellers": 2,
      "discretionary_sell_value": 0
     },
     "headlines": [
+     {
+      "title": "Klaviyo (NYSE:KVYO) Stock: Insider Ed Hallen Sells 98,782 Shares",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T22:47"
+     },
+     {
+      "title": "Klaviyo (NYSE:KVYO) Director Roxanne Oulman Sells 13,989 Shares of Company Stock",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T22:15"
+     },
      {
       "title": "84,418 Shares of Klaviyo, Inc. $KVYO Bought by Vise Technologies Inc.",
       "publisher": "MarketBeat",
@@ -779,6 +901,11 @@
       "title": "Klaviyo (KVYO) Stock May Trade At A Discount As Revenue Guidance Rises",
       "publisher": "Yahoo Finance",
       "published": "2026-11-08T05:11"
+     },
+     {
+      "title": "Klaviyo, Inc. (KVYO) stock price, news, quote and history",
+      "publisher": "Yahoo Finance Australia",
+      "published": "2026-11-08T04:27"
      },
      {
       "title": "Klaviyo, Inc. 2026 Q3 - Results - Earnings Call Presentation (NYSE:KVYO) 2026-11-07",
@@ -794,24 +921,84 @@
       "title": "Klaviyo (KVYO) Stock May Be Undervalued On Raised Revenue Guidance",
       "publisher": "Simply Wall St",
       "published": "2026-11-07T17:22"
-     },
-     {
-      "title": "Klaviyo (KVYO) Could Be 21% Undervalued Following Earnings And A New Buyback",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-11-07T14:10"
-     },
-     {
-      "title": "Why Is Klaviyo (KVYO) Raising Guidance And Starting A $300 Million Buyback?",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-07T12:16"
-     },
-     {
-      "title": "Klaviyo (NYSE:KVYO) Upgraded to Buy at Wall Street Zen",
-      "publisher": "MarketBeat",
-      "published": "2026-11-07T09:49"
      }
     ],
-    "short_share_latest": 0.577
+    "short_share_latest": 0.737
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "MAR",
+   "name": "MARRIOTT INTERNATIONAL INC /MD/",
+   "why": [
+    "holding",
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [
+    {
+     "source": "finra",
+     "kind": "short_volume",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "Short volume collapsed: 35% vs 55% average (z -3.1)",
+     "url": null
+    }
+   ],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 29778725,
+     "sellers": 3,
+     "discretionary_sell_value": 29778725
+    },
+    "headlines": [
+     {
+      "title": "Marriott International, Inc. $MAR Stock Holdings Lowered by Lockheed Martin Investment Management Co.",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T11:43"
+     },
+     {
+      "title": "Marriott International, Inc. $MAR Stock Sold by Pictet Asset Management Holding SA",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T10:54"
+     },
+     {
+      "title": "Marriott International, Inc. (NASDAQ:MAR) Stock Has Consensus Target Price of $399.04 According to Brokerages",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T07:47"
+     },
+     {
+      "title": "3,536 Marriott International, Inc. $MAR Shares Bought by Pegasus Asset Management Inc.",
+      "publisher": "MarketBeat",
+      "published": "2026-11-08T10:58"
+     },
+     {
+      "title": "Marriott International, Inc. $MAR Stock: Candriam S.C.A. Trims Position",
+      "publisher": "MarketBeat",
+      "published": "2026-11-08T09:35"
+     },
+     {
+      "title": "Marriott International Stock Price Forecast. Should You Buy MAR?",
+      "publisher": "StockInvest.us",
+      "published": "2026-11-06T22:19"
+     },
+     {
+      "title": "Marriott International (NASDAQ:MAR) Stock: Insider Anthony Capuano Sells 63,355 Shares",
+      "publisher": "MarketBeat",
+      "published": "2026-11-06T20:08"
+     },
+     {
+      "title": "Insider Selling: Marriott International (NASDAQ:MAR) EVP Sells 4,969 Shares of Stock",
+      "publisher": "MarketBeat",
+      "published": "2026-11-06T18:30"
+     }
+    ],
+    "short_share_latest": 0.347
    },
    "failed": [],
    "read": null
@@ -846,6 +1033,31 @@
     },
     "headlines": [
      {
+      "title": "Altria Group stock gets higher outlook after stronger third quarter",
+      "publisher": "ad-hoc-news.de",
+      "published": "2026-11-10T11:54"
+     },
+     {
+      "title": "Altria Yields Nearly 6%. Here's Why I'd Buy It for a Lifetime of Passive Income.",
+      "publisher": "The Globe and Mail",
+      "published": "2026-11-10T08:35"
+     },
+     {
+      "title": "I'd Put $100 Into Each of These 3 Dividend Stocks and Lose the Password",
+      "publisher": "The Motley Fool",
+      "published": "2026-11-09T20:15"
+     },
+     {
+      "title": "Earnings Beat At Altria Group Stock Has Changed Its Investment Story",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-09T14:19"
+     },
+     {
+      "title": "Can Altria's 64.5% Smokeable Margin Sustain Profit Growth Ahead?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-09T12:56"
+     },
+     {
       "title": "One Regulator Could Soon Unlock Altria And Cronos\u2019 Cannabis Fortune (NYSE:MO)",
       "publisher": "Seeking Alpha",
       "published": "2026-11-09T12:30"
@@ -859,34 +1071,9 @@
       "title": "129,366 Altria Group, Inc. $MO Shares Acquired by University of Texas Texas AM Investment Management Co.",
       "publisher": "MarketBeat",
       "published": "2026-11-09T11:32"
-     },
-     {
-      "title": "Altria Group, Inc. (NYSE: MO) Stock Analysis: Second-Highest Yield in This Group at 5.50% and a P/E of 15.72",
-      "publisher": "Kalkine India",
-      "published": "2026-11-09T10:39"
-     },
-     {
-      "title": "Altria Group, Inc. $MO Stock: Brighton Jones LLC Grows Stake",
-      "publisher": "MarketBeat",
-      "published": "2026-11-09T09:09"
-     },
-     {
-      "title": "Here's How Much $10,000 in Altria Stock Pays You Each Year",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-08T19:16"
-     },
-     {
-      "title": "Price-Driven Insight from (MO) for Rule-Based Strategy",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-11-08T19:08"
-     },
-     {
-      "title": "Here's How Much $10,000 in Altria Stock Pays You Each Year",
-      "publisher": "The Motley Fool",
-      "published": "2026-11-08T18:56"
      }
     ],
-    "short_share_latest": 0.585
+    "short_share_latest": 0.417
    },
    "failed": [],
    "read": null
@@ -900,24 +1087,7 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [
-    {
-     "source": "finra",
-     "kind": "short_volume",
-     "date": "2026-11-09",
-     "polarity": 0,
-     "text": "Short volume collapsed: 25% vs 49% average (z -2.0)",
-     "url": null
-    },
-    {
-     "source": "sec",
-     "kind": "10-Q",
-     "date": "2026-11-05",
-     "polarity": 0,
-     "text": "periodic report filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/1611052/000161105226000003/pcor-20260930.htm"
-    }
-   ],
+   "events": [],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
@@ -928,29 +1098,29 @@
     },
     "headlines": [
      {
+      "title": "CenterBook Partners LP Buys 14,623 Shares of Procore Technologies, Inc. $PCOR",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T08:46"
+     },
+     {
+      "title": "Procore Technologies, Inc. (PCOR) - What Are Investment Firms Saying About This Stock?",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T07:41"
+     },
+     {
+      "title": "After selling 10,000 shares, a Procore (PCOR) officer proposes another stock sale.",
+      "publisher": "Stock Titan",
+      "published": "2026-11-09T21:39"
+     },
+     {
       "title": "(PCOR) Stock Market Analysis (PCOR:CA)",
       "publisher": "Stock Traders Daily",
       "published": "2026-11-09T05:40"
      },
      {
-      "title": "Half of Young People Say AI Would Make Construction More Appealing, but 41% Don\u2019t Know the Industry Uses It",
-      "publisher": "Stock Titan",
-      "published": "2026-11-09T05:00"
-     },
-     {
       "title": "Procore Technologies (PCOR) Just Gave Investors Something To Think About",
       "publisher": "Simply Wall St",
       "published": "2026-11-08T20:22"
-     },
-     {
-      "title": "How Earnings Beat Will Impact Procore Stock Investors",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-07T11:33"
-     },
-     {
-      "title": "Director Elisa Steele Sells 3,337 Shares of Procore Technologies Inc (PCOR)",
-      "publisher": "GuruFocus",
-      "published": "2026-11-07T07:43"
      },
      {
       "title": "Procore Technologies (NYSE:PCOR) Stock: Insider Elisa Steele Sells 3,337 Shares",
@@ -968,73 +1138,7 @@
       "published": "2026-11-07T01:47"
      }
     ],
-    "short_share_latest": 0.249
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "PM",
-   "name": "Philip Morris International Inc.",
-   "why": [
-    "holding",
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 0,
-     "sellers": 0,
-     "discretionary_sell_value": 0
-    },
-    "headlines": [
-     {
-      "title": "Most Active Stocks Today, 9 November 2026 at 3:30 PM IST",
-      "publisher": "HDFC Sky",
-      "published": "2026-11-09T10:19"
-     },
-     {
-      "title": "Philip Morris International Inc (PM) Stock Forecasts",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-09T06:44"
-     },
-     {
-      "title": "Most Active Stocks Today, 9 November 2026 at 12:00 PM IST",
-      "publisher": "HDFC Sky",
-      "published": "2026-11-09T06:44"
-     },
-     {
-      "title": "You can't make this up: At 6:00 PM ET, US stock market futur",
-      "publisher": "KuCoin",
-      "published": "2026-11-09T03:15"
-     },
-     {
-      "title": "Kemi is kicking lumps out of PM Andy Burham's sham socialist state",
-      "publisher": "The Sun",
-      "published": "2026-11-08T23:02"
-     },
-     {
-      "title": "Philip Morris International Inc. $PM Stock Bought by Alps Advisors Inc.",
-      "publisher": "MarketBeat",
-      "published": "2026-11-08T08:18"
-     },
-     {
-      "title": "Stock, commodity markets to open for Diwali Muhurat trading today",
-      "publisher": "BusinessLine",
-      "published": "2026-11-08T04:49"
-     },
-     {
-      "title": "Philip Morris International Inc. (PM) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-07T10:49"
-     }
-    ],
-    "short_share_latest": 0.223
+    "short_share_latest": 0.53
    },
    "failed": [],
    "read": null
@@ -1059,9 +1163,34 @@
     },
     "headlines": [
      {
-      "title": "J. M. Smucker (NYSE:SJM) Hits A Yearly High As Dividend Appeal Grows",
-      "publisher": "Kalkine Media",
-      "published": "2026-11-08T15:55"
+      "title": "The J. M. Smucker Company (SJM) Latest Stock News & Headlines - Yahoo Finance",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-09T23:29"
+     },
+     {
+      "title": "The J. M. Smucker Company (SJM) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-09T23:11"
+     },
+     {
+      "title": "The J. M. Smucker Company (SJM) latest stock news and headlines \u2013 Yahoo Finance",
+      "publisher": "Yahoo Finance Singapore",
+      "published": "2026-11-09T23:09"
+     },
+     {
+      "title": "J.M. Smucker Co. stock rises Monday, still underperforms market",
+      "publisher": "MarketWatch",
+      "published": "2026-11-09T22:14"
+     },
+     {
+      "title": "Do These 3 Checks Before Buying The J. M. Smucker Company (NYSE:SJM) For Its Upcoming Dividend",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-09T14:45"
+     },
+     {
+      "title": "Trading the Move, Not the Narrative: (SJM) Edition",
+      "publisher": "Stock Traders Daily",
+      "published": "2026-11-09T12:30"
      },
      {
       "title": "The J. M. Smucker Company (NYSE:SJM) Stock Has Consensus Price Target of $136.00",
@@ -1072,38 +1201,11 @@
       "title": "10,660 The J. M. Smucker Company $SJM Shares Sold by Sumitomo Mitsui Trust Group Inc.",
       "publisher": "MarketBeat",
       "published": "2026-11-07T17:11"
-     },
-     {
-      "title": "5 Stocks Yielding 5X the Nasdaq-100 to Buy in November",
-      "publisher": "The Motley Fool",
-      "published": "2026-11-07T15:45"
-     },
-     {
-      "title": "Has J. M. Smucker (SJM) Become Overvalued After Its 35% Rise?",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-07T02:29"
-     },
-     {
-      "title": "J.M. Smucker Co. stock underperforms Friday when compared to competitors",
-      "publisher": "MarketWatch",
-      "published": "2026-11-06T22:12"
-     },
-     {
-      "title": "JM Smucker Co (JM2.HM) stock price, news, quote and history",
-      "publisher": "Yahoo Finance UK",
-      "published": "2026-11-06T17:58"
-     },
-     {
-      "title": "JM Smucker Co (JM2.HM) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-06T17:36"
      }
     ],
-    "short_share_latest": 0.726
+    "short_share_latest": 0.589
    },
-   "failed": [
-    "usaspending"
-   ],
+   "failed": [],
    "read": null
   },
   {
@@ -1115,41 +1217,36 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [
-    {
-     "source": "finra",
-     "kind": "short_volume",
-     "date": "2026-11-09",
-     "polarity": 0,
-     "text": "Short volume collapsed: 37% vs 67% average (z -2.6)",
-     "url": null
-    },
-    {
-     "source": "sec",
-     "kind": "10-Q",
-     "date": "2026-11-05",
-     "polarity": 0,
-     "text": "periodic report filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/887359/000162828026070657/vcel-20260930.htm"
-    },
-    {
-     "source": "sec",
-     "kind": "8-K",
-     "date": "2026-11-05",
-     "polarity": 0,
-     "text": "8-K: results announced",
-     "url": "https://www.sec.gov/Archives/edgar/data/887359/000162828026070622/vcel-20261105.htm"
-    }
-   ],
+   "events": [],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
      "buyers": [],
-     "sell_value": 1128325,
-     "sellers": 3,
+     "sell_value": 3802344,
+     "sellers": 4,
      "discretionary_sell_value": 0
     },
     "headlines": [
+     {
+      "title": "Vericel Stock: 6 Straight Green Days, Up 45%",
+      "publisher": "Trefis",
+      "published": "2026-11-10T07:22"
+     },
+     {
+      "title": "Automatic trading-plan sales total 50,000 shares for Vericel (VCEL) CFO.",
+      "publisher": "Stock Titan",
+      "published": "2026-11-09T21:05"
+     },
+     {
+      "title": "VCEL Maintained by Truist Securities -- Price Target Raised to $65",
+      "publisher": "GuruFocus",
+      "published": "2026-11-09T15:10"
+     },
+     {
+      "title": "HC Wainwright and Truist raise Vericel price targets, maintain Buy",
+      "publisher": "scanx.trade",
+      "published": "2026-11-09T14:52"
+     },
      {
       "title": "Earnings Beat: Vericel Corporation Just Beat Analyst Forecasts, And Analysts Have Been Updating Their Models",
       "publisher": "Simply Wall St",
@@ -1166,32 +1263,12 @@
       "published": "2026-11-07T00:18"
      },
      {
-      "title": "December 2, 2025 is the updated plan adoption date for a proposed $1.53M officer sale at Vericel (VCEL).",
-      "publisher": "Stock Titan",
-      "published": "2026-11-06T21:49"
-     },
-     {
-      "title": "An officer proposes a Vericel (VCEL) share sale, with $1.14M in sales also reported.",
-      "publisher": "Stock Titan",
-      "published": "2026-11-06T21:22"
-     },
-     {
-      "title": "Vericel Q3 Earnings Call Highlights",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-06T20:14"
-     },
-     {
-      "title": "Truist raises Vericel stock price target on MACI growth momentum",
-      "publisher": "Investing.com",
-      "published": "2026-11-06T19:20"
-     },
-     {
-      "title": "VCEL Maintains Rating by HC Wainwright & Co. -- Price Target Rai",
-      "publisher": "GuruFocus",
-      "published": "2026-11-06T14:24"
+      "title": "Vericel's Jonathan Siegal Executes 1,500 Stock Options, Sells Shares at $52.90 Under 10b5-1 Plan",
+      "publisher": "Kalkine Media",
+      "published": "2026-11-06T21:51"
      }
     ],
-    "short_share_latest": 0.373
+    "short_share_latest": 0.398
    },
    "failed": [],
    "read": null
@@ -1205,24 +1282,7 @@
    "score": 0,
    "osint_positive": false,
    "osint_negative": false,
-   "events": [
-    {
-     "source": "sec",
-     "kind": "10-Q",
-     "date": "2026-11-05",
-     "polarity": 0,
-     "text": "periodic report filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/1445305/000144530526000085/wk-20260930.htm"
-    },
-    {
-     "source": "sec",
-     "kind": "8-K",
-     "date": "2026-11-05",
-     "polarity": 0,
-     "text": "8-K: results announced",
-     "url": "https://www.sec.gov/Archives/edgar/data/1445305/000144530526000084/wk-20261105.htm"
-    }
-   ],
+   "events": [],
    "detail": {
     "insiders_30d": {
      "buy_value": 0,
@@ -1232,6 +1292,21 @@
      "discretionary_sell_value": 0
     },
     "headlines": [
+     {
+      "title": "Four Workiva executives are scheduled to speak at conferences through December.",
+      "publisher": "Stock Titan",
+      "published": "2026-11-09T21:25"
+     },
+     {
+      "title": "WK Q3 2026 deep dive: cautious guidance and AI expansion amid moderating tailwinds",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-09T10:21"
+     },
+     {
+      "title": "Baroda BNP P Low Dur Dir Wk IDCW-R (0P0001B9R4.BO) Stock Forum & Discussion - Yahoo Finance",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-09T09:13"
+     },
      {
       "title": "PVR Inox rises 3% to 52-wk high as Ramayana's box-office biz tops \u20b9500 cr",
       "publisher": "Business Standard",
@@ -1256,31 +1331,16 @@
       "title": "Workiva Stock Q3 Revenue Grows But Guidance Softens",
       "publisher": "Yahoo Finance",
       "published": "2026-11-07T10:15"
-     },
-     {
-      "title": "Workiva Stock Faces Strong Sales Growth After EPS Miss And Lower Guidance",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-07T08:36"
-     },
-     {
-      "title": "Alamar Capital Management LLC Purchases 14,220 Shares of Workiva Inc. $WK",
-      "publisher": "MarketBeat",
-      "published": "2026-11-07T08:29"
-     },
-     {
-      "title": "Workiva Inc. 2026 Q3 - Results - Earnings Call Presentation (NYSE:WK) 2026-11-07",
-      "publisher": "Seeking Alpha",
-      "published": "2026-11-07T08:01"
      }
     ],
-    "short_share_latest": 0.67
+    "short_share_latest": 0.735
    },
    "failed": [],
    "read": null
   },
   {
-   "symbol": "SWK",
-   "name": "STANLEY BLACK & DECKER, INC.",
+   "symbol": "EL",
+   "name": "ESTEE LAUDER COMPANIES INC",
    "why": [
     "candidate"
    ],
@@ -1290,11 +1350,85 @@
    "events": [
     {
      "source": "sec",
-     "kind": "S-3ASR",
-     "date": "2026-11-05",
+     "kind": "insider",
+     "date": "2026-11-09",
      "polarity": -1,
-     "text": "securities offering (possible dilution)",
-     "url": "https://www.sec.gov/Archives/edgar/data/93556/000119312526447952/d185076ds3asr.htm"
+     "text": "Heavy discretionary insider selling: $12,612,191 outside 10b5-1 plans, 4 seller(s)",
+     "url": null
+    }
+   ],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 12612191,
+     "sellers": 4,
+     "discretionary_sell_value": 12612191
+    },
+    "headlines": [
+     {
+      "title": "46,325 The Estee Lauder Companies Inc. $EL Shares Bought by Pictet Asset Management Holding SA",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T10:44"
+     },
+     {
+      "title": "The Est\u00e9e Lauder Companies Inc. (EL) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-10T00:50"
+     },
+     {
+      "title": "El Paso (NYSEAMERICAN:EP) Stock: Insider Evolution Master Fund Energy Acquires 9,417 Shares",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T00:40"
+     },
+     {
+      "title": "Insider Buying: El Paso (NYSEAMERICAN:EP) Major Shareholder Buys 48,025 Shares of Stock",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T00:16"
+     },
+     {
+      "title": "Estee Lauder Companies (NYSE:EL) Director Sells 70,000 Shares of Stock",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T18:11"
+     },
+     {
+      "title": "22,385 The Estee Lauder Companies Inc. $EL Shares Purchased by Candriam S.C.A.",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T09:54"
+     },
+     {
+      "title": "El Pollo Loco Holdings, Inc. (LOCO) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-08T10:39"
+     },
+     {
+      "title": "The Estee Lauder Companies Inc. $EL Shares Bought by CenterBook Partners LP",
+      "publisher": "MarketBeat",
+      "published": "2026-11-08T09:07"
+     }
+    ],
+    "short_share_latest": 0.296
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "BBY",
+   "name": "BEST BUY CO INC",
+   "why": [
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [
+    {
+     "source": "news",
+     "kind": "velocity",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "News surge: 14 headlines in 24h vs 4.2/day, 6 outlets, tone +0.14",
+     "url": null
     }
    ],
    "detail": {
@@ -1306,6 +1440,350 @@
      "discretionary_sell_value": 0
     },
     "headlines": [
+     {
+      "title": "What Moved Best Buy Stock?",
+      "publisher": "Trefis",
+      "published": "2026-11-10T12:28"
+     },
+     {
+      "title": "Best Buy (BBY) Stock Looks Cheap Based On Future Cash Flow",
+      "publisher": "Yahoo Finance Singapore",
+      "published": "2026-11-10T11:10"
+     },
+     {
+      "title": "Kornitzer Capital Management Inc. KS Makes New $1.14 Million Investment in Best Buy Co., Inc. $BBY",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T10:38"
+     },
+     {
+      "title": "Fulcrum Asset Management LLP Buys 40,105 Shares of Best Buy Co., Inc. $BBY",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T09:14"
+     },
+     {
+      "title": "Best Buy Co., Inc. $BBY Shares Newly Bought by Ashton Thomas Private Wealth LLC",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T08:40"
+     },
+     {
+      "title": "245,700 Shares in Best Buy Co., Inc. $BBY Purchased by AEGON ASSET MANAGEMENT UK Plc",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T08:17"
+     },
+     {
+      "title": "Best Buy Stock Gets Fresh Analyst Support as Value Appeal Draws Investor Interest",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-10T07:06"
+     },
+     {
+      "title": "Why Best Buy Stock Is Drawing Interest After Value And Dividend Strength",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-10T06:26"
+     }
+    ],
+    "short_share_latest": 0.764
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "CNC",
+   "name": "CENTENE CORP",
+   "why": [
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 0,
+     "sellers": 0,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "Did Raised Guidance Just Shift Centene (CNC) Investment Narrative?",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-09T17:26"
+     },
+     {
+      "title": "Fund Update: 77,571 CENTENE (CNC) shares added to HANTZ FINANCIAL SERVICES, INC. portfolio",
+      "publisher": "Quiver Quantitative",
+      "published": "2026-11-09T16:43"
+     },
+     {
+      "title": "Centene Corporation (CNC) stock price, news, quote and history",
+      "publisher": "Yahoo Finance Singapore",
+      "published": "2026-11-09T14:25"
+     },
+     {
+      "title": "Centene Corporation (CNC) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-09T13:40"
+     },
+     {
+      "title": "Canada Nickel Extends Auramet Loan Repayment Date",
+      "publisher": "TipRanks",
+      "published": "2026-11-09T12:07"
+     },
+     {
+      "title": "CNC261113P00070000 Interactive Stock Chart | CNC Nov 2026 70.000 put Stock",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-09T04:16"
+     },
+     {
+      "title": "The Technical Signals Behind (CNC) That Institutions Follow",
+      "publisher": "Stock Traders Daily",
+      "published": "2026-11-09T00:36"
+     },
+     {
+      "title": "3 Indian Growth Stocks With At Least 28% Revenue Growth",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-09T00:24"
+     }
+    ],
+    "short_share_latest": 0.392
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "CPAY",
+   "name": "CORPAY, INC.",
+   "why": [
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 0,
+     "sellers": 0,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "Corpay, Inc $CPAY Stock Holdings Increased by Brighton Jones LLC",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T09:46"
+     },
+     {
+      "title": "Corpay, Inc. (CPAY) Stock Price, News, Quote & History",
+      "publisher": "Yahoo! Finance Canada",
+      "published": "2026-11-09T16:50"
+     },
+     {
+      "title": "CPAY Maintained by Cantor Fitzgerald -- Price Target Raised to $550",
+      "publisher": "GuruFocus",
+      "published": "2026-11-09T14:19"
+     },
+     {
+      "title": "Corpay (NYSE:CPAY) Stock Price Target Raised at Cantor Fitzgerald",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T13:53"
+     },
+     {
+      "title": "Earnings Update: Corpay, Inc. (NYSE:CPAY) Just Reported Its Third-Quarter Results And Analysts Are Updating Their Forecasts",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-09T12:02"
+     },
+     {
+      "title": "Corpay: I Got The Rally Right, But For The Wrong Catalyst (NYSE:CPAY)",
+      "publisher": "Seeking Alpha",
+      "published": "2026-11-09T10:02"
+     },
+     {
+      "title": "Alps Advisors Inc. Acquires 13,303 Shares of Corpay, Inc $CPAY",
+      "publisher": "MarketBeat",
+      "published": "2026-11-09T08:13"
+     },
+     {
+      "title": "Corpay, Inc. (CPAY) stock price, news, quote and history",
+      "publisher": "Yahoo Finance Singapore",
+      "published": "2026-11-08T23:46"
+     }
+    ],
+    "short_share_latest": 0.568
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "HAS",
+   "name": "HASBRO, INC.",
+   "why": [
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [
+    {
+     "source": "news",
+     "kind": "velocity",
+     "date": "2026-11-10",
+     "polarity": 0,
+     "text": "News surge: 36 headlines in 24h vs 10.7/day, 14 outlets, tone -0.15",
+     "url": null
+    }
+   ],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 864084,
+     "sellers": 1,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "Sandisk Stock Has Collapsed by 65%, but It's Still Undergoing an 8-for-1 Stock Split on Nov. 19. Here's Why I'm Still Not Buying Shares Amidst This Nasdaq Market Slump.",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-10T12:40"
+     },
+     {
+      "title": "Cisco Just Jumped 5% Into an Earnings Report That Has Moved the Stock 8% or More Three Times Running",
+      "publisher": "24/7 Wall St.",
+      "published": "2026-11-10T12:24"
+     },
+     {
+      "title": "Nvidia stock now has a P/E ratio of just 11. Is it time to consider buying aggressively?",
+      "publisher": "Yahoo Finance UK",
+      "published": "2026-11-10T11:45"
+     },
+     {
+      "title": "What's Wrong With Kimberly-Clark Stock?",
+      "publisher": "The Motley Fool",
+      "published": "2026-11-10T11:15"
+     },
+     {
+      "title": "Gilead Sciences Stock Hits a New All-Time High: Is it Still a Good Buy?",
+      "publisher": "Yahoo Finance",
+      "published": "2026-11-10T11:09"
+     },
+     {
+      "title": "Worried About What the Midterm Elections Mean for the Stock Market? History Has a Clear and Reassuring Answer.",
+      "publisher": "The Motley Fool",
+      "published": "2026-11-10T11:00"
+     },
+     {
+      "title": "Gilead Sciences Stock Hits a New All-Time High: Is it Still a Good Buy?",
+      "publisher": "The Motley Fool",
+      "published": "2026-11-10T10:49"
+     },
+     {
+      "title": "What Has Changed Behind The Rise In ATI Stock?",
+      "publisher": "Trefis",
+      "published": "2026-11-10T08:53"
+     }
+    ],
+    "short_share_latest": 0.401
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "MRK",
+   "name": "Merck & Co., Inc.",
+   "why": [
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 0,
+     "sellers": 0,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "Can You Still Buy Merck Stock Today?",
+      "publisher": "Trefis",
+      "published": "2026-11-10T12:29"
+     },
+     {
+      "title": "Merck & Co., Inc. $MRK Stock Bought by Red Cedar Investment Management LLC",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T11:43"
+     },
+     {
+      "title": "27,441 Merck & Co., Inc. $MRK Shares Purchased by Vestor Capital LLC",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T11:43"
+     },
+     {
+      "title": "884,504 Merck & Co., Inc. $MRK Shares Sold by Beutel Goodman & Co Ltd.",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T09:44"
+     },
+     {
+      "title": "Merck & Co., Inc. $MRK Stock Purchased by Fulcrum Asset Management LLP",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T09:44"
+     },
+     {
+      "title": "37,653 Merck & Co., Inc. $MRK Shares Sold by AEGON ASSET MANAGEMENT UK Plc",
+      "publisher": "MarketBeat",
+      "published": "2026-11-10T08:46"
+     },
+     {
+      "title": "Merck & Co. Inc. stock rises Monday, still underperforms market",
+      "publisher": "MarketWatch",
+      "published": "2026-11-09T21:32"
+     },
+     {
+      "title": "Merck (MRK) Reports Promising Phase 2b Trial Results for Efinope",
+      "publisher": "GuruFocus",
+      "published": "2026-11-09T19:18"
+     }
+    ],
+    "short_share_latest": 0.394
+   },
+   "failed": [],
+   "read": null
+  },
+  {
+   "symbol": "SWK",
+   "name": "STANLEY BLACK & DECKER, INC.",
+   "why": [
+    "candidate"
+   ],
+   "score": 0,
+   "osint_positive": false,
+   "osint_negative": false,
+   "events": [],
+   "detail": {
+    "insiders_30d": {
+     "buy_value": 0,
+     "buyers": [],
+     "sell_value": 0,
+     "sellers": 0,
+     "discretionary_sell_value": 0
+    },
+    "headlines": [
+     {
+      "title": "The Call Stanley Black & Decker Bulls Got Right Before A 81% Rally",
+      "publisher": "Simply Wall St",
+      "published": "2026-11-10T06:21"
+     },
+     {
+      "title": "Why (SWK) Price Action Is Critical for Tactical Trading",
+      "publisher": "Stock Traders Daily",
+      "published": "2026-11-09T13:34"
+     },
      {
       "title": "The top 5 analyst questions from Stanley Black & Decker\u2019s Q3 2026 earnings call",
       "publisher": "Yahoo Finance",
@@ -1332,430 +1810,12 @@
       "published": "2026-11-06T23:46"
      },
      {
-      "title": "Stanley Black & Decker, Inc. (SWK) Stock Price, News, Quote & History",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-06T17:38"
-     },
-     {
       "title": "Top Stanley Black & Decker (SWK) Competitors 2026",
       "publisher": "MarketBeat",
       "published": "2026-11-06T08:00"
-     },
-     {
-      "title": "SWK Maintained by Wells Fargo -- Price Target Raised to $115",
-      "publisher": "GuruFocus",
-      "published": "2026-11-05T18:22"
      }
     ],
-    "short_share_latest": 0.547
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "CPAY",
-   "name": "CORPAY, INC.",
-   "why": [
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [
-    {
-     "source": "sec",
-     "kind": "10-Q",
-     "date": "2026-11-05",
-     "polarity": 0,
-     "text": "periodic report filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/1175454/000117545426000059/cpay-20260930.htm"
-    }
-   ],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 0,
-     "sellers": 0,
-     "discretionary_sell_value": 0
-    },
-    "headlines": [
-     {
-      "title": "Earnings Update: Corpay, Inc. (NYSE:CPAY) Just Reported Its Third-Quarter Results And Analysts Are Updating Their Forecasts",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-09T12:02"
-     },
-     {
-      "title": "Corpay: I Got The Rally Right, But For The Wrong Catalyst (NYSE:CPAY)",
-      "publisher": "Seeking Alpha",
-      "published": "2026-11-09T10:02"
-     },
-     {
-      "title": "Alps Advisors Inc. Acquires 13,303 Shares of Corpay, Inc $CPAY",
-      "publisher": "MarketBeat",
-      "published": "2026-11-09T08:13"
-     },
-     {
-      "title": "Corpay (CPAY) Raised Full Year Guidance, Is The Stock Fully Priced?",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-08T11:31"
-     },
-     {
-      "title": "Corpay, Inc $CPAY Shares Purchased by CenterBook Partners LP",
-      "publisher": "MarketBeat",
-      "published": "2026-11-08T09:07"
-     },
-     {
-      "title": "Corpay (CPAY) Stock Price, Chart & Analysis",
-      "publisher": "www.debelegger.nl",
-      "published": "2026-11-07T21:19"
-     },
-     {
-      "title": "2,233 Shares of Corpay, Inc $CPAY Bought by MGO One Seven LLC",
-      "publisher": "MarketBeat",
-      "published": "2026-11-07T16:09"
-     },
-     {
-      "title": "Guidance Raise And Momentum \u2013 Corpay Stock Has Both",
-      "publisher": "Trefis",
-      "published": "2026-11-07T10:07"
-     }
-    ],
-    "short_share_latest": 0.556
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "HAS",
-   "name": "HASBRO, INC.",
-   "why": [
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 864084,
-     "sellers": 1,
-     "discretionary_sell_value": 0
-    },
-    "headlines": [
-     {
-      "title": "Nvidia Stock Shock Has Investors Rethinking AI Infrastructure ETFs",
-      "publisher": "Yahoo! Finance Canada",
-      "published": "2026-11-09T12:11"
-     },
-     {
-      "title": "Jensen Huang just handed Wall Street its first $4.5 trillion CEO scandal",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-09T09:48"
-     },
-     {
-      "title": "Nvidia stock falls 5% as scrutiny turns to Jensen Huang\u2019s relationship with alleged Chinese spy",
-      "publisher": "CNBC",
-      "published": "2026-11-09T09:05"
-     },
-     {
-      "title": "Market Vulnerability Has Been Exposed for Good",
-      "publisher": "Bloomberg.com",
-      "published": "2026-11-09T07:15"
-     },
-     {
-      "title": "AMC Global Media: The Cheap Stock Still Has A Cash Problem (NASDAQ:AMCX)",
-      "publisher": "Seeking Alpha",
-      "published": "2026-11-09T04:58"
-     },
-     {
-      "title": "Nvidia Board Launches Probe In CEO Jensen Huang Spying Case. The Stock Is Falling.",
-      "publisher": "Investor's Business Daily",
-      "published": "2026-11-09T03:52"
-     },
-     {
-      "title": "3 Super Growth Stocks to Buy Hand Over Fist If the Stock Market Crashes",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-09T02:20"
-     },
-     {
-      "title": "Could Buying Palantir Stock Today Set You Up for Life?",
-      "publisher": "The Motley Fool",
-      "published": "2026-11-09T00:00"
-     }
-    ],
-    "short_share_latest": 0.66
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "KDP",
-   "name": "Keurig Dr Pepper Inc.",
-   "why": [
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [
-    {
-     "source": "sec",
-     "kind": "10-Q",
-     "date": "2026-11-09",
-     "polarity": 0,
-     "text": "periodic report filed",
-     "url": "https://www.sec.gov/Archives/edgar/data/1418135/000141813526000066/kdp-20260930.htm"
-    }
-   ],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 0,
-     "sellers": 0,
-     "discretionary_sell_value": 0
-    },
-    "headlines": [
-     {
-      "title": "Q3 profit rose at Keurig Dr Pepper (KDP), with a $400M investment-sale gain in the mix.",
-      "publisher": "Stock Titan",
-      "published": "2026-11-09T12:06"
-     },
-     {
-      "title": "Keurig Dr Pepper, Inc $KDP Stake Lessened by Allspring Global Investments Holdings LLC",
-      "publisher": "MarketBeat",
-      "published": "2026-11-09T08:39"
-     },
-     {
-      "title": "Keurig Dr Pepper (KDP) After Strong Q3 And Alta Launch Looks Near Fair Value",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-08T08:27"
-     },
-     {
-      "title": "Keurig Dr Pepper Inc. (KDP) Stock forecasts",
-      "publisher": "Yahoo Finance Singapore",
-      "published": "2026-11-06T14:43"
-     },
-     {
-      "title": "Keurig Dr Pepper Inc. (KDP) Stock Forecasts",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-06T13:14"
-     },
-     {
-      "title": "Keurig Dr Pepper (KDP) Stock Sees Modest Fair Value Lift As Analysts Weigh Split Plans",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-06T10:18"
-     },
-     {
-      "title": "Keurig Dr Pepper (KDP) Stock Looks Rich After A 47% Run",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-06T09:28"
-     },
-     {
-      "title": "Keurig Dr Pepper (Nasdaq:KDP) - Stock Analysis",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-06T00:38"
-     }
-    ],
-    "short_share_latest": 0.499
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "MAR",
-   "name": "MARRIOTT INTERNATIONAL INC /MD/",
-   "why": [
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 29778725,
-     "sellers": 3,
-     "discretionary_sell_value": 29778725
-    },
-    "headlines": [
-     {
-      "title": "Marriott International, Inc. $MAR Stock Sold by Pictet Asset Management Holding SA",
-      "publisher": "MarketBeat",
-      "published": "2026-11-09T10:54"
-     },
-     {
-      "title": "Marriott International, Inc. (NASDAQ:MAR) Stock Has Consensus Target Price of $399.04 According to Brokerages",
-      "publisher": "MarketBeat",
-      "published": "2026-11-09T07:47"
-     },
-     {
-      "title": "Behavioral Patterns of MAR and Institutional Flows",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-11-08T18:56"
-     },
-     {
-      "title": "3,536 Marriott International, Inc. $MAR Shares Bought by Pegasus Asset Management Inc.",
-      "publisher": "MarketBeat",
-      "published": "2026-11-08T10:58"
-     },
-     {
-      "title": "Marriott International, Inc. $MAR Stock: Candriam S.C.A. Trims Position",
-      "publisher": "MarketBeat",
-      "published": "2026-11-08T09:35"
-     },
-     {
-      "title": "META_TITLE_QUOTE",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-07T06:38"
-     },
-     {
-      "title": "Marriott International Stock Price Forecast. Should You Buy MAR?",
-      "publisher": "StockInvest.us",
-      "published": "2026-11-06T22:19"
-     },
-     {
-      "title": "Marriott International (NASDAQ:MAR) Stock: Insider Anthony Capuano Sells 63,355 Shares",
-      "publisher": "MarketBeat",
-      "published": "2026-11-06T20:08"
-     }
-    ],
-    "short_share_latest": 0.491
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "MRK",
-   "name": "Merck & Co., Inc.",
-   "why": [
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 0,
-     "sellers": 0,
-     "discretionary_sell_value": 0
-    },
-    "headlines": [
-     {
-      "title": "Merck & Co., Inc. $MRK Stock: Bryn Mawr Trust Advisors LLC Trims Stake",
-      "publisher": "MarketBeat",
-      "published": "2026-11-09T09:26"
-     },
-     {
-      "title": "7,868 Merck & Co., Inc. $MRK Shares Sold by Carnegie Lake Advisors LLC",
-      "publisher": "MarketBeat",
-      "published": "2026-11-09T09:08"
-     },
-     {
-      "title": "Did Cancer Trial Wins Just Shift Merck (MRK) Stock Investment Narrative?",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-09T04:45"
-     },
-     {
-      "title": "How (MRK) Movements Inform Risk Allocation Models",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-11-08T19:12"
-     },
-     {
-      "title": "Merck & Co., Inc. (MRK): A Top 10 Healthcare Stock to Buy Following the 2026 Democratic Midterm Sweep",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-08T15:34"
-     },
-     {
-      "title": "Merck & Co., Inc. $MRK Shares Sold by Kornitzer Capital Management Inc. KS",
-      "publisher": "MarketBeat",
-      "published": "2026-11-08T12:03"
-     },
-     {
-      "title": "Merck & Co., Inc. $MRK Stock Position Raised by Parallel Advisors LLC",
-      "publisher": "MarketBeat",
-      "published": "2026-11-07T17:34"
-     },
-     {
-      "title": "Merck & Co., Inc. $MRK Stock: Calamos Advisors LLC Raises Holdings",
-      "publisher": "MarketBeat",
-      "published": "2026-11-07T16:09"
-     }
-    ],
-    "short_share_latest": 0.425
-   },
-   "failed": [],
-   "read": null
-  },
-  {
-   "symbol": "TXN",
-   "name": "TEXAS INSTRUMENTS INC",
-   "why": [
-    "candidate"
-   ],
-   "score": 0,
-   "osint_positive": false,
-   "osint_negative": false,
-   "events": [],
-   "detail": {
-    "insiders_30d": {
-     "buy_value": 0,
-     "buyers": [],
-     "sell_value": 6384512,
-     "sellers": 4,
-     "discretionary_sell_value": 6384512
-    },
-    "headlines": [
-     {
-      "title": "ETFs Are Buying Texas Instruments (TXN) on Nov. 5",
-      "publisher": "Yahoo Finance",
-      "published": "2026-11-09T11:01"
-     },
-     {
-      "title": "What Could Send Texas Instruments Stock Soaring?",
-      "publisher": "Trefis",
-      "published": "2026-11-09T05:01"
-     },
-     {
-      "title": "Precision Trading with Texas Instruments Incorporated (TXN) Risk Zones",
-      "publisher": "Stock Traders Daily",
-      "published": "2026-11-08T20:08"
-     },
-     {
-      "title": "Missed Texas Instruments' 77% Gain? Here's What Investors Got Right",
-      "publisher": "Simply Wall St",
-      "published": "2026-11-08T17:28"
-     },
-     {
-      "title": "Texas Instruments stock targets connected factories with new chips",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-11-07T10:26"
-     },
-     {
-      "title": "Texas Instruments Stock Price Forecast. Should You Buy TXN?",
-      "publisher": "StockInvest.us",
-      "published": "2026-11-06T22:18"
-     },
-     {
-      "title": "Texas Instruments stock slips 2.80% as factory tools near launch",
-      "publisher": "ad-hoc-news.de",
-      "published": "2026-11-06T16:14"
-     },
-     {
-      "title": "Is Wall Street Bullish or Bearish on Texas Instruments Stock?",
-      "publisher": "Barchart.com",
-      "published": "2026-11-06T11:08"
-     }
-    ],
-    "short_share_latest": 0.46
+    "short_share_latest": 0.503
    },
    "failed": [],
    "read": null

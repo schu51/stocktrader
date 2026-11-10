@@ -245,3 +245,13 @@ def test_a_start_that_github_refuses_is_tried_again_unless_it_went_through(monke
     assert dispatch(["daily_trade.yml"], since, "main", already_started=lambda wf, s: False,
                     start=lambda wf, ref: tries.append(wf) or False) == 1
     assert len(tries) == 3
+
+
+def test_overnight_shadow_runs_after_the_close_on_weekdays_only():
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from dispatcher import due_workflows
+    et = ZoneInfo("America/New_York")
+    assert "overnight_shadow.yml" in due_workflows(datetime(2026, 11, 10, 16, 31, tzinfo=et))
+    assert "overnight_shadow.yml" not in due_workflows(datetime(2026, 11, 10, 16, 1, tzinfo=et))
+    assert "overnight_shadow.yml" not in due_workflows(datetime(2026, 11, 14, 16, 31, tzinfo=et))

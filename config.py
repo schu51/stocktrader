@@ -361,6 +361,12 @@ class EntryRules:
     rsi_overbought_block:       float = 78.0
     # Earnings blackout: skip entry if earnings within this many days
     earnings_blackout_days:     int   = 5
+    # Market filter (2026-11-10): no new buys unless SPY closes at least this
+    # fraction above its 50-day average. Momentum buys in a flat or falling market
+    # were the live losses of Jun-Nov 2026; the three-year backtest with this
+    # filter and the 5% break-even stop: Jun-Nov 2026 -3.2% vs -10.3% for the old
+    # rules, worst month -6.2% vs -11.7% (research/backtest_summary_r11_s2be5.json).
+    min_spy_above_50ma:         float = 0.02
     # Sector concentration: max allocation to any single sector
     max_sector_allocation:      float = 0.35  # 35% max in one sector
 

@@ -58,7 +58,9 @@ def test_no_exit_holds():
 
 def test_stop_only_ratchets_up_through_the_tiers():
     from backtest import next_stop
-    assert next_stop(_pos(), close=110.0) == 92.0                 # <25% gain: 8% below entry
+    assert next_stop(_pos(), close=104.0) == 92.0                 # <5% gain: 8% below entry
+    assert next_stop(_pos(), close=110.0) == 100.5                # 5%+: break-even + 0.5%
+    assert next_stop(_pos(stop=100.5), close=103.0) == 100.5      # falls back under 5%: stop stays
     assert next_stop(_pos(), close=130.0) == 101.5                # 25%+: break-even + 1.5%
     assert next_stop(_pos(stop=101.5), close=160.0) == 144.0      # 50%+: 10% trail
     assert next_stop(_pos(stop=144.0), close=150.0) == 144.0      # price falls back: stop never lowers
@@ -160,12 +162,13 @@ def test_adx_separates_trend_from_chop():
     assert adx(chop + 1, chop - 1, chop) < 20
 
 
-def test_atr_stop_replaces_the_fixed_entry_stop_only_below_25pct_gain():
+def test_atr_stop_replaces_the_fixed_entry_stop_only_below_the_breakeven_tier():
     from backtest import next_stop
     pos = _pos(stop=88.0, stop_dist=0.12)                 # volatile stock: 12% entry stop
-    assert next_stop(pos, close=110.0) == 88.0            # stays at the ATR stop, not 92
+    assert next_stop(pos, close=104.0) == 88.0            # stays at the ATR stop, not 92
+    assert next_stop(pos, close=110.0) == 100.5           # 5%+: break-even replaces it
     assert next_stop(pos, close=130.0) == 101.5           # 25%+ tier unchanged
-    assert next_stop(_pos(), close=110.0) == 92.0         # no variant: fixed 8%
+    assert next_stop(_pos(), close=104.0) == 92.0         # no variant: fixed 8%
 
 
 def test_stop_distance_is_clamped():
@@ -275,3 +278,31 @@ def test_a_limit_on_open_order_does_not_fill_on_a_gap_above_its_limit():
     assert opening_fill(open_px=102.5, prev_close=100.0, limit=0.02) is None
     assert opening_fill(open_px=105.0, prev_close=100.0, limit=0.0) == 105.0      # no limit: any gap fills
     assert opening_fill(open_px=105.0, prev_close=float("nan"), limit=0.02) == 105.0
+
+
+def test_stop_ladder_breakeven_and_trail_variants_only_ratchet_up():
+    from backtest import next_stop
+    pos = _pos(stop=92.0)
+    assert next_stop(pos, 104.0) == 92.0                                  # live rule: break-even from +5%
+    assert next_stop(pos, 104.0, breakeven_at=3) == 100.5                 # an earlier break-even variant
+    assert next_stop(pos, 120.0, breakeven_at=8, trail_at=15, trail_pct=0.10) == 108.0
+    assert next_stop(_pos(stop=108.0), 104.0, breakeven_at=8, trail_at=15, trail_pct=0.10) == 108.0
+
+
+def test_earnings_within_is_inclusive():
+    from backtest import earnings_within
+    e = [date(2026, 11, 5)]
+    assert earnings_within(e, date(2026, 11, 1), date(2026, 11, 5))
+    assert not earnings_within(e, date(2026, 11, 6), date(2026, 11, 9))
+    assert not earnings_within(None, date(2026, 11, 1), date(2026, 11, 9))
+
+
+def test_stop_slippage_measures_fills_below_the_planned_stop():
+    from backtest import stop_slippage
+    t = pd.DataFrame([
+        {"exit_reason": "STOP", "exit_price": 92.0, "stop_at_exit": 92.0, "pnl_pct": -8.0},
+        {"exit_reason": "STOP", "exit_price": 60.0, "stop_at_exit": 92.0, "pnl_pct": -40.0},
+        {"exit_reason": "PRICE_BELOW_50MA", "exit_price": 95.0, "stop_at_exit": 92.0, "pnl_pct": -5.0},
+    ])
+    s = stop_slippage(t)
+    assert s["n"] == 2 and s["share_gapped_over_2pct"] == 0.5 and round(s["worst_slip_pct"], 1) == -34.8

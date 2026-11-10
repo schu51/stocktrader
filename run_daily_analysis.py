@@ -45,7 +45,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from decision_engine import DecisionEngine
 from config import DecisionConfig, ConvictionTier
-from exit_logic import (clear_stops_for_sale, drop_sleeve_candidates, find_untradable, is_long_equity,
+from exit_logic import (BREAKEVEN_AT_PCT, calculate_stop_price, clear_stops_for_sale,
+                        drop_sleeve_candidates, find_untradable, is_long_equity,
                         read_sleeve_symbols, reconcile_phantom_trades, record_broker_exits, replace_stop,
                         safe_to_reconcile, sleeve_cash_reserved, sleeve_holdings, split_positions, without_sleeve)
 from models import PortfolioState, ResearchScore
@@ -210,6 +211,26 @@ def classify_order_for_reconcile(status: str, filled_qty=_NOT_GIVEN) -> str:
         except (TypeError, ValueError):
             return "keep"
     return "keep"
+
+
+def market_allows_buys(screen: Dict, today: str, need: float) -> tuple:
+    """
+    (allowed, reason). New buys only while SPY is at least `need` (a fraction)
+    above its 50-day average, read from today's screen (screener.json). A missing,
+    stale or unreadable screen means the market trend is unknown: no buys.
+    """
+    if not need:
+        return True, "market filter off"
+    if (screen.get("generated_at") or "")[:10] != today:
+        return False, "no screen from today, market trend unknown"
+    try:
+        regime = screen.get("market_regime") or {}
+        room = float(regime["spy_price"]) / float(regime["spy_50ma"]) - 1
+    except Exception as e:
+        return False, f"market trend unreadable ({e})"
+    if room < need:
+        return False, f"SPY {room:+.1%} vs its 50-day average (needs {need:+.0%})"
+    return True, f"SPY {room:+.1%} vs its 50-day average"
 
 
 class DailyRunner:
@@ -625,6 +646,16 @@ class DailyRunner:
             candidates, sleeve_skipped = drop_sleeve_candidates(candidates, getattr(self, "_sleeve", set()))
             for sym in sleeve_skipped:
                 holds.append({"symbol": sym, "reason": "held by the diamond sleeve"})
+
+            # Market filter (config.EntryRules.min_spy_above_50ma): no new buys unless
+            # SPY is clearly above its 50-day average. Unknown market = no buys.
+            market_ok, market_reason = self._market_allows_buys()
+            results["market_filter"] = {"allowed": market_ok, "reason": market_reason}
+            if not market_ok:
+                logger.info(f"Market filter: no new buys today — {market_reason}")
+                for candidate in candidates:
+                    holds.append({"symbol": candidate["symbol"], "reason": f"market filter: {market_reason}"})
+                candidates = []
 
             for candidate in candidates:
                 symbol = candidate["symbol"]
@@ -1719,17 +1750,10 @@ class DailyRunner:
                         continue
 
             # ── Trailing stop update ─────────────────────────────────────────
-            # Tightened tiers: protect gains more aggressively as they compound.
-            if pnl_pct >= 25:
-                if pnl_pct >= 100:
-                    new_stop = round(current * 0.92, 2)   # 8% trail (tightened from 10%)
-                    tier     = "100%+ gain → 8% trail"
-                elif pnl_pct >= 50:
-                    new_stop = round(current * 0.90, 2)   # 10% trail (tightened from 15%)
-                    tier     = "50%+ gain → 10% trail"
-                else:
-                    new_stop = round(avg_cost * 1.015, 2) # break-even + 1.5%
-                    tier     = "25%+ gain → break-even stop"
+            # The shared tiers (exit_logic.calculate_stop_price): break-even from +5%,
+            # break-even + 1.5% from +25%, then trailing from +50%.
+            if pnl_pct >= BREAKEVEN_AT_PCT:
+                new_stop, tier = calculate_stop_price(current, pnl_pct, avg_cost)
 
                 stop_action = {
                     "symbol":    sym,
@@ -1749,16 +1773,23 @@ class DailyRunner:
                         old_stops = [float(o["stop_price"]) for o in open_orders
                                      if o.get("side") == "sell" and o.get("type") in ("stop", "stop_limit")
                                      and o.get("stop_price") not in (None, "")]
-                        moved = replace_stop(self.broker, sym, qty, new_stop,
-                                             previous=max(old_stops) if old_stops else None)
-                        stop_action["executed"] = moved["status"] == "replaced"
-                        stop_action["order_id"] = moved.get("order_id")
-                        if moved["status"] != "replaced":
-                            stop_action["error"] = moved["error"]
-                        logger.info(
-                            f"STOP UPDATED: {sym} → ${new_stop:.2f} ({tier}) | "
-                            f"P&L: {pnl_pct:+.1f}%"
-                        )
+                        if not getattr(self.broker, "last_orders_ok", True):
+                            stop_action["error"] = "could not read open orders — stop left as it is"
+                        elif old_stops and new_stop <= max(old_stops):
+                            # A stop is never lowered: a holding that fell back from the 50%
+                            # tier keeps its higher trailing stop (2026-11-10)
+                            stop_action["skipped"] = f"existing stop ${max(old_stops):.2f} is already higher"
+                        else:
+                            moved = replace_stop(self.broker, sym, qty, new_stop,
+                                                 previous=max(old_stops) if old_stops else None)
+                            stop_action["executed"] = moved["status"] == "replaced"
+                            stop_action["order_id"] = moved.get("order_id")
+                            if moved["status"] != "replaced":
+                                stop_action["error"] = moved["error"]
+                            logger.info(
+                                f"STOP UPDATED: {sym} → ${new_stop:.2f} ({tier}) | "
+                                f"P&L: {pnl_pct:+.1f}%"
+                            )
                     except Exception as e:
                         stop_action["error"] = str(e)
                 else:
@@ -2171,6 +2202,15 @@ class DailyRunner:
             "total_attempted": len(opportunities),
             "details": execution_results
         }
+
+    def _market_allows_buys(self) -> tuple:
+        """(allowed, reason) for new buys today: see market_allows_buys."""
+        try:
+            data = json.loads((Path(__file__).parent / "docs" / "data" / "screener.json").read_text())
+        except Exception as e:
+            data = {"error": str(e)}
+        return market_allows_buys(data, datetime.now().strftime("%Y-%m-%d"),
+                                  self.engine.config.entry_rules.min_spy_above_50ma)
 
     def _market_above_50ma(self) -> Optional[bool]:
         """True/False from today's screener snapshot; None if it is missing, stale or unreadable."""

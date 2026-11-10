@@ -291,7 +291,7 @@ def _update_stop_if_better(broker, pos: Dict):
     Place or raise the trailing stop for a profitable position.
     Never moves a stop downward — only updates if the new stop would be higher.
     """
-    from exit_logic import calculate_stop_price
+    from exit_logic import BREAKEVEN_AT_PCT, calculate_stop_price
 
     sym      = pos["symbol"]
     current  = float(pos["current_price"])
@@ -299,8 +299,8 @@ def _update_stop_if_better(broker, pos: Dict):
     pnl_pct  = float(pos["unrealized_plpc"]) * 100
     qty      = int(pos["qty"])
 
-    # Only manage trailing stops for positions up 25%+
-    if pnl_pct < 25:
+    # Only raise stops for positions at least at the break-even tier (5%+)
+    if pnl_pct < BREAKEVEN_AT_PCT:
         return
 
     new_stop, tier = calculate_stop_price(current, pnl_pct, avg_cost)

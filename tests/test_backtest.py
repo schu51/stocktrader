@@ -58,7 +58,9 @@ def test_no_exit_holds():
 
 def test_stop_only_ratchets_up_through_the_tiers():
     from backtest import next_stop
-    assert next_stop(_pos(), close=110.0) == 92.0                 # <25% gain: 8% below entry
+    assert next_stop(_pos(), close=104.0) == 92.0                 # <5% gain: 8% below entry
+    assert next_stop(_pos(), close=110.0) == 100.5                # 5%+: break-even + 0.5%
+    assert next_stop(_pos(stop=100.5), close=103.0) == 100.5      # falls back under 5%: stop stays
     assert next_stop(_pos(), close=130.0) == 101.5                # 25%+: break-even + 1.5%
     assert next_stop(_pos(stop=101.5), close=160.0) == 144.0      # 50%+: 10% trail
     assert next_stop(_pos(stop=144.0), close=150.0) == 144.0      # price falls back: stop never lowers
@@ -160,12 +162,13 @@ def test_adx_separates_trend_from_chop():
     assert adx(chop + 1, chop - 1, chop) < 20
 
 
-def test_atr_stop_replaces_the_fixed_entry_stop_only_below_25pct_gain():
+def test_atr_stop_replaces_the_fixed_entry_stop_only_below_the_breakeven_tier():
     from backtest import next_stop
     pos = _pos(stop=88.0, stop_dist=0.12)                 # volatile stock: 12% entry stop
-    assert next_stop(pos, close=110.0) == 88.0            # stays at the ATR stop, not 92
+    assert next_stop(pos, close=104.0) == 88.0            # stays at the ATR stop, not 92
+    assert next_stop(pos, close=110.0) == 100.5           # 5%+: break-even replaces it
     assert next_stop(pos, close=130.0) == 101.5           # 25%+ tier unchanged
-    assert next_stop(_pos(), close=110.0) == 92.0         # no variant: fixed 8%
+    assert next_stop(_pos(), close=104.0) == 92.0         # no variant: fixed 8%
 
 
 def test_stop_distance_is_clamped():
@@ -277,12 +280,11 @@ def test_a_limit_on_open_order_does_not_fill_on_a_gap_above_its_limit():
     assert opening_fill(open_px=105.0, prev_close=float("nan"), limit=0.02) == 105.0
 
 
-def test_stop_ladder_breakeven_and_trail_are_off_by_default_and_only_ratchet_up():
+def test_stop_ladder_breakeven_and_trail_variants_only_ratchet_up():
     from backtest import next_stop
     pos = _pos(stop=92.0)
-    assert next_stop(pos, 110.0) == 92.0                                  # live rule: no change below +25%
-    assert next_stop(pos, 110.0, breakeven_at=8) == 100.5                 # +10% close -> cost + 0.5%
-    assert next_stop(pos, 107.0, breakeven_at=8) == 92.0                  # not there yet
+    assert next_stop(pos, 104.0) == 92.0                                  # live rule: break-even from +5%
+    assert next_stop(pos, 104.0, breakeven_at=3) == 100.5                 # an earlier break-even variant
     assert next_stop(pos, 120.0, breakeven_at=8, trail_at=15, trail_pct=0.10) == 108.0
     assert next_stop(_pos(stop=108.0), 104.0, breakeven_at=8, trail_at=15, trail_pct=0.10) == 108.0
 

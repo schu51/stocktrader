@@ -8,7 +8,8 @@ Trailing stop tiers (mirror run_daily_analysis.py _evaluate_exits):
   pnl >= 100%  →  8% trail below current price
   pnl >= 50%   → 10% trail below current price
   pnl >= 25%   →  break-even + 1.5%
-  pnl < 25%    →  8% below avg_cost (default protection for entries)
+  pnl >= 5%    →  break-even + 0.5% (BREAKEVEN_AT_PCT, 2026-11-10)
+  pnl < 5%     →  8% below avg_cost (default protection for entries)
 
 Exit triggers:
   PRICE_BELOW_50MA  →  current price crossed below 50-day MA
@@ -344,6 +345,15 @@ def split_positions(positions: list) -> Tuple[list, list]:
     return longs, others
 
 
+# Once a position is this far in profit, its stop rises to cost + 0.5%: a trade
+# that has worked can no longer turn into a full stop-loss. Three-year backtest
+# (research/backtest_summary_r11_s2be5.json, with the market filter in
+# config.EntryRules.min_spy_above_50ma): win rate 38% -> 60%, profit factor
+# 1.92 -> 2.45, max drawdown -15.6% -> -13.4%, annual return 36.5% -> 31.9%.
+BREAKEVEN_AT_PCT = 5.0
+BREAKEVEN_STOP = 1.005
+
+
 def calculate_stop_price(
     current: float,
     pnl_pct: float,
@@ -366,6 +376,8 @@ def calculate_stop_price(
         return round(current * 0.90, 2), "50%+ gain → 10% trail"
     elif pnl_pct >= 25:
         return round(avg_cost * 1.015, 2), "25%+ gain → break-even+1.5%"
+    elif pnl_pct >= BREAKEVEN_AT_PCT:
+        return round(avg_cost * BREAKEVEN_STOP, 2), f"{BREAKEVEN_AT_PCT:.0f}%+ gain → break-even+0.5%"
     else:
         return round(avg_cost * 0.92, 2), "default → 8% below entry"
 

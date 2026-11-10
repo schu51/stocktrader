@@ -1,12 +1,6 @@
-# round 2 (round 1 results: research/backtest_summary_r11_*.json)
-# tag | backtest.py flags on top of the live rules
-s2be5        | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.02 --breakeven-at 5
-s2be5bo      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.02 --breakeven-at 5 --earnings-blackout 5
-s2be5k15     | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.02 --breakeven-at 5 --earnings-blackout 5 --exit-before-earnings --earnings-keep-gain 15
-s1be5bo      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.01 --breakeven-at 5 --earnings-blackout 5
-s3be5bo      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.03 --breakeven-at 5 --earnings-blackout 5
-s0be5bo      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.001 --breakeven-at 5 --earnings-blackout 5
-s2be5tr20    | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.02 --breakeven-at 5 --earnings-blackout 5 --trail-at 20 --trail-pct 0.12
-s2be5risk    | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.02 --breakeven-at 5 --earnings-blackout 5 --risk-per-trade 0.004
-s2be3bo      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.02 --breakeven-at 3 --earnings-blackout 5
-s2be5vol     | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.02 --breakeven-at 5 --earnings-blackout 5 --max-atr-pct 0.04
+# round 3: verify the live code changes reproduce s2be5 with no extra flags,
+# and robustness: the same rules from other start dates / with harsher fills
+newlive      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10
+newlive_off  | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0
+newlive_adv  | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --fill adverse
+newlive_slip | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --slippage-bps 25

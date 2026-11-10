@@ -40,7 +40,8 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 
-from exit_logic import calculate_stop_price, check_exit_triggers
+from exit_logic import BREAKEVEN_AT_PCT, calculate_stop_price, check_exit_triggers
+from config import EntryRules
 from technical_signals import (adx, atr_pct, breakout, ema_reclaim, macd_cross_up,  # noqa: F401
                                stop_distance)
 
@@ -209,7 +210,7 @@ def next_stop(pos: Dict, close: float, breakeven_at: float = 0.0, trail_at: floa
     """
     pnl_pct = (close / pos["avg_cost"] - 1) * 100
     tier_stop, _ = calculate_stop_price(close, pnl_pct, pos["avg_cost"])
-    if pnl_pct < 25 and pos.get("stop_dist"):
+    if pnl_pct < BREAKEVEN_AT_PCT and pos.get("stop_dist"):
         # ATR-stop variant: the entry stop is volatility-sized instead of a fixed 8%
         tier_stop = round(pos["avg_cost"] * (1 - pos["stop_dist"]), 2)
     if breakeven_at and pnl_pct >= breakeven_at:
@@ -854,8 +855,9 @@ def main() -> int:
     parser.add_argument("--min-adx", type=float, default=0.0, help="experimental: require ADX(14) at least this")
     parser.add_argument("--min-above-50ma", type=float, default=0.0,
                         help="experimental: require the close to be at least this fraction above its 50-day average")
-    parser.add_argument("--min-spy-above-50ma", type=float, default=0.0,
-                        help="experimental: no new entries unless SPY closes at least this fraction above its 50-day average")
+    parser.add_argument("--min-spy-above-50ma", type=float, default=EntryRules().min_spy_above_50ma,
+                        help="no new entries unless SPY closes at least this fraction above its 50-day average "
+                             "(default: the live rule, config.EntryRules; 0 = off)")
     parser.add_argument("--exit-line", choices=["sma50", "ema50", "gauss50", "gauss100"], default="sma50",
                         help="experimental: line the close is tested against for the trend-broken exit")
     parser.add_argument("--exit-confirm", type=int, default=1,

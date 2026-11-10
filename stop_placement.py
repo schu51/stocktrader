@@ -63,10 +63,10 @@ def calculate_stop_for_position(pos: Dict, trade: Optional[Dict] = None) -> Tupl
     Calculate stop price for a position using trailing stop tiers.
 
     If the position's trade-log entry is in the ATR arm of the stop experiment
-    (experiments.py), its entry stop — the under-25%-gain tier — is its own
+    (experiments.py), its entry stop — the under-5%-gain tier — is its own
     volatility-sized distance instead of the fixed 8%. Higher tiers are unchanged.
     """
-    from exit_logic import SLEEVE_STOP, calculate_stop_price
+    from exit_logic import BREAKEVEN_AT_PCT, SLEEVE_STOP, calculate_stop_price
     current  = float(pos["current_price"])
     avg_cost = float(pos["avg_entry_price"])
     pnl_pct  = float(pos["unrealized_plpc"]) * 100   # Alpaca returns decimal
@@ -85,7 +85,7 @@ def calculate_stop_for_position(pos: Dict, trade: Optional[Dict] = None) -> Tupl
         dist = float(trade["stop_dist"]) if trade and trade.get("stop_arm") == "atr" else None
     except (TypeError, ValueError, KeyError):
         dist = None
-    if dist is not None and pnl_pct < 25 and STOP_DIST_BOUNDS[0] <= dist <= STOP_DIST_BOUNDS[1]:
+    if dist is not None and pnl_pct < BREAKEVEN_AT_PCT and STOP_DIST_BOUNDS[0] <= dist <= STOP_DIST_BOUNDS[1]:
         return round(avg_cost * (1 - dist), 2), f"ATR stop → {dist:.1%} below entry"
     return calculate_stop_price(current, pnl_pct, avg_cost)
 

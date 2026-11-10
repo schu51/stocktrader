@@ -3,11 +3,11 @@
   "run_id": "20261110_150053",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 106930.98,
+    "portfolio_value": 106869.22,
     "cash": 38342.57,
     "buying_power": 36425.4415,
-    "long_market_value": 68588.41,
-    "unrealized_pnl": 3020.04
+    "long_market_value": 68526.65,
+    "unrealized_pnl": 2958.28
   },
   "positions": [
     {
@@ -235,10 +235,10 @@
       "symbol": "KDP",
       "qty": 103,
       "avg_cost": 36.66,
-      "current_price": 37.74,
-      "market_value": 3887.66,
-      "unrealized_pnl": 111.68,
-      "unrealized_pnl_pct": 2.96,
+      "current_price": 37.12,
+      "market_value": 3823.36,
+      "unrealized_pnl": 47.38,
+      "unrealized_pnl_pct": 1.26,
       "stop_loss": 33.95,
       "side": "long",
       "asset_class": "us_equity",
@@ -257,10 +257,10 @@
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 96.95,
-      "market_value": 3684.1,
-      "unrealized_pnl": 121.62,
-      "unrealized_pnl_pct": 3.41,
+      "current_price": 96.94,
+      "market_value": 3683.72,
+      "unrealized_pnl": 121.24,
+      "unrealized_pnl_pct": 3.4,
       "stop_loss": 89.28,
       "side": "long",
       "asset_class": "us_equity",
@@ -323,10 +323,10 @@
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 76.34,
-      "market_value": 3740.66,
-      "unrealized_pnl": -4.8,
-      "unrealized_pnl_pct": -0.13,
+      "current_price": 76.4,
+      "market_value": 3743.58,
+      "unrealized_pnl": -1.88,
+      "unrealized_pnl_pct": -0.05,
       "stop_loss": 71.93,
       "side": "long",
       "asset_class": "us_equity",
@@ -661,7 +661,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-11-10T22:30:53.793762+00:00",
+  "sync_at": "2026-11-10T23:00:44.424802+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -726,6 +726,10 @@
       {
         "time": "22:30",
         "value": 106930.98
+      },
+      {
+        "time": "23:00",
+        "value": 106869.22
       }
     ]
   }

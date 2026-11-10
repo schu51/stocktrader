@@ -1,0 +1,286 @@
+{
+  "generated_at": "2026-11-10T22:40:06.530251",
+  "start": "2023-11-10",
+  "end": "2026-11-10",
+  "rules": {
+    "w_rs": 0.8,
+    "w_thesis": 0.2,
+    "atr_stop": 2.5,
+    "min_above_50ma": 0.06,
+    "stale_days": 60,
+    "stale_gain": 10.0,
+    "min_spy_above_50ma": 0.02,
+    "earnings_blackout": 5
+  },
+  "universe": 520,
+  "caveat": "today's index members replayed back: absolute returns are flattered; compare the legs",
+  "night": {
+    "sessions": 689,
+    "mean_bps": 17.18,
+    "median_bps": 18.66,
+    "t": 3.71,
+    "share_positive": 0.589,
+    "total_return": 2.1013,
+    "cagr": 0.4612,
+    "max_drawdown": -0.1374,
+    "worst_sessions_bps": [
+      -697.0,
+      -632.6,
+      -404.3,
+      -392.7,
+      -381.0
+    ],
+    "by_year": {
+      "2023": -0.0037,
+      "2024": 0.6962,
+      "2025": 0.4855,
+      "2026": 0.2355
+    }
+  },
+  "day": {
+    "sessions": 692,
+    "mean_bps": 3.14,
+    "median_bps": 16.24,
+    "t": 0.52,
+    "share_positive": 0.548,
+    "total_return": 0.1383,
+    "cagr": 0.0443,
+    "max_drawdown": -0.2582,
+    "worst_sessions_bps": [
+      -665.7,
+      -579.9,
+      -567.8,
+      -566.6,
+      -560.5
+    ],
+    "by_year": {
+      "2023": 0.1497,
+      "2024": 0.0483,
+      "2025": -0.0744,
+      "2026": 0.0203
+    }
+  },
+  "night_ex_earnings": {
+    "sessions": 689,
+    "mean_bps": 14.2,
+    "median_bps": 17.71,
+    "t": 3.23,
+    "share_positive": 0.591,
+    "total_return": 1.5388,
+    "cagr": 0.3664,
+    "max_drawdown": -0.1347,
+    "worst_sessions_bps": [
+      -697.0,
+      -632.6,
+      -379.2,
+      -360.6,
+      -347.3
+    ],
+    "by_year": {
+      "2023": -0.0013,
+      "2024": 0.5846,
+      "2025": 0.3787,
+      "2026": 0.1636
+    }
+  },
+  "overnight_only": {
+    "0bps_per_side": {
+      "all_nights": {
+        "sessions": 689,
+        "mean_bps": 17.18,
+        "median_bps": 18.66,
+        "t": 3.71,
+        "share_positive": 0.589,
+        "total_return": 2.1013,
+        "cagr": 0.4612,
+        "max_drawdown": -0.1374,
+        "worst_sessions_bps": [
+          -697.0,
+          -632.6,
+          -404.3,
+          -392.7,
+          -381.0
+        ],
+        "by_year": {
+          "2023": -0.0037,
+          "2024": 0.6962,
+          "2025": 0.4855,
+          "2026": 0.2355
+        }
+      },
+      "ex_earnings": {
+        "sessions": 689,
+        "mean_bps": 14.2,
+        "median_bps": 17.71,
+        "t": 3.23,
+        "share_positive": 0.591,
+        "total_return": 1.5388,
+        "cagr": 0.3664,
+        "max_drawdown": -0.1347,
+        "worst_sessions_bps": [
+          -697.0,
+          -632.6,
+          -379.2,
+          -360.6,
+          -347.3
+        ],
+        "by_year": {
+          "2023": -0.0013,
+          "2024": 0.5846,
+          "2025": 0.3787,
+          "2026": 0.1636
+        }
+      }
+    },
+    "2.5bps_per_side": {
+      "all_nights": {
+        "sessions": 689,
+        "mean_bps": 12.18,
+        "median_bps": 13.66,
+        "t": 2.63,
+        "share_positive": 0.569,
+        "total_return": 1.1985,
+        "cagr": 0.3021,
+        "max_drawdown": -0.1767,
+        "worst_sessions_bps": [
+          -702.0,
+          -637.6,
+          -409.3,
+          -397.7,
+          -386.0
+        ],
+        "by_year": {
+          "2023": -0.0186,
+          "2024": 0.4957,
+          "2025": 0.3389,
+          "2026": 0.1185
+        }
+      },
+      "ex_earnings": {
+        "sessions": 689,
+        "mean_bps": 9.2,
+        "median_bps": 12.71,
+        "t": 2.09,
+        "share_positive": 0.567,
+        "total_return": 0.7996,
+        "cagr": 0.2176,
+        "max_drawdown": -0.1751,
+        "worst_sessions_bps": [
+          -702.0,
+          -637.6,
+          -384.2,
+          -365.6,
+          -352.3
+        ],
+        "by_year": {
+          "2023": -0.0162,
+          "2024": 0.3973,
+          "2025": 0.2427,
+          "2026": 0.0534
+        }
+      }
+    },
+    "5bps_per_side": {
+      "all_nights": {
+        "sessions": 689,
+        "mean_bps": 7.18,
+        "median_bps": 8.66,
+        "t": 1.55,
+        "share_positive": 0.537,
+        "total_return": 0.5582,
+        "cagr": 0.1602,
+        "max_drawdown": -0.2142,
+        "worst_sessions_bps": [
+          -707.0,
+          -642.6,
+          -414.3,
+          -402.7,
+          -391.0
+        ],
+        "by_year": {
+          "2023": -0.0332,
+          "2024": 0.3188,
+          "2025": 0.2068,
+          "2026": 0.0126
+        }
+      },
+      "ex_earnings": {
+        "sessions": 689,
+        "mean_bps": 4.2,
+        "median_bps": 7.71,
+        "t": 0.96,
+        "share_positive": 0.541,
+        "total_return": 0.2754,
+        "cagr": 0.0849,
+        "max_drawdown": -0.2142,
+        "worst_sessions_bps": [
+          -707.0,
+          -642.6,
+          -389.2,
+          -370.6,
+          -357.3
+        ],
+        "by_year": {
+          "2023": -0.0308,
+          "2024": 0.232,
+          "2025": 0.1201,
+          "2026": -0.0464
+        }
+      }
+    },
+    "10bps_per_side": {
+      "all_nights": {
+        "sessions": 689,
+        "mean_bps": -2.82,
+        "median_bps": -1.34,
+        "t": -0.61,
+        "share_positive": 0.498,
+        "total_return": -0.2176,
+        "cagr": -0.0789,
+        "max_drawdown": -0.2842,
+        "worst_sessions_bps": [
+          -717.0,
+          -652.6,
+          -424.3,
+          -412.7,
+          -401.0
+        ],
+        "by_year": {
+          "2023": -0.0618,
+          "2024": 0.0252,
+          "2025": -0.0197,
+          "2026": -0.1702
+        }
+      },
+      "ex_earnings": {
+        "sessions": 689,
+        "mean_bps": -5.8,
+        "median_bps": -2.29,
+        "t": -1.32,
+        "share_positive": 0.498,
+        "total_return": -0.3597,
+        "cagr": -0.1388,
+        "max_drawdown": -0.3553,
+        "worst_sessions_bps": [
+          -717.0,
+          -652.6,
+          -399.2,
+          -380.6,
+          -367.3
+        ],
+        "by_year": {
+          "2023": -0.0595,
+          "2024": -0.0424,
+          "2025": -0.0903,
+          "2026": -0.2186
+        }
+      }
+    }
+  },
+  "night_legs_near_a_report": 0.0261,
+  "pnl_usd": {
+    "night": 126473.6,
+    "night_near_report": 23957.86,
+    "day": -1584.36
+  }
+}

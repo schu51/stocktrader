@@ -1,0 +1,67 @@
+name: Overnight Split
+
+# On demand: replays the live rules over three years and splits the return
+# into nights (close -> open) and days (open -> close), with an overnight-only
+# variant net of auction costs (overnight_split.py). Research only: places
+# no orders, changes no rules. Writes research/overnight_split.json.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      issues: write          # to open a failure issue
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Shares the daily eval's cached earnings dates
+      - uses: actions/cache@v4
+        with:
+          path: trading_data/backtest_cache/earnings_dates.json
+          key: earnings-dates-${{ github.run_id }}
+          restore-keys: earnings-dates-
+
+      - name: Split
+        run: python overnight_split.py
+
+      - name: Commit result
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add research/overnight_split.json
+          git diff --staged --quiet && { echo "Nothing to commit"; exit 0; }
+          git commit -m "Overnight split [skip ci]"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="🚨 ${GITHUB_WORKFLOW} failed $(date -u +%Y-%m-%d)"
+          existing=$(gh issue list --state open --search "\"${title}\" in:title" --json number --jq '.[0].number // empty' || true)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Failed again. Run log: ${RUN_URL}"
+          else
+            gh issue create --title "$title" --body "The ${GITHUB_WORKFLOW} workflow failed. Run log: ${RUN_URL}"
+          fi

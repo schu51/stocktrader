@@ -15,83 +15,85 @@
    "trades": 0
   },
   "account": {
-   "value": 106397.21,
-   "as_of": "2026-11-09",
-   "drawdown_from_peak": -0.115,
-   "return": -0.0766,
-   "spy_return": -0.0556
+   "value": 106045.55,
+   "as_of": "2026-11-10",
+   "drawdown_from_peak": -0.1179,
+   "return": -0.0797,
+   "spy_return": -0.0368
   },
   "stop_fills": {
    "n": 10,
-   "mean_slip_pct": -4.41,
-   "worst_slip_pct": -32.99,
-   "gapped_over_2pct": 5,
+   "mean_slip_pct": -3.55,
+   "median_slip_pct": -0.57,
+   "worst_slip_pct": -24.6,
+   "gapped_over_2pct": 2,
+   "recorded": 0,
    "worst": "VCYT"
   },
   "tracking": {
-   "live_return": -0.0766,
-   "backtest_return": -0.0581,
-   "gap": -0.0185
+   "live_return": -0.0797,
+   "backtest_return": -0.0564,
+   "gap": -0.0233
   },
   "alerts": [
-   "Account is 11.5% below its peak",
-   "Stop exits filled 4.4% below their stop on average (last 10)"
+   "Account is 11.8% below its peak",
+   "Stop exits filled 3.5% below their stop on average (last 10)"
   ],
   "champion": {
    "trades": 660,
    "win_rate": 0.5969696969696969,
-   "profit_factor": 2.3179892337804886,
-   "cagr": 0.3096,
+   "profit_factor": 2.317989091364496,
+   "cagr": 0.3101,
    "max_drawdown": -0.1307,
-   "recent_return": -0.0129
+   "recent_return": -0.011
   },
   "challengers": {
    "be3": {
     "win_rate": 0.6541554959785523,
-    "profit_factor": 2.183454465905133,
-    "cagr": 0.2735,
+    "profit_factor": 2.183454127876469,
+    "cagr": 0.2737,
     "max_drawdown": -0.132,
-    "recent_return": 0.029,
+    "recent_return": 0.0302,
     "promotable_today": false
    },
    "trail20": {
     "win_rate": 0.6017191977077364,
-    "profit_factor": 2.1771950010987964,
-    "cagr": 0.2927,
+    "profit_factor": 2.1771947570427126,
+    "cagr": 0.2932,
     "max_drawdown": -0.1281,
-    "recent_return": 0.0216,
+    "recent_return": 0.0235,
     "promotable_today": false
    },
    "spy3": {
     "win_rate": 0.6551020408163265,
-    "profit_factor": 2.8402274401433156,
-    "cagr": 0.2973,
+    "profit_factor": 2.8402277514833796,
+    "cagr": 0.297,
     "max_drawdown": -0.1012,
     "recent_return": -0.0263,
     "promotable_today": false
    },
    "spy1": {
     "win_rate": 0.5834411384217335,
-    "profit_factor": 2.134111692711934,
-    "cagr": 0.3211,
+    "profit_factor": 2.134112422289274,
+    "cagr": 0.3214,
     "max_drawdown": -0.1454,
-    "recent_return": -0.0753,
+    "recent_return": -0.0739,
     "promotable_today": false
    },
    "earn_exit15": {
     "win_rate": 0.6096904441453567,
-    "profit_factor": 2.099134438042774,
-    "cagr": 0.268,
+    "profit_factor": 2.0991347600883734,
+    "cagr": 0.2682,
     "max_drawdown": -0.1276,
-    "recent_return": 0.02,
+    "recent_return": 0.0211,
     "promotable_today": false
    },
    "risk40": {
     "win_rate": 0.6,
-    "profit_factor": 2.303797843799647,
-    "cagr": 0.2872,
+    "profit_factor": 2.3037985857510397,
+    "cagr": 0.2877,
     "max_drawdown": -0.134,
-    "recent_return": 0.0028,
+    "recent_return": 0.0047,
     "promotable_today": false
    }
   }

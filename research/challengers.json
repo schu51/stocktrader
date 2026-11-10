@@ -16,7 +16,11 @@
     {"name": "earn_exit15", "change": {"exit_before_earnings": true, "earnings_keep_gain": 15.0},
      "why": "sell before earnings unless up 15%: fewer gaps through stops", "added": "2026-11-10"},
     {"name": "risk40", "change": {"risk_per_trade": 0.004},
-     "why": "cap what one stop-out can cost at 0.4% of the account", "added": "2026-11-10"}
+     "why": "cap what one stop-out can cost at 0.4% of the account", "added": "2026-11-10"},
+    {"name": "pullback", "change": {"pullback_entry": true},
+     "why": "short-horizon entry: names within 6% of a rising 50-day average may buy on a 21-day EMA reclaim (live: stretched names lagged closer ones, -4.4% over 10 sessions, t -0.7)", "added": "2026-11-10"},
+    {"name": "grace5", "change": {"exit_grace_days": 5},
+     "why": "no 50-day exit in the first 5 sessions, stop and hard loss still apply (live: 10 of 15 post-Oct-6 50-day exits came within 3 days; TXN, ADI, HUM, IQV recovered)", "added": "2026-11-10"}
   ],
-  "max_challengers": 6
+  "max_challengers": 8
 }

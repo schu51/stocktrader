@@ -1,0 +1,15 @@
+# tag | backtest.py flags (the live rules = "live")
+live        | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10
+earn_bo5    | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --earnings-blackout 5
+earn_exit   | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --earnings-blackout 5 --exit-before-earnings
+earn_keep15 | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --earnings-blackout 5 --exit-before-earnings --earnings-keep-gain 15
+be8         | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --breakeven-at 8
+be8_tr15    | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --breakeven-at 8 --trail-at 15 --trail-pct 0.10
+be10_tr20   | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --breakeven-at 10 --trail-at 20 --trail-pct 0.12
+be5         | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --breakeven-at 5
+spy2        | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --min-spy-above-50ma 0.02
+stale30     | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 30 --stale-gain 5
+comboA      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --earnings-blackout 5 --exit-before-earnings --breakeven-at 8 --trail-at 15 --trail-pct 0.10
+comboB      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --earnings-blackout 5 --exit-before-earnings --earnings-keep-gain 15 --breakeven-at 8 --trail-at 15 --trail-pct 0.10
+comboC      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 60 --stale-gain 10 --earnings-blackout 5 --exit-before-earnings --breakeven-at 8 --trail-at 15 --trail-pct 0.10 --min-spy-above-50ma 0.02
+comboD      | --w-rs 0.8 --w-thesis 0.2 --atr-stop 2.5 --min-above-50ma 0.06 --stale-days 30 --stale-gain 5 --earnings-blackout 5 --exit-before-earnings --breakeven-at 8 --trail-at 15 --trail-pct 0.10 --risk-per-trade 0.004

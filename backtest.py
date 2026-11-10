@@ -195,14 +195,33 @@ def trend_line(closes: np.ndarray, kind: str = "sma50") -> np.ndarray:
     return out
 
 
-def next_stop(pos: Dict, close: float) -> float:
-    """Stop for the next session: the live tier for this gain, never lower than the current stop."""
+def next_stop(pos: Dict, close: float, breakeven_at: float = 0.0, trail_at: float = 0.0,
+              trail_pct: float = 0.0) -> float:
+    """
+    Stop for the next session: the live tier for this gain, never lower than the current stop.
+
+    Experimental ladder (off by default), filling the gap between the entry stop
+    and the live 25%-gain break-even tier:
+      breakeven_at  once a close is this many percent above cost, the stop rises
+                    to cost + 0.5% (a trade that was working can no longer become a loss)
+      trail_at / trail_pct  once a close is trail_at percent above cost, the stop
+                    trails the close by trail_pct (a fraction, 0.10 = 10%)
+    """
     pnl_pct = (close / pos["avg_cost"] - 1) * 100
     tier_stop, _ = calculate_stop_price(close, pnl_pct, pos["avg_cost"])
     if pnl_pct < 25 and pos.get("stop_dist"):
         # ATR-stop variant: the entry stop is volatility-sized instead of a fixed 8%
         tier_stop = round(pos["avg_cost"] * (1 - pos["stop_dist"]), 2)
+    if breakeven_at and pnl_pct >= breakeven_at:
+        tier_stop = max(tier_stop, round(pos["avg_cost"] * 1.005, 2))
+    if trail_at and trail_pct and pnl_pct >= trail_at:
+        tier_stop = max(tier_stop, round(close * (1 - trail_pct), 2))
     return max(pos["stop"], tier_stop)
+
+
+def earnings_within(earnings: Optional[List], start, end) -> bool:
+    """True if any earnings date falls in [start, end] (dates, inclusive)."""
+    return any(start <= d <= end for d in (earnings or []))
 
 
 def max_drawdown(equity: pd.Series) -> float:
@@ -315,7 +334,10 @@ class Backtest:
                  exit_line: str = "sma50", exit_confirm: int = 1, drawdown_mode: str = "live",
                  stale_days: int = 0, stale_gain: float = 5.0, stale_needs_cash: bool = False,
                  risk_per_trade: float = 0.0, max_atr_pct: float = 0.0, fill_mode: str = "open",
-                 max_stop_dist: float = 0.0, open_limit: float = 0.0):
+                 max_stop_dist: float = 0.0, open_limit: float = 0.0,
+                 earnings: Optional[Dict[str, List]] = None, earnings_blackout: int = 0,
+                 exit_before_earnings: bool = False, earnings_keep_gain: Optional[float] = None,
+                 breakeven_at: float = 0.0, trail_at: float = 0.0, trail_pct: float = 0.0):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -340,6 +362,15 @@ class Backtest:
         # Live-vs-backtest checks (2026-10-16): when in the day a buy fills, and a cap on the entry stop
         self.fill_mode, self.max_stop_dist = fill_mode, max_stop_dist
         self.open_limit = open_limit       # limit-on-open buys: skip an open gapping above the prior close by more
+        # Earnings (experimental, 2026-11-10): historical report dates per symbol.
+        #   earnings_blackout     no entry with a report within this many calendar days (live rule: 5)
+        #   exit_before_earnings  sell at the close of the session before a report, unless the
+        #                         holding is up at least earnings_keep_gain percent (None = always sell)
+        self.earnings = earnings or {}
+        self.earnings_blackout = int(earnings_blackout)
+        self.exit_before_earnings, self.earnings_keep_gain = exit_before_earnings, earnings_keep_gain
+        # Stop ladder between the entry stop and the 25% break-even tier (see next_stop)
+        self.breakeven_at, self.trail_at, self.trail_pct = breakeven_at, trail_at, trail_pct
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -354,7 +385,8 @@ class Backtest:
         self.cash_share: List[float] = []
         self.counters = {"candidates": 0, "gate_rsi": 0, "gate_bb": 0, "gate_sector": 0,
                          "gate_trigger": 0, "gate_adx": 0, "gate_50ma_room": 0, "gate_volatile": 0, "days_market_weak": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
-                         "unfilled_no_cash": 0, "unfilled_at_cap": 0}
+                         "unfilled_no_cash": 0, "unfilled_at_cap": 0, "gate_earnings": 0,
+                         "earnings_exits": 0, "earnings_held": 0}
 
         if quiet:
             logging.disable(logging.WARNING)
@@ -514,9 +546,18 @@ class Backtest:
             if price is None and (self.cash_short_today or not self.stale_needs_cash) \
                     and is_stale(pos, float(c), self.dates[i].date(), self.stale_days, self.stale_gain):
                 price, reason = float(c), "STALE"
+            if price is None and self.exit_before_earnings and i + 1 < len(self.dates):
+                today, nxt = self.dates[i].date(), self.dates[i + 1].date()
+                if any(today < d <= nxt for d in self.earnings.get(sym, [])):
+                    gain = (float(c) / pos["avg_cost"] - 1) * 100
+                    if self.earnings_keep_gain is not None and gain >= self.earnings_keep_gain:
+                        self.counters["earnings_held"] += 1
+                    else:
+                        price, reason = float(c), "EARNINGS_EXIT"
+                        self.counters["earnings_exits"] += 1
             if price is None:
                 pos["last_price"] = float(c)
-                pos["stop"] = next_stop(pos, float(c))
+                pos["stop"] = next_stop(pos, float(c), self.breakeven_at, self.trail_at, self.trail_pct)
                 pos["stop_active"] = True
                 continue
             fill = float(price) * (1 - self.slip)
@@ -530,7 +571,7 @@ class Backtest:
                 "hold_days": (self.dates[i].date() - pos["entry_date"]).days,
                 "rs_rank": pos["rs_rank"], "thesis_score": pos["thesis_score"],
                 "trend_score": pos["trend_score"], "confidence": pos["confidence"],
-                "sector": pos["sector"], "weight_version": 1})
+                "sector": pos["sector"], "weight_version": 1, "stop_at_exit": pos["stop"]})
             del self.positions[sym]
 
     def _decide(self, i: int, total_value: float):
@@ -567,6 +608,12 @@ class Backtest:
             if runner._check_sector_concentration(stub, cand["sector"], allocations)[0]:
                 self.counters["gate_sector"] += 1
                 continue
+            if self.earnings_blackout:
+                today = self.dates[i].date()
+                if earnings_within(self.earnings.get(sym), today,
+                                   today + pd.Timedelta(days=self.earnings_blackout).to_pytimedelta()):
+                    self.counters["gate_earnings"] += 1
+                    continue
 
             # Experimental technical gates
             c = np.array([b.close for b in bars]); h = np.array([b.high for b in bars])
@@ -652,7 +699,14 @@ class Backtest:
             "sessions": int(len(equity)), "universe": len(self.universe),
             "w_rs": self.w_rs, "w_thesis": self.w_thesis, "slippage_bps": self.slip * 10_000,
             "variant": {"entry_trigger": self.entry_trigger, "atr_stop": self.atr_stop, "min_adx": self.min_adx,
-                        "min_above_50ma": self.min_above_50ma},
+                        "min_above_50ma": self.min_above_50ma, "min_spy_above_50ma": self.min_spy_above_50ma,
+                        "exit_line": self.exit_line, "exit_confirm": self.exit_confirm,
+                        "stale_days": self.stale_days, "stale_gain": self.stale_gain,
+                        "earnings_blackout": self.earnings_blackout,
+                        "exit_before_earnings": self.exit_before_earnings,
+                        "earnings_keep_gain": self.earnings_keep_gain,
+                        "breakeven_at": self.breakeven_at, "trail_at": self.trail_at, "trail_pct": self.trail_pct},
+            "stop_exits": stop_slippage(trades),
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),
                          "cagr": cagr(equity), "max_drawdown": max_drawdown(equity)},
@@ -706,6 +760,45 @@ def load_prices(tickers: List[str], start: str, end: Optional[str]) -> Dict[str,
     for f, frame in prices.items():
         frame.to_csv(cache / f"{f}.csv")
     return prices
+
+
+def load_earnings(tickers: List[str]) -> Dict[str, List]:
+    """
+    Historical (and scheduled) earnings report dates per ticker from yfinance,
+    cached on disk. Report dates are announced weeks ahead, so using them as of
+    a past session is not look-ahead in any way that matters for a blackout.
+    """
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache = CACHE_DIR / "earnings_dates.json"
+    saved = json.loads(cache.read_text()) if cache.exists() else {}
+    missing = [t for t in tickers if t not in saved]
+    if missing:
+        import yfinance as yf
+        for n, sym in enumerate(missing, 1):
+            try:
+                frame = yf.Ticker(sym).get_earnings_dates(limit=24)
+                saved[sym] = sorted({ts.date().isoformat() for ts in frame.index}) if frame is not None else []
+            except Exception as e:
+                logging.getLogger(__name__).warning(f"{sym}: earnings dates failed: {e}")
+                saved[sym] = []
+            if n % 50 == 0:
+                print(f"  earnings dates: {n}/{len(missing)}", flush=True)
+                cache.write_text(json.dumps(saved))
+        cache.write_text(json.dumps(saved))
+    return {s: [date.fromisoformat(d) for d in v] for s, v in saved.items() if s in set(tickers)}
+
+
+def stop_slippage(trades: pd.DataFrame) -> Optional[Dict]:
+    """How far below their planned level stop exits filled (gaps through the stop)."""
+    if trades is None or not len(trades) or "stop_at_exit" not in trades:
+        return None
+    s = trades[trades["exit_reason"] == "STOP"]
+    if not len(s):
+        return {"n": 0}
+    slip = (s["exit_price"] / s["stop_at_exit"] - 1) * 100
+    return {"n": int(len(s)), "mean_slip_pct": float(slip.mean()), "worst_slip_pct": float(slip.min()),
+            "share_gapped_over_2pct": float((slip < -2).mean()),
+            "mean_pnl_pct": float(s["pnl_pct"].mean()), "worst_pnl_pct": float(s["pnl_pct"].min())}
 
 
 def learning_fit(trades: pd.DataFrame) -> Optional[Dict]:
@@ -784,6 +877,17 @@ def main() -> int:
     parser.add_argument("--max-stop-dist", type=float, default=0.0, help="experimental: cap the entry stop distance")
     parser.add_argument("--open-limit", type=float, default=0.0,
                         help="buy at the open only if it is no more than this above the prior close (0 = any)")
+    parser.add_argument("--earnings-blackout", type=int, default=0,
+                        help="experimental: no entry with an earnings report within this many calendar days")
+    parser.add_argument("--exit-before-earnings", action="store_true",
+                        help="experimental: sell at the close of the session before an earnings report")
+    parser.add_argument("--earnings-keep-gain", type=float, default=None,
+                        help="with --exit-before-earnings: keep holdings up at least this percent")
+    parser.add_argument("--breakeven-at", type=float, default=0.0,
+                        help="experimental: raise the stop to cost+0.5%% once a close is this percent above cost")
+    parser.add_argument("--trail-at", type=float, default=0.0,
+                        help="experimental: start trailing the stop once a close is this percent above cost")
+    parser.add_argument("--trail-pct", type=float, default=0.0, help="trail distance as a fraction (0.10 = 10%%)")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -794,6 +898,7 @@ def main() -> int:
     print(f"Universe: {len(universe)} tickers (today's index members)")
     prices = load_prices(list(universe), args.start, args.end)
     universe = {s: sec for s, sec in universe.items() if s in prices["Close"].columns}
+    earnings = load_earnings(list(universe)) if (args.earnings_blackout or args.exit_before_earnings) else None
 
     bt = Backtest(universe, prices, args.start, args.end, args.capital,
                   args.w_rs, args.w_thesis, args.slippage_bps, entry_trigger=args.entry_trigger,
@@ -803,7 +908,10 @@ def main() -> int:
                   drawdown_mode="off" if args.no_drawdown_halt else args.drawdown_mode,
                   stale_days=args.stale_days, stale_gain=args.stale_gain, stale_needs_cash=args.stale_needs_cash,
                   risk_per_trade=args.risk_per_trade, max_atr_pct=args.max_atr_pct,
-                  fill_mode=args.fill, max_stop_dist=args.max_stop_dist, open_limit=args.open_limit)
+                  fill_mode=args.fill, max_stop_dist=args.max_stop_dist, open_limit=args.open_limit,
+                  earnings=earnings, earnings_blackout=args.earnings_blackout,
+                  exit_before_earnings=args.exit_before_earnings, earnings_keep_gain=args.earnings_keep_gain,
+                  breakeven_at=args.breakeven_at, trail_at=args.trail_at, trail_pct=args.trail_pct)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

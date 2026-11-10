@@ -1,0 +1,97 @@
+name: Research Backtest
+# Research only (2026-11-10): runs backtest.py variants in parallel on a
+# research/** branch and commits the summaries to that branch. Never trades,
+# never touches main.
+
+on:
+  push:
+    branches: ['research/**']
+    paths: ['.github/workflows/research_backtest.yml', 'research/variants.txt']
+
+concurrency:
+  group: research-backtest-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  START: '2023-10-02'
+  END: '2026-11-07'
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      variants: ${{ steps.v.outputs.variants }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
+      - name: Download prices, universe and earnings dates once
+        run: |
+          python - <<'EOF'
+          import os, backtest as bt
+          u = bt.load_universe()
+          p = bt.load_prices(list(u), os.environ["START"], os.environ["END"])
+          u = {s: v for s, v in u.items() if s in p["Close"].columns}
+          e = bt.load_earnings(list(u))
+          print(len(u), "tickers,", sum(1 for v in e.values() if v), "with earnings dates")
+          EOF
+      - name: Live loss check
+        run: python research/live_loss_check.py || true
+      - id: v
+        run: echo "variants=$(python -c "import json;print(json.dumps([l.split('|')[0].strip() for l in open('research/variants.txt') if l.strip() and not l.startswith('#')]))")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cache
+          path: trading_data/backtest_cache
+          retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: out-live-loss-check
+          path: research/live_loss_check.json
+          if-no-files-found: ignore
+
+  run:
+    needs: data
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: ${{ fromJson(needs.data.outputs.variants) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with: { name: cache, path: trading_data/backtest_cache }
+      - name: Backtest ${{ matrix.tag }}
+        run: |
+          ARGS=$(grep -E "^${{ matrix.tag }} *\|" research/variants.txt | cut -d'|' -f2)
+          echo "args: $ARGS"
+          python backtest.py --start "$START" --end "$END" --tag "r11_${{ matrix.tag }}" $ARGS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: out-${{ matrix.tag }}
+          path: research/backtest_*_r11_${{ matrix.tag }}.*
+
+  collect:
+    needs: run
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { pattern: out-*, path: research, merge-multiple: true }
+      - name: Commit results to this research branch
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add research/
+          git diff --staged --quiet && { echo "Nothing to commit"; exit 0; }
+          git commit -m "Research backtest results [skip ci]"
+          git push

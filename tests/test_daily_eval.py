@@ -21,11 +21,28 @@ def test_trade_stats():
 
 def test_stop_fill_stats_measures_gaps_through_the_stop():
     from daily_eval import stop_fill_stats
-    t = [_t(-8, reason="BROKER_STOP", stop_loss=92.0, exit_price=92.0, symbol="A"),
-         _t(-40, reason="BROKER_STOP", stop_loss=92.0, exit_price=60.0, symbol="B"),
-         _t(-5, stop_loss=92.0, exit_price=95.0, symbol="C")]
+    t = [_t(-8, reason="BROKER_STOP", exit_stop=92.0, exit_price=92.0, symbol="A"),
+         _t(-40, reason="BROKER_STOP", exit_stop=92.0, exit_price=60.0, symbol="B"),
+         _t(-5, exit_stop=92.0, exit_price=95.0, symbol="C")]
     s = stop_fill_stats(t)
-    assert s["n"] == 2 and s["gapped_over_2pct"] == 1 and s["worst"] == "B"
+    assert s["n"] == 2 and s["gapped_over_2pct"] == 1 and s["worst"] == "B" and s["recorded"] == 2
+
+
+def test_stop_fill_stats_uses_the_broker_stop_not_the_logged_plan():
+    # ZS 2026-11-05: logged a 2.9% stop, the broker held the ATR arm's 12.7%
+    from daily_eval import stop_fill_stats
+    zs = _t(-13, reason="BROKER_STOP", symbol="ZS", entry_price=237.88, stop_loss=231.10,
+            stop_arm="atr", stop_dist=0.126875, exit_price=206.99)
+    s = stop_fill_stats([zs])
+    assert s["n"] == 1 and -0.5 < s["mean_slip_pct"] < 0 and s["recorded"] == 0
+
+
+def test_stop_fill_stats_skips_an_estimate_the_fill_is_above():
+    # MRNA: filled 19% above its entry stop, so a trailing tier had raised it
+    from daily_eval import stop_fill_stats
+    mrna = _t(1, reason="BROKER_STOP", symbol="MRNA", entry_price=196.47,
+              stop_arm="atr", stop_dist=0.15, exit_price=199.20)
+    assert stop_fill_stats([mrna]) == {"n": 0}
 
 
 def test_account_stats_return_drawdown_and_spy():

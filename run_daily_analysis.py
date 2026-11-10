@@ -733,6 +733,12 @@ class DailyRunner:
                         decision_dict["stop_arm"]  = exp["stop_arm"]
                         decision_dict["stop_dist"] = exp["stop_dist"]
                         decision_dict["news_arm"]  = exp.get("news_arm")
+                        # Size and log on the stop the broker will actually hold
+                        # (stop_placement.entry_stop_dist), not the engine's own
+                        from stop_placement import align_entry_to_broker_stop
+                        align_entry_to_broker_stop(
+                            decision_dict, float(self.portfolio.total_value or 0),
+                            self.engine.config.risk_config.max_risk_per_trade)
                         if exp["blocked_by"]:
                             reason = (f"experiment gate could not be evaluated: {exp.get('error')}"
                                       if exp.get("error") and exp["signals"] is None

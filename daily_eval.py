@@ -35,7 +35,7 @@ import logging
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -93,18 +93,59 @@ def trade_stats(trades: List[Dict]) -> Dict:
     }
 
 
+def stop_at_fill(trade: Dict) -> Tuple[Optional[float], str]:
+    """
+    The broker stop a BROKER_STOP exit filled against, and how it is known.
+
+    "recorded": the filled order's own stop_price (exit_logic.settle_broker_exits,
+    from 2026-11-10). Older trades only logged the decision engine's stop, which
+    was not the one at the broker, so their stop is rebuilt from the entry rule
+    (stop_placement.entry_stop_dist, or the sleeve's own distance): "estimated".
+    """
+    if trade.get("exit_stop"):
+        return float(trade["exit_stop"]), "recorded"
+    entry = trade.get("entry_price")
+    if not entry:
+        return None, ""
+    if trade.get("sleeve"):
+        try:
+            return float(entry) * (1 - float(trade["stop_dist"])), "estimated"
+        except (KeyError, TypeError, ValueError):
+            return None, ""
+    from stop_placement import entry_stop_dist
+    return float(entry) * (1 - entry_stop_dist(trade)), "estimated"
+
+
 def stop_fill_stats(trades: List[Dict], last: int = 10) -> Dict:
-    """How far the last `last` broker stop exits filled below their recorded stop."""
-    stops = [x for x in trades if x.get("exit_reason") == "BROKER_STOP"
-             and x.get("stop_loss") and x.get("exit_price")]
-    stops = sorted(stops, key=lambda x: x.get("exit_date") or "")[-last:]
-    if not stops:
+    """
+    How far the last `last` broker stop exits filled below the stop that was live.
+
+    An estimated stop the fill is above was raised by a trailing tier after entry
+    (a sell stop cannot fill above its stop), so it is not the live one: those
+    trades are left out rather than counted as fills above the stop.
+    """
+    rows = []
+    for x in trades:
+        if x.get("exit_reason") != "BROKER_STOP" or not x.get("exit_price"):
+            continue
+        stop, how = stop_at_fill(x)
+        if not stop:
+            continue
+        slip = (x["exit_price"] / stop - 1) * 100
+        if how == "estimated" and slip > 0.5:
+            continue
+        rows.append((x.get("exit_date") or "", x["symbol"], slip, how))
+    rows = sorted(rows)[-last:]
+    if not rows:
         return {"n": 0}
-    slip = [(x["exit_price"] / x["stop_loss"] - 1) * 100 for x in stops]
-    return {"n": len(stops), "mean_slip_pct": round(float(np.mean(slip)), 2),
-            "worst_slip_pct": round(min(slip), 2),
+    slip = [r[2] for r in rows]
+    worst = min(rows, key=lambda r: r[2])
+    return {"n": len(rows), "mean_slip_pct": round(float(np.mean(slip)), 2),
+            "median_slip_pct": round(float(np.median(slip)), 2),
+            "worst_slip_pct": round(worst[2], 2),
             "gapped_over_2pct": sum(s < -2 for s in slip),
-            "worst": min(stops, key=lambda x: x["exit_price"] / x["stop_loss"])["symbol"]}
+            "recorded": sum(r[3] == "recorded" for r in rows),
+            "worst": worst[1]}
 
 
 def account_stats(history: List[Dict], spy: Optional[pd.Series], since: date) -> Dict:
@@ -339,7 +380,9 @@ def to_markdown(ev: Dict) -> str:
     sf = s("stop_fills")
     if sf.get("n"):
         out += [f"Stop exits (last {sf['n']}): filled {sf['mean_slip_pct']:+.1f}% vs their stop on average, "
-                f"worst {sf['worst_slip_pct']:+.1f}% ({sf['worst']}), {sf['gapped_over_2pct']} gapped more than 2%.", ""]
+                f"median {sf['median_slip_pct']:+.1f}%, worst {sf['worst_slip_pct']:+.1f}% ({sf['worst']}), "
+                f"{sf['gapped_over_2pct']} gapped more than 2%. Stop known from the filled order for "
+                f"{sf['recorded']} of {sf['n']}; the rest rebuilt from the entry rule.", ""]
     tg = ev.get("tracking") or {}
     if tg:
         out += [f"Tracking (30 days): live {pct(tg['live_return'])} vs backtest of the same rules {pct(tg['backtest_return'])}.", ""]

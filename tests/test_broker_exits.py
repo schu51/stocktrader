@@ -13,9 +13,9 @@ def _trade(symbol="DE", shares=4, **over):
     return base
 
 
-def _sell(qty=4, price=650.40, at="2026-10-07T15:02:11.123456789Z", kind="stop"):
+def _sell(qty=4, price=650.40, at="2026-10-07T15:02:11.123456789Z", kind="stop", stop=None):
     return {"side": "sell", "status": "filled", "type": kind, "filled_qty": str(qty),
-            "filled_avg_price": str(price), "filled_at": at}
+            "filled_avg_price": str(price), "filled_at": at, "stop_price": stop}
 
 
 def _settle(trades, held=(), sells=(), bought=(4.0, 692.47)):
@@ -176,3 +176,15 @@ def test_lookups_are_capped_per_run_newest_first():
         seen.append(oid)
         return {"status": "filled", "filled_qty": "4", "filled_avg_price": "690"}
     assert confirm_entry_fills(trades, get, limit=2) == 2 and seen == ["o4", "o3"]
+
+
+def test_a_filled_stop_records_the_stop_it_filled_against():
+    trades = [_trade()]
+    _settle(trades, sells=[_sell(stop="655.00")])
+    assert trades[0]["exit_stop"] == 655.0
+
+
+def test_a_sale_by_hand_records_no_stop():
+    trades = [_trade()]
+    _settle(trades, sells=[_sell(kind="market")])
+    assert "exit_stop" not in trades[0]

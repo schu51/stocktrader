@@ -58,6 +58,54 @@ def open_trade_for(symbol: str, trades: Optional[List[Dict]]) -> Optional[Dict]:
     return None
 
 
+DEFAULT_ENTRY_STOP = 0.08   # exit_logic.calculate_stop_price's under-5%-gain tier
+
+
+def entry_stop_dist(trade: Optional[Dict]) -> float:
+    """
+    How far below entry the broker stop goes while a position is under the
+    break-even tier: the ATR arm's own distance when it is in bounds, else the
+    default 8%. The one rule shared by sizing at entry (align_entry_to_broker_stop)
+    and by the stop placed at the broker (calculate_stop_for_position).
+    """
+    try:
+        dist = float(trade["stop_dist"]) if trade and trade.get("stop_arm") == "atr" else None
+    except (TypeError, ValueError, KeyError):
+        dist = None
+    if dist is not None and STOP_DIST_BOUNDS[0] <= dist <= STOP_DIST_BOUNDS[1]:
+        return dist
+    return DEFAULT_ENTRY_STOP
+
+
+def align_entry_to_broker_stop(decision: Dict, equity: float, max_risk: float) -> Dict:
+    """
+    Make a buy's logged stop and its size agree with the stop the broker will hold.
+
+    Until 2026-11-10 a buy was sized and logged on the decision engine's stop,
+    then given a different (usually wider) ATR stop at the broker, so a loser
+    could cost several times what its log said (ZS: $95 planned, $423 held).
+    Here the logged stop becomes the broker's, and shares are cut if needed so
+    the trade risks no more than `max_risk` of the account at that stop
+    (the same cap as backtest.risk_capped_shares). Never sizes up. Edits and
+    returns `decision`.
+    """
+    price = float(decision.get("limit_price") or 0)
+    if price <= 0:
+        return decision
+    dist = entry_stop_dist(decision)
+    decision["planned_stop_loss"] = decision.get("stop_loss")
+    decision["stop_loss"] = round(price * (1 - dist), 2)
+    shares = int(decision.get("shares") or 0)
+    if max_risk and equity > 0 and shares > 0:
+        cap = int(max_risk * equity / (price * dist))
+        if cap < shares:
+            decision["shares"] = max(0, cap)
+            decision["risk_capped_from"] = shares
+            if decision.get("position_value") is not None:
+                decision["position_value"] = round(decision["shares"] * price, 2)
+    return decision
+
+
 def calculate_stop_for_position(pos: Dict, trade: Optional[Dict] = None) -> Tuple[float, str]:
     """
     Calculate stop price for a position using trailing stop tiers.
@@ -81,11 +129,8 @@ def calculate_stop_for_position(pos: Dict, trade: Optional[Dict] = None) -> Tupl
         if not 0.05 <= wide <= 0.50:
             wide = SLEEVE_STOP
         return round(avg_cost * (1 - wide), 2), f"sleeve disaster stop → {wide:.0%} below entry"
-    try:
-        dist = float(trade["stop_dist"]) if trade and trade.get("stop_arm") == "atr" else None
-    except (TypeError, ValueError, KeyError):
-        dist = None
-    if dist is not None and pnl_pct < BREAKEVEN_AT_PCT and STOP_DIST_BOUNDS[0] <= dist <= STOP_DIST_BOUNDS[1]:
+    dist = entry_stop_dist(trade)
+    if pnl_pct < BREAKEVEN_AT_PCT and dist != DEFAULT_ENTRY_STOP:
         return round(avg_cost * (1 - dist), 2), f"ATR stop → {dist:.1%} below entry"
     return calculate_stop_price(current, pnl_pct, avg_cost)
 

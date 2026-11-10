@@ -567,16 +567,16 @@ def settle_broker_exits(trades: list, held_symbols: set, filled_sells, buy_fill)
             except (KeyError, TypeError, ValueError):
                 continue
             if at and qty > 0 and (entered is None or at >= entered):
-                since.append((at, qty, price, o.get("type")))
+                since.append((at, qty, price, o.get("type"), o.get("stop_price")))
         shares = float(t.get("shares") or 0)
-        sold = sum(q for _, q, _, _ in since)
+        sold = sum(row[1] for row in since)
         if sells is None or not since or sold < shares:
             if sells is None or t.get("order_id"):    # could not look, or it was bought (or may have been) and is gone
                 unresolved.append(t)
             continue
 
-        exit_price = sum(q * p for _, q, p, _ in since) / sold
-        last_at = max(at for at, _, _, _ in since)
+        exit_price = sum(row[1] * row[2] for row in since) / sold
+        last_at = max(row[0] for row in since)
         biggest = max(since, key=lambda row: row[1])
         basis = bought[1] if bought and bought[1] else float(t.get("entry_price") or 0)
         exit_day = last_at.replace(tzinfo=timezone.utc).astimezone(_NEW_YORK).date()
@@ -594,6 +594,13 @@ def settle_broker_exits(trades: list, held_symbols: set, filled_sells, buy_fill)
             "pnl_usd":     round((exit_price - basis) * shares, 2) if basis else 0,
             "hold_days":   hold,
         })
+        # The stop that was live when it filled, so fill quality is measured
+        # against it and not against the entry plan (daily_eval.stop_fill_stats)
+        if biggest[3] in _STOP_ORDER_TYPES:
+            try:
+                t["exit_stop"] = round(float(biggest[4]), 2)
+            except (TypeError, ValueError):
+                pass
         closed.append(t)
     return closed, unresolved
 

@@ -51,6 +51,7 @@ TIMETABLE = [
     ("diamond_sleeve.yml", WEEKDAYS,   "10:30", "10:30", None),  # after the large-cap run has spent its cash
     ("intraday_exit.yml",  WEEKDAYS,   "09:45", "15:45", 30),    # :15/:45, offset from sync
     ("postmarket.yml",     WEEKDAYS,   "16:15", "16:15", None),
+    ("overnight_shadow.yml", WEEKDAYS, "16:30", "16:30", None),  # overnight shadow test, no orders (overnight_shadow.py)
     ("daily_eval.yml",     WEEKDAYS,   "16:45", "16:45", None),  # scorecard + backtest tournament (daily_eval.py)
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30
     # Saturday chain — each step feeds the next

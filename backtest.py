@@ -154,6 +154,28 @@ def is_stale(pos: Dict, close: float, today, stale_days: int, stale_gain: float)
     return held >= stale_days and (close / pos["avg_cost"] - 1) * 100 < stale_gain
 
 
+def pullback_entry_ok(closes: np.ndarray, rising_over: int = 10) -> bool:
+    """
+    Experimental (2026-11-10): a short-horizon pullback entry for a name the
+    50-day room gate turns away. It qualifies when the close is at or above a
+    50-day average that is itself rising (higher than `rising_over` sessions
+    ago) and the close has just reclaimed its 21-day EMA after a dip below it.
+    """
+    if len(closes) < 50 + rising_over:
+        return False
+    sma_now = closes[-50:].mean()
+    sma_then = closes[-(50 + rising_over):-rising_over].mean()
+    return bool(closes[-1] >= sma_now and sma_now > sma_then and ema_reclaim(closes))
+
+
+def in_exit_grace(entry_i: Optional[int], i: int, grace_days: int) -> bool:
+    """
+    Experimental (2026-11-10): the first `grace_days` sessions after a fill skip
+    the close-below-50-day exit. The resting stop and the hard-loss exit still apply.
+    """
+    return bool(grace_days and entry_i is not None and i - entry_i < grace_days)
+
+
 GAUSS_POLES = 4
 
 
@@ -338,7 +360,8 @@ class Backtest:
                  max_stop_dist: float = 0.0, open_limit: float = 0.0,
                  earnings: Optional[Dict[str, List]] = None, earnings_blackout: int = 0,
                  exit_before_earnings: bool = False, earnings_keep_gain: Optional[float] = None,
-                 breakeven_at: float = 0.0, trail_at: float = 0.0, trail_pct: float = 0.0):
+                 breakeven_at: float = 0.0, trail_at: float = 0.0, trail_pct: float = 0.0,
+                 pullback_entry: bool = False, exit_grace_days: int = 0):
         self.universe = universe
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
@@ -372,6 +395,8 @@ class Backtest:
         self.exit_before_earnings, self.earnings_keep_gain = exit_before_earnings, earnings_keep_gain
         # Stop ladder between the entry stop and the 25% break-even tier (see next_stop)
         self.breakeven_at, self.trail_at, self.trail_pct = breakeven_at, trail_at, trail_pct
+        # Short-horizon variants (experimental, 2026-11-10; see pullback_entry_ok, in_exit_grace)
+        self.pullback_entry, self.exit_grace_days = bool(pullback_entry), int(exit_grace_days)
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -387,7 +412,8 @@ class Backtest:
         self.counters = {"candidates": 0, "gate_rsi": 0, "gate_bb": 0, "gate_sector": 0,
                          "gate_trigger": 0, "gate_adx": 0, "gate_50ma_room": 0, "gate_volatile": 0, "days_market_weak": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
                          "unfilled_no_cash": 0, "unfilled_at_cap": 0, "gate_earnings": 0,
-                         "earnings_exits": 0, "earnings_held": 0}
+                         "earnings_exits": 0, "earnings_held": 0,
+                         "pullback_entries": 0, "exits_in_grace": 0}
 
         if quiet:
             logging.disable(logging.WARNING)
@@ -521,7 +547,7 @@ class Backtest:
                 "stop": round(fill * (1 - (stop_dist or 0.08)), 2),
                 "stop_active": False,   # stop is placed the next morning
                 "stop_dist": stop_dist,
-                "entry_date": self.dates[i].date(), **order["features"]}
+                "entry_date": self.dates[i].date(), "entry_i": i, **order["features"]}
             self.counters["fills"] += 1
         self.pending = []
 
@@ -543,6 +569,10 @@ class Backtest:
                 if len(history) >= n and not np.isnan(line[-n:]).any():
                     # With confirmation, the exit needs every one of the last n closes below the line
                     sma50 = float(line[-1]) if (history[-n:] < line[-n:]).all() else None
+            if sma50 is not None and in_exit_grace(pos.get("entry_i"), i, self.exit_grace_days):
+                if float(c) < sma50:
+                    self.counters["exits_in_grace"] += 1
+                sma50 = None
             price, reason = evaluate_exit(pos, {"open": o, "high": h, "low": l, "close": c}, sma50)
             if price is None and (self.cash_short_today or not self.stale_needs_cash) \
                     and is_stale(pos, float(c), self.dates[i].date(), self.stale_days, self.stale_gain):
@@ -628,8 +658,11 @@ class Backtest:
             if self.min_above_50ma and len(c) >= 50 and c[-1] / c[-50:].mean() - 1 < self.min_above_50ma:
                 # The main exit is a close below the 50-day average: an entry
                 # sitting just above it has no room for an ordinary down day.
-                self.counters["gate_50ma_room"] += 1
-                continue
+                if self.pullback_entry and pullback_entry_ok(c):
+                    self.counters["pullback_entries"] += 1
+                else:
+                    self.counters["gate_50ma_room"] += 1
+                    continue
             if self.min_adx and not adx(h, l, c) >= self.min_adx:
                 self.counters["gate_adx"] += 1
                 continue
@@ -706,7 +739,8 @@ class Backtest:
                         "earnings_blackout": self.earnings_blackout,
                         "exit_before_earnings": self.exit_before_earnings,
                         "earnings_keep_gain": self.earnings_keep_gain,
-                        "breakeven_at": self.breakeven_at, "trail_at": self.trail_at, "trail_pct": self.trail_pct},
+                        "breakeven_at": self.breakeven_at, "trail_at": self.trail_at, "trail_pct": self.trail_pct,
+                        "pullback_entry": self.pullback_entry, "exit_grace_days": self.exit_grace_days},
             "stop_exits": stop_slippage(trades),
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),
@@ -890,6 +924,10 @@ def main() -> int:
     parser.add_argument("--trail-at", type=float, default=0.0,
                         help="experimental: start trailing the stop once a close is this percent above cost")
     parser.add_argument("--trail-pct", type=float, default=0.0, help="trail distance as a fraction (0.10 = 10%%)")
+    parser.add_argument("--pullback-entry", action="store_true",
+                        help="let a name the 50-day room gate turns away enter on a 21-day EMA reclaim above a rising 50-day average")
+    parser.add_argument("--exit-grace-days", type=int, default=0,
+                        help="sessions after a fill during which a close below the 50-day line does not exit")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
@@ -913,7 +951,8 @@ def main() -> int:
                   fill_mode=args.fill, max_stop_dist=args.max_stop_dist, open_limit=args.open_limit,
                   earnings=earnings, earnings_blackout=args.earnings_blackout,
                   exit_before_earnings=args.exit_before_earnings, earnings_keep_gain=args.earnings_keep_gain,
-                  breakeven_at=args.breakeven_at, trail_at=args.trail_at, trail_pct=args.trail_pct)
+                  breakeven_at=args.breakeven_at, trail_at=args.trail_at, trail_pct=args.trail_pct,
+                  pullback_entry=args.pullback_entry, exit_grace_days=args.exit_grace_days)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

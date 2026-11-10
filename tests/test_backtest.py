@@ -306,3 +306,28 @@ def test_stop_slippage_measures_fills_below_the_planned_stop():
     ])
     s = stop_slippage(t)
     assert s["n"] == 2 and s["share_gapped_over_2pct"] == 0.5 and round(s["worst_slip_pct"], 1) == -34.8
+
+
+def test_pullback_entry_needs_a_rising_50ma_and_a_21ema_reclaim():
+    from backtest import pullback_entry_ok
+    up = np.linspace(80, 110, 80)
+    dip = np.concatenate([up, [106, 104, 103, 108]])     # dips under the 21-day EMA, then closes back above
+    assert pullback_entry_ok(dip)
+    assert not pullback_entry_ok(np.concatenate([up, [111, 112, 113, 114]]))   # no dip: nothing reclaimed
+    down = np.linspace(110, 80, 80)
+    assert not pullback_entry_ok(np.concatenate([down, [76, 75, 74, 82]]))    # falling 50-day average
+    assert not pullback_entry_ok(dip[-40:])                                    # too little history
+
+
+def test_exit_grace_only_covers_the_first_sessions_after_a_fill():
+    from backtest import in_exit_grace
+    assert in_exit_grace(10, 10, 5) and in_exit_grace(10, 14, 5)
+    assert not in_exit_grace(10, 15, 5)
+    assert not in_exit_grace(10, 11, 0)          # off by default
+    assert not in_exit_grace(None, 11, 5)        # a position without a fill index is never in grace
+
+
+def test_new_short_horizon_settings_are_allowed_challenger_knobs():
+    from daily_eval import check_challenger
+    assert check_challenger({"pullback_entry": True}) is None
+    assert check_challenger({"exit_grace_days": 5}) is None

@@ -149,12 +149,18 @@ class Broker:
             self.orders[oid] = {"id": oid, "symbol": kw["symbol"], "side": "sell", "type": kw["order_type"], "status": "new",
                                 "qty": str(kw["qty"]), "stop_price": str(kw.get("stop_price"))}
         return {"id": oid}
-    def close_position(self, symbol):
-        self.closed.append(symbol)
+    def close_position(self, symbol, qty=None):
+        self.closed.append(symbol if qty is None else (symbol, qty))
         oid = f"c{len(self.closed)}"
+        held = int(float(self.positions[symbol]["qty"]))
+        sold = held if qty is None else int(qty)
         self.orders[oid] = {"id": oid, "symbol": symbol, "side": "sell", "type": "market", "status": "filled",
-                            "filled_qty": self.positions[symbol]["qty"]}
-        del self.positions[symbol]
+                            "filled_qty": str(sold)}
+        if sold >= held:
+            del self.positions[symbol]
+        else:
+            p = self.positions[symbol]
+            self.positions[symbol] = _pos(symbol, held - sold, float(p["avg_entry_price"]), float(p["current_price"]))
         return {"id": oid}
 
 
@@ -174,9 +180,9 @@ def _files(tmp_path, monkeypatch, trades=(), doc=DOC, history=HISTORY):
     return paths
 
 
-def _run(broker, paths, execute=True, above=lambda s: True):
+def _run(broker, paths, execute=True, above=lambda s: True, report=lambda s: None):
     from diamond_sleeve import run
-    return run(broker, TODAY, execute=execute, above_200=above, wait_seconds=0, **paths)
+    return run(broker, TODAY, execute=execute, above_200=above, wait_seconds=0, report_of=report, **paths)
 
 
 SLEEVE_OPEN = {"symbol": "GONE", "status": "OPEN", "sleeve": "diamond", "entry_date": "2026-09-01", "entry_price": 40.0,
@@ -434,3 +440,70 @@ def test_both_sale_rules_need_the_earlier_list_to_be_last_weeks():
     absent = _doc([_row("AAA", 7, 7, 1)])
     assert broken("GONE", absent, _hist("2026-10-23", {"X": 1}) + _hist("2026-10-24", {"AAA": 1}), TODAY) is None
     assert "two weeks" in broken("GONE", absent, _hist("2026-10-17", {"X": 1}) + _hist("2026-10-24", {"AAA": 1}), TODAY)
+
+
+# ── earnings trims ───────────────────────────────────────────────────────────
+
+def test_earnings_trim_sizes_a_holding_so_a_30pct_gap_costs_half_a_percent():
+    from diamond_sleeve import earnings_trim
+    soon = date(2026, 10, 28)
+    t = earnings_trim("AAA", 60, 50.0, 5.0, 100_000.0, soon, TODAY)
+    assert (t["shares"], t["keep"]) == (27, 33)            # 100k * 0.5% / 30% = $1,667 -> 33 shares at $50
+    assert earnings_trim("AAA", 60, 50.0, 15.0, 100_000.0, soon, TODAY) is None     # up 15%: held full size
+    assert earnings_trim("AAA", 60, 50.0, -10.0, 100_000.0, None, TODAY) is None    # no known report
+    assert earnings_trim("AAA", 60, 50.0, 0.0, 100_000.0, date(2026, 11, 2), TODAY) is None   # a week out
+    assert earnings_trim("AAA", 60, 50.0, 0.0, 100_000.0, date(2026, 10, 25), TODAY) is None  # already reported
+    assert earnings_trim("AAA", 30, 50.0, 0.0, 100_000.0, soon, TODAY) is None      # already small enough
+    assert earnings_trim("BIG", 3, 5_000.0, 0.0, 100_000.0, soon, TODAY)["keep"] == 1   # never trimmed to nothing
+
+
+def _sleeve_holding(symbol="AAA", qty=60, cost=50.0, price=50.0, **trade):
+    broker = Broker([_pos(symbol, qty, cost, price)])
+    broker.orders["s1"] = {"id": "s1", "symbol": symbol, "side": "sell", "type": "stop", "status": "new",
+                           "qty": str(qty), "stop_price": str(round(cost * 0.75, 2))}
+    rec = dict({"symbol": symbol, "status": "OPEN", "sleeve": "diamond", "entry_date": "2026-10-19", "entry_price": cost,
+                "shares": qty, "stop_arm": "sleeve", "stop_dist": 0.25}, **trade)
+    return broker, rec
+
+
+def test_a_holding_with_a_report_due_is_trimmed_logged_and_its_stop_put_back(tmp_path, monkeypatch):
+    broker, rec = _sleeve_holding(price=52.0)
+    paths = _files(tmp_path, monkeypatch, trades=[rec])
+    out = _run(broker, paths, above=lambda s: False, report=lambda s: date(2026, 10, 27))
+    keep = int(100_000 * 0.005 / 0.30 // 52.0)
+    assert broker.cancelled == ["s1"] and broker.closed == [("AAA", 60 - keep)]
+    assert out["trims"][0]["status"] == "trimmed" and out["failures"] == []
+    t = json.loads(paths["trades_file"].read_text())[0]
+    assert t["status"] == "OPEN" and t["shares"] == keep
+    assert t["trims"][0]["reason"] == "EARNINGS_TRIM" and t["trims"][0]["pnl_usd"] == round((60 - keep) * 2.0, 2)
+    stops = [(o["symbol"], o["qty"], o["stop_price"]) for o in broker.sent if o["order_type"] == "stop"]
+    assert stops == [("AAA", keep, 37.5)]                  # the sleeve's wide stop, on the shares left
+
+
+def test_no_trim_when_up_15pct_when_no_report_is_due_or_on_a_dry_run(tmp_path, monkeypatch):
+    broker, rec = _sleeve_holding(price=60.0)              # up 20%
+    paths = _files(tmp_path, monkeypatch, trades=[rec])
+    out = _run(broker, paths, above=lambda s: False, report=lambda s: date(2026, 10, 27))
+    assert broker.closed == [] and out["trims"] == []
+    broker, rec = _sleeve_holding()
+    paths = _files(tmp_path, monkeypatch, trades=[rec])
+    assert _run(broker, paths, above=lambda s: False)["trims"] == [] and broker.closed == []
+    out = _run(broker, paths, execute=False, above=lambda s: False, report=lambda s: date(2026, 10, 27))
+    assert broker.closed == [] and broker.sent == [] and out["trims"][0]["symbol"] == "AAA"
+
+
+def test_a_holding_is_trimmed_once_per_report(tmp_path, monkeypatch):
+    broker, rec = _sleeve_holding(trims=[{"report_date": "2026-10-27", "shares": 27}])
+    paths = _files(tmp_path, monkeypatch, trades=[rec])
+    out = _run(broker, paths, above=lambda s: False, report=lambda s: date(2026, 10, 27))
+    assert broker.closed == [] and out["trims"] == []
+
+
+def test_a_failed_trim_is_a_failure_and_the_holding_keeps_a_stop(tmp_path, monkeypatch):
+    broker, rec = _sleeve_holding()
+    broker.close_position = lambda symbol, qty=None: {"error": "insufficient qty"}
+    paths = _files(tmp_path, monkeypatch, trades=[rec])
+    out = _run(broker, paths, above=lambda s: False, report=lambda s: date(2026, 10, 27))
+    assert "AAA: earnings trim failed" in out["failures"][0]
+    assert json.loads(paths["trades_file"].read_text())[0]["shares"] == 60
+    assert [(o["symbol"], o["qty"]) for o in broker.sent if o["order_type"] == "stop"] == [("AAA", 60)]

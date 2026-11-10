@@ -32,6 +32,14 @@ Rules (owner decisions, 2026-10-08 and 2026-10-11):
   Stop     one price exit, a disaster stop SLEEVE_STOP below entry that never
            trails. Placed by the same sweep that protects every position
            (stop_placement.place_missing_stops).
+  Earnings (owner decision, 2026-11-10) a stop cannot protect against a gap on
+           a report (VCYT filled 33% under its stop on 2026-11-05). With a report
+           due within EARNINGS_TRIM_DAYS, a holding up less than
+           EARNINGS_KEEP_GAIN percent is trimmed to the size where an
+           EARNINGS_GAP drop costs at most EARNINGS_MAX_LOSS of the account.
+           Trimmed, not sold: the report is where a turnaround shows up. No
+           report date (unknown) means no trim. Shares are not bought back
+           after the report; the smaller holding keeps its slot.
 
 Everything the large-cap bot does to a position (50-day exit, trailing tiers,
 rotation, stale exit, caps) skips sleeve holdings: see exit_logic's sleeve
@@ -80,6 +88,10 @@ SELL_BELOW = 8.0             # a fresh judgment under this: the thesis is not th
 LIST_MAX_AGE_DAYS = 9        # the list is weekly; older than this, nothing is decided on it
 FILL_WAIT_SECONDS = 60       # how long to wait for buys to fill before placing their stops
 SELL_CONFIRM_SECONDS = 20
+EARNINGS_TRIM_DAYS = 3       # a report within this many calendar days (today included) is trimmed for
+EARNINGS_KEEP_GAIN = 15.0    # up at least this many percent: a gap gives back profit, so hold full size
+EARNINGS_GAP = 0.30          # the drop a report is sized for
+EARNINGS_MAX_LOSS = 0.005    # of the account, lost if that drop happens
 
 
 # ── rules (pure) ─────────────────────────────────────────────────────────────
@@ -231,6 +243,24 @@ def plan(doc: Dict, history: List[Dict], held: Dict[str, float], other_holdings:
     return {"budget": round(budget, 2), "slot": slot, "sells": sells, "buys": buys, "skipped": skipped}
 
 
+def earnings_trim(symbol: str, qty: int, price: float, pnl_pct: float, equity: float,
+                  report: Optional[date], today: date) -> Optional[Dict]:
+    """
+    The shares to sell ahead of a report, or None. Keeps the size at which an
+    EARNINGS_GAP drop costs EARNINGS_MAX_LOSS of the account (at least one share).
+    """
+    if report is None or not 0 <= (report - today).days <= EARNINGS_TRIM_DAYS:
+        return None
+    if pnl_pct >= EARNINGS_KEEP_GAIN or price <= 0 or qty < 2:
+        return None
+    keep = max(1, int(equity * EARNINGS_MAX_LOSS / EARNINGS_GAP // price))
+    if keep >= qty:
+        return None
+    return {"symbol": symbol, "shares": qty - keep, "keep": keep, "report_date": report.isoformat(),
+            "reason": f"report {report.isoformat()}, {pnl_pct:+.1f}% so far (under +{EARNINGS_KEEP_GAIN:.0f}%): "
+                      f"trim to {keep} shares so a {EARNINGS_GAP:.0%} gap costs at most {EARNINGS_MAX_LOSS:.1%} of the account"}
+
+
 # ── execution ────────────────────────────────────────────────────────────────
 
 def _load(path: Path):
@@ -266,6 +296,48 @@ def ask_price(broker, symbol: str) -> Optional[float]:
         return None
 
 
+def next_report(symbol: str, today: Optional[date] = None) -> Optional[date]:
+    """The next earnings report date on or after today, from yfinance; None if unknown."""
+    today = today or date.today()
+    try:
+        import yfinance as yf
+        cal = yf.Ticker(symbol).calendar
+        raw = []
+        if isinstance(cal, dict):
+            raw = cal.get("Earnings Date", [])
+            raw = raw if isinstance(raw, list) else [raw]
+        elif cal is not None and hasattr(cal, "columns") and "Earnings Date" in cal.columns:
+            raw = cal["Earnings Date"].dropna().tolist()
+        elif cal is not None and hasattr(cal, "index") and "Earnings Date" in cal.index:
+            row = cal.loc["Earnings Date"]
+            raw = row.tolist() if hasattr(row, "tolist") else [row]
+        days = []
+        for d in raw:
+            try:
+                days.append(d.date() if hasattr(d, "date") else date.fromisoformat(str(d)[:10]))
+            except Exception:
+                continue
+        upcoming = sorted(d for d in days if d >= today)
+        return upcoming[0] if upcoming else None
+    except Exception:
+        return None
+
+
+def log_trim(symbol: str, trim: Dict, price: float, cost: float, trades_file: Path) -> None:
+    """Record a trim on the open trade: fewer shares, and what the sold ones made."""
+    trades = _load(trades_file) if trades_file.exists() else []
+    for t in reversed(trades):
+        if t.get("symbol") == symbol and t.get("status") == "OPEN" and t.get("sleeve"):
+            t["shares"] = trim["keep"]
+            t.setdefault("trims", []).append({
+                "date": date.today().isoformat(), "shares": trim["shares"], "price": round(price, 2),
+                "pnl_usd": round(trim["shares"] * (price - cost), 2),
+                "pnl_pct": round((price / cost - 1) * 100, 2) if cost else None,
+                "reason": "EARNINGS_TRIM", "report_date": trim["report_date"]})
+            break
+    _write(trades_file, trades)
+
+
 def log_buy(symbol: str, shares: int, price: float, order_id: Optional[str], buy: Dict, trades_file: Path) -> None:
     """Append the sleeve's buy to the trade log, tagged so every large-cap rule leaves it alone."""
     now = datetime.now()
@@ -296,11 +368,13 @@ def adopt(symbol: str, pos: Dict, trades_file: Path) -> None:
 
 
 def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seconds: float = FILL_WAIT_SECONDS,
-        list_file: Path = None, history_file: Path = None, trades_file: Path = None) -> Dict:
+        list_file: Path = None, history_file: Path = None, trades_file: Path = None,
+        report_of: Callable[[str], Optional[date]] = None) -> Dict:
     """One pass of the sleeve. Returns the result document; `failures` non-empty means a human should look."""
     list_file, history_file, trades_file = list_file or LIST_FILE, history_file or HISTORY_FILE, trades_file or TRADES_FILE
+    report_of = report_of or (lambda s: next_report(s, today))
     out = {"generated_at": datetime.now().isoformat(), "mode": "EXECUTE" if execute else "DRY-RUN",
-           "holdings": [], "sells": [], "buys": [], "skipped": [], "failures": [], "alerts": [], "note": None}
+           "holdings": [], "sells": [], "trims": [], "buys": [], "skipped": [], "failures": [], "alerts": [], "note": None}
 
     def stop(note: str, failure: bool = False) -> Dict:
         out["note"] = note
@@ -387,8 +461,29 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
                 pending=pending)
     out.update(budget=todo["budget"], slot=todo["slot"], skipped=todo["skipped"],
                invested=round(sum(held.values()), 2), list_date=_list_day(doc))
+    # Earnings trims, for holdings that are staying (not being sold, not pending, not already being sold)
+    selling = {s["symbol"] for s in todo["sells"]}
+    trims = []
+    for symbol in sorted(set(held) - selling - pending - in_flight):
+        pos = by_symbol.get(symbol)
+        trade = next((t for t in reversed(trades) if t.get("symbol") == symbol and t.get("status") == "OPEN"
+                      and t.get("sleeve")), {})
+        if not pos:
+            continue
+        try:
+            qty, price = int(float(pos["qty"])), float(pos["current_price"])
+            pnl = float(pos["unrealized_plpc"]) * 100
+        except (KeyError, TypeError, ValueError):
+            continue
+        report = report_of(symbol)
+        if any(x.get("report_date") == (report.isoformat() if report else None) for x in trade.get("trims") or []):
+            continue                                 # already trimmed for this report
+        trim = earnings_trim(symbol, qty, price, pnl, equity, report, today)
+        if trim:
+            trims.append(trim)
+
     if not execute:
-        out["sells"], out["buys"] = todo["sells"], todo["buys"]
+        out["sells"], out["buys"], out["trims"] = todo["sells"], todo["buys"], trims
         return stop("dry run: nothing sent")
 
     from exit_logic import SALE_DEAD, SALE_FILLED, clear_stops_for_sale, sale_status
@@ -423,6 +518,30 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
         except Exception as exc:
             out["sells"].append(dict(sell, status="failed", error=str(exc)))
             out["failures"].append(f"{symbol}: sell failed ({exc})")
+
+    # Earnings trims: the stop holds every share, so it comes off first; the
+    # stop sweep below puts one back on whatever is left
+    for trim in trims:
+        symbol, pos = trim["symbol"], by_symbol[trim["symbol"]]
+        try:
+            cleared, why = clear_stops_for_sale(broker, symbol)
+            if not cleared:
+                raise RuntimeError(why)
+            result = broker.close_position(symbol, qty=trim["shares"])
+            if "error" in result:
+                raise RuntimeError(result.get("error"))
+            sale = sale_status(broker, result.get("id"), wait_seconds=SELL_CONFIRM_SECONDS if wait_seconds else 0)
+            if sale == SALE_FILLED:
+                log_trim(symbol, trim, float(pos["current_price"]), float(pos["avg_entry_price"]), trades_file)
+                out["trims"].append(dict(trim, status="trimmed"))
+            elif sale == SALE_DEAD:
+                raise RuntimeError("trim order ended without filling")
+            else:
+                out["trims"].append(dict(trim, status="sent, not yet filled"))
+                out["failures"].append(f"{symbol}: earnings trim sent but not confirmed; check the position and its stop")
+        except Exception as exc:
+            out["trims"].append(dict(trim, status="failed", error=str(exc)))
+            out["failures"].append(f"{symbol}: earnings trim failed ({exc})")
 
     # Buys are worked out again now: only a sale that filled frees a slot and its budget
     sold = {s["symbol"] for s in out["sells"] if s.get("status") == "sold"}
@@ -476,7 +595,7 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
     # Stops: wait briefly for the buys to fill, then the same sweep that
     # protects every position places the sleeve's wide stop on each new one.
     # A buy still unfilled gets its stop from the intraday check once it fills.
-    if sent or any(s.get("status") == "failed" for s in out["sells"]):
+    if sent or out["trims"] or any(s.get("status") == "failed" for s in out["sells"]):
         import time
         finished = ("filled", "canceled", "expired", "rejected", "done_for_day", "replaced")
         deadline = time.monotonic() + wait_seconds
@@ -504,7 +623,7 @@ def main(argv=None) -> int:
         return 1
     out = run(broker, date.today(), execute=args.execute)
     _write(OUT_FILE, out)
-    print(json.dumps({k: out.get(k) for k in ("mode", "note", "budget", "invested", "sells", "buys", "skipped", "failures")},
+    print(json.dumps({k: out.get(k) for k in ("mode", "note", "budget", "invested", "sells", "trims", "buys", "skipped", "failures")},
                      indent=2, default=str))
     return 1 if out["failures"] else 0
 

@@ -1,0 +1,22 @@
+{
+  "notes": "Rule changes the daily eval (daily_eval.py) backtests against the live rules every evening. Each 'change' holds backtest.Backtest arguments that differ from the live rules (at most 2). The evening Claude review may add, retire or replace challengers; it never changes the live rules itself. A challenger that clears every promotion gate for 5 straight evals is proposed to Alex as a pull request.",
+  "rules_versions": [
+    {"since": "2026-11-10", "name": "breakeven5_spy2",
+     "change": "break-even stop from +5%; no new buys unless SPY is 2% above its 50-day average"}
+  ],
+  "challengers": [
+    {"name": "be3", "change": {"breakeven_at": 3.0},
+     "why": "earlier break-even: round 2 backtest 66% win rate, lower return", "added": "2026-11-10"},
+    {"name": "trail20", "change": {"trail_at": 20.0, "trail_pct": 0.12},
+     "why": "trail 12% once +20%: best Jun-Nov 2026 result in round 2", "added": "2026-11-10"},
+    {"name": "spy3", "change": {"min_spy_above_50ma": 0.03},
+     "why": "stricter market filter: profit factor 2.74, fewer trades", "added": "2026-11-10"},
+    {"name": "spy1", "change": {"min_spy_above_50ma": 0.01},
+     "why": "looser market filter: more trades", "added": "2026-11-10"},
+    {"name": "earn_exit15", "change": {"exit_before_earnings": true, "earnings_keep_gain": 15.0},
+     "why": "sell before earnings unless up 15%: fewer gaps through stops", "added": "2026-11-10"},
+    {"name": "risk40", "change": {"risk_per_trade": 0.004},
+     "why": "cap what one stop-out can cost at 0.4% of the account", "added": "2026-11-10"}
+  ],
+  "max_challengers": 6
+}

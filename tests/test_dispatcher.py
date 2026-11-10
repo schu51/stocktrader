@@ -36,7 +36,12 @@ def test_intraday_exit_on_quarter_hours_during_market():
     assert _due(2026, 10, 5, 9, 45) == ["intraday_exit.yml"]
     assert _due(2026, 10, 5, 15, 45) == ["intraday_exit.yml"]
     assert _due(2026, 10, 5, 9, 15) == ["daily_open.yml"]      # before the open: buys, no exit check
-    assert _due(2026, 10, 5, 16, 45) == []     # after the close
+    assert "intraday_exit.yml" not in _due(2026, 10, 5, 16, 45)    # after the close
+
+
+def test_daily_eval_after_the_postmarket_reconcile():
+    assert _due(2026, 10, 5, 16, 45) == ["daily_eval.yml"]
+    assert _due(2026, 10, 10, 16, 45) == []                        # Saturday
 
 
 def test_postmarket_at_1615():

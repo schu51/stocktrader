@@ -51,6 +51,7 @@ TIMETABLE = [
     ("diamond_sleeve.yml", WEEKDAYS,   "10:30", "10:30", None),  # after the large-cap run has spent its cash
     ("intraday_exit.yml",  WEEKDAYS,   "09:45", "15:45", 30),    # :15/:45, offset from sync
     ("postmarket.yml",     WEEKDAYS,   "16:15", "16:15", None),
+    ("daily_eval.yml",     WEEKDAYS,   "16:45", "16:45", None),  # scorecard + backtest tournament (daily_eval.py)
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30
     # Saturday chain — each step feeds the next
     ("refresh_universe.yml",   [SATURDAY], "07:00", "07:00", None),  # S&P 500 + Nasdaq-100 list the screener scans

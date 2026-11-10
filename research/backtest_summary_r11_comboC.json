@@ -1,0 +1,96 @@
+{
+  "generated_at": "2026-11-10T00:29:19.257318",
+  "start": "2023-10-02",
+  "end": "2026-11-06",
+  "sessions": 779,
+  "universe": 520,
+  "w_rs": 0.8,
+  "w_thesis": 0.2,
+  "slippage_bps": 10.0,
+  "variant": {
+    "entry_trigger": "none",
+    "atr_stop": 2.5,
+    "min_adx": 0.0,
+    "min_above_50ma": 0.06,
+    "min_spy_above_50ma": 0.02,
+    "exit_line": "sma50",
+    "exit_confirm": 1,
+    "stale_days": 60,
+    "stale_gain": 10.0,
+    "earnings_blackout": 5,
+    "exit_before_earnings": true,
+    "earnings_keep_gain": null,
+    "breakeven_at": 8.0,
+    "trail_at": 15.0,
+    "trail_pct": 0.1
+  },
+  "stop_exits": {
+    "n": 388,
+    "mean_slip_pct": -0.27178848380491205,
+    "worst_slip_pct": -7.930895452414443,
+    "share_gapped_over_2pct": 0.028350515463917526,
+    "mean_pnl_pct": 2.3949871134020615,
+    "worst_pnl_pct": -21.744
+  },
+  "strategy": {
+    "final_equity": 177381.557341928,
+    "total_return": 0.7738155734192802,
+    "cagr": 0.20332674334095913,
+    "max_drawdown": -0.12701269713898333
+  },
+  "spy_buy_and_hold": {
+    "total_return": 0.784257393576713,
+    "cagr": 0.20560979350449116,
+    "max_drawdown": -0.18755242410695117
+  },
+  "average_invested_share": 0.43432130342395026,
+  "open_positions_at_end": 0,
+  "closed_trades": {
+    "trades": 761,
+    "win_rate": 0.5716162943495401,
+    "total_pnl_usd": 77381.52,
+    "profit_factor": 1.7547116371556613,
+    "avg_win_pct": 11.458374712643678,
+    "avg_loss_pct": -8.001739263803682,
+    "mean_pnl_pct": 3.1219789750328517,
+    "median_pnl_pct": 0.4,
+    "median_hold_days": 19.0,
+    "pnl_without_best_trade_usd": 72673.03,
+    "pnl_without_best_5_usd": 59290.600000000006
+  },
+  "exit_reasons": {
+    "STOP": 388,
+    "EARNINGS_EXIT": 205,
+    "PRICE_BELOW_50MA": 141,
+    "STALE": 26,
+    "HARD_LOSS_STOP": 1
+  },
+  "funnel": {
+    "candidates": 20325,
+    "gate_rsi": 1203,
+    "gate_bb": 2435,
+    "gate_sector": 836,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1899,
+    "gate_volatile": 0,
+    "days_market_weak": 371,
+    "engine_buy": 790,
+    "engine_hold": 4655,
+    "orders": 764,
+    "fills": 761,
+    "unfilled_no_cash": 3,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 392,
+    "earnings_exits": 205,
+    "earnings_held": 0
+  },
+  "learning_fit": {
+    "n": 761,
+    "t_rs": 1.13458598443686,
+    "t_thesis": -0.6830757718039601,
+    "coef_rs": 0.6465623774385874,
+    "coef_thesis": -0.3892618990948276,
+    "derived_weights": null
+  }
+}

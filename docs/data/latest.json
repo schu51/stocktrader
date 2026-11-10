@@ -3,21 +3,21 @@
   "run_id": "20261110_150053",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 106869.22,
+    "portfolio_value": 106858.89,
     "cash": 38342.57,
     "buying_power": 36425.4415,
-    "long_market_value": 68526.65,
-    "unrealized_pnl": 2958.28
+    "long_market_value": 68516.32,
+    "unrealized_pnl": 2947.95
   },
   "positions": [
     {
       "symbol": "ACN",
       "qty": 10,
       "avg_cost": 244.66,
-      "current_price": 258.54,
-      "market_value": 2585.4,
-      "unrealized_pnl": 138.81,
-      "unrealized_pnl_pct": 5.67,
+      "current_price": 258.51,
+      "market_value": 2585.1,
+      "unrealized_pnl": 138.51,
+      "unrealized_pnl_pct": 5.66,
       "stop_loss": 245.88,
       "side": "long",
       "asset_class": "us_equity",
@@ -103,10 +103,10 @@
       "symbol": "DG",
       "qty": 40,
       "avg_cost": 135.26,
-      "current_price": 137.44,
-      "market_value": 5497.6,
-      "unrealized_pnl": 87.0,
-      "unrealized_pnl_pct": 1.61,
+      "current_price": 137.31,
+      "market_value": 5492.4,
+      "unrealized_pnl": 81.8,
+      "unrealized_pnl_pct": 1.51,
       "stop_loss": 121.8,
       "side": "long",
       "asset_class": "us_equity",
@@ -257,10 +257,10 @@
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 96.94,
-      "market_value": 3683.72,
-      "unrealized_pnl": 121.24,
-      "unrealized_pnl_pct": 3.4,
+      "current_price": 96.92,
+      "market_value": 3682.96,
+      "unrealized_pnl": 120.48,
+      "unrealized_pnl_pct": 3.38,
       "stop_loss": 89.28,
       "side": "long",
       "asset_class": "us_equity",
@@ -301,10 +301,10 @@
       "symbol": "MAR",
       "qty": 5,
       "avg_cost": 425.06,
-      "current_price": 428.26,
-      "market_value": 2141.3,
-      "unrealized_pnl": 16.01,
-      "unrealized_pnl_pct": 0.75,
+      "current_price": 428.03,
+      "market_value": 2140.15,
+      "unrealized_pnl": 14.86,
+      "unrealized_pnl_pct": 0.7,
       "stop_loss": 396.26,
       "side": "long",
       "asset_class": "us_equity",
@@ -323,10 +323,10 @@
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 76.4,
-      "market_value": 3743.58,
-      "unrealized_pnl": -1.88,
-      "unrealized_pnl_pct": -0.05,
+      "current_price": 76.34,
+      "market_value": 3740.66,
+      "unrealized_pnl": -4.8,
+      "unrealized_pnl_pct": -0.13,
       "stop_loss": 71.93,
       "side": "long",
       "asset_class": "us_equity",
@@ -661,7 +661,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-11-10T23:00:44.424802+00:00",
+  "sync_at": "2026-11-10T23:30:44.894425+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -730,6 +730,10 @@
       {
         "time": "23:00",
         "value": 106869.22
+      },
+      {
+        "time": "23:30",
+        "value": 106858.89
       }
     ]
   }

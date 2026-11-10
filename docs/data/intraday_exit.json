@@ -1,10 +1,24 @@
 {
-  "generated_at": "2026-11-09T20:45:48.015771",
+  "generated_at": "2026-11-10T14:45:50.027210",
   "positions_checked": 15,
   "exits_triggered": [],
-  "stops_updated": [],
+  "stops_updated": [
+    {
+      "symbol": "CRL",
+      "new_stop": 308.76,
+      "tier": "5%+ gain \u2192 break-even+0.5%",
+      "pnl_pct": 12.03
+    }
+  ],
   "stops_placed": [],
-  "stop_failures": [],
+  "stop_failures": [
+    {
+      "symbol": "CTLP",
+      "status": "failed",
+      "error": "asset CTLP is not active",
+      "restored": false
+    }
+  ],
   "broker_exits": [],
   "sleeve_positions": [
     "KVYO",

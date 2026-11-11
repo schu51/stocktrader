@@ -358,11 +358,13 @@ def _alpaca_symbol(ticker: str) -> str:
     return ticker.replace("-", ".")
 
 
-def _alpaca_daily_bars(tickers: List[str], session=None) -> Optional[Dict[str, object]]:
+def _alpaca_daily_bars(tickers: List[str], session=None,
+                       lookback_days: int = ALPACA_LOOKBACK_DAYS) -> Optional[Dict[str, object]]:
     """
     One year of split- and dividend-adjusted daily bars from Alpaca's market
     data API, shaped like the parts of yf.download() the screener reads:
     {"Close": DataFrame, "Volume": DataFrame}, dates down, tickers across.
+    Open, High and Low frames are included too (big_movers.py reads them).
 
     Uses the consolidated (SIP) feed, which the free plan serves for anything
     older than 15 minutes; the request ends 16 minutes ago to stay inside that.
@@ -384,12 +386,13 @@ def _alpaca_daily_bars(tickers: List[str], session=None) -> Optional[Dict[str, o
         session = requests.Session()
 
     now = datetime.now(timezone.utc)
-    start = (now - timedelta(days=ALPACA_LOOKBACK_DAYS)).strftime("%Y-%m-%d")
+    start = (now - timedelta(days=lookback_days)).strftime("%Y-%m-%d")
     end = (now - timedelta(minutes=16)).strftime("%Y-%m-%dT%H:%M:%SZ")
     back = {_alpaca_symbol(t): t for t in tickers}
 
     closes: Dict[str, Dict[str, float]] = {}
     volumes: Dict[str, Dict[str, float]] = {}
+    extra: Dict[str, Dict[str, Dict[str, float]]] = {"Open": {}, "High": {}, "Low": {}}
     symbols = list(back)
 
     for i in range(0, len(symbols), ALPACA_CHUNK):
@@ -431,6 +434,9 @@ def _alpaca_daily_bars(tickers: List[str], session=None) -> Optional[Dict[str, o
                     day = str(bar["t"])[:10]
                     closes.setdefault(t, {})[day] = float(bar["c"])
                     volumes.setdefault(t, {})[day] = float(bar["v"])
+                    for field, key in (("Open", "o"), ("High", "h"), ("Low", "l")):
+                        if bar.get(key) is not None:
+                            extra[field].setdefault(t, {})[day] = float(bar[key])
 
             page_token = payload.get("next_page_token")
             if not page_token:
@@ -447,7 +453,13 @@ def _alpaca_daily_bars(tickers: List[str], session=None) -> Optional[Dict[str, o
     volume_df = pd.DataFrame(volumes)
     volume_df.index = pd.to_datetime(volume_df.index)
     volume_df = volume_df.sort_index()
-    return {"Close": close_df, "Volume": volume_df}
+    out = {"Close": close_df, "Volume": volume_df}
+    for field, values in extra.items():
+        if values:
+            df = pd.DataFrame(values)
+            df.index = pd.to_datetime(df.index)
+            out[field] = df.sort_index()
+    return out
 
 
 def _full_history_share(tickers: List[str], data) -> float:
@@ -669,6 +681,15 @@ def get_sector_leaders(
     return sorted(sector_scores, key=lambda s: sector_scores[s], reverse=True)
 
 
+def _catalyst_watch() -> List[Dict]:
+    try:
+        from big_movers import load_watch
+        return load_watch()
+    except Exception as e:
+        logger.warning(f"Catalyst watch list unavailable: {e}")
+        return []
+
+
 def run_screener(
     output_path: Optional[Path] = None,
     top_n: int = 50,
@@ -882,6 +903,10 @@ def run_screener(
         # Every stock's rank, not just the candidates': rotation.py judges holdings by it
         "rs_ranks":        {s: int(r) for s, r in rs_ranks.items()},
         "candidates":      candidates,
+        # Watch-only lane from big_movers.py: stocks matching a precursor of past
+        # 20%+ days (e.g. earnings due after a selloff). Not traded; never ranked
+        # with the candidates above.
+        "catalyst_watch":  _catalyst_watch(),
     }
 
     logger.info(

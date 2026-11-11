@@ -52,6 +52,7 @@ TIMETABLE = [
     ("intraday_exit.yml",  WEEKDAYS,   "09:45", "15:45", 30),    # :15/:45, offset from sync
     ("put_shadow.yml",     WEEKDAYS,   "15:30", "15:30", None),  # put shadow test before the close, no orders (put_shadow.py)
     ("postmarket.yml",     WEEKDAYS,   "16:15", "16:15", None),
+    ("big_movers.yml",     WEEKDAYS,   "16:30", "16:30", None),  # 20%+ jumps: why, precursors, watch list (no orders)
     ("overnight_shadow.yml", WEEKDAYS, "16:30", "16:30", None),  # overnight shadow test, no orders (overnight_shadow.py)
     ("daily_eval.yml",     WEEKDAYS,   "16:45", "16:45", None),  # scorecard + backtest tournament (daily_eval.py)
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30

@@ -556,3 +556,44 @@ def test_a_filled_exit_is_left_alone_by_the_sweep(monkeypatch, tmp_path):
     assert broker.placed == []
     out = json.loads((tmp_path / "intraday_exit.json").read_text())
     assert out["exits_triggered"][0]["confirmed"] is True and out["stop_failures"] == []
+
+
+def test_intraday_check_passes_with_a_delisted_holding_that_rejects_its_stop_update(monkeypatch, tmp_path):
+    # 2026-11-11: CTLP was acquired; Alpaca rejects every order ("asset CTLP is not active").
+    # Its trailing-stop update failed every 30 minutes and failed the whole run, though
+    # every other position was checked. It is now reported as untradable instead.
+    import json
+    import alpaca_broker, exit_logic, intraday_exit
+    ctlp = {**make_position("CTLP", 281, 8.0, 11.0, 37.5), "side": "long", "asset_class": "us_equity"}
+    expd = {**make_position("EXPD", 13, 192.39, 192.38, -0.01), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([ctlp, expd], inactive={"CTLP"})
+    broker.market_clock = lambda: True
+    real_place = broker.place_order
+
+    def place(**kw):
+        if kw["symbol"] == "CTLP":
+            return {"error": "asset CTLP is not active"}
+        return real_place(**kw)
+    broker.place_order = place
+    monkeypatch.setattr(alpaca_broker, "AlpacaBroker", lambda: broker)
+    monkeypatch.setattr(exit_logic, "get_sma50_map", lambda symbols: {"CTLP": 9.0, "EXPD": 150.0})
+    monkeypatch.setattr(intraday_exit, "DOCS_DATA", tmp_path)
+    intraday_exit.main()                                     # no SystemExit: the run passes
+    out = json.loads((tmp_path / "intraday_exit.json").read_text())
+    assert out["stop_failures"] == []
+    assert [u["symbol"] for u in out["untradable"]] == ["CTLP"]
+    assert [r["symbol"] for r in out["stops_placed"]] == ["EXPD"]   # the tradable position is still protected
+
+
+def test_a_real_stop_failure_still_fails_the_intraday_run(monkeypatch, tmp_path):
+    import pytest
+    import alpaca_broker, exit_logic, intraday_exit
+    pos = {**make_position("EXPD", 13, 150.0, 192.38, 28.0), "side": "long", "asset_class": "us_equity"}
+    broker = _Broker([pos])
+    broker.market_clock = lambda: True
+    broker.place_order = lambda **kw: {"error": "insufficient qty available"}
+    monkeypatch.setattr(alpaca_broker, "AlpacaBroker", lambda: broker)
+    monkeypatch.setattr(exit_logic, "get_sma50_map", lambda symbols: {"EXPD": 150.0})
+    monkeypatch.setattr(intraday_exit, "DOCS_DATA", tmp_path)
+    with pytest.raises(SystemExit):
+        intraday_exit.main()

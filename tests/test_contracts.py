@@ -9,7 +9,7 @@ import contracts
 import identity
 
 ROOT = Path(__file__).parent.parent
-RAW_JSON_LOADS_CEILING = 16     # may only fall: new code reads shared files through contracts.read
+RAW_JSON_LOADS_CEILING = 7     # raw JSON FILE reads; may only fall: read shared files with contracts.read
 
 
 def test_every_committed_shared_file_has_a_contract_and_keeps_it():
@@ -17,7 +17,7 @@ def test_every_committed_shared_file_has_a_contract_and_keeps_it():
 
 
 def test_no_new_raw_json_loads_in_the_bot():
-    n = sum(len(re.findall(r"json\.loads?\(", f.read_text()))
+    n = sum(len(re.findall(r"json\.load\(|json\.loads\([^\n]*read_text\(\)", f.read_text()))
             for f in ROOT.glob("*.py") if f.name not in ("contracts.py", "pit.py"))   # pit parses its own stored blobs
     assert n <= RAW_JSON_LOADS_CEILING, \
         f"{n} raw json.load(s) calls (ceiling {RAW_JSON_LOADS_CEILING}): read docs/data files with contracts.read"

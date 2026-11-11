@@ -1,0 +1,325 @@
+{
+ "note": "Market themes whose stocks tend to move together on news and trends. Starting lists, curated by hand; big_movers.py also adds members the evening review assigns in research/big_mover_reads.json (\"theme\" field). Tickers outside the S&P 500 / Nasdaq-100 are fetched too, so their moves count. A ticker with no price data (renamed, acquired) is simply skipped.",
+ "themes": {
+  "ai_compute": {
+   "description": "AI data-center compute and neoclouds",
+   "members": [
+    "NVDA",
+    "AMD",
+    "AVGO",
+    "CRWV",
+    "NBIS",
+    "IREN",
+    "APLD",
+    "CORZ",
+    "CIFR",
+    "WULF",
+    "ORCL",
+    "SMCI",
+    "DELL",
+    "ANET",
+    "MRVL",
+    "ALAB",
+    "CRDO"
+   ]
+  },
+  "ai_power": {
+   "description": "Power, cooling and grid for data centers",
+   "members": [
+    "VRT",
+    "ETN",
+    "PWR",
+    "CEG",
+    "VST",
+    "TLN",
+    "GEV",
+    "NRG",
+    "OKLO",
+    "SMR",
+    "NNE",
+    "BE",
+    "MOD"
+   ]
+  },
+  "memory_storage": {
+   "description": "Memory and storage chips and drives",
+   "members": [
+    "MU",
+    "WDC",
+    "STX",
+    "SNDK",
+    "PSTG",
+    "NTAP"
+   ]
+  },
+  "quantum": {
+   "description": "Quantum computing",
+   "members": [
+    "IONQ",
+    "RGTI",
+    "QBTS",
+    "QUBT",
+    "ARQQ"
+   ]
+  },
+  "crypto": {
+   "description": "Crypto exchanges, miners and treasuries",
+   "members": [
+    "COIN",
+    "MSTR",
+    "HOOD",
+    "MARA",
+    "RIOT",
+    "CLSK",
+    "HUT",
+    "BTDR",
+    "GLXY"
+   ]
+  },
+  "space": {
+   "description": "Launch, satellites and space infrastructure",
+   "members": [
+    "RKLB",
+    "ASTS",
+    "LUNR",
+    "PL",
+    "RDW",
+    "FLY",
+    "SATS",
+    "IRDM"
+   ]
+  },
+  "defense_tech": {
+   "description": "Defense technology, drones and autonomy",
+   "members": [
+    "PLTR",
+    "KTOS",
+    "AVAV",
+    "LMT",
+    "NOC",
+    "GD",
+    "LHX",
+    "RCAT",
+    "UMAC",
+    "ONDS"
+   ]
+  },
+  "obesity_drugs": {
+   "description": "GLP-1 and obesity treatments",
+   "members": [
+    "LLY",
+    "NVO",
+    "HIMS",
+    "VKTX",
+    "AMGN",
+    "MDGL"
+   ]
+  },
+  "uranium": {
+   "description": "Uranium miners and fuel",
+   "members": [
+    "CCJ",
+    "UEC",
+    "LEU",
+    "NXE",
+    "UUUU",
+    "DNN"
+   ]
+  },
+  "software_ai_apps": {
+   "description": "Software repriced on AI adoption",
+   "members": [
+    "NOW",
+    "CRM",
+    "SNOW",
+    "DDOG",
+    "MDB",
+    "PATH",
+    "AI",
+    "SOUN",
+    "APP",
+    "TEM"
+   ]
+  },
+  "biotech": {
+   "description": "Biotech, where FDA decisions and trial results drive big days",
+   "members": [
+    "VRTX",
+    "REGN",
+    "BIIB",
+    "MRNA",
+    "ALNY",
+    "SRPT",
+    "INSM",
+    "EXEL",
+    "BMRN",
+    "INCY",
+    "NBIX",
+    "CRSP",
+    "BEAM",
+    "IONS",
+    "ARGX"
+   ]
+  },
+  "regional_banks": {
+   "description": "Regional banks: rates, credit and deal news",
+   "members": [
+    "ZION",
+    "WAL",
+    "KEY",
+    "CFG",
+    "HBAN",
+    "RF",
+    "FHN",
+    "EWBC",
+    "BOKF",
+    "PNFP",
+    "WBS",
+    "VLY",
+    "CMA"
+   ]
+  },
+  "oil_gas": {
+   "description": "Oil and gas producers and services",
+   "members": [
+    "XOM",
+    "CVX",
+    "COP",
+    "OXY",
+    "EOG",
+    "DVN",
+    "FANG",
+    "APA",
+    "HAL",
+    "SLB",
+    "BKR"
+   ]
+  },
+  "homebuilders": {
+   "description": "Homebuilders and building products: mortgage rates",
+   "members": [
+    "DHI",
+    "LEN",
+    "PHM",
+    "NVR",
+    "TOL",
+    "KBH",
+    "BLDR"
+   ]
+  },
+  "rate_sensitive_fintech": {
+   "description": "Mortgage, housing and consumer lending fintech: rate moves",
+   "members": [
+    "RKT",
+    "UWMC",
+    "OPEN",
+    "Z",
+    "SOFI",
+    "AFRM",
+    "UPST"
+   ]
+  },
+  "retail_consumer": {
+   "description": "Retail and consumer brands",
+   "members": [
+    "WMT",
+    "COST",
+    "TGT",
+    "DG",
+    "DLTR",
+    "BBY",
+    "LULU",
+    "NKE",
+    "ELF",
+    "ULTA",
+    "ANF",
+    "AEO",
+    "GAP",
+    "CROX",
+    "DECK"
+   ]
+  },
+  "shipping": {
+   "description": "Container, dry bulk and tanker shipping",
+   "members": [
+    "ZIM",
+    "MATX",
+    "DAC",
+    "SBLK",
+    "INSW",
+    "FRO",
+    "STNG"
+   ]
+  },
+  "gold_miners": {
+   "description": "Gold miners and royalty companies",
+   "members": [
+    "NEM",
+    "AEM",
+    "B",
+    "KGC",
+    "AU",
+    "GFI",
+    "WPM",
+    "FNV",
+    "RGLD"
+   ]
+  },
+  "copper": {
+   "description": "Copper miners",
+   "members": [
+    "FCX",
+    "SCCO",
+    "TECK",
+    "HBM",
+    "ERO"
+   ]
+  },
+  "cybersecurity": {
+   "description": "Cybersecurity software",
+   "members": [
+    "CRWD",
+    "PANW",
+    "ZS",
+    "FTNT",
+    "NET",
+    "S",
+    "OKTA",
+    "RBRK",
+    "QLYS",
+    "TENB"
+   ]
+  },
+  "pharmacy_distribution": {
+   "description": "Drug distributors and pharmacies",
+   "members": [
+    "CVS",
+    "CAH",
+    "MCK",
+    "COR"
+   ]
+  },
+  "solar": {
+   "description": "Solar manufacturers and installers: policy news",
+   "members": [
+    "FSLR",
+    "ENPH",
+    "SEDG",
+    "RUN",
+    "NXT",
+    "ARRY"
+   ]
+  },
+  "airlines": {
+   "description": "Airlines: fuel, demand and travel news",
+   "members": [
+    "DAL",
+    "UAL",
+    "AAL",
+    "LUV",
+    "JBLU",
+    "ALK"
+   ]
+  }
+ }
+}

@@ -1,0 +1,69 @@
+name: Big Movers
+
+# Weekdays 16:30 ET: every stock that closed 20%+ up today — what it looked like
+# beforehand, the filings and headlines behind the move, whether a precursor
+# pattern predicts such days, and the watch list the screener publishes as
+# catalyst_watch (big_movers.py). Places no orders. Started by dispatcher.yml.
+# Run by hand with backfill_days=365 to rebuild the log from a year of history.
+
+on:
+  workflow_dispatch:
+    inputs:
+      backfill_days:
+        description: 'Rebuild the log from this many days of history (0 = today only)'
+        required: false
+        default: '0'
+
+jobs:
+  movers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+      issues: write          # to open a failure issue
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Find and explain big movers
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}       # price history from Alpaca's data API
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          BACKFILL_DAYS: ${{ inputs.backfill_days }}
+        run: python big_movers.py --backfill-days "${BACKFILL_DAYS:-0}"
+
+      - name: Commit results
+        if: always()
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add docs/data/big_movers.json docs/data/big_movers_log.json docs/data/big_movers_cache.json 2>/dev/null || true
+          git diff --staged --quiet && { echo "Nothing to commit"; exit 0; }
+          git commit -m "Big movers update [skip ci]"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      # In-workflow alert: runs started by the dispatcher belong to the Actions
+      # bot, which neither emails anyone nor triggers a workflow_run listener.
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create \
+            --title "🚨 ${GITHUB_WORKFLOW} run failed $(date -u +%Y-%m-%d)" \
+            --body "The ${GITHUB_WORKFLOW} workflow failed. Run log: ${RUN_URL}"

@@ -36,6 +36,12 @@ jobs:
       - name: Evaluate
         run: python daily_eval.py
 
+      # Every shared file against its contract (contracts.py): a renamed or missing
+      # field anywhere in docs/data fails this step, which opens an issue below.
+      - name: Check data contracts
+        if: always()
+        run: python contracts.py --check
+
       - name: Commit eval
         if: always()
         run: |

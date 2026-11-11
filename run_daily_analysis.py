@@ -33,6 +33,7 @@ Execution safety gates (all must pass before any order is submitted):
 
 import argparse
 import json
+import contracts
 import logging
 import os
 import sys
@@ -540,7 +541,7 @@ class DailyRunner:
             try:
                 trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
                 if trades_file.exists():
-                    trades = json.loads(trades_file.read_text())
+                    trades = contracts.read(trades_file)
                     held = set(live_portfolio.positions.keys())
                     ok, why = safe_to_reconcile(trades, held, positions_verified)
                     if not ok:
@@ -875,7 +876,7 @@ class DailyRunner:
         cache = {}
         if cache_file.exists():
             try:
-                cache = json.loads(cache_file.read_text())
+                cache = contracts.read(cache_file)
             except Exception:
                 pass
 
@@ -1005,7 +1006,7 @@ class DailyRunner:
                 existing_latest = docs_dir / "latest.json"
                 if existing_latest.exists():
                     try:
-                        prev = json.loads(existing_latest.read_text())
+                        prev = contracts.read(existing_latest)
                         positions = prev.get("positions", [])
                         logger.warning(
                             f"Alpaca unavailable — preserving {len(positions)} positions "
@@ -1040,7 +1041,7 @@ class DailyRunner:
             total_unrealized = sum(p["unrealized_pnl"] for p in positions)
 
             try:
-                previous_latest = json.loads((docs_dir / "latest.json").read_text())
+                previous_latest = contracts.read((docs_dir / "latest.json"))
             except Exception:
                 previous_latest = None
             latest = {
@@ -1081,7 +1082,7 @@ class DailyRunner:
 
             # Append/update history.json
             history_file = docs_dir / "history.json"
-            history = json.loads(history_file.read_text()) if history_file.exists() else []
+            history = contracts.read(history_file) if history_file.exists() else []
 
             today = datetime.now().strftime("%Y-%m-%d")
             entry = {
@@ -1127,7 +1128,7 @@ class DailyRunner:
             logger.info("screener.json not found — using static universe")
             return None
         try:
-            data = json.loads(screener_file.read_text())
+            data = contracts.read(screener_file)
             generated = (data.get("generated_at") or "")[:10]
             today = datetime.now().strftime("%Y-%m-%d")
             if generated != today:
@@ -1366,7 +1367,7 @@ class DailyRunner:
         try:
             wf = Path(__file__).parent / "docs" / "data" / "weights.json"
             if wf.exists():
-                return int(json.loads(wf.read_text()).get("active", {}).get("version") or 1)
+                return int(contracts.read(wf).get("active", {}).get("version") or 1)
         except Exception:
             pass
         return 1
@@ -1391,7 +1392,7 @@ class DailyRunner:
             trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
             if not trades_file.exists():
                 return
-            trades = json.loads(trades_file.read_text())
+            trades = contracts.read(trades_file)
         except Exception as e:
             logger.warning(f"Phantom reconcile: could not read trades.json: {e}")
             return
@@ -1439,7 +1440,7 @@ class DailyRunner:
         """
         try:
             trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
-            trades = json.loads(trades_file.read_text()) if trades_file.exists() else []
+            trades = contracts.read(trades_file) if trades_file.exists() else []
 
             today = datetime.now().strftime("%Y-%m-%d")
             ts    = datetime.now().isoformat()
@@ -1660,7 +1661,7 @@ class DailyRunner:
             try:
                 trades_file = Path(__file__).parent / "docs" / "data" / "trades.json"
                 if trades_file.exists():
-                    trades = json.loads(trades_file.read_text())
+                    trades = contracts.read(trades_file)
                     open_trade = next(
                         (t for t in reversed(trades)
                          if t.get("symbol") == sym and t.get("status") == "OPEN"),
@@ -2212,7 +2213,7 @@ class DailyRunner:
     def _market_allows_buys(self) -> tuple:
         """(allowed, reason) for new buys today: see market_allows_buys."""
         try:
-            data = json.loads((Path(__file__).parent / "docs" / "data" / "screener.json").read_text())
+            data = contracts.read((Path(__file__).parent / "docs" / "data" / "screener.json"))
         except Exception as e:
             data = {"error": str(e)}
         return market_allows_buys(data, datetime.now().strftime("%Y-%m-%d"),
@@ -2221,7 +2222,7 @@ class DailyRunner:
     def _market_above_50ma(self) -> Optional[bool]:
         """True/False from today's screener snapshot; None if it is missing, stale or unreadable."""
         try:
-            data = json.loads((Path(__file__).parent / "docs" / "data" / "screener.json").read_text())
+            data = contracts.read((Path(__file__).parent / "docs" / "data" / "screener.json"))
             if (data.get("generated_at") or "")[:10] != datetime.now().strftime("%Y-%m-%d"):
                 return None
             regime = data.get("market_regime") or {}
@@ -2234,11 +2235,11 @@ class DailyRunner:
         import rotation
         try:
             docs = Path(__file__).parent / "docs" / "data"
-            ranks = rotation.load_ranks(json.loads((docs / "screener.json").read_text()), date.today())
+            ranks = rotation.load_ranks(contracts.read((docs / "screener.json")), date.today())
             if ranks is None:
                 logger.info("Rotation: no trustworthy ranks from today's screen — nothing rotated")
                 return []
-            trades = json.loads((docs / "trades.json").read_text())
+            trades = contracts.read((docs / "trades.json"))
             exited = {e.get("symbol") for e in (exit_results or {}).get("exits_triggered", [])}
             holdings = {sym: {"pnl_pct": round(pos.unrealized_pnl_pct, 2), "market_value": pos.market_value}
                         for sym, pos in (self.portfolio.positions or {}).items()}
@@ -2256,9 +2257,9 @@ class DailyRunner:
         import rotation
         try:
             docs = Path(__file__).parent / "docs" / "data"
-            trades = json.loads((docs / "trades.json").read_text())
+            trades = contracts.read((docs / "trades.json"))
             try:
-                ranks = rotation.load_ranks(json.loads((docs / "screener.json").read_text()), date.today())
+                ranks = rotation.load_ranks(contracts.read((docs / "screener.json")), date.today())
             except Exception:
                 ranks = None
             exited = {e.get("symbol") for e in (exit_results or {}).get("exits_triggered", [])}

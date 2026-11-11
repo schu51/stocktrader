@@ -28,6 +28,7 @@ Fetchers take an optional session and are injected in tests.
 """
 
 import json
+import identity
 import logging
 import re
 import statistics
@@ -430,7 +431,7 @@ def fetch_wiki_titles(tickers: List[str], session) -> Dict[str, str]:
     """{ticker: English Wikipedia title} via Wikidata's ticker-symbol qualifier (P249)."""
     if not tickers:
         return {}
-    values = " ".join(f'"{t.replace("-", ".")}"' for t in tickers)
+    values = " ".join(f'"{identity.dotted(t)}"' for t in tickers)
     query = f"""SELECT ?ticker ?article WHERE {{
       VALUES ?ticker {{ {values} }}
       VALUES ?exchange {{ wd:Q13677 wd:Q82059 }}   # NYSE, Nasdaq: the same ticker can belong to a foreign company
@@ -441,7 +442,7 @@ def fetch_wiki_titles(tickers: List[str], session) -> Dict[str, str]:
     resp.raise_for_status()
     out = {}
     for b in resp.json()["results"]["bindings"]:
-        t = b["ticker"]["value"].replace(".", "-")
+        t = identity.canonical(b["ticker"]["value"])
         out.setdefault(t, b["article"]["value"].rsplit("/", 1)[-1])
     return out
 

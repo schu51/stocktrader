@@ -25,6 +25,8 @@ Usage:
 
 import argparse
 import json
+import identity
+import contracts
 import logging
 import sys
 import time
@@ -46,7 +48,7 @@ def _load_ranking_weights():
     """
     try:
         if _WEIGHTS_PATH.exists():
-            active = json.loads(_WEIGHTS_PATH.read_text()).get("active", {})
+            active = contracts.read(_WEIGHTS_PATH).get("active", {})
             w_rs = float(active.get("w_rs", 0.60))
             w_thesis = float(active.get("w_thesis", 0.40))
             if abs((w_rs + w_thesis) - 1.0) < 0.01:
@@ -264,7 +266,7 @@ def _load_saved_universe(path: Path = None) -> Dict[str, str]:
     """
     path = path or UNIVERSE_PATH
     try:
-        saved = json.loads(Path(path).read_text())
+        saved = contracts.read(Path(path))
         tickers = saved.get("tickers", {})
         if len(tickers) < MIN_FINVIZ_UNIVERSE:
             logger.warning(f"Saved universe has only {len(tickers)} tickers — ignoring it")
@@ -355,7 +357,8 @@ def _alpaca_headers() -> Optional[Dict[str, str]]:
 
 def _alpaca_symbol(ticker: str) -> str:
     """Screener writes class shares as BRK-B; Alpaca expects BRK.B."""
-    return ticker.replace("-", ".")
+    import identity
+    return identity.alpaca(ticker)
 
 
 def _alpaca_daily_bars(tickers: List[str], session=None,
@@ -429,7 +432,7 @@ def _alpaca_daily_bars(tickers: List[str], session=None,
 
             payload = resp.json()
             for sym, bars in (payload.get("bars") or {}).items():
-                t = back.get(sym, sym.replace(".", "-"))
+                t = back.get(sym, identity.canonical(sym))
                 for bar in bars or []:
                     day = str(bar["t"])[:10]
                     closes.setdefault(t, {})[day] = float(bar["c"])

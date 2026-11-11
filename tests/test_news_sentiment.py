@@ -139,7 +139,8 @@ def test_scan_symbols_only_accepts_ticker_shaped_values(tmp_path, monkeypatch):
     import news_sentiment as ns
     monkeypatch.setattr(ns, "DOCS_DATA", tmp_path)
     (tmp_path / "screener.json").write_text(json.dumps({"candidates": [
-        {"symbol": "NVDA"}, {"symbol": "../../etc/passwd"}, {"symbol": "nvda"}, {"symbol": None}, {"symbol": "BRK.B"}]}))
+        {"symbol": "NVDA"}, {"symbol": "../../etc/passwd"}, {"symbol": "nvda"}, {"symbol": "BRK.B"}]}))
+    # (a null symbol no longer reaches this filter: it breaks screener.json's contract, test_contracts.py)
     (tmp_path / "latest.json").write_text(json.dumps({"positions": [
         {"symbol": "AMD"}, {"symbol": "NVDA"}, {"symbol": "AMD261218P00400000", "asset_class": "us_option"}]}))
     assert ns.scan_symbols() == ["NVDA", "BRK.B", "AMD"]

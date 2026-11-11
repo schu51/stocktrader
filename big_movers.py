@@ -57,6 +57,8 @@ anything addressed to an automated reader is dropped before it is stored.
 
 import argparse
 import json
+import identity
+import contracts
 import logging
 import re
 import sys
@@ -611,7 +613,7 @@ def fetch_market_movers(session=None) -> List[str]:
     resp = session.get(MARKET_MOVERS_URL, params={"top": 50}, headers=headers, timeout=20)
     resp.raise_for_status()
     rows = (resp.json() or {}).get("gainers") or []
-    return [str(r["symbol"]).replace(".", "-") for r in rows
+    return [identity.canonical(r["symbol"]) for r in rows
             if (r.get("price") or 0) >= MIN_PRICE
             and re.match(r"^[A-Z]{1,5}(\.[A-Z])?$", str(r.get("symbol", "")))][:MARKET_MOVERS_MAX]
 
@@ -670,7 +672,7 @@ def refresh_filings(symbols: List[str], today: date, cache: Dict, index: Dict, s
         entry = earn.get(sym) or {}
         stale = not entry.get("fetched") or \
             (today - date.fromisoformat(entry["fetched"])).days >= EARNINGS_CACHE_DAYS
-        company = index.get(sym) or index.get(sym.replace("-", "."))
+        company = index.get(sym) or index.get(identity.dotted(sym))
         if not company or not (stale or sym in force):
             continue
         try:
@@ -690,7 +692,7 @@ def refresh_filings(symbols: List[str], today: date, cache: Dict, index: Dict, s
 
 def _read(path: Path, default):
     try:
-        return json.loads(path.read_text())
+        return contracts.read(path)
     except Exception:
         return default
 

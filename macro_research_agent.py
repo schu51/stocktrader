@@ -16,6 +16,7 @@ Requires ANTHROPIC_API_KEY in the environment.
 """
 
 import json
+import contracts
 import logging
 import os
 import sys
@@ -65,7 +66,7 @@ invalidation_condition, horizon (YYYY-MM-DD), sources (list of URLs)."""
 def _load_register() -> Dict:
     try:
         if THESES_FILE.exists():
-            return json.loads(THESES_FILE.read_text())
+            return contracts.read(THESES_FILE)
     except Exception as e:
         logger.warning(f"Could not read theses.json: {e}")
     return {"generated_at": None, "theses": []}

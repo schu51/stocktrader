@@ -13,6 +13,7 @@ This agent does NOT generate new entry signals — exits and stop management onl
 """
 
 import json
+import contracts
 import logging
 import sys
 from datetime import datetime, date
@@ -39,7 +40,7 @@ def _rewrite_trades(change) -> bool:
     """Apply `change(trades)` to trades.json with an atomic write. False if it could not be done."""
     try:
         import os
-        trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
+        trades = contracts.read(TRADES_FILE) if TRADES_FILE.exists() else []
         change(trades)
         tmp = TRADES_FILE.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(trades, indent=2))
@@ -90,7 +91,7 @@ def settle_pending_exits(broker) -> List[Dict]:
     """
     from exit_logic import SALE_DEAD, SALE_FILLED, SALE_PARTIAL, SALE_WORKING, sale_status
     try:
-        trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
+        trades = contracts.read(TRADES_FILE) if TRADES_FILE.exists() else []
     except Exception as e:
         logger.error(f"Could not read trades.json to settle pending exits: {e}")
         return [{"symbol": None, "order_id": None, "status": "working", "error": str(e)}]
@@ -212,7 +213,7 @@ def _log_exit(symbol: str, price: float, qty: int, trigger: str,
     corrupt the pnl_pct the learning agent regresses on).
     """
     try:
-        trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
+        trades = contracts.read(TRADES_FILE) if TRADES_FILE.exists() else []
         today  = datetime.now().strftime("%Y-%m-%d")
         ts     = datetime.now().isoformat()
         for t in reversed(trades):

@@ -64,6 +64,7 @@ Usage:
 
 import argparse
 import json
+import contracts
 import logging
 import os
 import sys
@@ -264,7 +265,7 @@ def earnings_trim(symbol: str, qty: int, price: float, pnl_pct: float, equity: f
 # ── execution ────────────────────────────────────────────────────────────────
 
 def _load(path: Path):
-    return json.loads(path.read_text())
+    return contracts.read(path)
 
 
 def _write(path: Path, payload) -> None:

@@ -41,6 +41,7 @@ is not established. Review with the other rules on 2026-12-05.
 """
 
 import json
+import contracts
 import logging
 import os
 from datetime import date
@@ -223,7 +224,7 @@ def record(entries: List[Dict], path: Optional[Path] = None) -> None:
     try:
         path = Path(path or ROTATION_LOG)
         try:
-            log = json.loads(path.read_text())
+            log = contracts.read(path)
             if not isinstance(log, list):
                 log = []
         except Exception:

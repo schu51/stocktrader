@@ -31,6 +31,7 @@ day), docs/data/eval_report.md. Places no orders.
 
 import argparse
 import json
+import contracts
 import logging
 import sys
 from datetime import date, datetime, timedelta
@@ -194,8 +195,8 @@ def live_rules() -> Dict:
     """Backtest arguments for the rules the bot trades on today, read from the live config."""
     from config import EntryRules
     import rotation
-    weights = json.loads((DOCS / "weights.json").read_text()).get("active") or {}
-    exps = json.loads((DOCS / "experiments.json").read_text()).get("experiments") or {}
+    weights = contracts.read((DOCS / "weights.json")).get("active") or {}
+    exps = contracts.read((DOCS / "experiments.json")).get("experiments") or {}
     atr = exps.get("atr_stop") or {}
     room = exps.get("ma50_room") or {}
     rules = EntryRules()
@@ -409,7 +410,7 @@ def to_markdown(ev: Dict) -> str:
 
 def _read(path: Path, default):
     try:
-        return json.loads(path.read_text())
+        return contracts.read(path)
     except Exception:
         return default
 

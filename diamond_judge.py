@@ -39,6 +39,7 @@ Usage:
 
 import argparse
 import json
+import contracts
 import logging
 import os
 import sys
@@ -408,7 +409,7 @@ def main(argv=None) -> int:
 
     if args.past_list:
         path = Path(args.past_list)
-        doc = judge_past_list(json.loads(path.read_text()),
+        doc = judge_past_list(contracts.read(path),
                               make_pack=lambda row, as_of: live_pack(row, as_of, with_sentiment=False),
                               ask=ask_claude, until=today)
         _write(path, doc)
@@ -417,13 +418,13 @@ def main(argv=None) -> int:
         return 0 if judged else 1
 
     try:
-        doc = json.loads(LIST_FILE.read_text())
+        doc = contracts.read(LIST_FILE)
         assert isinstance(doc.get("watchlist"), list) and doc["watchlist"]
     except Exception as exc:
         print(f"::error::no watchlist to judge: {exc}")
         return 1
     try:
-        cache = json.loads(CACHE_FILE.read_text()) if CACHE_FILE.exists() else {}
+        cache = contracts.read(CACHE_FILE) if CACHE_FILE.exists() else {}
     except Exception:
         cache = {}
 
@@ -444,7 +445,7 @@ def main(argv=None) -> int:
     _write(CACHE_FILE, cache)
     try:
         from diamond_run import update_history
-        history = json.loads(HISTORY_FILE.read_text()) if HISTORY_FILE.exists() else []
+        history = contracts.read(HISTORY_FILE) if HISTORY_FILE.exists() else []
         _write(HISTORY_FILE, update_history(history, doc))
     except Exception as exc:
         logger.error(f"History not updated with conviction: {exc}")

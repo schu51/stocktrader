@@ -13,6 +13,7 @@ even when Alpaca is unreachable — status shows "sync_error" in that case.
 """
 
 import json
+import contracts
 import logging
 import os
 import sys
@@ -33,7 +34,7 @@ COMPANIES_JSON = DOCS_DATA / "companies.json"
 def load_existing() -> dict:
     if LATEST_JSON.exists():
         try:
-            return json.loads(LATEST_JSON.read_text())
+            return contracts.read(LATEST_JSON)
         except Exception as e:
             logger.warning(f"Could not read latest.json: {e}")
     return {}
@@ -111,7 +112,7 @@ def main():
     companies = {}
     if COMPANIES_JSON.exists():
         try:
-            companies = json.loads(COMPANIES_JSON.read_text())
+            companies = contracts.read(COMPANIES_JSON)
         except Exception:
             pass
 

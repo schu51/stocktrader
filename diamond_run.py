@@ -26,6 +26,7 @@ Checking the screen against the past (writes nothing):
 import argparse
 import calendar
 import json
+import contracts
 import logging
 import os
 import sys
@@ -365,7 +366,7 @@ def main(argv=None) -> int:
         return as_of_prices(tickers, cutoff) if args.as_of else fetch_prices(tickers)
 
     try:
-        history = json.loads(HISTORY_FILE.read_text()) if HISTORY_FILE.exists() else []
+        history = contracts.read(HISTORY_FILE) if HISTORY_FILE.exists() else []
     except Exception:
         history = []
     try:

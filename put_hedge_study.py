@@ -54,6 +54,8 @@ Writes research/put_hedge_study.json. Usage:
 """
 
 import json
+import identity
+import contracts
 import logging
 import math
 import statistics as st
@@ -256,7 +258,7 @@ def held_events(evs: List[Dict], half_spread: float) -> List[Dict]:
 
 def _load(path: Path, default):
     try:
-        return json.loads(path.read_text())
+        return contracts.read(path)
     except Exception:
         return default
 
@@ -274,7 +276,7 @@ def yahoo_closes(symbols: Iterable[str], start: date) -> Dict[str, tuple]:
     out = {}
     for sym in symbols:
         try:
-            h = yf.Ticker(sym.replace(".", "-")).history(start=start.isoformat(), auto_adjust=True)["Close"].dropna()
+            h = yf.Ticker(identity.yahoo(sym)).history(start=start.isoformat(), auto_adjust=True)["Close"].dropna()
             if len(h):
                 out[sym] = ([ts.date() for ts in h.index], [float(x) for x in h.values])
         except Exception as exc:

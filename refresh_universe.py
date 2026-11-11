@@ -26,6 +26,8 @@ Usage:
 import argparse
 import io
 import json
+import identity
+import contracts
 import re
 import logging
 import sys
@@ -93,7 +95,8 @@ _HEADERS = {"User-Agent": "stocktrader-universe-refresh/1.0 (github.com/schu51/s
 
 def normalize_ticker(symbol: str) -> str:
     """Class shares as the screener writes them: BRK.B -> BRK-B."""
-    return str(symbol).strip().upper().replace(".", "-")
+    import identity
+    return identity.canonical(symbol)
 
 
 def _members_from_table(df, ticker_cols=("Symbol", "Ticker")) -> Dict[str, str]:
@@ -193,7 +196,7 @@ def fetch_ndx() -> Dict[str, str]:
 
 def load_previous(path: Path = UNIVERSE_PATH) -> Optional[dict]:
     try:
-        return json.loads(path.read_text())
+        return contracts.read(path)
     except Exception:
         return None
 

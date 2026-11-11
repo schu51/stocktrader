@@ -9,6 +9,7 @@ second-order, and falsifiable. See docs/superpowers/specs/2026-06-14-macro-thesi
 """
 
 import re
+import contracts
 import unicodedata
 from datetime import date, datetime
 from typing import Dict, List, Optional, Tuple
@@ -225,7 +226,7 @@ def load_live_theses(path) -> List[Dict]:
         p = Path(path)
         if not p.exists():
             return []
-        data = json.loads(p.read_text())
+        data = contracts.read(p)
         theses = data.get("theses", []) if isinstance(data, dict) else []
         return [t for t in theses if is_thesis_live(t)]
     except Exception:

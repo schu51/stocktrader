@@ -27,11 +27,22 @@ jobs:
       - name: Refresh universe
         run: python refresh_universe.py
 
+      # Stable security ids (Alpaca asset id + SEC CIK) with ticker history (identity.py).
+      # A failure here leaves the old registry in place and does not block the universe.
+      - name: Refresh security registry
+        continue-on-error: true
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+        run: python identity.py --refresh
+
       - name: Commit universe
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
           git add docs/data/universe.json
+          git add docs/data/securities.json 2>/dev/null || true
           git diff --staged --quiet && { echo "Universe unchanged"; exit 0; }
           git commit -m "Refresh screener universe [skip ci]"
           pushed=0

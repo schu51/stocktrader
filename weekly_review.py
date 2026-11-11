@@ -16,6 +16,7 @@ Usage:
 
 import argparse
 import json
+import contracts
 import sys
 from datetime import date, timedelta
 from pathlib import Path
@@ -35,7 +36,7 @@ MIN_UNIVERSE = 400
 
 def _load(name: str):
     try:
-        return json.loads((DOCS_DATA / name).read_text())
+        return contracts.read((DOCS_DATA / name))
     except Exception:
         return None
 

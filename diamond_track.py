@@ -35,6 +35,7 @@ Usage:
 """
 
 import json
+import contracts
 import logging
 import os
 import sys
@@ -155,7 +156,7 @@ def fetch_quotes(tickers: List[str]) -> Dict[str, dict]:
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
     try:
-        history = json.loads(HISTORY_FILE.read_text())
+        history = contracts.read(HISTORY_FILE)
         tickers = sorted({h["ticker"] for h in history if isinstance(h, dict) and isinstance(h.get("ticker"), str)})
         rows = evaluate(history, fetch_quotes(tickers + [BENCHMARK])) if tickers else []
     except Exception as exc:

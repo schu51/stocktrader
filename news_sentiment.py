@@ -22,6 +22,7 @@ Usage:
 
 import argparse
 import json
+import contracts
 import logging
 import os
 import re
@@ -257,7 +258,7 @@ def scan_symbols() -> List[str]:
                          ("latest.json", lambda d: [p.get("symbol") for p in d.get("positions") or []
                                                     if p.get("asset_class", "us_equity") == "us_equity"])):
         try:
-            symbols += [s for s in picker(json.loads((DOCS_DATA / name).read_text())) if s]
+            symbols += [s for s in picker(contracts.read((DOCS_DATA / name))) if s]
         except Exception as e:
             logger.warning(f"Could not read {name}: {e}")
     seen, ordered = set(), []
@@ -270,7 +271,7 @@ def scan_symbols() -> List[str]:
 
 def load_log(path: Path = SENTIMENT_LOG) -> List[Dict]:
     try:
-        data = json.loads(Path(path).read_text())
+        data = contracts.read(Path(path))
         return data if isinstance(data, list) else []
     except Exception:
         return []

@@ -7,6 +7,7 @@ Manages portfolio and position-level risk controls.
 from datetime import datetime, date, timedelta
 from typing import Dict, List, Optional, Tuple
 import json
+import contracts
 import logging
 from pathlib import Path
 
@@ -56,7 +57,7 @@ class RiskManager:
             history_path = history_path or Path(__file__).parent / 'docs' / 'data' / 'history.json'
             if not history_path.exists():
                 return 0.0
-            data = json.loads(history_path.read_text())
+            data = contracts.read(history_path)
             rows = data if isinstance(data, list) else data.get('trades', [])
             since = getattr(self.risk_config, "drawdown_peak_since", None)
             values = []

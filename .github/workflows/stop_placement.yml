@@ -34,6 +34,7 @@ jobs:
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
           git add docs/data/stop_placement.json 2>/dev/null || true
+          git add docs/data/decisions/ 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Stop placement [skip ci]"
           pushed=0
           for attempt in 1 2 3 4 5; do

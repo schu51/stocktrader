@@ -12,6 +12,7 @@ Stop price is calculated using the same trailing stop tiers as the daily runner.
 import logging
 import json
 import contracts
+import decisions
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -272,6 +273,7 @@ def place_missing_stops(broker, trades: Optional[List[Dict]] = None, skip: Optio
                 qty -= partial["qty"]
                 if partial["stop"] is not None and partial["stop"] > stop_price:
                     stop_price, tier = round(partial["stop"], 2), "matched existing stop price"
+            decisions.why(sym, f"missing stop placed ({tier})", rule="stop_placement", stop_price=stop_price, qty=qty)
             result = broker.place_order(
                 symbol=sym,
                 qty=qty,

@@ -18,6 +18,7 @@ Exit triggers:
 
 import json
 import contracts
+import decisions
 import logging
 import re
 from datetime import date, datetime, timezone
@@ -147,6 +148,7 @@ def replace_stop(broker, symbol: str, qty: int, new_stop: float, previous: Optio
             return {"status": "sold", "error": why, "restored": False}
         return {"status": "failed", "error": why, "restored": None}     # nothing was placed; the old stop may stand
     try:
+        decisions.why(symbol, f"stop moved to {new_stop}", rule="stop_move", previous=previous, new_stop=new_stop)
         result = broker.place_order(symbol=symbol, qty=qty, side="sell", order_type="stop",
                                     stop_price=new_stop, time_in_force="gtc")
     except Exception as exc:

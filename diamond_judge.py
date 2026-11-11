@@ -374,6 +374,69 @@ def ask_claude(system: str, user: str) -> str:
     return "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
 
 
+REQUESTS_FILE = ROOT / "research" / "requests" / "diamond_judge.json"
+REPLIES_FILE = ROOT / "research" / "replies" / "diamond_judge.json"
+
+
+def prepare(doc: Dict, cache: Dict, today: date, make_pack: Callable[[Dict], Dict],
+            path: Path = REQUESTS_FILE, limit: int = MAX_CALLS) -> Dict:
+    """
+    Step 1 of 2 (GitHub job, no model): the companies that need a judgment this
+    week, each with its evidence pack and the exact prompt, for the "Diamond judge"
+    scheduled task on Alex's Claude account to answer.
+    """
+    import contracts
+    # Every company's pack is saved, judged or not: the guard checks reused
+    # judgments against the current evidence too (judge_watchlist).
+    requests, due = [], 0
+    for row in doc.get("watchlist") or []:
+        try:
+            pack = make_pack(row)
+        except Exception as exc:
+            logger.warning(f"{row.get('ticker')}: evidence could not be gathered ({exc})")
+            continue
+        if not pack:
+            continue
+        judge = due < limit and needs_judging(row["ticker"], pack["basis"], cache, today)
+        due += judge
+        requests.append({"ticker": row["ticker"], "judge": judge, "pack": pack,
+                         "prompt": build_prompt(pack) if judge else None})
+    payload = {"date": today.isoformat(), "answer_to": str(REPLIES_FILE.relative_to(ROOT)),
+               "system": SYSTEM_PROMPT, "requests": requests}
+    contracts.write(path, payload, compact=True)
+    logger.info(f"Diamond judge: {due} of {len(requests)} compan(ies) to judge")
+    return payload
+
+
+def from_files(requests_path: Path = REQUESTS_FILE, replies_path: Path = REPLIES_FILE,
+               today: Optional[date] = None) -> Tuple[Callable, Callable]:
+    """
+    Step 2 of 2: (make_pack, ask) that serve the saved packs and the task's replies,
+    so judge_watchlist runs unchanged, guard included. A company with no saved
+    pack is skipped this week; one with no reply counts as a failed call.
+    """
+    import contracts
+    req = contracts.read(requests_path)
+    rep = contracts.read(replies_path)
+    today = today or date.today()
+    if str(rep.get("date")) != str(req.get("date")) or str(req.get("date")) != today.isoformat():
+        raise RuntimeError(f"requests ({req.get('date')}) and replies ({rep.get('date')}) are not both from today")
+    packs = {r["ticker"]: r["pack"] for r in req.get("requests") or []}
+    replies = rep.get("replies") or {}
+    current = {"ticker": None}
+
+    def make_pack(row):
+        current["ticker"] = row.get("ticker")
+        return packs.get(row.get("ticker"))      # None: no evidence this week (skipped; keeps its last judgment, stale)
+
+    def ask(system, user):
+        reply = replies.get(current["ticker"])
+        if not isinstance(reply, str) or not reply.strip():
+            raise RuntimeError("no reply for this company")
+        return reply
+    return make_pack, ask
+
+
 def live_pack(row: Dict, today: date, with_sentiment: bool = True) -> Dict:
     """
     The evidence pack for a row, from the SEC, USAspending and the news scorer.
@@ -403,10 +466,15 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Judge the diamond watchlist (no trades)")
     parser.add_argument("--dry-run", action="store_true", help="build the evidence packs and print their sizes; call nothing, write nothing")
     parser.add_argument("--past-list", help="fast test: judge a list saved by `diamond_run.py --as-of ... --out`, in place")
+    parser.add_argument("--prepare", action="store_true", help="write this week's questions for the scheduled task (no model)")
+    parser.add_argument("--apply", action="store_true", help="judge from the scheduled task's replies (no model)")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
     today = date.today()
 
+    if args.past_list and not os.getenv("ANTHROPIC_API_KEY"):
+        print("::error::the fast test calls the Anthropic API, which is retired; judge past lists through a scheduled task instead")
+        return 1
     if args.past_list:
         path = Path(args.past_list)
         doc = judge_past_list(contracts.read(path),
@@ -439,7 +507,22 @@ def main(argv=None) -> int:
                 print(f"{row.get('ticker')}: pack failed ({exc})")
         return 0
 
-    doc, cache, stats = judge_watchlist(doc, cache, today, make_pack=lambda row: live_pack(row, today), ask=ask_claude)
+    if args.prepare:
+        prepare(doc, cache, today, make_pack=lambda row: live_pack(row, today))
+        return 0
+    if args.apply:
+        try:
+            make_pack, ask = from_files(today=today)
+        except Exception as exc:
+            print(f"::error::cannot apply judgments: {exc}")
+            return 1
+        doc, cache, stats = judge_watchlist(doc, cache, today, make_pack=make_pack, ask=ask)
+        doc["judgment_replies_date"] = today.isoformat()
+    else:
+        if not os.getenv("ANTHROPIC_API_KEY"):
+            print("::error::ANTHROPIC_API_KEY not set: run --prepare, then --apply after the scheduled task answers")
+            return 1
+        doc, cache, stats = judge_watchlist(doc, cache, today, make_pack=lambda row: live_pack(row, today), ask=ask_claude)
     logger.info(f"Judged {stats['judged']}, reused {stats['reused']}, failed {stats['failed']}, skipped {stats['skipped']}")
     _write(LIST_FILE, doc)
     _write(CACHE_FILE, cache)

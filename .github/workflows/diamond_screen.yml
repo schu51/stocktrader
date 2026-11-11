@@ -32,14 +32,13 @@ jobs:
           SEC_EDGAR_USER_AGENT: "stocktrader diamond screen (aschumacherdesign@gmail.com)"
         run: python diamond_run.py
 
-      # Stage 2: Claude reads each listed company's filings and scores its edge
-      # and demand (diamond_judge.py). If this step fails the numbers-only list
-      # above is still committed, and the failure issue below is opened.
-      - name: Judge the watchlist
+      # Stage 2: evidence packs and questions for the 'Diamond judge' scheduled task
+      # on Alex's Claude account (no API key). Its answers are applied, guard included,
+      # by apply_replies.yml; until then the list keeps last week's judgments.
+      - name: Prepare the judgment questions
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SEC_EDGAR_USER_AGENT: "stocktrader diamond screen (aschumacherdesign@gmail.com)"
-        run: python diamond_judge.py
+        run: python diamond_judge.py --prepare
 
       # What the top names under each ranking went on to do, and whether there
       # is enough to act on the judgment yet (diamond_track.py)
@@ -53,6 +52,7 @@ jobs:
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
           git add docs/data/diamonds.json docs/data/diamond_history.json docs/data/diamond_judgments.json docs/data/diamond_track.json 2>/dev/null || true
+          git add research/requests/diamond_judge.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "Diamond watchlist update [skip ci]"
           pushed=0
           for attempt in 1 2 3 4 5; do

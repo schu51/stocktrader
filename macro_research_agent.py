@@ -22,7 +22,7 @@ import os
 import sys
 from datetime import date, datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)
@@ -187,7 +187,73 @@ def _ask(system: str, user: str) -> str:
     return text
 
 
-def _generate(context: str, existing: List[str] = None) -> List[Dict]:
+REQUESTS_FILE = ROOT / "research" / "requests" / "macro_research.json"
+REPLIES_FILE = ROOT / "research" / "replies" / "macro_research.json"
+
+
+def _generate_request(context: str, existing: List[str] = None) -> Dict:
+    today = date.today().isoformat()
+    already = ""
+    if existing:
+        already = ("\n\nThese theses are already active — do not repeat them or restate them "
+                   "in other words:\n"
+                   + _as_data("\n".join(f"- {clean_text(t, TEXT_LIMITS['theme'])}" for t in existing)))
+    user = (f"Today is {today}. Using current macro/economic/policy conditions and the "
+            f"supplementary signal below, produce 1-4 high-quality theses per the rules.{already}\n\n"
+            f"Supplementary signal:\n{_as_data(context)}\n\nReturn ONLY the JSON array.")
+    return {"system": SYSTEM_PROMPT + UNTRUSTED_RULE, "user": user}
+
+
+def _revalidate_request(active: List[Dict]) -> Dict:
+    today = date.today().isoformat()
+    listing = json.dumps([
+        {"id": clean_text(t.get("id"), 40),
+         "theme": clean_text(t.get("theme"), TEXT_LIMITS["theme"]),
+         "invalidation_condition": clean_text(t.get("invalidation_condition"),
+                                              TEXT_LIMITS["invalidation_condition"])}
+        for t in active], indent=2)
+    return {"system": REVALIDATE_PROMPT + UNTRUSTED_RULE, "user": f"Today is {today}. Theses to audit:\n{_as_data(listing)}"}
+
+
+def prepare(path: Path = REQUESTS_FILE) -> Dict:
+    """
+    Step 1 of 2 (GitHub job, no model): write the two research questions for the
+    "Macro research analyst" scheduled task on Alex's Claude account to answer.
+    """
+    from macro_thesis import is_thesis_live, retire_expired
+    reg = _load_register()
+    retire_expired(reg.get("theses", []))
+    active = [t for t in reg.get("theses", []) if t.get("status") == "active"]
+    live = [t for t in reg.get("theses", []) if is_thesis_live(t)]
+    payload = {"date": date.today().isoformat(), "generated_at": datetime.now().isoformat(),
+               "answer_to": str(REPLIES_FILE.relative_to(ROOT)),
+               "requests": {"revalidate": _revalidate_request(active) if active else None,
+                            "generate": _generate_request(_gather_context(), [t["theme"] for t in live])}}
+    import contracts
+    contracts.write(path, payload)
+    logger.info(f"Macro research requests written for {len(active)} active theses")
+    return payload
+
+
+def replies_ask(path: Path = REPLIES_FILE, today: Optional[str] = None):
+    """Step 2 of 2: an `ask` that answers from the task's replies file (same day only)."""
+    import contracts
+    data = contracts.read(path)
+    today = today or date.today().isoformat()
+    if str(data.get("date")) != today:
+        raise RuntimeError(f"replies are from {data.get('date')}, not today ({today})")
+    replies = data.get("replies") or {}
+
+    def ask(system: str, user: str) -> str:
+        key = "revalidate" if system.startswith(REVALIDATE_PROMPT[:40]) else "generate"
+        reply = replies.get(key)
+        if not isinstance(reply, str) or not reply.strip():
+            raise RuntimeError(f"no '{key}' reply in {path.name}")
+        return reply
+    return ask
+
+
+def _generate(context: str, existing: List[str] = None, ask=None) -> List[Dict]:
     """Call Claude to produce candidate theses. Returns parsed list (may be empty)."""
     today = date.today().isoformat()
     already = ""
@@ -198,7 +264,7 @@ def _generate(context: str, existing: List[str] = None) -> List[Dict]:
     user = (f"Today is {today}. Using current macro/economic/policy conditions and the "
             f"supplementary signal below, produce 1-4 high-quality theses per the rules.{already}\n\n"
             f"Supplementary signal:\n{_as_data(context)}\n\nReturn ONLY the JSON array.")
-    theses = _parse_theses(_ask(SYSTEM_PROMPT + UNTRUSTED_RULE, user))
+    theses = _parse_theses((ask or _ask)(SYSTEM_PROMPT + UNTRUSTED_RULE, user))
     if not theses:
         logger.warning("No JSON array of theses in model response")
     return theses
@@ -224,7 +290,7 @@ def _parse_verdicts(text: str) -> Dict[str, Dict]:
     return verdicts
 
 
-def _revalidate(active: List[Dict]) -> Dict[str, Dict]:
+def _revalidate(active: List[Dict], ask=None) -> Dict[str, Dict]:
     """Ask Claude whether each active thesis's invalidation condition has been met."""
     today = date.today().isoformat()
     # Cleaned again here: the register may hold text admitted before the limits existed
@@ -234,7 +300,7 @@ def _revalidate(active: List[Dict]) -> Dict[str, Dict]:
          "invalidation_condition": clean_text(t.get("invalidation_condition"),
                                               TEXT_LIMITS["invalidation_condition"])}
         for t in active], indent=2)
-    return _parse_verdicts(_ask(REVALIDATE_PROMPT + UNTRUSTED_RULE,
+    return _parse_verdicts((ask or _ask)(REVALIDATE_PROMPT + UNTRUSTED_RULE,
                                 f"Today is {today}. Theses to audit:\n{_as_data(listing)}"))
 
 
@@ -248,7 +314,7 @@ def _next_id(reg: Dict) -> int:
     return n + 1
 
 
-def run() -> Dict:
+def run(ask=None) -> Dict:
     from macro_thesis import (validate_thesis, retire_expired, compute_conviction,
                               find_duplicate, is_thesis_live)
 
@@ -266,7 +332,7 @@ def run() -> Dict:
     revalidation_error = None
     if active:
         try:
-            verdicts = _revalidate(active)
+            verdicts = _revalidate(active, ask) if ask else _revalidate(active)
             for t in active:
                 verdict = verdicts.get(t["id"])
                 if verdict is None:
@@ -289,7 +355,8 @@ def run() -> Dict:
     # 3. Generate candidates
     try:
         context = _gather_context()
-        candidates = _generate(context, existing=[t["theme"] for t in live])
+        existing = [t["theme"] for t in live]
+        candidates = _generate(context, existing=existing, ask=ask) if ask else _generate(context, existing=existing)
     except Exception as e:
         logger.error(f"Generation failed: {e} — no new theses")
         if revalidation["confirmed"] or revalidation["invalidated"]:
@@ -346,11 +413,42 @@ def run() -> Dict:
             "admitted": len(admitted), "active": len(live)}
 
 
-def main() -> int:
-    """Returns a process exit code: non-zero when no research was produced, so the workflow run fails visibly."""
+def main(argv=None) -> int:
+    """
+    Returns a process exit code: non-zero when no research was produced, so the workflow run fails visibly.
+
+        --prepare            write the research questions (GitHub, Saturday 09:00 ET)
+        --apply [FILE]       validate the scheduled task's answers and update the register
+        (neither)            call the Anthropic API directly (legacy; needs ANTHROPIC_API_KEY)
+    """
+    import argparse
+    ap = argparse.ArgumentParser(description="Macro research: theses for the screener")
+    ap.add_argument("--prepare", action="store_true")
+    ap.add_argument("--apply", nargs="?", const=str(REPLIES_FILE))
+    args = ap.parse_args(argv or [])
     logger.info("=== Macro Research Agent Starting ===")
+    if args.prepare:
+        prepare()
+        return 0
+    if args.apply:
+        try:
+            ask = replies_ask(Path(args.apply))
+        except Exception as e:
+            logger.error(f"Cannot apply replies: {e} — register unchanged")
+            _write_brief("error", {"error": f"replies: {e}"})
+            return 1
+        result = run(ask=ask)
+        try:   # mark which answers were applied, so a second trigger the same day is a no-op
+            import contracts
+            brief = contracts.read(BRIEF_FILE, default={})
+            brief["replies_date"] = contracts.read(Path(args.apply)).get("date")
+            contracts.write(BRIEF_FILE, brief)
+        except Exception as e:
+            logger.warning(f"Could not mark the replies applied: {e}")
+        logger.info("=== Macro Research Agent Complete ===")
+        return 1 if result.get("status") == "error" else 0
     if not os.getenv("ANTHROPIC_API_KEY"):
-        logger.error("ANTHROPIC_API_KEY not set — register unchanged")
+        logger.error("ANTHROPIC_API_KEY not set — use --prepare / --apply (scheduled task) instead")
         _write_brief("error", {"error": "missing ANTHROPIC_API_KEY"})
         return 1
     result = run()
@@ -359,4 +457,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

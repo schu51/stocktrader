@@ -41,7 +41,8 @@ jobs:
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
-          git add docs/data/universe.json docs/data/securities.json 2>/dev/null || true
+          git add docs/data/universe.json
+          git add docs/data/securities.json 2>/dev/null || true
           git diff --staged --quiet && { echo "Universe unchanged"; exit 0; }
           git commit -m "Refresh screener universe [skip ci]"
           pushed=0

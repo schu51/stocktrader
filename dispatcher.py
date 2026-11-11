@@ -57,14 +57,18 @@ TIMETABLE = [
     ("overnight_shadow.yml", WEEKDAYS, "16:30", "16:30", None),  # overnight shadow test, no orders (overnight_shadow.py)
     ("daily_eval.yml",     WEEKDAYS,   "16:45", "16:45", None),  # scorecard + backtest tournament (daily_eval.py)
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30
+    ("ops_monitor.yml",    WEEKDAYS,   "10:45", "10:45", None),  # machinery check after the morning trades (no orders)
+    ("ops_monitor.yml",    WEEKDAYS,   "17:30", "17:30", None),  # ... and after the evening jobs, with trade attribution
+    ("pit.yml",            WEEKDAYS,   "18:45", "18:45", None),  # after the day's last write: knowledge graph + point-in-time history
     # Saturday chain — each step feeds the next
     ("refresh_universe.yml",   [SATURDAY], "07:00", "07:00", None),  # S&P 500 + Nasdaq-100 list the screener scans
     ("diamond_screen.yml",     [SATURDAY], "07:30", "07:30", None),  # small/mid-cap inflection watchlist (no trades)
     ("candidate_outcomes.yml", [SATURDAY], "08:00", "08:00", None),  # evidence the learning agent checks
     ("experiments.yml",        [SATURDAY], "08:15", "08:15", None),  # promote / keep / drop technical trials
     ("learning.yml",           [SATURDAY], "08:30", "08:30", None),
-    ("macro_research.yml",     [SATURDAY], "09:00", "09:00", None),
+    ("macro_research.yml",     [SATURDAY], "09:00", "09:00", None),  # questions only; answered by the Macro research analyst task
     ("weekly_review.yml",      [SATURDAY], "09:30", "09:30", None),  # summarizes all of the above
+    ("apply_replies.yml",      [SATURDAY], "11:30", "11:30", None),  # fallback: apply model answers if their push did not
 ]
 
 

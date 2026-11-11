@@ -10,8 +10,6 @@ jobs:
     permissions:
       contents: write
       issues: write          # to open a failure issue
-    env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -24,15 +22,15 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Run macro research agent
-        run: python macro_research_agent.py
+        run: python macro_research_agent.py --prepare   # questions for the 'Macro research analyst' scheduled task; answers applied by apply_replies.yml
 
       - name: Commit register + brief
         if: always()
         run: |
           git config user.email "aschumacherdesign@gmail.com"
           git config user.name "schu51"
-          git add docs/data/theses.json docs/data/macro_brief.json 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "Macro research update [skip ci]"
+          git add research/requests/macro_research.json
+          git diff --staged --quiet || git commit -m "Model requests: macro research [skip ci]"
           pushed=0
           for attempt in 1 2 3 4 5; do
             if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi

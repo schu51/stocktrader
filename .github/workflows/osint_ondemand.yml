@@ -20,8 +20,6 @@ jobs:
     permissions:
       contents: write
       issues: write          # to open a failure issue
-    env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +35,7 @@ jobs:
         env:
           TICKERS: ${{ inputs.tickers }}
           DAYS: ${{ inputs.days }}
-        run: python osint_brief.py --tickers "$TICKERS" --days "${DAYS:-30}"
+        run: python osint_brief.py --no-model --tickers "$TICKERS" --days "${DAYS:-30}"
 
       - name: Commit brief
         if: always()

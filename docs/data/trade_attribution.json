@@ -1,0 +1,2348 @@
+{
+  "generated_at": "2026-11-11T09:32:17",
+  "findings": [
+    "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 20% of 91.",
+    "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 20% of 91.",
+    "Most exits were trend break: 69 trades, 16% won, -5,244 USD.",
+    "27 trades were closed within 3 days (0% won, -4,556 USD).",
+    "Bought 15%+ above the 50-day average: 32% won (avg +3.6%) vs 15% (avg -3.6%) otherwise.",
+    "On the 18 trades the backtest also took, live averaged -1.0% vs the backtest's -2.1%."
+  ],
+  "summary": {
+    "all": {
+      "trades": 91,
+      "win_rate": 0.198,
+      "avg_pnl_pct": -1.48,
+      "total_pnl_usd": -4753.77
+    },
+    "by_tag": {
+      "exit": {
+        "hard_loss": {
+          "trades": 4,
+          "win_rate": 0.0,
+          "avg_pnl_pct": -6.35,
+          "total_pnl_usd": -643.62
+        },
+        "reduce": {
+          "trades": 4,
+          "win_rate": 1.0,
+          "avg_pnl_pct": 45.87,
+          "total_pnl_usd": 4979.0
+        },
+        "stale": {
+          "trades": 1,
+          "win_rate": 1.0,
+          "avg_pnl_pct": 6.69,
+          "total_pnl_usd": 167.31
+        },
+        "stop": {
+          "trades": 6,
+          "win_rate": 0.333,
+          "avg_pnl_pct": -4.76,
+          "total_pnl_usd": -718.25
+        },
+        "stop_gapped": {
+          "trades": 7,
+          "win_rate": 0.0,
+          "avg_pnl_pct": -15.19,
+          "total_pnl_usd": -3293.86
+        },
+        "trend_break": {
+          "trades": 69,
+          "win_rate": 0.159,
+          "avg_pnl_pct": -2.39,
+          "total_pnl_usd": -5244.35
+        }
+      },
+      "quick_fail": {
+        "False": {
+          "trades": 64,
+          "win_rate": 0.281,
+          "avg_pnl_pct": 0.15,
+          "total_pnl_usd": -197.62
+        },
+        "True": {
+          "trades": 27,
+          "win_rate": 0.0,
+          "avg_pnl_pct": -5.34,
+          "total_pnl_usd": -4556.15
+        }
+      },
+      "earnings": {
+        "False": {
+          "trades": 74,
+          "win_rate": 0.162,
+          "avg_pnl_pct": -2.4,
+          "total_pnl_usd": -5643.64
+        },
+        "True": {
+          "trades": 17,
+          "win_rate": 0.353,
+          "avg_pnl_pct": 2.5,
+          "total_pnl_usd": 889.87
+        }
+      },
+      "extended": {
+        "False": {
+          "trades": 47,
+          "win_rate": 0.149,
+          "avg_pnl_pct": -3.58,
+          "total_pnl_usd": -5047.17
+        },
+        "None": {
+          "trades": 25,
+          "win_rate": 0.2,
+          "avg_pnl_pct": -1.42,
+          "total_pnl_usd": -1771.36
+        },
+        "True": {
+          "trades": 19,
+          "win_rate": 0.316,
+          "avg_pnl_pct": 3.63,
+          "total_pnl_usd": 2064.76
+        }
+      },
+      "regime": {
+        "bull": {
+          "trades": 77,
+          "win_rate": 0.195,
+          "avg_pnl_pct": -0.56,
+          "total_pnl_usd": -2106.72
+        },
+        "neutral": {
+          "trades": 14,
+          "win_rate": 0.214,
+          "avg_pnl_pct": -6.54,
+          "total_pnl_usd": -2647.05
+        }
+      },
+      "backtest": {
+        "matched": {
+          "trades": 18,
+          "win_rate": 0.278,
+          "avg_pnl_pct": -1.04,
+          "total_pnl_usd": -422.2
+        },
+        "unmatched": {
+          "trades": 73,
+          "win_rate": 0.178,
+          "avg_pnl_pct": -1.59,
+          "total_pnl_usd": -4331.57
+        }
+      },
+      "sleeve": {
+        "False": {
+          "trades": 90,
+          "win_rate": 0.2,
+          "avg_pnl_pct": -1.01,
+          "total_pnl_usd": -3692.25
+        },
+        "True": {
+          "trades": 1,
+          "win_rate": 0.0,
+          "avg_pnl_pct": -43.45,
+          "total_pnl_usd": -1061.52
+        }
+      }
+    },
+    "window": {
+      "from": "2026-06-04",
+      "to": "2026-11-05"
+    },
+    "same_window_backtest": {
+      "rules live Jun-Nov (r11_live)": {
+        "trades": 126,
+        "win_rate": 0.238,
+        "avg_pnl_pct": -4.38,
+        "covers_to": "2026-11-03"
+      },
+      "rules live since Nov 10 (r11_newlive)": {
+        "trades": 74,
+        "win_rate": 0.568,
+        "avg_pnl_pct": -2.29,
+        "covers_to": "2026-09-22"
+      }
+    },
+    "matched": {
+      "trades": 18,
+      "live_avg_pnl_pct": -1.04,
+      "backtest_avg_pnl_pct": -2.06,
+      "live_win_rate": 0.278,
+      "backtest_win_rate": 0.389
+    },
+    "losses_by_exit": {
+      "trend_break": -7370.95,
+      "stop_gapped": -3293.86,
+      "stop": -767.45,
+      "hard_loss": -643.62
+    },
+    "worst": [
+      {
+        "symbol": "VCYT",
+        "entry_date": "2026-10-26",
+        "pnl_pct": -43.45,
+        "pnl_usd": -1061.52,
+        "tags": {
+          "exit": "stop_gapped",
+          "quick_fail": false,
+          "earnings": false,
+          "extended": null,
+          "regime": "neutral",
+          "backtest": "unmatched",
+          "sleeve": true
+        }
+      },
+      {
+        "symbol": "HPQ",
+        "entry_date": "2026-10-28",
+        "pnl_pct": -15.52,
+        "pnl_usd": -607.82,
+        "tags": {
+          "exit": "stop_gapped",
+          "quick_fail": true,
+          "earnings": false,
+          "extended": false,
+          "regime": "neutral",
+          "backtest": "unmatched",
+          "sleeve": false
+        }
+      },
+      {
+        "symbol": "VRT",
+        "entry_date": "2026-09-08",
+        "pnl_pct": -8.66,
+        "pnl_usd": -511.37,
+        "tags": {
+          "exit": "trend_break",
+          "quick_fail": true,
+          "earnings": false,
+          "extended": null,
+          "regime": "bull",
+          "backtest": "unmatched",
+          "sleeve": false
+        }
+      },
+      {
+        "symbol": "BE",
+        "entry_date": "2026-10-05",
+        "pnl_pct": -8.05,
+        "pnl_usd": -464.94,
+        "tags": {
+          "exit": "stop_gapped",
+          "quick_fail": true,
+          "earnings": false,
+          "extended": true,
+          "regime": "bull",
+          "backtest": "unmatched",
+          "sleeve": false
+        }
+      },
+      {
+        "symbol": "ZS",
+        "entry_date": "2026-10-29",
+        "pnl_pct": -12.99,
+        "pnl_usd": -432.5,
+        "tags": {
+          "exit": "stop_gapped",
+          "quick_fail": false,
+          "earnings": false,
+          "extended": true,
+          "regime": "bull",
+          "backtest": "matched",
+          "sleeve": false
+        }
+      },
+      {
+        "symbol": "EOG",
+        "entry_date": "2026-10-28",
+        "pnl_pct": -7.8,
+        "pnl_usd": -302.64,
+        "tags": {
+          "exit": "stop_gapped",
+          "quick_fail": false,
+          "earnings": false,
+          "extended": false,
+          "regime": "neutral",
+          "backtest": "matched",
+          "sleeve": false
+        }
+      },
+      {
+        "symbol": "MRVL",
+        "entry_date": "2026-08-20",
+        "pnl_pct": -4.96,
+        "pnl_usd": -296.36,
+        "tags": {
+          "exit": "trend_break",
+          "quick_fail": false,
+          "earnings": false,
+          "extended": null,
+          "regime": "bull",
+          "backtest": "unmatched",
+          "sleeve": false
+        }
+      },
+      {
+        "symbol": "WST",
+        "entry_date": "2026-07-07",
+        "pnl_pct": -7.57,
+        "pnl_usd": -296.22,
+        "tags": {
+          "exit": "trend_break",
+          "quick_fail": false,
+          "earnings": true,
+          "extended": false,
+          "regime": "bull",
+          "backtest": "matched",
+          "sleeve": false
+        }
+      }
+    ],
+    "total_pnl_usd": -4753.77
+  },
+  "trades": [
+    {
+      "symbol": "AMAT",
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-06-29",
+      "pnl_pct": 45.86,
+      "pnl_usd": 1339.25,
+      "hold_days": 25,
+      "tags": {
+        "exit": "reduce",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.2378,
+        "rs_rank_at_screen": 93
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "NET",
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-06-10",
+      "pnl_pct": -9.9,
+      "pnl_usd": -294.3,
+      "hold_days": 6,
+      "tags": {
+        "exit": "hard_loss",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.2578,
+        "rs_rank_at_screen": 70
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "ARM",
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-06-09",
+      "pnl_pct": -4.54,
+      "pnl_usd": -130.41,
+      "hold_days": 5,
+      "tags": {
+        "exit": "hard_loss",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.9147,
+        "rs_rank_at_screen": 99
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "PANW",
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-08-11",
+      "pnl_pct": 40.14,
+      "pnl_usd": 987.93,
+      "hold_days": 68,
+      "tags": {
+        "exit": "reduce",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.4096,
+        "rs_rank_at_screen": 83
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "AMD",
+      "entry_date": "2026-06-04",
+      "exit_date": "2026-06-09",
+      "pnl_pct": -9.28,
+      "pnl_usd": -181.92,
+      "hold_days": 5,
+      "tags": {
+        "exit": "hard_loss",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.5575,
+        "rs_rank_at_screen": 98
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "AMAT",
+      "entry_date": "2026-06-05",
+      "exit_date": "2026-06-29",
+      "pnl_pct": 45.86,
+      "pnl_usd": 1480.18,
+      "hold_days": 24,
+      "tags": {
+        "exit": "reduce",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.2331,
+        "rs_rank_at_screen": 94
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "LRCX",
+      "entry_date": "2026-06-05",
+      "exit_date": "2026-07-13",
+      "pnl_pct": 3.4,
+      "pnl_usd": 123.54,
+      "hold_days": 38,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.2384,
+        "rs_rank_at_screen": 95
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "ARM",
+      "entry_date": "2026-06-05",
+      "exit_date": "2026-06-09",
+      "pnl_pct": -1.7,
+      "pnl_usd": -36.99,
+      "hold_days": 4,
+      "tags": {
+        "exit": "hard_loss",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.7876,
+        "rs_rank_at_screen": 99
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "TSM",
+      "entry_date": "2026-06-05",
+      "exit_date": "2026-07-13",
+      "pnl_pct": -2.42,
+      "pnl_usd": -51.64,
+      "hold_days": 38,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1476,
+        "rs_rank_at_screen": 80
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CHRW",
+      "entry_date": "2026-06-09",
+      "exit_date": "2026-06-24",
+      "pnl_pct": -5.2,
+      "pnl_usd": -185.28,
+      "hold_days": 15,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "JBHT",
+      "entry_date": "2026-06-09",
+      "exit_date": "2026-07-27",
+      "pnl_pct": -1.16,
+      "pnl_usd": -42.26,
+      "hold_days": 48,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1628,
+        "rs_rank_at_screen": 93
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "APA",
+      "entry_date": "2026-06-10",
+      "exit_date": "2026-06-10",
+      "pnl_pct": -0.93,
+      "pnl_usd": -22.68,
+      "hold_days": 0,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "SLB",
+      "entry_date": "2026-06-12",
+      "exit_date": "2026-06-15",
+      "pnl_pct": -4.64,
+      "pnl_usd": -104.73,
+      "hold_days": 3,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0147,
+        "rs_rank_at_screen": 84
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "DD",
+      "entry_date": "2026-06-12",
+      "exit_date": "2026-06-23",
+      "pnl_pct": -1.65,
+      "pnl_usd": -37.98,
+      "hold_days": 11,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "VLO",
+      "entry_date": "2026-06-12",
+      "exit_date": "2026-06-15",
+      "pnl_pct": -7.39,
+      "pnl_usd": -250.74,
+      "hold_days": 3,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0588,
+        "rs_rank_at_screen": 87
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "WBD",
+      "entry_date": "2026-06-15",
+      "exit_date": "2026-06-16",
+      "pnl_pct": -1.09,
+      "pnl_usd": -41.04,
+      "hold_days": 1,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0015,
+        "rs_rank_at_screen": 93
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CSX",
+      "entry_date": "2026-06-16",
+      "exit_date": "2026-09-01",
+      "pnl_pct": 1.06,
+      "pnl_usd": 25.15,
+      "hold_days": 77,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "VRT",
+      "entry_date": "2026-06-18",
+      "exit_date": "2026-06-23",
+      "pnl_pct": -3.58,
+      "pnl_usd": -194.75,
+      "hold_days": 5,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.003,
+        "rs_rank_at_screen": 95
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CFG",
+      "entry_date": "2026-06-18",
+      "exit_date": "2026-08-20",
+      "pnl_pct": 5.19,
+      "pnl_usd": 121.4,
+      "hold_days": 63,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0565,
+        "rs_rank_at_screen": 84
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CAT",
+      "entry_date": "2026-06-23",
+      "exit_date": "2026-07-14",
+      "pnl_pct": -5.42,
+      "pnl_usd": -221.57,
+      "hold_days": 21,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1606,
+        "rs_rank_at_screen": 96
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CMI",
+      "entry_date": "2026-06-23",
+      "exit_date": "2026-07-02",
+      "pnl_pct": -4.25,
+      "pnl_usd": -92.74,
+      "hold_days": 9,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0918,
+        "rs_rank_at_screen": 93
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "WBD",
+      "entry_date": "2026-06-24",
+      "exit_date": "2026-06-26",
+      "pnl_pct": -0.5,
+      "pnl_usd": -18.41,
+      "hold_days": 2,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "VRT",
+      "entry_date": "2026-06-25",
+      "exit_date": "2026-06-26",
+      "pnl_pct": -7.09,
+      "pnl_usd": -167.25,
+      "hold_days": 1,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "GEV",
+      "entry_date": "2026-06-26",
+      "exit_date": "2026-07-15",
+      "pnl_pct": -4.9,
+      "pnl_usd": -165.73,
+      "hold_days": 19,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0673,
+        "rs_rank_at_screen": 91
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "FIX",
+      "entry_date": "2026-06-26",
+      "exit_date": "2026-07-01",
+      "pnl_pct": -3.61,
+      "pnl_usd": -69.79,
+      "hold_days": 5,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "UNH",
+      "entry_date": "2026-06-29",
+      "exit_date": "2026-08-04",
+      "pnl_pct": -2.73,
+      "pnl_usd": -137.65,
+      "hold_days": 36,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "TXN",
+      "entry_date": "2026-07-02",
+      "exit_date": "2026-07-02",
+      "pnl_pct": -3.22,
+      "pnl_usd": -81.21,
+      "hold_days": 0,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0204,
+        "rs_rank_at_screen": 90
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "AAPL",
+      "entry_date": "2026-07-02",
+      "exit_date": "2026-07-31",
+      "pnl_pct": -1.54,
+      "pnl_usd": -56.67,
+      "hold_days": 29,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0321,
+        "rs_rank_at_screen": 78
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "WST",
+      "entry_date": "2026-07-07",
+      "exit_date": "2026-07-27",
+      "pnl_pct": -7.57,
+      "pnl_usd": -296.22,
+      "hold_days": 20,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1209,
+        "rs_rank_at_screen": 89
+      },
+      "backtest_pnl_pct": -5.91
+    },
+    {
+      "symbol": "IBKR",
+      "entry_date": "2026-07-07",
+      "exit_date": "2026-07-29",
+      "pnl_pct": -7.23,
+      "pnl_usd": -272.34,
+      "hold_days": 22,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CHRW",
+      "entry_date": "2026-07-07",
+      "exit_date": "2026-07-27",
+      "pnl_pct": -6.59,
+      "pnl_usd": -158.59,
+      "hold_days": 20,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0452,
+        "rs_rank_at_screen": 87
+      },
+      "backtest_pnl_pct": -7.698
+    },
+    {
+      "symbol": "CRWD",
+      "entry_date": "2026-07-07",
+      "exit_date": "2026-07-28",
+      "pnl_pct": -2.3,
+      "pnl_usd": -53.59,
+      "hold_days": 21,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.2847,
+        "rs_rank_at_screen": 96
+      },
+      "backtest_pnl_pct": -7.487
+    },
+    {
+      "symbol": "VLO",
+      "entry_date": "2026-07-07",
+      "exit_date": "2026-09-16",
+      "pnl_pct": 51.6,
+      "pnl_usd": 1171.64,
+      "hold_days": 71,
+      "tags": {
+        "exit": "reduce",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CNC",
+      "entry_date": "2026-07-07",
+      "exit_date": "2026-07-24",
+      "pnl_pct": -5.43,
+      "pnl_usd": -135.14,
+      "hold_days": 17,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1097,
+        "rs_rank_at_screen": 95
+      },
+      "backtest_pnl_pct": -11.634
+    },
+    {
+      "symbol": "SSO",
+      "entry_date": "2026-07-15",
+      "exit_date": "2026-07-17",
+      "pnl_pct": -2.57,
+      "pnl_usd": -109.5,
+      "hold_days": 2,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "SNOW",
+      "entry_date": "2026-07-15",
+      "exit_date": "2026-10-15",
+      "pnl_pct": 17.6,
+      "pnl_usd": 771.99,
+      "hold_days": 92,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.2686,
+        "rs_rank_at_screen": 95
+      },
+      "backtest_pnl_pct": 16.308
+    },
+    {
+      "symbol": "NET",
+      "entry_date": "2026-07-28",
+      "exit_date": "2026-09-02",
+      "pnl_pct": 0.96,
+      "pnl_usd": 23.11,
+      "hold_days": 36,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.0324,
+        "rs_rank_at_screen": 80
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "FTNT",
+      "entry_date": "2026-07-30",
+      "exit_date": "2026-08-19",
+      "pnl_pct": -2.89,
+      "pnl_usd": -77.07,
+      "hold_days": 20,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "MDB",
+      "entry_date": "2026-08-03",
+      "exit_date": "2026-09-04",
+      "pnl_pct": 5.87,
+      "pnl_usd": 240.68,
+      "hold_days": 32,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": null,
+        "regime": "neutral",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral"
+      },
+      "backtest_pnl_pct": 3.115
+    },
+    {
+      "symbol": "CRWD",
+      "entry_date": "2026-08-03",
+      "exit_date": "2026-08-20",
+      "pnl_pct": -2.28,
+      "pnl_usd": -58.17,
+      "hold_days": 17,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.0419,
+        "rs_rank_at_screen": 91
+      },
+      "backtest_pnl_pct": -7.697
+    },
+    {
+      "symbol": "DD",
+      "entry_date": "2026-08-07",
+      "exit_date": "2026-08-18",
+      "pnl_pct": -3.81,
+      "pnl_usd": -95.21,
+      "hold_days": 11,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0429,
+        "rs_rank_at_screen": 80
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "ANET",
+      "entry_date": "2026-08-07",
+      "exit_date": "2026-10-13",
+      "pnl_pct": 6.69,
+      "pnl_usd": 167.31,
+      "hold_days": 67,
+      "tags": {
+        "exit": "stale",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1354,
+        "rs_rank_at_screen": 83
+      },
+      "backtest_pnl_pct": 8.169
+    },
+    {
+      "symbol": "AMD",
+      "entry_date": "2026-08-17",
+      "exit_date": "2026-08-17",
+      "pnl_pct": -0.54,
+      "pnl_usd": -30.42,
+      "hold_days": 0,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "VRT",
+      "entry_date": "2026-08-17",
+      "exit_date": "2026-08-17",
+      "pnl_pct": -1.01,
+      "pnl_usd": -39.32,
+      "hold_days": 0,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "MRVL",
+      "entry_date": "2026-08-20",
+      "exit_date": "2026-08-24",
+      "pnl_pct": -4.96,
+      "pnl_usd": -296.36,
+      "hold_days": 4,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "TEAM",
+      "entry_date": "2026-08-25",
+      "exit_date": "2026-10-30",
+      "pnl_pct": 15.08,
+      "pnl_usd": 382.41,
+      "hold_days": 66,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": 18.124
+    },
+    {
+      "symbol": "FF",
+      "entry_date": "2026-08-31",
+      "exit_date": "2026-09-23",
+      "pnl_pct": -4.08,
+      "pnl_usd": -104.46,
+      "hold_days": 23,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0832,
+        "rs_rank_at_screen": 85
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "MMSI",
+      "entry_date": "2026-08-31",
+      "exit_date": "2026-10-01",
+      "pnl_pct": -5.41,
+      "pnl_usd": -137.82,
+      "hold_days": 31,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1355,
+        "rs_rank_at_screen": 80
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "HOOD",
+      "entry_date": "2026-08-31",
+      "exit_date": "2026-10-08",
+      "pnl_pct": 0.19,
+      "pnl_usd": 4.8,
+      "hold_days": 38,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CRWD",
+      "entry_date": "2026-09-03",
+      "exit_date": "2026-10-16",
+      "pnl_pct": 7.1,
+      "pnl_usd": 181.71,
+      "hold_days": 43,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0215,
+        "rs_rank_at_screen": 93
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "VRT",
+      "entry_date": "2026-09-08",
+      "exit_date": "2026-09-09",
+      "pnl_pct": -8.66,
+      "pnl_usd": -511.37,
+      "hold_days": 1,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "MRVL",
+      "entry_date": "2026-09-08",
+      "exit_date": "2026-10-15",
+      "pnl_pct": 0.6,
+      "pnl_usd": 13.71,
+      "hold_days": 37,
+      "tags": {
+        "exit": "stop",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0131,
+        "rs_rank_at_screen": 99
+      },
+      "backtest_pnl_pct": 1.122
+    },
+    {
+      "symbol": "NET",
+      "entry_date": "2026-09-09",
+      "exit_date": "2026-10-15",
+      "pnl_pct": -0.36,
+      "pnl_usd": -9.01,
+      "hold_days": 36,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1061,
+        "rs_rank_at_screen": 85
+      },
+      "backtest_pnl_pct": 0.746
+    },
+    {
+      "symbol": "AMD",
+      "entry_date": "2026-09-10",
+      "exit_date": "2026-10-16",
+      "pnl_pct": 5.61,
+      "pnl_usd": 198.88,
+      "hold_days": 36,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0477,
+        "rs_rank_at_screen": 97
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "PANW",
+      "entry_date": "2026-09-14",
+      "exit_date": "2026-10-15",
+      "pnl_pct": -1.81,
+      "pnl_usd": -40.73,
+      "hold_days": 31,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0727,
+        "rs_rank_at_screen": 92
+      },
+      "backtest_pnl_pct": 0.299
+    },
+    {
+      "symbol": "FTNT",
+      "entry_date": "2026-09-16",
+      "exit_date": "2026-10-16",
+      "pnl_pct": -2.0,
+      "pnl_usd": -116.86,
+      "hold_days": 30,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.0859,
+        "rs_rank_at_screen": 91
+      },
+      "backtest_pnl_pct": -0.757
+    },
+    {
+      "symbol": "NVDA",
+      "entry_date": "2026-09-21",
+      "exit_date": "2026-10-14",
+      "pnl_pct": -2.32,
+      "pnl_usd": -95.13,
+      "hold_days": 23,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "PLTR",
+      "entry_date": "2026-09-21",
+      "exit_date": "2026-10-30",
+      "pnl_pct": 2.08,
+      "pnl_usd": 52.93,
+      "hold_days": 39,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.1085,
+        "rs_rank_at_screen": 80
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "SMCI",
+      "entry_date": "2026-09-29",
+      "exit_date": "2026-10-14",
+      "pnl_pct": -9.0,
+      "pnl_usd": -227.33,
+      "hold_days": 15,
+      "tags": {
+        "exit": "stop",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1809,
+        "rs_rank_at_screen": 80
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "ARM",
+      "entry_date": "2026-09-29",
+      "exit_date": "2026-10-08",
+      "pnl_pct": -8.04,
+      "pnl_usd": -191.38,
+      "hold_days": 9,
+      "tags": {
+        "exit": "stop_gapped",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0706,
+        "rs_rank_at_screen": 92
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "SHOP",
+      "entry_date": "2026-10-01",
+      "exit_date": "2026-11-03",
+      "pnl_pct": -6.15,
+      "pnl_usd": -239.83,
+      "hold_days": 33,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "BE",
+      "entry_date": "2026-10-05",
+      "exit_date": "2026-10-08",
+      "pnl_pct": -8.05,
+      "pnl_usd": -464.94,
+      "hold_days": 3,
+      "tags": {
+        "exit": "stop_gapped",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1931,
+        "rs_rank_at_screen": 98
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "WAB",
+      "entry_date": "2026-10-05",
+      "exit_date": "2026-10-07",
+      "pnl_pct": -1.75,
+      "pnl_usd": -69.27,
+      "hold_days": 2,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "AME",
+      "entry_date": "2026-10-05",
+      "exit_date": "2026-10-15",
+      "pnl_pct": -3.89,
+      "pnl_usd": -158.1,
+      "hold_days": 10,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0309,
+        "rs_rank_at_screen": 80
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "GEV",
+      "entry_date": "2026-10-05",
+      "exit_date": "2026-10-14",
+      "pnl_pct": -2.73,
+      "pnl_usd": -53.88,
+      "hold_days": 9,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.013,
+        "rs_rank_at_screen": 83
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "PSX",
+      "entry_date": "2026-10-05",
+      "exit_date": "2026-11-04",
+      "pnl_pct": -1.26,
+      "pnl_usd": -30.26,
+      "hold_days": 30,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.104,
+        "rs_rank_at_screen": 96
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "EXPD",
+      "entry_date": "2026-10-05",
+      "exit_date": "2026-11-05",
+      "pnl_pct": -0.03,
+      "pnl_usd": -0.75,
+      "hold_days": 31,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0328,
+        "rs_rank_at_screen": 90
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "MPC",
+      "entry_date": "2026-10-06",
+      "exit_date": "2026-11-03",
+      "pnl_pct": -2.38,
+      "pnl_usd": -143.13,
+      "hold_days": 28,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1682,
+        "rs_rank_at_screen": 97
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CAH",
+      "entry_date": "2026-10-06",
+      "exit_date": "2026-10-06",
+      "pnl_pct": -0.44,
+      "pnl_usd": -19.03,
+      "hold_days": 0,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "HUM",
+      "entry_date": "2026-10-06",
+      "exit_date": "2026-10-08",
+      "pnl_pct": -3.76,
+      "pnl_usd": -150.51,
+      "hold_days": 2,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0114,
+        "rs_rank_at_screen": 90
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "TRGP",
+      "entry_date": "2026-10-06",
+      "exit_date": "2026-10-07",
+      "pnl_pct": -1.95,
+      "pnl_usd": -52.4,
+      "hold_days": 1,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0088,
+        "rs_rank_at_screen": 91
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "DE",
+      "entry_date": "2026-10-06",
+      "exit_date": "2026-10-07",
+      "pnl_pct": -5.99,
+      "pnl_usd": -165.88,
+      "hold_days": 1,
+      "tags": {
+        "exit": "stop",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0585,
+        "rs_rank_at_screen": 89
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "IQV",
+      "entry_date": "2026-10-06",
+      "exit_date": "2026-10-08",
+      "pnl_pct": -5.58,
+      "pnl_usd": -135.84,
+      "hold_days": 2,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": null,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "PWR",
+      "entry_date": "2026-10-08",
+      "exit_date": "2026-10-14",
+      "pnl_pct": -6.03,
+      "pnl_usd": -209.31,
+      "hold_days": 6,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0673,
+        "rs_rank_at_screen": 88
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "APA",
+      "entry_date": "2026-10-08",
+      "exit_date": "2026-11-04",
+      "pnl_pct": -0.31,
+      "pnl_usd": -12.71,
+      "hold_days": 27,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0558,
+        "rs_rank_at_screen": 95
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "MRNA",
+      "entry_date": "2026-10-08",
+      "exit_date": "2026-10-22",
+      "pnl_pct": 1.39,
+      "pnl_usd": 35.49,
+      "hold_days": 14,
+      "tags": {
+        "exit": "stop",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.4255,
+        "rs_rank_at_screen": 99
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "JCI",
+      "entry_date": "2026-10-12",
+      "exit_date": "2026-10-15",
+      "pnl_pct": -6.47,
+      "pnl_usd": -161.84,
+      "hold_days": 3,
+      "tags": {
+        "exit": "stop",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0626,
+        "rs_rank_at_screen": 84
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "NTAP",
+      "entry_date": "2026-10-14",
+      "exit_date": "2026-10-15",
+      "pnl_pct": -9.1,
+      "pnl_usd": -212.4,
+      "hold_days": 1,
+      "tags": {
+        "exit": "stop",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1949,
+        "rs_rank_at_screen": 97
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "TWLO",
+      "entry_date": "2026-10-14",
+      "exit_date": "2026-10-16",
+      "pnl_pct": -11.45,
+      "pnl_usd": -294.94,
+      "hold_days": 2,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1492,
+        "rs_rank_at_screen": 98
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "ILMN",
+      "entry_date": "2026-10-14",
+      "exit_date": "2026-10-30",
+      "pnl_pct": -9.38,
+      "pnl_usd": -232.28,
+      "hold_days": 16,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": true,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1762,
+        "rs_rank_at_screen": 98
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "CRWD",
+      "entry_date": "2026-10-26",
+      "exit_date": "2026-11-04",
+      "pnl_pct": -6.15,
+      "pnl_usd": -142.73,
+      "hold_days": 9,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.0161,
+        "rs_rank_at_screen": 96
+      },
+      "backtest_pnl_pct": -7.157
+    },
+    {
+      "symbol": "VCYT",
+      "entry_date": "2026-10-26",
+      "exit_date": "2026-11-05",
+      "pnl_pct": -43.45,
+      "pnl_usd": -1061.52,
+      "hold_days": 10,
+      "tags": {
+        "exit": "stop_gapped",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": true
+      },
+      "context": {
+        "regime": "neutral"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "HPQ",
+      "entry_date": "2026-10-28",
+      "exit_date": "2026-10-30",
+      "pnl_pct": -15.52,
+      "pnl_usd": -607.82,
+      "hold_days": 2,
+      "tags": {
+        "exit": "stop_gapped",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.0836,
+        "rs_rank_at_screen": 89
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "EOG",
+      "entry_date": "2026-10-28",
+      "exit_date": "2026-11-04",
+      "pnl_pct": -7.8,
+      "pnl_usd": -302.64,
+      "hold_days": 7,
+      "tags": {
+        "exit": "stop_gapped",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.1123,
+        "rs_rank_at_screen": 89
+      },
+      "backtest_pnl_pct": -5.997
+    },
+    {
+      "symbol": "PANW",
+      "entry_date": "2026-10-29",
+      "exit_date": "2026-10-30",
+      "pnl_pct": -1.05,
+      "pnl_usd": -55.08,
+      "hold_days": 1,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.0828,
+        "rs_rank_at_screen": 96
+      },
+      "backtest_pnl_pct": -9.079
+    },
+    {
+      "symbol": "ZS",
+      "entry_date": "2026-10-29",
+      "exit_date": "2026-11-05",
+      "pnl_pct": -12.99,
+      "pnl_usd": -432.5,
+      "hold_days": 7,
+      "tags": {
+        "exit": "stop_gapped",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": true,
+        "regime": "bull",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.299,
+        "rs_rank_at_screen": 94
+      },
+      "backtest_pnl_pct": -12.775
+    },
+    {
+      "symbol": "NTAP",
+      "entry_date": "2026-10-29",
+      "exit_date": "2026-10-30",
+      "pnl_pct": -10.46,
+      "pnl_usd": -233.06,
+      "hold_days": 1,
+      "tags": {
+        "exit": "stop_gapped",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1164,
+        "rs_rank_at_screen": 97
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "DDOG",
+      "entry_date": "2026-10-29",
+      "exit_date": "2026-10-30",
+      "pnl_pct": -8.88,
+      "pnl_usd": -190.57,
+      "hold_days": 1,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1236,
+        "rs_rank_at_screen": 95
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "ADI",
+      "entry_date": "2026-11-02",
+      "exit_date": "2026-11-05",
+      "pnl_pct": -7.95,
+      "pnl_usd": -168.86,
+      "hold_days": 3,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1184,
+        "rs_rank_at_screen": 95
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "PM",
+      "entry_date": "2026-11-03",
+      "exit_date": "2026-11-09",
+      "pnl_pct": -6.3,
+      "pnl_usd": -235.0,
+      "hold_days": 6,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.0806,
+        "rs_rank_at_screen": 88
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "TXN",
+      "entry_date": "2026-11-05",
+      "exit_date": "2026-11-06",
+      "pnl_pct": -8.15,
+      "pnl_usd": -197.04,
+      "hold_days": 1,
+      "tags": {
+        "exit": "trend_break",
+        "quick_fail": true,
+        "earnings": false,
+        "extended": false,
+        "regime": "neutral",
+        "backtest": "matched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "neutral",
+        "extension": 0.1313,
+        "rs_rank_at_screen": 96
+      },
+      "backtest_pnl_pct": -8.818
+    }
+  ]
+}

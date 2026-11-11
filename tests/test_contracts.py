@@ -9,7 +9,7 @@ import contracts
 import identity
 
 ROOT = Path(__file__).parent.parent
-RAW_JSON_LOADS_CEILING = 16     # may only fall: new code reads shared files through contracts.read
+RAW_JSON_LOADS_CEILING = 7     # raw JSON FILE reads; may only fall: read shared files with contracts.read
 
 
 def test_every_committed_shared_file_has_a_contract_and_keeps_it():
@@ -17,8 +17,8 @@ def test_every_committed_shared_file_has_a_contract_and_keeps_it():
 
 
 def test_no_new_raw_json_loads_in_the_bot():
-    n = sum(len(re.findall(r"json\.loads?\(", f.read_text()))
-            for f in ROOT.glob("*.py") if f.name != "contracts.py")
+    n = sum(len(re.findall(r"json\.load\(|json\.loads\([^\n]*read_text\(\)", f.read_text()))
+            for f in ROOT.glob("*.py") if f.name not in ("contracts.py", "pit.py"))   # pit parses its own stored blobs
     assert n <= RAW_JSON_LOADS_CEILING, \
         f"{n} raw json.load(s) calls (ceiling {RAW_JSON_LOADS_CEILING}): read docs/data files with contracts.read"
 
@@ -111,3 +111,13 @@ def test_lookups_use_the_registry(tmp_path, monkeypatch):
     assert identity.security_id("META") == "a1" and identity.security_id("fb") == "a1"
     assert identity.resolve("FB") == "META" and identity.cik("META") == 1326801
     assert identity.security_id("NOPE") is None and identity.resolve("nope") == "NOPE"
+
+
+def test_new_paths_get_their_own_git_add_line():
+    # `git add a b missing/` adds NOTHING when one path is missing: a new folder on the
+    # same line as trades.json would silently skip committing the trade log.
+    for wf in (ROOT / ".github" / "workflows").glob("*.yml"):
+        for line in wf.read_text().splitlines():
+            if "git add" in line and ("decisions/" in line or "securities.json" in line):
+                assert line.strip().split()[2:3] and len([w for w in line.split() if w.startswith("docs/")]) == 1, \
+                    f"{wf.name}: {line.strip()}"

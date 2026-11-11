@@ -1,0 +1,101 @@
+name: Apply Model Replies
+
+# The model work runs as scheduled tasks on Alex's Claude account (no Anthropic
+# API key). A task reads its questions from research/requests/, pushes its
+# answers to research/replies/, and this job applies them with the repo's own
+# validation: macro theses through macro_research_agent.py (gates, duplicates,
+# horizon), diamond judgments through diamond_judge.py (the injection guard
+# runs on every judgment). The model never writes trading data directly.
+#
+# Runs on the push of an answer file, and from the dispatcher on Saturday as a
+# fallback. Each answer file is applied once (a second run the same day is a no-op).
+
+on:
+  push:
+    branches: [main]
+    paths: ['research/replies/**']
+  workflow_dispatch:
+
+concurrency:
+  group: apply-replies
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      issues: write          # to open a failure issue
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Which answers are new
+        id: due
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, datetime
+          from pathlib import Path
+          from zoneinfo import ZoneInfo
+          today = datetime.datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+          def read(p):
+              try: return json.loads(Path(p).read_text())
+              except Exception: return {}
+          macro = read("research/replies/macro_research.json")
+          brief = read("docs/data/macro_brief.json")
+          print("macro=" + str(macro.get("date") == today and brief.get("replies_date") != today).lower())
+          judge = read("research/replies/diamond_judge.json")
+          diamonds = read("docs/data/diamonds.json")
+          print("diamond=" + str(judge.get("date") == today and diamonds.get("judgment_replies_date") != today).lower())
+          PY
+          cat "$GITHUB_OUTPUT"
+
+      - name: Apply macro theses
+        if: steps.due.outputs.macro == 'true'
+        run: python macro_research_agent.py --apply
+
+      - name: Apply diamond judgments
+        if: steps.due.outputs.diamond == 'true'
+        run: |
+          python diamond_judge.py --apply
+          python diamond_track.py
+
+      - name: Commit
+        if: always() && (steps.due.outputs.macro == 'true' || steps.due.outputs.diamond == 'true')
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          if [ "${{ steps.due.outputs.macro }}" = "true" ]; then
+            git add docs/data/theses.json docs/data/macro_brief.json 2>/dev/null || true
+            git diff --staged --quiet || git commit -m "Macro research update [skip ci]"
+          fi
+          if [ "${{ steps.due.outputs.diamond }}" = "true" ]; then
+            git add docs/data/diamonds.json docs/data/diamond_history.json docs/data/diamond_judgments.json docs/data/diamond_track.json 2>/dev/null || true
+            git diff --staged --quiet || git commit -m "Diamond watchlist update [skip ci]"
+          fi
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create \
+            --title "🚨 ${GITHUB_WORKFLOW} run failed $(date -u +%Y-%m-%d)" \
+            --body "The ${GITHUB_WORKFLOW} workflow failed. Run log: ${RUN_URL}"

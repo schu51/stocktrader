@@ -14,6 +14,7 @@ This agent does NOT generate new entry signals — exits and stop management onl
 
 import json
 import contracts
+import decisions
 import logging
 import sys
 from datetime import datetime, date
@@ -434,6 +435,7 @@ def main():
                 stop_failures.append({"symbol": sym, "status": "exit_deferred", "error": why})
                 exits_triggered.append(action)
                 continue
+            decisions.why(sym, action.get("reason"), rule=action.get("trigger") or "intraday_exit", pnl_pct=action.get("pnl_pct"))
             result = broker.close_position(sym)
             action["executed"] = "error" not in result
             action["order_id"] = result.get("id")

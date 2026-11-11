@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-11-11T18:15:39.780903",
+  "generated_at": "2026-11-11T18:45:41.216880",
   "positions_checked": 15,
   "exits_triggered": [],
   "stops_updated": [],
   "stops_placed": [],
-  "stop_failures": [
+  "stop_failures": [],
+  "untradable": [
     {
       "symbol": "CTLP",
-      "status": "failed",
-      "error": "asset CTLP is not active",
-      "restored": false
+      "reason": "asset is inactive on Alpaca (delisted or acquired)",
+      "qty": 281.0
     }
   ],
   "broker_exits": [],

@@ -54,12 +54,26 @@ def test_freshness_only_expects_outputs_whose_time_has_passed():
     assert om.check_freshness(datetime(2026, 11, 14, 12, 0, tzinfo=ET), {}.get)["status"] == "green"   # Saturday
 
 
-def test_model_check_catches_the_lapsed_credit_and_stale_theses():
-    brief = {"status": "error", "error": "Error code: 400 - Your credit balance is too low to access the Anthropic API"}
-    theses = {"theses": [{"id": "TH-1", "last_validated": "2026-10-31"}]}
-    c = om.check_model(brief, theses, date(2026, 11, 11))
-    assert c["status"] == "red" and "credit" in c["detail"] and any("not re-checked" in i for i in c["items"])
-    assert om.check_model({"status": "ok"}, {"theses": [{"id": "x", "last_validated": "2026-11-10"}]}, date(2026, 11, 11))["status"] == "green"
+def test_model_check_reds_a_current_failure_and_ambers_an_old_one():
+    brief = {"status": "error", "generated_at": "2026-11-07T14:00:00",
+             "error": "Error code: 400 - Your credit balance is too low to access the Anthropic API"}
+    theses = {"theses": [{"id": "TH-1", "status": "active", "last_validated": "2026-10-31"}]}
+    c = om.check_model(brief, theses, date(2026, 11, 8))
+    assert c["status"] == "red" and "credit" in c["detail"]
+    c = om.check_model(brief, theses, date(2026, 11, 11))        # four days on, the API retired: amber
+    assert c["status"] == "amber" and "Saturday" in c["detail"]
+    assert any("stop counting in ranking on 2026-11-14" in i for i in c["items"])
+    ok = {"status": "generated", "generated_at": "2026-11-14T10:00:00"}
+    assert om.check_model(ok, {"theses": [{"id": "x", "status": "active", "last_validated": "2026-11-14"}]},
+                          date(2026, 11, 14))["status"] == "green"
+
+
+def test_only_runs_on_main_count(monkeypatch):
+    rows = [{"path": ".github/workflows/macro_research.yml", "conclusion": "failure", "head_branch": "no-api-key"},
+            {"path": ".github/workflows/intraday_exit.yml", "conclusion": "success", "head_branch": "main"}]
+    monkeypatch.setattr(om, "_gh", lambda args: {"workflow_runs": rows})
+    runs = om.fetch_runs(datetime(2026, 11, 11, 20, 0, tzinfo=timezone.utc))
+    assert runs == [{"workflow": "intraday_exit.yml", "conclusion": "success", "created_at": None}]
 
 
 def test_overall_status_is_the_worst_check(tmp_path):

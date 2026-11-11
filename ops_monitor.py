@@ -122,24 +122,44 @@ def check_freshness(now: datetime, read: Callable[[str], Optional[dict]]) -> Dic
 
 
 def check_model(macro_brief: Optional[dict], theses: Optional[dict], today: date) -> Dict:
+    """
+    Macro research runs weekly (Saturday) through a scheduled task. A failure is red
+    only while it is current (the brief is from the last 2 days); an older error is
+    the last thing the job said, reported as amber until the next run replaces it.
+    """
+    from macro_thesis import STALE_DAYS
     items = []
-    err = str((macro_brief or {}).get("error") or "") + " " + str((macro_brief or {}).get("revalidation_error") or "")
+    brief = macro_brief or {}
+    err = (str(brief.get("error") or "") + " " + str(brief.get("revalidation_error") or "")).strip()
+    try:
+        brief_age = (today - date.fromisoformat(str(brief.get("generated_at"))[:10])).days
+    except ValueError:
+        brief_age = None
     status = "green"
-    if "credit balance" in err.lower():
-        status, items = "red", ["Anthropic API account out of credit: macro research and the diamond judge cannot run"]
-    elif (macro_brief or {}).get("status") == "error":
-        status, items = "amber", [f"macro research failed: {err.strip()[:160]}"]
-    old = []
+    if brief.get("status") == "error" or err:
+        what = "out of API credit (the API is now retired)" if "credit balance" in err.lower() else err[:120]
+        if brief_age is not None and brief_age <= 2:
+            status, items = "red", [f"macro research failed: {what}"]
+        else:
+            status = "amber"
+            items = [f"macro research last ran {str(brief.get('generated_at'))[:10]} and failed ({what}); "
+                     f"the next run is Saturday through the Macro research analyst task"]
+    lapsing = []
     for t in (theses or {}).get("theses") or []:
+        if t.get("status") != "active":
+            continue
         lv = t.get("last_validated") or t.get("created_at")
         try:
-            age = (today - date.fromisoformat(str(lv)[:10])).days
+            checked = date.fromisoformat(str(lv)[:10])
         except ValueError:
             continue
-        if age > THESIS_MAX_AGE_DAYS:
-            old.append(f"{t.get('id')}: last checked {age} days ago")
-    if old:
-        items.append(f"{len(old)} live thesis(es) not re-checked in {THESIS_MAX_AGE_DAYS} days but still used in ranking")
+        if (today - checked).days > THESIS_MAX_AGE_DAYS:
+            lapsing.append((t.get("id"), checked))
+    if lapsing:
+        first = min(c for _, c in lapsing)
+        lapse = first + timedelta(days=STALE_DAYS)
+        when = f"stop counting in ranking on {lapse.isoformat()}" if lapse > today else "no longer count in ranking"
+        items.append(f"{len(lapsing)} thesis(es) not re-checked since {first.isoformat()}: they {when}")
         status = max(status, "amber", key=RANK.get)
     return _check("model", status, items[0] if items else "model-backed jobs healthy", items or None)
 
@@ -193,8 +213,9 @@ def fetch_runs(now: datetime) -> List[Dict]:
     for page in range(1, 6):
         data = _gh([f"repos/{REPO}/actions/runs?per_page=100&page={page}&created=>={since}"])
         rows = (data or {}).get("workflow_runs") or []
+        # main only: a failed run on a pull request's branch is not the live system failing
         out += [{"workflow": Path(r.get("path") or "").name, "conclusion": r.get("conclusion"),
-                 "created_at": r.get("created_at")} for r in rows]
+                 "created_at": r.get("created_at")} for r in rows if r.get("head_branch") == "main"]
         if len(rows) < 100:
             break
     return out

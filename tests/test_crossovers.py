@@ -103,9 +103,9 @@ def test_intraday_exit_labels_by_live_line(monkeypatch):
     import intraday_exit
     monkeypatch.setattr(exit_logic, "EXIT_LINE", "sma50")
     pos = {"symbol": "X", "current_price": "90", "avg_entry_price": "95", "unrealized_plpc": "-0.05", "qty": "10"}
-    assert intraday_exit.evaluate_position(pos, 100.0)["trigger"] == "PRICE_BELOW_50MA"
+    assert intraday_exit.evaluate_position(pos, 100.0, now=_et(15, 45))["trigger"] == "PRICE_BELOW_50MA"
     monkeypatch.setattr(exit_logic, "EXIT_LINE", "death_cross")
-    act = intraday_exit.evaluate_position(pos, exit_logic._ALWAYS_ABOVE)
+    act = intraday_exit.evaluate_position(pos, exit_logic._ALWAYS_ABOVE, now=_et(15, 45))
     assert act["trigger"] == "DEATH_CROSS" and "death cross" in act["reason"]
 
 
@@ -123,3 +123,33 @@ def test_champion_backtest_uses_the_live_exit_line(monkeypatch):
     assert daily_eval.live_rules()["exit_line"] == "sma200"
     monkeypatch.setattr(exit_logic, "EXIT_LINE", "death_cross")
     assert daily_eval.live_rules()["exit_line"] == "death_cross"
+
+
+# ── Trend exits wait for the close (as the backtest sells) ───────────────────
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+
+def _et(h, m):
+    return datetime(2026, 11, 12, h, m, tzinfo=ZoneInfo("America/New_York"))
+
+
+def test_trend_exit_window():
+    assert not exit_logic.trend_exit_window_open(_et(9, 45))
+    assert not exit_logic.trend_exit_window_open(_et(15, 15))
+    assert exit_logic.trend_exit_window_open(_et(15, 45))
+
+
+def test_intraday_dip_below_the_line_does_not_sell_until_the_close(monkeypatch):
+    import intraday_exit
+    pos = {"symbol": "X", "current_price": "90", "avg_entry_price": "95", "unrealized_plpc": "-0.05", "qty": "10"}
+    assert intraday_exit.evaluate_position(pos, 100.0, now=_et(10, 15)) is None
+    act = intraday_exit.evaluate_position(pos, 100.0, now=_et(15, 45))
+    assert act and act["trigger"] in ("PRICE_BELOW_50MA", "PRICE_BELOW_200MA")
+
+
+def test_hard_loss_still_sells_intraday():
+    import intraday_exit
+    pos = {"symbol": "X", "current_price": "80", "avg_entry_price": "100", "unrealized_plpc": "-0.20", "qty": "10"}
+    act = intraday_exit.evaluate_position(pos, 100.0, now=_et(10, 15))
+    assert act and act["trigger"] == "HARD_LOSS_STOP"

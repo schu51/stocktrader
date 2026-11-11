@@ -1605,7 +1605,11 @@ class DailyRunner:
 
             # ── Hard exit: the trend line (exit_logic.EXIT_LINE; the 50-day by default) ──
             from exit_logic import describe_trend_exit, trend_exit_line
+            from exit_logic import trend_exit_window_open
             line = trend_exit_line(closes)
+            if line is not None and current < line and not trend_exit_window_open():
+                logger.info(f"{sym}: below its trend line now; the trend exit is decided at the close")
+                line = None
             if line is not None and current < line:
                 pct_below = (sma50 - current) / sma50 * 100
                 trigger, why_text = describe_trend_exit(current, line)

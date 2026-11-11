@@ -253,7 +253,7 @@ def _log_exit(symbol: str, price: float, qty: int, trigger: str,
         logger.warning(f"Could not log exit for {symbol}: {e}")
 
 
-def evaluate_position(pos: Dict, sma50: Optional[float]) -> Optional[Dict]:
+def evaluate_position(pos: Dict, sma50: Optional[float], now=None) -> Optional[Dict]:
     """
     Check one position for exit triggers.
     Returns an action dict if the position should be closed, None to hold.
@@ -261,10 +261,13 @@ def evaluate_position(pos: Dict, sma50: Optional[float]) -> Optional[Dict]:
     sma50 is supplied by the caller (from the batched daily cache) rather than
     fetched per-position, to avoid one yfinance call per position per run.
     """
-    from exit_logic import check_exit_triggers
+    from exit_logic import check_exit_triggers, trend_exit_window_open
 
     sym      = pos["symbol"]
     current  = float(pos["current_price"])
+    if sma50 is not None and current < sma50 and not trend_exit_window_open(now):
+        logger.info(f"{sym}: below its trend line intraday; the trend exit is decided at the close")
+        sma50 = None            # the hard-loss check below still applies
     avg_cost = float(pos["avg_entry_price"])
     pnl_pct  = float(pos["unrealized_plpc"]) * 100
 

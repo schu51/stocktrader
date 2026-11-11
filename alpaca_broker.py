@@ -38,6 +38,7 @@ Usage:
 
 import os
 import json
+import decisions
 import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
@@ -104,6 +105,15 @@ class AlpacaConfig:
     @property
     def data_url(self) -> str:
         return "https://data.alpaca.markets"
+
+
+def _record(action: str, symbol: str, request: Dict, result) -> None:
+    """Decision record for every order call (decisions.py). Never raises."""
+    try:
+        import decisions
+        decisions.record_order(action, symbol, request, result)
+    except Exception as e:
+        logger.error(f"Decision record failed for {symbol}: {e}")
 
 
 class AlpacaBroker:
@@ -299,12 +309,16 @@ class AlpacaBroker:
         params = {}
         if qty:
             params["qty"] = str(qty)
-        
-        return self._request("DELETE", f"/v2/positions/{symbol}", params=params)
+
+        result = self._request("DELETE", f"/v2/positions/{symbol}", params=params)
+        _record("close", symbol, {"side": "sell", "qty": qty, "type": "market"}, result)
+        return result
     
     def close_all_positions(self) -> Dict:
         """Close all open positions."""
-        return self._request("DELETE", "/v2/positions")
+        result = self._request("DELETE", "/v2/positions")
+        _record("close", "*", {"side": "sell", "all": True}, result)
+        return result
     
     # =========================================================================
     # ORDERS
@@ -367,7 +381,8 @@ class AlpacaBroker:
                 order_data["take_profit"] = {"limit_price": str(round(float(take_profit), 2))}
         
         result = self._request("POST", "/v2/orders", data=order_data)
-        
+        _record("place", symbol, order_data, result)
+
         if "error" not in result:
             logger.info(f"Order placed: {side.upper()} {qty} {symbol} @ {order_type}")
         
@@ -427,11 +442,15 @@ class AlpacaBroker:
     
     def cancel_order(self, order_id: str) -> Dict:
         """Cancel an order by ID."""
-        return self._request("DELETE", f"/v2/orders/{order_id}")
+        result = self._request("DELETE", f"/v2/orders/{order_id}")
+        _record("cancel", "*", {"order_id": order_id}, result)
+        return result
     
     def cancel_all_orders(self) -> Dict:
         """Cancel all open orders."""
-        return self._request("DELETE", "/v2/orders")
+        result = self._request("DELETE", "/v2/orders")
+        _record("cancel", "*", {"all": True}, result)
+        return result
     
     # =========================================================================
     # MARKET DATA
@@ -637,6 +656,12 @@ class OrderExecutor:
             }
         
         # Place bracket order
+        try:
+            import decisions
+            decisions.why(symbol, decision.get("reason") or decision.get("rationale"), rule="entry",
+                          **{k: v for k, v in decision.items() if k not in ("symbol", "reason", "rationale", "action")})
+        except Exception as e:
+            logger.error(f"Decision reason for {symbol} not attached: {e}")
         result = self.broker.place_bracket_order(
             symbol=symbol,
             qty=shares,

@@ -65,6 +65,7 @@ Usage:
 import argparse
 import json
 import contracts
+import decisions
 import logging
 import os
 import sys
@@ -501,6 +502,7 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
             cleared, why = clear_stops_for_sale(broker, symbol)
             if not cleared:
                 raise RuntimeError(why)
+            decisions.why(symbol, sell.get("reason"), rule="sleeve_sell", **{k: v for k, v in sell.items() if k not in ("symbol", "reason")})
             result = broker.close_position(symbol)
             if "error" in result:
                 raise RuntimeError(result.get("error"))
@@ -528,6 +530,7 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
             cleared, why = clear_stops_for_sale(broker, symbol)
             if not cleared:
                 raise RuntimeError(why)
+            decisions.why(symbol, "trim ahead of an earnings report", rule="sleeve_earnings_trim", shares=trim["shares"], report_date=trim.get("report_date"))
             result = broker.close_position(symbol, qty=trim["shares"])
             if "error" in result:
                 raise RuntimeError(result.get("error"))
@@ -581,6 +584,7 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
     sent = []
     for buy in todo["buys"]:
         try:
+            decisions.why(buy["symbol"], buy.get("reason") or "diamond list pick", rule="sleeve_buy", **{k: v for k, v in buy.items() if k not in ("symbol", "reason")})
             result = broker.place_order(symbol=buy["symbol"], qty=buy["shares"], side="buy", order_type="limit",
                                         limit_price=buy["limit_price"], time_in_force="day",
                                         client_order_id=f"{SLEEVE_ORDER_PREFIX}{buy['symbol']}-{datetime.now():%Y%m%d%H%M%S}")

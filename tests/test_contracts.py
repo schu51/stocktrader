@@ -111,3 +111,13 @@ def test_lookups_use_the_registry(tmp_path, monkeypatch):
     assert identity.security_id("META") == "a1" and identity.security_id("fb") == "a1"
     assert identity.resolve("FB") == "META" and identity.cik("META") == 1326801
     assert identity.security_id("NOPE") is None and identity.resolve("nope") == "NOPE"
+
+
+def test_new_paths_get_their_own_git_add_line():
+    # `git add a b missing/` adds NOTHING when one path is missing: a new folder on the
+    # same line as trades.json would silently skip committing the trade log.
+    for wf in (ROOT / ".github" / "workflows").glob("*.yml"):
+        for line in wf.read_text().splitlines():
+            if "git add" in line and ("decisions/" in line or "securities.json" in line):
+                assert line.strip().split()[2:3] and len([w for w in line.split() if w.startswith("docs/")]) == 1, \
+                    f"{wf.name}: {line.strip()}"

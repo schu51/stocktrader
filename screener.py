@@ -920,6 +920,20 @@ def run_screener(
     )
 
     if output_path:
+        # Decision record: the day's ranking, its rules and inputs (decisions.py)
+        try:
+            import decisions
+            decisions.record("rank", "*", {
+                "regime": regime.get("regime"), "rs_threshold": threshold,
+                "universe_size": len(universe), "price_source": LAST_PRICE_SOURCE,
+                "weights": {"w_rs": w_rs, "w_thesis": w_thesis}, "theses_live": len(live_theses),
+                "ranked": [{"symbol": c["symbol"], "rs_rank": c["rs_rank"], "thesis_score": c["thesis_score"],
+                            "macro_mult": c["macro_mult"], "effective_score": c["effective_score"]}
+                           for c in candidates],
+                "rejected": rejected,
+            }, reason={"reason": "daily momentum screen", "rule": "rank", "facts": {}})
+        except Exception as e:
+            logger.error(f"Ranking decision not recorded: {e}")
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         Path(output_path).write_text(json.dumps(result, indent=2))
         logger.info(f"Written to {output_path}")

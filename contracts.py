@@ -388,7 +388,7 @@ CONTRACTS: List[tuple] = [
     ("sma50_cache.json", _doc("Sma50Cache", **_req("date", "values"))),
     ("themes.json", _doc("Themes", themes=Dict[str, Dict[str, Any]])),
     ("weekly_review_*.json", _doc("WeeklyReview", **_req("date", "generated_at", "type"))),
-    ("decisions/*.json", _rows("Decision", "at", "kind", "symbol", "rule_version", "inputs", "output")),
+    ("decisions/*/*.json", _rows("Decision", "at", "job", "kind", "symbol", "rule_version", "inputs", "output")),
     ("agents/*/*.json", AnyDict),
 ]
 

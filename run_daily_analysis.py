@@ -34,6 +34,7 @@ Execution safety gates (all must pass before any order is submitted):
 import argparse
 import json
 import contracts
+import decisions
 import logging
 import os
 import sys
@@ -1620,6 +1621,7 @@ class DailyRunner:
                     try:
                         # A stop holds the shares: confirm it is cancelled before selling (2026-10-15)
                         cleared, why = clear_stops_for_sale(self.broker, sym)
+                        decisions.why(sym, action.get("reason"), rule=action.get("trigger") or action.get("type") or "daily_exit", pnl_pct=action.get("pnl_pct"))
                         close_result = self.broker.close_position(sym) if cleared else {"error": why}
                         action["executed"] = "error" not in close_result
                         action["order_id"] = close_result.get("id")
@@ -1691,6 +1693,7 @@ class DailyRunner:
                         try:
                             # A stop holds the shares: confirm it is cancelled before selling (2026-10-15)
                             cleared, why = clear_stops_for_sale(self.broker, sym)
+                            decisions.why(sym, action.get("reason"), rule=action.get("trigger") or action.get("type") or "daily_exit", pnl_pct=action.get("pnl_pct"))
                             close_result = self.broker.close_position(sym) if cleared else {"error": why}
                             action["executed"] = "error" not in close_result
                             action["order_id"] = close_result.get("id")
@@ -1735,6 +1738,7 @@ class DailyRunner:
                             try:
                                 # A stop holds the shares: confirm it is cancelled before selling (2026-10-15)
                                 cleared, why = clear_stops_for_sale(self.broker, sym)
+                                decisions.why(sym, action.get("reason"), rule=action.get("trigger") or action.get("type") or "daily_exit", pnl_pct=action.get("pnl_pct"))
                                 close_result = self.broker.close_position(sym) if cleared else {"error": why}
                                 action["executed"] = "error" not in close_result
                                 action["order_id"] = close_result.get("id")
@@ -1873,6 +1877,7 @@ class DailyRunner:
                         # Stops reserve the shares: confirm they are cancelled first, or
                         # Alpaca rejects the sale with "insufficient qty" (2026-10-15)
                         cleared, why = clear_stops_for_sale(self.broker, dec.symbol)
+                        decisions.why(dec.symbol, getattr(dec, "reason", None) or entry.get("reason"), rule="decision_engine_sell", shares=dec.shares)
                         r = self.broker.close_position(dec.symbol, qty=dec.shares) if cleared else {"error": why}
                         entry["executed"] = "error" not in r
                         entry["order_id"] = r.get("id")
@@ -1899,6 +1904,8 @@ class DailyRunner:
                             if remaining > 0 and cur_price > 0:
                                 residual_stop = round(cur_price * 0.90, 2)  # 10% trail
                                 try:
+                                    decisions.why(dec.symbol, "residual stop after a partial sell", rule="residual_stop",
+                                                  stop_price=residual_stop, qty=remaining)
                                     self.broker.place_order(
                                         symbol=dec.symbol,
                                         qty=remaining,
@@ -2310,6 +2317,7 @@ class DailyRunner:
                 cleared, why = clear_stops_for_sale(self.broker, sym)
                 if not cleared:
                     raise RuntimeError(why)
+                decisions.why(sym, lag.get("reason") or "rotation: weaker than a waiting candidate", rule="rotation", rs_rank=lag.get("rs_rank"), pnl_pct=lag.get("pnl_pct"), hold_days=lag.get("hold_days"))
                 result = self.broker.close_position(sym)
                 if "error" in result:
                     raise RuntimeError(result.get("error"))

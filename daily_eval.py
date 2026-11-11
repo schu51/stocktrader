@@ -57,7 +57,7 @@ ALLOWED_KNOBS = {           # backtest.Backtest arguments a challenger may chang
     "breakeven_at", "trail_at", "trail_pct", "min_spy_above_50ma", "min_above_50ma", "atr_stop",
     "exit_before_earnings", "earnings_keep_gain", "earnings_blackout", "risk_per_trade", "max_atr_pct",
     "stale_days", "stale_gain", "exit_confirm", "exit_line", "w_rs", "w_thesis", "open_limit", "min_adx",
-    "pullback_entry", "exit_grace_days",
+    "pullback_entry", "exit_grace_days", "entry_trigger",
 }
 # Promotion gates, challenger vs champion on the same three-year replay
 GATES = {

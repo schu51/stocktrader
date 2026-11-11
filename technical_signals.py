@@ -27,6 +27,35 @@ def macd_cross_up(closes: np.ndarray, within: int = 3) -> bool:
     return bool(recent[-1] > 0 and (recent[:-1] <= 0).any())
 
 
+def _sma_series(x: np.ndarray, n: int) -> np.ndarray:
+    out = np.full(len(x), np.nan)
+    if len(x) >= n:
+        c = np.cumsum(np.insert(np.asarray(x, dtype=float), 0, 0.0))
+        out[n - 1:] = (c[n:] - c[:-n]) / n
+    return out
+
+
+def golden_cross_recent(closes: np.ndarray, within: int = 20) -> bool:
+    """The 50-day average crossed above the 200-day within the last `within` sessions (and is still above)."""
+    c = np.asarray(closes, dtype=float)
+    if len(c) < 200 + within:
+        return False
+    s50, s200 = _sma_series(c, 50), _sma_series(c, 200)
+    above = s50 > s200
+    if not above[-1]:
+        return False
+    recent = above[-(within + 1):]
+    return bool((~recent[:-1]).any())          # it was below at some point in the window, above now
+
+
+def death_cross(closes: np.ndarray) -> bool:
+    """The 50-day average is below the 200-day (the state a death cross leads to)."""
+    c = np.asarray(closes, dtype=float)
+    if len(c) < 200:
+        return False
+    return bool(c[-50:].mean() < c[-200:].mean())
+
+
 def ema_reclaim(closes: np.ndarray, span: int = 21, lookback: int = 5) -> bool:
     """Close is back above the 21-day EMA after closing below it within the last `lookback` sessions."""
     if len(closes) < span + lookback:
@@ -94,6 +123,8 @@ def compute_signals(closes, highs, lows, volumes) -> Dict:
         "macd_cross": macd_cross_up(c),
         "ema21_reclaim": ema_reclaim(c),
         "breakout": breakout(c, v),
+        # 50-day crossed above the 200-day in the last 20 sessions. Measured only (experiments.py)
+        "golden_cross": golden_cross_recent(c),
         "adx25": bool(strength >= ADX_MIN),
         # The main exit is a close below the 50-day average; an entry just above
         # it has no room for an ordinary down day (78% fail within a month).

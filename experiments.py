@@ -124,6 +124,10 @@ def default_registry(today: date) -> Dict:
                        "options flow bullish the evening before: puts/calls <= 0.5, 65%+ of premium on calls, "
                        "no fear skew; measured only, never blocks a buy")
     options_bull["auto_promote"] = False
+    golden = exp("entry_signal", "observing",
+                 "the 50-day average crossed above the 200-day in the last 20 sessions; measured only, never "
+                 "blocks a buy (the backtest tests it as an entry trigger: challenger golden20)")
+    golden["auto_promote"] = False
     return {
         "experiments": {
             "atr_stop": exp("stop_arm", "adopted",
@@ -148,6 +152,7 @@ def default_registry(today: date) -> Dict:
                                   "OSINT score <= -2 (e.g. late filing, cyber incident, short spike); "
                                   "confirmed if those stocks then lag"),
             "options_bullish": options_bull,
+            "golden_cross": golden,
             "options_bearish": exp("bearish_signal", "observing",
                                    "options flow bearish (puts dominate or put skew >= 12 vol points); "
                                    "confirmed if those stocks then lag"),

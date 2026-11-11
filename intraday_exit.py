@@ -392,6 +392,15 @@ def main():
     exits_triggered = []
     stops_updated   = []
     stop_failures   = []   # an exit or stop that could not be carried out; fails the run
+    untradable      = []   # held but rejected by the broker (delisted/acquired): reported, not a failure
+
+    def _untradable(sym):
+        """Why the broker rejects every order for `sym` (delisted or acquired), or None."""
+        try:
+            from exit_logic import untradable_reason
+            return untradable_reason(broker.get_asset(sym))
+        except Exception:
+            return None
 
     # Sells from an earlier run that had not filled when it finished
     pending = settle_pending_exits(broker)
@@ -445,8 +454,13 @@ def main():
                 # Still held, and its stops were just cancelled. The sweep below
                 # puts a stop back; the failed exit itself fails the run.
                 why = result.get("error") or "sell order ended without filling"
-                logger.error(f"EXIT FAILED: {sym} — {why}")
-                stop_failures.append({"symbol": sym, "status": "exit_failed", "error": why})
+                reason = _untradable(sym)
+                if reason:
+                    logger.warning(f"UNTRADABLE: {sym} — {reason}; cannot be sold here, close it with the broker")
+                    untradable.append({"symbol": sym, "reason": reason, "qty": pos.get("qty")})
+                else:
+                    logger.error(f"EXIT FAILED: {sym} — {why}")
+                    stop_failures.append({"symbol": sym, "status": "exit_failed", "error": why})
             else:
                 logger.error(f"EXIT NOT CONFIRMED: {sym} — sell order {action['order_id']} is still working")
                 tracked = mark_pending_exit(sym, action["order_id"], action["trigger"],
@@ -462,7 +476,15 @@ def main():
         # --- Trailing stop update (profitable positions only) ---
         stop_update = _update_stop_if_better(broker, pos)
         if stop_update and stop_update.get("status") == "failed":
-            stop_failures.append(stop_update)
+            # A delisted or acquired holding rejects every order (CTLP, 2026-11-11): it
+            # can never take a stop, so it is reported, not counted as a failure that
+            # would fail every run until the broker cashes it out.
+            reason = _untradable(sym)
+            if reason:
+                logger.warning(f"UNTRADABLE: {sym} — {reason}; no stop possible, close it with the broker")
+                untradable.append({"symbol": sym, "reason": reason, "qty": pos.get("qty")})
+            else:
+                stop_failures.append(stop_update)
         elif stop_update:
             stops_updated.append(stop_update)
 
@@ -490,6 +512,7 @@ def main():
         "stops_updated":     stops_updated,
         "stops_placed":      stops_placed,
         "stop_failures":     stop_failures,
+        "untradable":        untradable,
         "broker_exits":      broker_exits,
         "sleeve_positions":  [p["symbol"] for p in sleeve_held],
         "mode":              "EXECUTE",

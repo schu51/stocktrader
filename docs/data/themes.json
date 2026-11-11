@@ -1,5 +1,5 @@
 {
- "note": "Market themes whose stocks tend to move together on news and trends. Starting lists, curated by hand; big_movers.py also adds members the evening review assigns in research/big_mover_reads.json (\"theme\" field). Tickers outside the S&P 500 / Nasdaq-100 are fetched too, so their moves count. A ticker with no price data (renamed, acquired) is simply skipped.",
+ "note": "Market themes whose stocks tend to move together on news and trends. Starting lists, curated by hand; big_movers.py also adds members the evening review assigns in research/big_mover_reads.json (\"theme\" field). Tickers outside the S&P 500 / Nasdaq-100 are fetched too, so their moves count. A ticker with no price data (renamed, acquired) is simply skipped. Keywords link macro theses to themes (ontology.py).",
  "themes": {
   "ai_compute": {
    "description": "AI data-center compute and neoclouds",
@@ -21,6 +21,17 @@
     "MRVL",
     "ALAB",
     "CRDO"
+   ],
+   "keywords": [
+    "artificial intelligence",
+    "ai compute",
+    "ai data",
+    "gpu",
+    "data center",
+    "datacenter",
+    "accelerator",
+    "neocloud",
+    "hyperscaler"
    ]
   },
   "ai_power": {
@@ -39,6 +50,20 @@
     "NNE",
     "BE",
     "MOD"
+   ],
+   "keywords": [
+    "grid",
+    "power generat",
+    "electrical equipment",
+    "transformer",
+    "switchgear",
+    "cooling",
+    "power distribution",
+    "electrification",
+    "merchant power",
+    "independent power",
+    "datacenter power",
+    "nuclear"
    ]
   },
   "memory_storage": {
@@ -50,6 +75,13 @@
     "SNDK",
     "PSTG",
     "NTAP"
+   ],
+   "keywords": [
+    "memory",
+    "dram",
+    "nand",
+    "hbm",
+    "storage"
    ]
   },
   "quantum": {
@@ -60,6 +92,9 @@
     "QBTS",
     "QUBT",
     "ARQQ"
+   ],
+   "keywords": [
+    "quantum"
    ]
   },
   "crypto": {
@@ -74,6 +109,12 @@
     "HUT",
     "BTDR",
     "GLXY"
+   ],
+   "keywords": [
+    "bitcoin",
+    "crypto",
+    "digital asset",
+    "stablecoin"
    ]
   },
   "space": {
@@ -87,6 +128,11 @@
     "FLY",
     "SATS",
     "IRDM"
+   ],
+   "keywords": [
+    "satellite",
+    "launch vehicle",
+    "space"
    ]
   },
   "defense_tech": {
@@ -102,6 +148,12 @@
     "RCAT",
     "UMAC",
     "ONDS"
+   ],
+   "keywords": [
+    "defense",
+    "drone",
+    "autonomy",
+    "military"
    ]
   },
   "obesity_drugs": {
@@ -113,6 +165,11 @@
     "VKTX",
     "AMGN",
     "MDGL"
+   ],
+   "keywords": [
+    "glp-1",
+    "obesity",
+    "weight loss"
    ]
   },
   "uranium": {
@@ -124,6 +181,11 @@
     "NXE",
     "UUUU",
     "DNN"
+   ],
+   "keywords": [
+    "uranium",
+    "nuclear fuel",
+    "enrichment"
    ]
   },
   "software_ai_apps": {
@@ -139,6 +201,11 @@
     "SOUN",
     "APP",
     "TEM"
+   ],
+   "keywords": [
+    "software",
+    "saas",
+    "ai adoption"
    ]
   },
   "biotech": {
@@ -159,6 +226,12 @@
     "BEAM",
     "IONS",
     "ARGX"
+   ],
+   "keywords": [
+    "biotech",
+    "fda",
+    "clinical",
+    "drug approval"
    ]
   },
   "regional_banks": {
@@ -177,6 +250,13 @@
     "WBS",
     "VLY",
     "CMA"
+   ],
+   "keywords": [
+    "regional bank",
+    "community bank",
+    "net interest",
+    "asset-sensitive",
+    "loan yield"
    ]
   },
   "oil_gas": {
@@ -193,6 +273,17 @@
     "HAL",
     "SLB",
     "BKR"
+   ],
+   "keywords": [
+    "oil",
+    "crude",
+    "oilfield",
+    "drilling",
+    "midstream",
+    "pipeline",
+    "e&p",
+    "upstream",
+    "refin"
    ]
   },
   "homebuilders": {
@@ -205,6 +296,12 @@
     "TOL",
     "KBH",
     "BLDR"
+   ],
+   "keywords": [
+    "homebuilder",
+    "housing",
+    "mortgage rate",
+    "home sales"
    ]
   },
   "rate_sensitive_fintech": {
@@ -217,6 +314,12 @@
     "SOFI",
     "AFRM",
     "UPST"
+   ],
+   "keywords": [
+    "consumer lending",
+    "fintech",
+    "non-bank lender",
+    "floating-rate lender"
    ]
   },
   "retail_consumer": {
@@ -237,6 +340,11 @@
     "GAP",
     "CROX",
     "DECK"
+   ],
+   "keywords": [
+    "retail",
+    "consumer brand",
+    "apparel"
    ]
   },
   "shipping": {
@@ -249,6 +357,12 @@
     "INSW",
     "FRO",
     "STNG"
+   ],
+   "keywords": [
+    "shipping",
+    "freight rate",
+    "tanker",
+    "container ship"
    ]
   },
   "gold_miners": {
@@ -263,6 +377,10 @@
     "WPM",
     "FNV",
     "RGLD"
+   ],
+   "keywords": [
+    "gold",
+    "precious metal"
    ]
   },
   "copper": {
@@ -273,6 +391,12 @@
     "TECK",
     "HBM",
     "ERO"
+   ],
+   "keywords": [
+    "copper",
+    "electrification metal",
+    "wire and cable",
+    "aluminum"
    ]
   },
   "cybersecurity": {
@@ -288,6 +412,11 @@
     "RBRK",
     "QLYS",
     "TENB"
+   ],
+   "keywords": [
+    "cyber",
+    "security software",
+    "ransomware"
    ]
   },
   "pharmacy_distribution": {
@@ -297,6 +426,10 @@
     "CAH",
     "MCK",
     "COR"
+   ],
+   "keywords": [
+    "pharmacy",
+    "drug distribut"
    ]
   },
   "solar": {
@@ -308,6 +441,11 @@
     "RUN",
     "NXT",
     "ARRY"
+   ],
+   "keywords": [
+    "solar",
+    "renewable",
+    "clean energy"
    ]
   },
   "airlines": {
@@ -319,6 +457,100 @@
     "LUV",
     "JBLU",
     "ALK"
+   ],
+   "keywords": [
+    "airline",
+    "air travel",
+    "jet fuel"
+   ]
+  },
+  "defense_suppliers": {
+   "description": "Sub-tier defense suppliers: munitions, rocket motors, forgings, components",
+   "members": [
+    "HWM",
+    "CW",
+    "HEI",
+    "TDG",
+    "MRCY",
+    "BWXT",
+    "ATI",
+    "CRS",
+    "KTOS"
+   ],
+   "keywords": [
+    "munitions",
+    "missile",
+    "energetics",
+    "rocket motor",
+    "forgings",
+    "sub-tier",
+    "replenishment",
+    "defense supplier"
+   ]
+  },
+  "lng_natgas": {
+   "description": "Natural gas producers, pipelines and LNG exporters",
+   "members": [
+    "EQT",
+    "CTRA",
+    "AR",
+    "RRC",
+    "EXE",
+    "LNG",
+    "KMI",
+    "WMB"
+   ],
+   "keywords": [
+    "lng",
+    "natural gas",
+    "gas-weighted",
+    "feedgas",
+    "gas producer",
+    "gas-to-power"
+   ]
+  },
+  "discount_retail": {
+   "description": "Discount, dollar-store and off-price retail: trade-down",
+   "members": [
+    "DG",
+    "DLTR",
+    "TJX",
+    "ROST",
+    "BURL",
+    "WMT",
+    "COST",
+    "FIVE",
+    "OLLI",
+    "BJ"
+   ],
+   "keywords": [
+    "discount",
+    "dollar-channel",
+    "dollar store",
+    "off-price",
+    "trade-down",
+    "private-label",
+    "value-oriented"
+   ]
+  },
+  "industrial_distributors": {
+   "description": "MRO, electrical and fastener distributors with pricing power",
+   "members": [
+    "GWW",
+    "FAST",
+    "WCC",
+    "POOL",
+    "MSM",
+    "AIT",
+    "WSO"
+   ],
+   "keywords": [
+    "distributor",
+    "mro",
+    "fastener",
+    "pricing power",
+    "pass-through",
+    "list-price"
    ]
   }
  }

@@ -57,6 +57,7 @@ TIMETABLE = [
     ("overnight_shadow.yml", WEEKDAYS, "16:30", "16:30", None),  # overnight shadow test, no orders (overnight_shadow.py)
     ("daily_eval.yml",     WEEKDAYS,   "16:45", "16:45", None),  # scorecard + backtest tournament (daily_eval.py)
     ("portfolio_sync.yml", WEEKDAYS,   "09:00", "18:30", 30),    # :00/:30
+    ("pit.yml",            WEEKDAYS,   "18:45", "18:45", None),  # after the day's last write: knowledge graph + point-in-time history
     # Saturday chain — each step feeds the next
     ("refresh_universe.yml",   [SATURDAY], "07:00", "07:00", None),  # S&P 500 + Nasdaq-100 list the screener scans
     ("diamond_screen.yml",     [SATURDAY], "07:30", "07:30", None),  # small/mid-cap inflection watchlist (no trades)

@@ -1,0 +1,39 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-11",
+  "generated_at": "2026-11-11T22:39:38+00:00",
+  "status": "amber",
+  "headline": "The 200-day exit is now the champion (backtest PF 2.70 vs 2.29 for the old 50-day exit at the same -13% drawdown); it trades live from tomorrow and no challenger is near promotion (all streaks 0/5).",
+  "calls": [
+    {
+      "subject": "challenger:golden20",
+      "direction": "bearish",
+      "horizon_days": 20,
+      "confidence": "high",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.golden20.trades",
+        "tournament.gates.min_trades"
+      ],
+      "why": "72 trades vs the 200 minimum and 7.4%/yr: the high PF 4.15 cannot clear the trade-count and annual-return gates."
+    },
+    {
+      "subject": "challenger:death_cross_exit",
+      "direction": "bearish",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.death_cross_exit"
+      ],
+      "why": "Near-copy of the 200-day champion (PF 2.63 vs 2.70, 597 vs 604 trades) with no edge to clear the +0.1 PF gate."
+    }
+  ],
+  "notes": [
+    "Changed research/challengers.json: added rules_versions 'sma200_exit' since 2026-11-12 (PR #38/#39 changed the live exit but no rules version was recorded). No challenger retired or added; list full at 11, only 2 eval rows.",
+    "Crossovers vs champion (sma200): death_cross_exit PF 2.63 / DD -13.3%; sma50_exit PF 2.29 / DD -13.1% / win 60%; golden20 PF 4.15 / DD -3.3% on 72 trades. Share closed within 3 days is not in the eval output; live under the 50-day exit 27 of 91 trades (0% won, -$4,556). grace5 now identical to the champion, so the 200-day exit rarely fires in the first 5 sessions.",
+    "grace5 is a no-op under the 200-day exit; first candidate to replace when a slot is needed.",
+    "Live: last 20 trades PF 0.11, 15% win; account -11.0% from peak, 30d -7.1% vs SPY -2.4%. Tracking gap -0.5pt; matched trades live -1.0% vs backtest -2.1%, so execution is not the cause.",
+    "Stop fills: mean -3.5%, median -0.6%, worst VCYT -24.6%; 2 of 10 gapped >2%. Too few to act on.",
+    "All 8 theses last validated 2026-10-31 (11 days). macro_brief status error since 2026-11-07 (Anthropic API credit balance too low).",
+    "Nothing ready to propose; no PR or issue opened."
+  ]
+}

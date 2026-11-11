@@ -5,6 +5,11 @@
       "since": "2026-11-10",
       "name": "breakeven5_spy2",
       "change": "break-even stop from +5%; no new buys unless SPY is 2% above its 50-day average"
+    },
+    {
+      "since": "2026-11-12",
+      "name": "sma200_exit",
+      "change": "sell on a close below the 200-day average instead of the 50-day (PR #38, #39); break-even from +5% and SPY 2% above its 50-day kept"
     }
   ],
   "challengers": [

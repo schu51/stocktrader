@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-11T20:57:59+00:00",
+  "generated_at": "2026-11-11T22:30:50+00:00",
   "status": "red",
   "red": [
-    "jobs",
-    "scope"
+    "jobs"
   ],
   "amber": [
     "model",
+    "scope",
     "issues"
   ],
   "checks": [
@@ -41,10 +41,9 @@
     },
     {
       "name": "scope",
-      "status": "red",
-      "detail": "1 write(s) outside a job's lane",
+      "status": "amber",
+      "detail": "3 code change(s) pushed to main without a pull request",
       "items": [
-        "breach: b8e9212b [unknown writer] Post-market 2026-11-09: 15 intact, 2 weakening (WK/KVYO), EV -> docs/data/postmarket.json",
         "direct: babbd9ea [direct push] Daily eval: live scorecard, backtest tournament and tracking -> .github/workflows/daily_eval.yml, daily_eval.py, dispatcher.py",
         "direct: d54c3821 [direct push] Model: break-even stop from +5% and an SPY market filter for -> backtest.py, config.py, exit_logic.py",
         "direct: 09e8e846 [direct push] OSINT brief: run rules-only, analysis moves to the scheduled -> .github/workflows/osint_brief.yml"

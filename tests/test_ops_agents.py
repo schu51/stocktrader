@@ -120,3 +120,8 @@ def test_model_requests_and_replies_have_their_own_lanes():
     assert sa.classify("Model replies: macro research 2026-11-14", ["research/replies/macro_research.json"], 1) is None
     f = sa.classify("Model replies: macro research", ["research/replies/macro_research.json", "docs/data/theses.json"], 1)
     assert f["kind"] == "breach" and f["paths"] == ["docs/data/theses.json"]     # the model never writes trading data
+
+
+def test_agent_records_have_their_own_lane():
+    assert sa.classify("Agent record manager 2026-11-11 [skip ci]", ["docs/data/agents/manager/2026-11-11.json"], 1) is None
+    assert sa.classify("Agent record manager 2026-11-11 [skip ci]", ["docs/data/theses.json"], 1)["kind"] == "breach"

@@ -30,6 +30,7 @@ D = "docs/data/"
 # Model answers are pushed WITHOUT [skip ci] on purpose: the push starts apply_replies.yml.
 JOBS: List[Tuple] = [
     ("model_requests", r"^Model requests", ("research/requests/*",)),
+    ("agent_record", r"^Agent record", ("docs/data/agents/*",)),
     ("model_replies", r"^Model replies", ("research/replies/*",), False),
     ("portfolio_sync", r"^Portfolio sync", (D + "latest.json",)),
     ("intraday_exit", r"^Intraday exit check", (D + "intraday_exit.json", D + "sma50_cache.json", D + "trades.json", D + "decisions/*")),
@@ -46,7 +47,7 @@ JOBS: List[Tuple] = [
     ("candidate_outcomes", r"^Candidate outcomes update", (D + "candidate_outcomes.json", "research/candidate_outcomes.csv")),
     ("diamond_screen", r"^Diamond (watchlist update|fast test)", (D + "diamond*", "research/fast_test/*", "research/diamond*")),
     ("daily_eval", r"^Daily eval", (D + "eval_*", D + "eval_report.md")),
-    ("eval_task", r"^Eval journal", ("research/challengers.json", "research/eval_journal.md")),
+    ("eval_task", r"^Eval journal", ("research/challengers.json", "research/eval_journal.md", "docs/data/agents/thesis_strategy/*")),
     ("big_movers", r"^Big movers update", (D + "big_movers*",)),
     ("big_mover_reads", r"^Big mover reads", ("research/big_mover_reads.json",)),
     ("options", r"^Options sentiment update", (D + "options_sentiment.json", D + "options/*")),

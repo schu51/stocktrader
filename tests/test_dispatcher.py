@@ -45,7 +45,8 @@ def test_daily_eval_after_the_postmarket_reconcile():
 
 
 def test_postmarket_at_1615():
-    assert _due(2026, 10, 5, 16, 15) == ["postmarket.yml"]
+    # the options snapshot shares the slot, after the reconcile (it places no orders)
+    assert _due(2026, 10, 5, 16, 15) == ["postmarket.yml", "options_sentiment.yml"]
 
 
 def test_sync_window_edges():

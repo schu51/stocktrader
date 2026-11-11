@@ -139,8 +139,11 @@ def test_run_end_to_end_with_injected_sources(tmp_path, monkeypatch):
     data = _bars()
     _jump(data, "CCC", len(data["Close"]) - 1, 0.30)       # today's mover
     last = data["Close"].index[-1].date()
-    for name in ("LATEST_FILE", "LOG_FILE", "CACHE_FILE", "READS_FILE"):
+    for name in ("LATEST_FILE", "LOG_FILE", "CACHE_FILE", "READS_FILE", "THEMES_FILE"):
         monkeypatch.setattr(bm, name, tmp_path / f"{name}.json")
+    monkeypatch.setattr(bm, "NEWS_PAUSE", 0)
+    (tmp_path / "THEMES_FILE.json").write_text(
+        '{"themes": {"t": {"description": "d", "members": ["AAA", "BBB", "CCC", "DDD"]}}}')
     filed = (last - timedelta(days=1)).isoformat()
     subs = {"filings": {"recent": {"form": ["8-K"], "filingDate": [filed], "accessionNumber": ["1"],
                                    "primaryDocument": ["a.htm"], "items": ["2.02,9.01"]}}}
@@ -188,3 +191,63 @@ def test_dispatcher_runs_big_movers_after_the_close_on_weekdays():
     et = ZoneInfo("America/New_York")
     assert "big_movers.yml" in due_workflows(datetime(2026, 11, 11, 16, 31, tzinfo=et))
     assert "big_movers.yml" not in due_workflows(datetime(2026, 11, 14, 16, 31, tzinfo=et))
+
+
+def test_theme_heat_is_the_median_of_the_other_members():
+    idx = pd.bdate_range("2026-01-01", periods=10)
+    close = pd.DataFrame({"A": 100.0, "B": 100.0, "C": 100.0, "D": 100.0}, index=idx)
+    close.loc[idx[-1], "B"] = 120.0     # +20% over 5 days
+    close.loc[idx[-1], "C"] = 110.0     # +10%
+    heat = bm.theme_heat(close, {"t": ["A", "B", "C"]})
+    assert heat.loc[idx[-1], "A"] == pytest.approx(0.15)      # median of B, C
+    assert heat.loc[idx[-1], "B"] == pytest.approx(0.05)      # median of A, C
+    assert pd.isna(heat.loc[idx[-1], "D"])                     # in no theme
+
+
+def test_classify_theme_move_and_news():
+    d = date(2026, 11, 11)
+    assert bm.classify(d, [], [], False, 0, 0.0, 3, ["ai_compute"])[0] == "theme_move"
+    h = [{"title": f"Acme story {i}", "published": "2026-11-11T14:00:00+00:00"} for i in range(4)]
+    assert bm.classify(d, [], h, False, 0, 0.0)[0] == "news"
+    # company-specific evidence outranks the theme
+    e = [{"form": "8-K", "date": "2026-11-10", "items": "2.02"}]
+    assert bm.classify(d, e, [], True, 0, 0.0, 3, ["ai_compute"])[0] == "earnings"
+
+
+def test_news_snapshot_and_news_before():
+    from datetime import datetime, timezone
+    now = datetime(2026, 11, 11, 21, 0, tzinfo=timezone.utc)
+    items = [{"title": "Acme wins big contract", "published": "2026-11-11T15:00:00+00:00"}] * 6 + \
+            [{"title": "Acme note", "published": "2026-11-08T15:00:00+00:00"}] * 3
+    snap = bm.news_snapshot(items, now)
+    assert snap["n_1d"] == 6 and snap["pace"] == 0.5 and snap["surge"] == 6.0
+    nb = bm.news_before(items, date(2026, 11, 11))
+    assert nb["n_7d"] == 3                     # the jump day itself is left out
+
+
+def test_news_precursors_compare_with_the_control_group():
+    rows = [{"date": "2026-11-0%d" % (i % 9 + 1), "symbol": f"S{i}", "group": "control", "n_1d": 0,
+             "surge": 0, "tone": 0, "next_ret": 0.0} for i in range(100)]
+    rows += [{"date": "2026-11-01", "symbol": f"N{i}", "group": "theme", "n_1d": 8, "surge": 5,
+              "tone": 0.3, "next_ret": 0.25 if i < 5 else 0.01} for i in range(10)]
+    t = bm.news_precursors(rows)
+    surge = next(p for p in t["patterns"] if p["pattern"] == "news_surge")
+    assert surge["hits"] == 5 and surge["days"] == 10 and surge["lift"] > 3
+    assert t["control_base_rate"] == 0.0
+
+
+def test_news_sample_always_includes_a_control_group():
+    syms = bm.news_symbols(["CRWV"], [], {"t": ["NBIS"]}, {}, [f"U{i}" for i in range(200)], date(2026, 11, 11))
+    groups = [g for _, g in syms]
+    assert groups[0] == "mover" and groups.count("control") == bm.NEWS_CONTROL
+    # same day, same sample: reruns are reproducible
+    assert syms == bm.news_symbols(["CRWV"], [], {"t": ["NBIS"]}, {}, [f"U{i}" for i in range(200)],
+                                   date(2026, 11, 11))
+
+
+def test_evening_review_can_add_a_theme_member(tmp_path):
+    p = tmp_path / "themes.json"
+    p.write_text('{"themes": {"ai_compute": {"description": "d", "members": ["NVDA"]}}}')
+    themes = bm.load_themes(p, {"CRWV@2026-11-11": {"theme": "ai_compute"},
+                                "BAD@2026-11-11": {"theme": "made_up"}})
+    assert themes == {"ai_compute": ["NVDA", "CRWV"]}

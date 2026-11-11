@@ -14,12 +14,14 @@ Each weekday after the close it:
      (price >= $5, liquid) so moves outside the universe are learned from too.
   2. Records what each one looked like at the PRIOR close (no lookahead): RS
      rank, 1- and 3-month return, distance from the 52-week high, trend, the
-     volume pattern, whether it passed the momentum gate, and whether an
-     earnings report was due.
+     volume pattern, whether it passed the momentum gate, whether an earnings
+     report was due, how hot its theme was (docs/data/themes.json: groups that
+     trade together on news and trends, e.g. AI compute, quantum, crypto) and
+     how much news it had in the week before.
   3. Collects the evidence for why it moved - SEC filings (8-K items, merger and
      tender documents) and the day's headlines - and gives it a catalyst label
      by fixed rules (earnings, M&A, regulatory, index, analyst, contract,
-     sector move, market move, unknown). The evening "big mover review"
+     theme move, news, sector move, market move, unknown). The evening "big mover review"
      scheduled task reads the evidence, writes the plain-language why, and may
      correct the label in research/big_mover_reads.json; corrected labels win.
   4. Tests precursor patterns against EVERY stock-day in the universe, not only
@@ -28,7 +30,12 @@ Each weekday after the close it:
      patterns that are just as common among the stocks that went nowhere.
   5. Measures what happened AFTER each jump (next open to 5/10/20 sessions
      later, net of SPY): whether chasing a jump pays, by catalyst.
-  6. Writes a forward watch list - stocks matching a pattern that has earned
+  6. Takes a daily news snapshot (headline count, surge against the stock's own
+     pace, tone) for theme members, likely reporters, the watch list and a
+     random control sample of the universe, then checks which of them jumped
+     the next session. The control sample keeps the news base rate honest: the
+     bot's other news log only covers stocks it already likes.
+  7. Writes a forward watch list - stocks matching a pattern that has earned
      its place (enough cases, 3x+ the base rate) with earnings expected in the
      next week - which the screener publishes as `catalyst_watch`. The list is
      WATCH-ONLY: it places no orders and changes no live rule. Each day the
@@ -69,6 +76,7 @@ LATEST_FILE = DOCS_DATA / "big_movers.json"
 LOG_FILE = DOCS_DATA / "big_movers_log.json"
 CACHE_FILE = DOCS_DATA / "big_movers_cache.json"
 READS_FILE = ROOT / "research" / "big_mover_reads.json"
+THEMES_FILE = DOCS_DATA / "themes.json"
 
 JUMP = 0.20                  # a "big mover": close 20%+ above the prior close
 MIN_PRICE = 5.0              # prior close; below this a 20% day is noise
@@ -84,6 +92,14 @@ EARNINGS_AHEAD_DAYS = 7      # watch window: report expected within a week
 MARKET_MOVERS_URL = "https://data.alpaca.markets/v1beta1/screener/stocks/movers"
 MARKET_MOVERS_MAX = 30
 LOG_KEEP_DAYS = 800
+THEME_HOT = 0.10             # theme peers' median 5-day return: a theme "in play"
+THEME_MOVE_MIN = 2           # theme peers up SECTOR_MOVE_PCT+ the same day make a theme move
+NEWS_DAY_MIN = 3             # same-day headlines that make an otherwise unexplained move "news"
+NEWS_MAX_SYMBOLS = 120       # daily news snapshot size
+NEWS_CONTROL = 40            # of which a random universe sample (the control group)
+NEWS_PAUSE = 0.5             # seconds between Google News requests
+NEWS_SURGE = 3.0             # last-24h headlines vs the prior six days' daily pace
+NEWS_TONE = 0.15             # mean headline tone counted as positive
 
 # A pattern goes on the watch list only with this much evidence behind it
 WATCH_MIN_DAYS = 50          # stock-days matching the pattern
@@ -92,14 +108,53 @@ WATCH_MIN_LIFT = 3.0         # hit rate against the all-days base rate
 WATCH_MAX = 15
 
 CATALYSTS = ("mna", "earnings", "regulatory", "index", "analyst", "contract",
-             "short_squeeze", "sector_move", "market_move", "unknown")
+             "short_squeeze", "theme_move", "news", "sector_move", "market_move", "unknown")
 
 
 # ---------------------------------------------------------------------------
 # Features (pure)
 # ---------------------------------------------------------------------------
 
-def features(data: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
+def load_themes(path: Path, reads: Dict) -> Dict[str, List[str]]:
+    """{theme: members} from themes.json, plus members the evening review assigned."""
+    raw = (_read(path, {}).get("themes") or {})
+    themes = {t: list(dict.fromkeys(v.get("members") or [])) for t, v in raw.items()}
+    for key, read in (reads or {}).items():
+        t, sym = read.get("theme"), key.split("@")[0]
+        if t in themes and re.fullmatch(r"[A-Z]{1,5}(-[A-Z]{1,2})?", sym) and sym not in themes[t]:
+            themes[t].append(sym)
+    return themes
+
+
+def themes_of(sym: str, themes: Dict[str, List[str]]) -> List[str]:
+    return [t for t, members in themes.items() if sym in members]
+
+
+def theme_heat(close: pd.DataFrame, themes: Dict[str, List[str]], days: int = 5) -> pd.DataFrame:
+    """
+    For each theme member: the median `days`-day return of its OTHER theme
+    members (max across its themes). NaN for stocks in no theme.
+    """
+    r = close / close.shift(days) - 1
+    heat = pd.DataFrame(np.nan, index=close.index, columns=close.columns)
+    for members in themes.values():
+        cols = [m for m in members if m in close.columns]
+        if len(cols) < 3:
+            continue
+        for m in cols:
+            peers = r[[c for c in cols if c != m]].median(axis=1)
+            heat[m] = np.fmax(heat[m], peers)
+    return heat
+
+
+def theme_movers(row: pd.Series, sym: str, themes: Dict[str, List[str]]) -> Tuple[int, List[str]]:
+    """Theme peers of `sym` up SECTOR_MOVE_PCT+ in this session, and the themes."""
+    peers = {m for t in themes_of(sym, themes) for m in themes[t] if m != sym}
+    up = [m for m in peers if m in row.index and not pd.isna(row[m]) and row[m] >= SECTOR_MOVE_PCT]
+    return len(up), themes_of(sym, themes)
+
+
+def features(data: Dict[str, pd.DataFrame], themes: Optional[Dict[str, List[str]]] = None) -> Dict[str, pd.DataFrame]:
     """
     State of every stock at each day's close (row t = known at t's close).
     Shift by one row to get the state BEFORE a session.
@@ -127,6 +182,7 @@ def features(data: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
         "momentum_gate": (rs_rank >= MOMENTUM_GATE_RS) & (c > sma50) & (sma50 > sma200),
         "vol_surge": v / avg_vol,
         "dollar_volume": (c * v).rolling(20, min_periods=15).mean(),
+        "theme_heat": theme_heat(c, themes or {}),
     }
 
 
@@ -179,7 +235,8 @@ def pre_move(feats: Dict[str, pd.DataFrame], sym: str, day: pd.Timestamp) -> Dic
 
     return {"rs_rank": val("rs_rank", int), "ret_1m": val("ret_1m"), "ret_3m": val("ret_3m"),
             "dist_52w_high": val("dist_52w_high"), "trend_up": val("trend_up", bool),
-            "momentum_gate": val("momentum_gate", bool), "vol_surge": val("vol_surge", float, 2)}
+            "momentum_gate": val("momentum_gate", bool), "vol_surge": val("vol_surge", float, 2),
+            "theme_heat": val("theme_heat")}
 
 
 # ---------------------------------------------------------------------------
@@ -205,7 +262,8 @@ HEADLINE_RULES = [
 
 
 def classify(day: date, filings: List[Dict], headlines: List[Dict], earnings_reaction: bool,
-             sector_movers: int, spy_ret: Optional[float]) -> Tuple[str, List[str]]:
+             sector_movers: int, spy_ret: Optional[float], theme_peers_up: int = 0,
+             themes: Optional[List[str]] = None) -> Tuple[str, List[str]]:
     """
     A catalyst label and the evidence for it, by fixed rules. Filings are
     {form, date, items}; headlines are {title, published}. Only evidence from
@@ -243,6 +301,12 @@ def classify(day: date, filings: List[Dict], headlines: List[Dict], earnings_rea
     material = [f for f in recent if f.get("form", "").startswith("8-K") and "1.01" in str(f.get("items", ""))]
     if "contract" in found or material:
         return "contract", [f"{f['date']}: 8-K material agreement (item 1.01)" for f in material] + found.get("contract", [])[:2]
+    if theme_peers_up >= THEME_MOVE_MIN:
+        return "theme_move", [f"{theme_peers_up} {'/'.join(themes or [])} peers rose {SECTOR_MOVE_PCT:.0%}+ the same day"] \
+            + titles[:2]
+    same_day = [h["title"] for h in headlines if str(h.get("published", ""))[:10] == until and h.get("title")]
+    if len(same_day) >= NEWS_DAY_MIN:
+        return "news", [f"{len(same_day)} headlines the same day"] + same_day[:3]
     if sector_movers >= SECTOR_MOVE_MIN:
         return "sector_move", [f"{sector_movers} other stocks in the sector rose {SECTOR_MOVE_PCT:.0%}+ the same day"]
     if spy_ret is not None and spy_ret >= MARKET_MOVE_PCT:
@@ -264,6 +328,7 @@ def patterns(pre: Dict[str, pd.DataFrame], earn: pd.DataFrame) -> Dict[str, Tupl
     far = pre["dist_52w_high"] <= -0.40
     gate = pre["momentum_gate"].fillna(False).astype(bool)
     surge = pre["vol_surge"] >= 2
+    hot = pre["theme_heat"] >= THEME_HOT
     no_e = ~earn
     return {
         "earnings": ("earnings report due", earn),
@@ -273,6 +338,8 @@ def patterns(pre: Dict[str, pd.DataFrame], earn: pd.DataFrame) -> Dict[str, Tupl
         "beaten_down": ("down 15%+ in a month, no earnings", no_e & down),
         "volume_surge": ("volume 2x+ normal the day before, no earnings", no_e & surge),
         "momentum_leader": ("passes the momentum gate, no earnings", no_e & gate),
+        "earnings_theme_hot": ("earnings due, theme peers up 10%+ in a week", earn & hot),
+        "theme_hot": ("theme peers up 10%+ in a week, no earnings", no_e & hot),
     }
 
 
@@ -395,7 +462,9 @@ def watch_list(table: Dict, state: Dict[str, pd.Series], expected: Dict[str, str
         far = (state["dist_52w_high"].get(sym) or 0) <= -0.40
         gate = bool(state["momentum_gate"].get(sym)) if not pd.isna(state["momentum_gate"].get(sym)) else False
         surge = (state["vol_surge"].get(sym) or 0) >= 2
-        matches = {"earnings": e, "earnings_beaten_down": e and down, "earnings_far_from_high": e and far,
+        heat = state.get("theme_heat", pd.Series(dtype=float)).get(sym)
+        hot = heat is not None and not pd.isna(heat) and heat >= THEME_HOT
+        matches = {"earnings_theme_hot": e and hot, "theme_hot": not e and hot,"earnings": e, "earnings_beaten_down": e and down, "earnings_far_from_high": e and far,
                    "earnings_leader": e and gate, "beaten_down": not e and down,
                    "volume_surge": not e and surge, "momentum_leader": not e and gate}
         for p in good:
@@ -418,6 +487,81 @@ def score_watch(previous: List[Dict], ret_today: pd.Series) -> List[Dict]:
         out.append({"symbol": w["symbol"], "pattern": w["pattern"], "ret": round(float(r), 4),
                     "hit": bool(r >= JUMP)})
     return out
+
+
+def news_snapshot(items: List[Dict], now: datetime) -> Dict:
+    """Headlines in the last 24h, the prior six days' daily pace, the surge, and tone."""
+    from news_sentiment import score_headline
+    day_ago = now - timedelta(days=1)
+    when = lambda i: datetime.fromisoformat(i["published"])
+    last = [i for i in items if when(i) >= day_ago]
+    prior = [i for i in items if day_ago - timedelta(days=6) <= when(i) < day_ago]
+    pace = len(prior) / 6
+    tone = round(sum(score_headline(i["title"]) for i in last) / len(last), 3) if last else None
+    return {"n_1d": len(last), "pace": round(pace, 2), "surge": round(len(last) / max(pace, 1.0), 2), "tone": tone}
+
+
+def news_before(items: List[Dict], day: date) -> Dict:
+    """Headlines in the seven days before `day` (the jump day itself excluded)."""
+    from news_sentiment import score_headline
+    lo, hi = (day - timedelta(days=7)).isoformat(), day.isoformat()
+    before = [i for i in items if lo <= str(i.get("published", ""))[:10] < hi]
+    tone = round(sum(score_headline(i["title"]) for i in before) / len(before), 3) if before else None
+    return {"n_7d": len(before), "tone": tone}
+
+
+def news_symbols(movers: List[str], watch: List[Dict], themes: Dict[str, List[str]], expected: Dict[str, str],
+                 universe: List[str], today: date) -> List[Tuple[str, str]]:
+    """(symbol, group) for today's news snapshot; the control group is a random universe sample."""
+    import random
+    picked: Dict[str, str] = {}
+    for group, syms in (("mover", movers), ("watch", [w["symbol"] for w in watch or []]),
+                        ("earnings_soon", sorted(expected)),
+                        ("theme", sorted({m for ms in themes.values() for m in ms}))):
+        for sym in syms:
+            picked.setdefault(sym, group)
+    rest = sorted(set(universe) - set(picked))
+    control = random.Random(today.toordinal()).sample(rest, min(NEWS_CONTROL, len(rest)))
+    room = max(0, NEWS_MAX_SYMBOLS - len(control))
+    return list(picked.items())[:room] + [(s, "control") for s in control]
+
+
+def score_news_log(rows: List[Dict], ret: pd.DataFrame) -> None:
+    """Fill each snapshot row's next-session return once that session is in the bars."""
+    idx = ret.index
+    for row in rows:
+        if "next_ret" in row or row["symbol"] not in ret.columns:
+            continue
+        pos = idx.searchsorted(pd.Timestamp(row["date"]), side="right")
+        if pos >= len(idx):
+            continue
+        r = ret[row["symbol"]].iloc[pos]
+        row["next_ret"] = None if pd.isna(r) else round(float(r), 4)
+
+
+def news_precursors(rows: List[Dict]) -> Dict:
+    """Jump rate the session after a news pattern, against all snapshot rows (and the control group)."""
+    scored = [r for r in rows if r.get("next_ret") is not None]
+    hit = lambda r: r["next_ret"] >= JUMP
+    rate = lambda rs: (sum(map(hit, rs)) / len(rs)) if rs else 0.0
+    base, control = rate(scored), rate([r for r in scored if r.get("group") == "control"])
+    surge = lambda r: (r.get("surge") or 0) >= NEWS_SURGE and (r.get("n_1d") or 0) >= 3
+    pos = lambda r: (r.get("tone") or 0) >= NEWS_TONE
+    defs = {"news_surge": ("headlines 3x+ their normal pace in the last day", surge),
+            "news_positive": ("last day's headlines lean positive", pos),
+            "news_surge_positive": ("headline surge with positive tone", lambda r: surge(r) and pos(r))}
+    out = []
+    for name, (desc, f) in defs.items():
+        m = [r for r in scored if f(r)]
+        hits = sum(map(hit, m))
+        lift = rate(m) / base if base else None
+        out.append({"pattern": name, "description": desc, "days": len(m), "hits": hits,
+                    "hit_rate": round(rate(m), 5), "lift": round(lift, 2) if lift is not None else None,
+                    "avg_next_day": round(float(np.mean([r["next_ret"] for r in m])), 4) if m else None,
+                    "watchable": len(m) >= WATCH_MIN_DAYS and hits >= WATCH_MIN_HITS
+                                 and lift is not None and lift >= WATCH_MIN_LIFT})
+    return {"rows": len(scored), "base_rate": round(base, 5), "control_base_rate": round(control, 5),
+            "patterns": out}
 
 
 def _r(x, nd=3):
@@ -542,7 +686,8 @@ def _write(path: Path, payload) -> None:
 
 def build_events(days: List[pd.Timestamp], data, feats, earn_panel, ret, gap, eligible,
                  sectors: Dict[str, str], universe: set, filings: Dict[str, List[Dict]],
-                 headlines: Dict[str, List[Dict]], reads: Dict) -> List[Dict]:
+                 headlines: Dict[str, List[Dict]], reads: Dict,
+                 themes: Optional[Dict[str, List[str]]] = None) -> List[Dict]:
     """One event per (stock, day) that closed 20%+ up, with its pre-move state and catalyst."""
     events = []
     spy = data["Close"]["SPY"] if "SPY" in data["Close"].columns else None
@@ -563,16 +708,20 @@ def build_events(days: List[pd.Timestamp], data, feats, earn_panel, ret, gap, el
             d = day.date()
             sector = sectors.get(sym, "other")
             others = movers_by_sector.get(sector, 0) - (1 if sym in universe else 0)
+            peers_up, sym_themes = theme_movers(row, sym, themes or {})
             cat, evidence = classify(d, filings.get(sym, []), headlines.get(sym, []),
                                      bool(earn_panel[sym].loc[day]) if sym in earn_panel.columns else False,
-                                     others if sector != "other" else 0, spy_ret)
+                                     others if sector != "other" else 0, spy_ret, peers_up, sym_themes)
+            pre = pre_move(feats, sym, day)
+            if sym in headlines:
+                pre["news_before"] = news_before(headlines[sym], d)
             key = f"{sym}@{d.isoformat()}"
             read = reads.get(key) or {}
             events.append({
                 "symbol": sym, "date": d.isoformat(), "ret": round(float(row[sym]), 4),
                 "gap": _r(gap.loc[day, sym], 4) if sym in gap.columns else None,
-                "in_universe": sym in universe, "sector": sector,
-                "pre": pre_move(feats, sym, day),
+                "in_universe": sym in universe, "sector": sector, "themes": sym_themes,
+                "pre": pre,
                 "catalyst": read.get("catalyst") if read.get("catalyst") in CATALYSTS else cat,
                 "catalyst_rule": cat, "evidence": evidence,
                 "why": read.get("why"), "lesson": read.get("lesson"),
@@ -623,13 +772,15 @@ def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = Fa
     prev_latest = _read(LATEST_FILE, {})
     cache = _read(CACHE_FILE, {})
     reads = _read(READS_FILE, {})
+    themes = load_themes(THEMES_FILE, reads)
+    theme_syms = {m for ms in themes.values() for m in ms}
 
     # Out-of-universe names logged in the last month need bars for their drift
     recent_outside = sorted({e["symbol"] for e in log.get("events", [])
                              if not e.get("in_universe")
                              and e["date"] >= (date.today() - timedelta(days=40)).isoformat()})
     lookback = LOOKBACK_DAYS + backfill_days
-    tickers = sorted(universe | {"SPY"} | set(extra) | set(recent_outside))
+    tickers = sorted(universe | theme_syms | {"SPY"} | set(extra) | set(recent_outside))
     data = bars_fn(tickers, lookback)
     if not data or "Close" not in data or data["Close"].empty:
         raise RuntimeError("no price bars — cannot look for big movers")
@@ -655,7 +806,7 @@ def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = Fa
         logger.error(f"SEC ticker index failed: {e}")
         session, index = None, {}
     since = (days[0].date() - timedelta(days=5)).isoformat()
-    filings = refresh_filings(sorted(universe | set(movers)), today, cache, index, session,
+    filings = refresh_filings(sorted(universe | theme_syms | set(movers)), today, cache, index, session,
                               submissions_fn, force=set(movers), keep_since=since,
                               history_since=c.index[0].date().isoformat())
     earn_dates = {s: (cache.get("earnings", {}).get(s) or {}).get("dates", []) for s in c.columns}
@@ -670,15 +821,15 @@ def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = Fa
             except Exception as e:
                 logger.warning(f"Headlines for {sym} failed: {e}")
 
-    feats = features(data)
+    feats = features(data, themes)
     new = build_events(days, data, feats, earn_panel, ret, gap, eligible, sectors,
-                       universe, filings, headlines, reads)
+                       universe, filings, headlines, reads, themes)
     log = merge_log(log, new, today, reads)
     spy = c["SPY"] if "SPY" in c.columns else None
     drift(log["events"], data, spy)
 
-    # Learning: patterns against every universe stock-day in the bars we have
-    uni_cols = [s for s in c.columns if s in universe]
+    # Learning: patterns against every stock-day of the universe and the theme lists
+    uni_cols = [s for s in c.columns if s in universe or s in theme_syms]
     pre = {k: v[uni_cols].shift(1) for k, v in feats.items()}
     jumps = jump_mask(data)[uni_cols]
     table = precursor_table(patterns(pre, earn_panel[uni_cols]), jumps, ret[uni_cols], eligible[uni_cols],
@@ -688,6 +839,26 @@ def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = Fa
     state = {k: v[uni_cols].iloc[-1] for k, v in feats.items()}
     expected = {s: d for s in uni_cols if (d := expected_earnings(earn_dates.get(s), today))}
     watch = watch_list(table, state, expected, sectors)
+
+    # News: score past snapshots against the session that followed, then take today's
+    news_log = log.setdefault("news_log", [])
+    score_news_log(news_log, ret)
+    cutoff = (today - timedelta(days=LOG_KEEP_DAYS)).isoformat()
+    log["news_log"] = news_log = [r for r in news_log if r["date"] >= cutoff]
+    if not backfill_days and session is not None and not any(r["date"] == today.isoformat() for r in news_log):
+        now = datetime.now(timezone.utc)
+        for i, (sym, group) in enumerate(news_symbols(movers, watch, themes, expected, sorted(universe), today)):
+            try:
+                items = headlines.get(sym)
+                if items is None:
+                    name = (index.get(sym) or {}).get("name", "")
+                    items = news_fn(sym, name, session)
+                    time.sleep(NEWS_PAUSE)
+                news_log.append({"date": today.isoformat(), "symbol": sym, "group": group,
+                                 **news_snapshot(items, now)})
+            except Exception as e:
+                logger.warning(f"News snapshot for {sym} failed: {e}")
+    news_table = news_precursors(news_log)
 
     scored = []
     if not backfill_days and prev_latest.get("date") and prev_latest["date"] < today.isoformat():
@@ -712,6 +883,10 @@ def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = Fa
             "profile_1y": profile([e for e in log["events"]
                                    if e["date"] >= (today - timedelta(days=365)).isoformat()]),
             "precursors": table,
+            "news_precursors": news_table,
+            "themes_hot": {t: round(float(np.nanmedian([feats["close"][m].iloc[-1] / feats["close"][m].iloc[-6] - 1
+                                                        for m in ms if m in c.columns])), 3)
+                           for t, ms in themes.items() if any(m in c.columns for m in ms)},
             "after_the_jump": drift_table(log["events"]),
         },
         "note": "Watch-only: this list places no orders and changes no live rule.",

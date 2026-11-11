@@ -1,0 +1,15 @@
+{
+ "note": "Market themes whose stocks tend to move together on news and trends. Starting lists, curated by hand; big_movers.py also adds members the evening review assigns in research/big_mover_reads.json (\"theme\" field). Tickers outside the S&P 500 / Nasdaq-100 are fetched too, so their moves count.",
+ "themes": {
+  "ai_compute": {"description": "AI data-center compute and neoclouds", "members": ["NVDA", "AMD", "AVGO", "CRWV", "NBIS", "IREN", "APLD", "CORZ", "CIFR", "WULF", "ORCL", "SMCI", "DELL", "ANET", "MRVL", "ALAB", "CRDO"]},
+  "ai_power": {"description": "Power, cooling and grid for data centers", "members": ["VRT", "ETN", "PWR", "CEG", "VST", "TLN", "GEV", "NRG", "OKLO", "SMR", "NNE", "BE", "MOD"]},
+  "memory_storage": {"description": "Memory and storage chips and drives", "members": ["MU", "WDC", "STX", "SNDK", "PSTG", "NTAP"]},
+  "quantum": {"description": "Quantum computing", "members": ["IONQ", "RGTI", "QBTS", "QUBT", "ARQQ"]},
+  "crypto": {"description": "Crypto exchanges, miners and treasuries", "members": ["COIN", "MSTR", "HOOD", "MARA", "RIOT", "CLSK", "HUT", "BTDR", "GLXY"]},
+  "space": {"description": "Launch, satellites and space infrastructure", "members": ["RKLB", "ASTS", "LUNR", "PL", "RDW", "FLY", "SATS", "IRDM"]},
+  "defense_tech": {"description": "Defense technology, drones and autonomy", "members": ["PLTR", "KTOS", "AVAV", "LMT", "NOC", "GD", "LHX", "RCAT", "UMAC", "ONDS"]},
+  "obesity_drugs": {"description": "GLP-1 and obesity treatments", "members": ["LLY", "NVO", "HIMS", "VKTX", "AMGN", "MDGL"]},
+  "uranium": {"description": "Uranium miners and fuel", "members": ["CCJ", "UEC", "LEU", "NXE", "UUUU", "DNN"]},
+  "software_ai_apps": {"description": "Software repriced on AI adoption", "members": ["NOW", "CRM", "SNOW", "DDOG", "MDB", "PATH", "AI", "SOUN", "APP", "TEM"]}
+ }
+}

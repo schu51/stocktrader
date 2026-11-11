@@ -112,3 +112,16 @@ def test_entry_context_reads_the_screen_the_trade_was_bought_off(tmp_path):
               "2026-10-01T13:16:00Z")
     ctx = ta.entry_context({"symbol": "A", "entry_date": "2026-10-01", "entry_ts": "2026-10-01T14:30:00+00:00"}, store)
     assert ctx == {"regime": "bull", "extension": 0.2, "rs_rank_at_screen": 95}
+
+
+def test_model_requests_and_replies_have_their_own_lanes():
+    assert sa.classify("Model requests: macro research [skip ci]", ["research/requests/macro_research.json"], 1) is None
+    # answers are pushed without [skip ci] so apply_replies.yml starts on the push
+    assert sa.classify("Model replies: macro research 2026-11-14", ["research/replies/macro_research.json"], 1) is None
+    f = sa.classify("Model replies: macro research", ["research/replies/macro_research.json", "docs/data/theses.json"], 1)
+    assert f["kind"] == "breach" and f["paths"] == ["docs/data/theses.json"]     # the model never writes trading data
+
+
+def test_agent_records_have_their_own_lane():
+    assert sa.classify("Agent record manager 2026-11-11 [skip ci]", ["docs/data/agents/manager/2026-11-11.json"], 1) is None
+    assert sa.classify("Agent record manager 2026-11-11 [skip ci]", ["docs/data/theses.json"], 1)["kind"] == "breach"

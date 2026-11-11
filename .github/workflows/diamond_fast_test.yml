@@ -20,7 +20,6 @@ jobs:
       contents: write
       issues: write          # to open a failure issue
     env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       SEC_EDGAR_USER_AGENT: "stocktrader diamond screen (aschumacherdesign@gmail.com)"
 
     steps:

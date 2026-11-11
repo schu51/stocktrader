@@ -66,8 +66,9 @@ TIMETABLE = [
     ("candidate_outcomes.yml", [SATURDAY], "08:00", "08:00", None),  # evidence the learning agent checks
     ("experiments.yml",        [SATURDAY], "08:15", "08:15", None),  # promote / keep / drop technical trials
     ("learning.yml",           [SATURDAY], "08:30", "08:30", None),
-    ("macro_research.yml",     [SATURDAY], "09:00", "09:00", None),
+    ("macro_research.yml",     [SATURDAY], "09:00", "09:00", None),  # questions only; answered by the Macro research analyst task
     ("weekly_review.yml",      [SATURDAY], "09:30", "09:30", None),  # summarizes all of the above
+    ("apply_replies.yml",      [SATURDAY], "11:30", "11:30", None),  # fallback: apply model answers if their push did not
 ]
 
 

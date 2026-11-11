@@ -26,8 +26,12 @@ from typing import Dict, List, Optional, Tuple
 ROOT = Path(__file__).parent.resolve()
 D = "docs/data/"
 
-# (job, commit-message pattern, allowed path globs)
-JOBS: List[Tuple[str, str, Tuple[str, ...]]] = [
+# (job, commit-message pattern, allowed path globs[, needs "[skip ci]"])
+# Model answers are pushed WITHOUT [skip ci] on purpose: the push starts apply_replies.yml.
+JOBS: List[Tuple] = [
+    ("model_requests", r"^Model requests", ("research/requests/*",)),
+    ("agent_record", r"^Agent record", ("docs/data/agents/*",)),
+    ("model_replies", r"^Model replies", ("research/replies/*",), False),
     ("portfolio_sync", r"^Portfolio sync", (D + "latest.json",)),
     ("intraday_exit", r"^Intraday exit check", (D + "intraday_exit.json", D + "sma50_cache.json", D + "trades.json", D + "decisions/*")),
     ("daily_run", r"^Dashboard \+ screener data update", (D + "*",)),
@@ -43,7 +47,7 @@ JOBS: List[Tuple[str, str, Tuple[str, ...]]] = [
     ("candidate_outcomes", r"^Candidate outcomes update", (D + "candidate_outcomes.json", "research/candidate_outcomes.csv")),
     ("diamond_screen", r"^Diamond (watchlist update|fast test)", (D + "diamond*", "research/fast_test/*", "research/diamond*")),
     ("daily_eval", r"^Daily eval", (D + "eval_*", D + "eval_report.md")),
-    ("eval_task", r"^Eval journal", ("research/challengers.json", "research/eval_journal.md")),
+    ("eval_task", r"^Eval journal", ("research/challengers.json", "research/eval_journal.md", "docs/data/agents/thesis_strategy/*")),
     ("big_movers", r"^Big movers update", (D + "big_movers*",)),
     ("big_mover_reads", r"^Big mover reads", ("research/big_mover_reads.json",)),
     ("options", r"^Options sentiment update", (D + "options_sentiment.json", D + "options/*")),
@@ -59,8 +63,9 @@ def classify(message: str, paths: List[str], parents: int) -> Optional[Dict]:
     """A finding for one commit, or None if it is in scope."""
     if parents > 1 or message.startswith("Merge pull request #"):
         return None                                   # reviewed: arrived through a pull request
-    for job, pattern, allowed in JOBS:
-        if re.search(pattern, message) and "[skip ci]" in message:      # every job commit carries [skip ci]
+    for job, pattern, allowed, *opt in JOBS:
+        needs_skip = opt[0] if opt else True             # job commits carry [skip ci], except model answers
+        if re.search(pattern, message) and ("[skip ci]" in message or not needs_skip):
             outside = [p for p in paths if not any(fnmatch.fnmatch(p, g) for g in allowed)]
             if outside:
                 return {"kind": "breach", "job": job, "paths": outside[:10]}

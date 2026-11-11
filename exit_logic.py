@@ -384,6 +384,22 @@ def trend_exit_line(closes, mode: Optional[str] = None) -> Optional[float]:
     raise ValueError(f"unknown exit line {mode!r}; expected one of {EXIT_LINES}")
 
 
+# The backtest sells on a CLOSE below the trend line. Live used to sell the moment
+# the price dipped below it during the day: 66 of 69 trend exits (Jun-Nov 2026) fired
+# before 15:30 ET, -$5,411. Trend exits now wait for the last run of the day, so
+# live sells on (nearly) the closing price, as tested. Stops and the hard loss still
+# act at any time.
+TREND_EXIT_FROM = (15, 30)       # ET; the intraday monitor's last run is 15:45
+
+
+def trend_exit_window_open(now=None) -> bool:
+    """True when a trend-line exit may fire: from 15:30 ET until the close."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    et = (now or datetime.now(ZoneInfo("UTC"))).astimezone(ZoneInfo("America/New_York"))
+    return (et.hour, et.minute) >= TREND_EXIT_FROM
+
+
 def describe_trend_exit(current: float, line: float, mode: Optional[str] = None) -> Tuple[str, str]:
     """(trigger, reason) for a trend exit under the live exit line."""
     mode = mode or EXIT_LINE

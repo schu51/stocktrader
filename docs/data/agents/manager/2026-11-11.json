@@ -1,0 +1,27 @@
+{
+  "agent": "manager",
+  "date": "2026-11-11",
+  "generated_at": "2026-11-11T23:15:00+00:00",
+  "status": "red",
+  "headline": "Red: intraday_exit.yml, ops_monitor.yml and tests.yml failed, the research analyst did not report, and CTLP (281 shares) has no stop because 'asset CTLP is not active'.",
+  "calls": [
+    {"subject": "CTLP", "direction": "broken", "horizon_days": 5, "confidence": "high",
+     "evidence": ["agents/performance_risk/2026-11-11.json:notes (4 stop attempts failed, 'asset CTLP is not active')", "trades.json missing CTLP"],
+     "why": "Untracked and unprotected position; needs manual review by Alex, not by the bot."},
+    {"subject": "CNC", "direction": "bearish", "horizon_days": 5, "confidence": "low",
+     "evidence": ["screener.json:candidates (#18)", "options_sentiment.json:reads[CNC].options_bearish=true, options_score=-1"],
+     "why": "Options read is bearish on a top-20 candidate; treat as lower priority until the read turns."}
+  ],
+  "notes": [
+    "RED ops: jobs check red (intraday_exit.yml: failed, ops_monitor.yml: failed, tests.yml: failed). https://github.com/schu51/stocktrader/actions/workflows/intraday_exit.yml , https://github.com/schu51/stocktrader/actions/workflows/ops_monitor.yml , https://github.com/schu51/stocktrader/actions/workflows/tests.yml",
+    "RED specialist: research_analyst did not report (no agents/research_analyst/2026-11-11.json; folder does not exist).",
+    "AMBER ops: model (macro research failed 2026-11-07, out of API credit; 8 theses not re-checked since 2026-10-31, stop counting on 2026-11-14), scope (3 direct pushes to main without PR), issues (5 failure issues open >2 days: #15, #14, #12, #4, #3).",
+    "Specialists: performance_risk amber, thesis_strategy amber.",
+    "Conflict 1 (drawdown): eval_latest.json -0.1097 from the all-time peak vs latest.json risk_assessment 8.2% from a later peak. Call: use 11.0% (eval_latest, all-time peak) because the red line is measured from the all-time peak.",
+    "Conflict 2 (WK stop): trades.json stop_loss 73.53 vs broker stop 64.57 with price 69.77. Call: the broker stop at 64.57 is the one actually protecting the position; the trades.json value is stale and should be checked.",
+    "Conflict 3 (options vs candidate): CNC is #18 in the screener but options_bearish=true (score -1). Call: low priority; no buys were signalled today anyway.",
+    "Conflict 4 (tracking gap): performance_risk reports 1.51 points, thesis_strategy -0.5pt. Call: no action; both are inside the 3-point threshold.",
+    "Strategy change: 200-day exit is now champion (backtest PF 2.70 vs 2.29 for the 50-day exit) and trades live from 2026-11-12; research/challengers.json gained rules_version 'sma200_exit'. experiments.json unchanged since 2026-11-07.",
+    "Big movers (20%+): CRWV +24.71% (earnings beat and raise), NBIL +31.6% and NEBX +31.64% (2x Nebius ETFs, theme move), AXTX +38.53% (2x AXTI ETF, sector move). Proposed theme ai_optical (LITE, COHR, CIEN)."
+  ]
+}

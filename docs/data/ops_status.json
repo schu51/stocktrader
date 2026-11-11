@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-11-11T18:29:20+00:00",
+  "status": "red",
+  "red": [
+    "jobs",
+    "model",
+    "scope"
+  ],
+  "amber": [
+    "issues"
+  ],
+  "checks": [
+    {
+      "name": "jobs",
+      "status": "red",
+      "detail": "1 trading-path job(s) failed or missed",
+      "items": [
+        "intraday_exit.yml: failed",
+        "macro_research.yml: failed",
+        "osint_ondemand.yml: failed",
+        "tests.yml: failed"
+      ]
+    },
+    {
+      "name": "freshness",
+      "status": "green",
+      "detail": "every output due by now is from today"
+    },
+    {
+      "name": "model",
+      "status": "red",
+      "detail": "Anthropic API account out of credit: macro research and the diamond judge cannot run",
+      "items": [
+        "Anthropic API account out of credit: macro research and the diamond judge cannot run",
+        "8 live thesis(es) not re-checked in 8 days but still used in ranking"
+      ]
+    },
+    {
+      "name": "contracts",
+      "status": "green",
+      "detail": "every shared file matches its contract"
+    },
+    {
+      "name": "scope",
+      "status": "red",
+      "detail": "1 write(s) outside a job's lane",
+      "items": [
+        "breach: b8e9212b [unknown writer] Post-market 2026-11-09: 15 intact, 2 weakening (WK/KVYO), EV -> docs/data/postmarket.json",
+        "direct: babbd9ea [direct push] Daily eval: live scorecard, backtest tournament and tracking -> .github/workflows/daily_eval.yml, daily_eval.py, dispatcher.py",
+        "direct: d54c3821 [direct push] Model: break-even stop from +5% and an SPY market filter for -> backtest.py, config.py, exit_logic.py",
+        "direct: 09e8e846 [direct push] OSINT brief: run rules-only, analysis moves to the scheduled -> .github/workflows/osint_brief.yml"
+      ]
+    },
+    {
+      "name": "issues",
+      "status": "amber",
+      "detail": "5 failure issue(s) open more than 2 days",
+      "items": [
+        "#15 \ud83d\udea8 Macro Research run failed 2026-11-07 (4 days)",
+        "#14 \ud83d\udea8 Daily Opening Buys run failed 2026-11-05 (6 days)",
+        "#12 \ud83d\udea8 Macro Research run failed 2026-10-31 (11 days)",
+        "#4 \ud83d\udea8 Intraday Exit Monitor failed 2026-10-15 (27 days)",
+        "#3 \ud83d\udea8 Dispatcher failed 2026-10-14 (28 days)"
+      ]
+    }
+  ]
+}

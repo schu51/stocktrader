@@ -354,6 +354,43 @@ def split_positions(positions: list) -> Tuple[list, list]:
 # config.EntryRules.min_spy_above_50ma): win rate 38% -> 60%, profit factor
 # 1.92 -> 2.45, max drawdown -15.6% -> -13.4%, annual return 36.5% -> 31.9%.
 BREAKEVEN_AT_PCT = 5.0
+
+# ── Trend exit ───────────────────────────────────────────────────────────────
+# Which trend line the bot sells on. Both live exit paths (intraday_exit.py and
+# run_daily_analysis.py) and the backtest's champion read this one constant.
+#   sma50        sell when the price is below the 50-day average (the rule today)
+#   sma200       sell when the price is below the 200-day average
+#   death_cross  sell once the 50-day average is below the 200-day
+EXIT_LINE = "sma50"
+EXIT_LINES = ("sma50", "sma200", "death_cross")
+EXIT_LABEL = {"sma50": "PRICE_BELOW_50MA", "sma200": "PRICE_BELOW_200MA", "death_cross": "DEATH_CROSS"}
+_ALWAYS_ABOVE = 1e9      # a death cross is a state, not a price level: a line above any price fires the exit
+
+
+def trend_exit_line(closes, mode: Optional[str] = None) -> Optional[float]:
+    """The price level below which the trend exit fires, or None (not enough history / no exit)."""
+    import numpy as np
+    mode = mode or EXIT_LINE
+    c = np.asarray(closes, dtype=float)
+    c = c[~np.isnan(c)]
+    if mode == "sma50":
+        return float(c[-50:].mean()) if len(c) >= 50 else None
+    if mode == "sma200":
+        return float(c[-200:].mean()) if len(c) >= 200 else None
+    if mode == "death_cross":
+        if len(c) < 200:
+            return None
+        return _ALWAYS_ABOVE if c[-50:].mean() < c[-200:].mean() else None
+    raise ValueError(f"unknown exit line {mode!r}; expected one of {EXIT_LINES}")
+
+
+def describe_trend_exit(current: float, line: float, mode: Optional[str] = None) -> Tuple[str, str]:
+    """(trigger, reason) for a trend exit under the live exit line."""
+    mode = mode or EXIT_LINE
+    if mode == "death_cross":
+        return EXIT_LABEL[mode], f"50-day average is below the 200-day (death cross) at ${current:.2f}"
+    name = "50MA" if mode == "sma50" else "200MA"
+    return EXIT_LABEL[mode], f"${current:.2f} is {(line - current) / line * 100:.1f}% below {name} ${line:.2f}"
 BREAKEVEN_STOP = 1.005
 
 
@@ -678,7 +715,7 @@ def load_sma50_cache() -> dict:
     try:
         if _SMA50_CACHE.exists():
             data = contracts.read(_SMA50_CACHE)
-            if data.get("date") == _today_str():
+            if data.get("date") == _today_str() and data.get("mode", "sma50") == EXIT_LINE:
                 return data.get("values", {})
     except Exception as e:
         logger.warning(f"Could not read SMA50 cache: {e}")
@@ -688,7 +725,7 @@ def load_sma50_cache() -> dict:
 def _write_sma50_cache(values: dict):
     """Write the SMA50 cache atomically (temp file + rename)."""
     import json, os
-    payload = {"date": _today_str(), "values": values}
+    payload = {"date": _today_str(), "mode": EXIT_LINE, "values": values}
     try:
         _SMA50_CACHE.parent.mkdir(parents=True, exist_ok=True)
         tmp = _SMA50_CACHE.with_suffix(".json.tmp")
@@ -730,7 +767,7 @@ def get_sma50_map(symbols: list) -> dict:
                     else:
                         cache[sym] = None
                         continue
-                    cache[sym] = float(series[-50:].mean()) if len(series) >= 50 else None
+                    cache[sym] = trend_exit_line(series)
                 except Exception:
                     cache[sym] = None
         except Exception as e:

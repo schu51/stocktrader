@@ -41,7 +41,8 @@ def test_default_registry_reflects_the_backtest_verdicts():
                       "news_positive": "observing", "social_bullish": "observing",
                       "news_negative": "observing", "social_bearish": "observing", "news_veto": "trial",
                       "osint_positive": "observing", "osint_negative": "observing",
-                      "options_bullish": "observing", "options_bearish": "observing"}
+                      "options_bullish": "observing", "options_bearish": "observing",
+                      "golden_cross": "observing"}
 
 
 def test_live_defaults_gate_on_room_above_the_50_day_average_and_give_every_buy_the_atr_stop():

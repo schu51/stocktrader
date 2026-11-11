@@ -1603,19 +1603,22 @@ class DailyRunner:
                 result.setdefault("unchecked", []).append(sym)
                 continue
 
-            # ── Hard exit: price below 50MA ─────────────────────────────────
-            if current < sma50:
+            # ── Hard exit: the trend line (exit_logic.EXIT_LINE; the 50-day by default) ──
+            from exit_logic import describe_trend_exit, trend_exit_line
+            line = trend_exit_line(closes)
+            if line is not None and current < line:
                 pct_below = (sma50 - current) / sma50 * 100
+                trigger, why_text = describe_trend_exit(current, line)
                 action = {
                     "symbol":    sym,
-                    "trigger":   "PRICE_BELOW_50MA",
+                    "trigger":   trigger,
                     "current":   round(current, 2),
                     "sma50":     round(sma50, 2),
                     "pct_below": round(pct_below, 2),
                     "pnl_pct":   round(pnl_pct, 2),
                     "qty":       qty,
                     "executed":  False,
-                    "reason":    f"Price ${current:.2f} is {pct_below:.1f}% below 50MA ${sma50:.2f}",
+                    "reason":    why_text,
                 }
                 if execute:
                     try:
@@ -1626,8 +1629,7 @@ class DailyRunner:
                         action["executed"] = "error" not in close_result
                         action["order_id"] = close_result.get("id")
                         logger.info(
-                            f"EXIT EXECUTED: {sym} — price below 50MA "
-                            f"(${current:.2f} < ${sma50:.2f}) | P&L: {pnl_pct:+.1f}%"
+                            f"EXIT EXECUTED: {sym} — {why_text} | P&L: {pnl_pct:+.1f}%"
                         )
                         if action["executed"]:
                             self._log_trade(
@@ -1635,15 +1637,14 @@ class DailyRunner:
                                 symbol=sym,
                                 shares=qty,
                                 price=current,
-                                exit_reason="PRICE_BELOW_50MA",
+                                exit_reason=trigger,
                                 realized_pnl_pct=pnl_pct,
                             )
                     except Exception as e:
                         action["error"] = str(e)
                 else:
                     logger.info(
-                        f"EXIT SIGNAL (dry-run): {sym} — price ${current:.2f} "
-                        f"below 50MA ${sma50:.2f} | P&L: {pnl_pct:+.1f}%"
+                        f"EXIT SIGNAL (dry-run): {sym} — {why_text} | P&L: {pnl_pct:+.1f}%"
                     )
                 result["exits_triggered"].append(action)
                 continue  # Skip stop update — position is being closed

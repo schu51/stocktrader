@@ -42,7 +42,7 @@ import pandas as pd
 
 from exit_logic import BREAKEVEN_AT_PCT, calculate_stop_price, check_exit_triggers
 from config import EntryRules
-from technical_signals import (adx, atr_pct, breakout, ema_reclaim, macd_cross_up,  # noqa: F401
+from technical_signals import (adx, atr_pct, breakout, ema_reclaim, golden_cross_recent, macd_cross_up,  # noqa: F401
                                stop_distance)
 
 ROOT = Path(__file__).parent.resolve()
@@ -186,16 +186,18 @@ def trend_line(closes: np.ndarray, kind: str = "sma50") -> np.ndarray:
 
       sma50      50-day simple average — the live rule
       ema50      50-day exponential average (same average lag as sma50, ~25 sessions)
+      sma200     200-day simple average: exit only on a close below the long trend
       gaussN     Ehlers 4-pole Gaussian filter of period N. gauss100 has about
                  the same lag as sma50 but is much smoother; gauss50 has about
                  half the lag, so it follows price more closely.
     """
     x = np.asarray(closes, dtype=float)
     out = np.full(len(x), np.nan)
-    if kind == "sma50":
-        if len(x) >= 50:
+    if kind in ("sma50", "sma200"):
+        n = 50 if kind == "sma50" else 200
+        if len(x) >= n:
             c = np.cumsum(np.insert(x, 0, 0.0))
-            out[49:] = (c[50:] - c[:-50]) / 50
+            out[n - 1:] = (c[n:] - c[:-n]) / n
         return out
     if kind == "ema50":
         alpha, passes, warm = 2.0 / 51.0, 1, 50
@@ -561,6 +563,15 @@ class Backtest:
             if self.exit_line == "sma50" and self.exit_confirm == 1:      # the live rule, unchanged
                 history = self.close[sym].iloc[max(0, i - 49):i + 1].dropna().values
                 sma50 = float(history.mean()) if len(history) >= 50 else None
+            elif self.exit_line == "death_cross":
+                # Sell at the close once the 50-day average has been below the 200-day
+                # for exit_confirm sessions. Not a price-vs-line test, so the exit
+                # line handed on is set just above the close to make it fire.
+                history = self.close[sym].iloc[max(0, i - LOOKBACK + 1):i + 1].dropna().values
+                n = self.exit_confirm
+                s50, s200 = trend_line(history, "sma50"), trend_line(history, "sma200")
+                crossed = len(history) >= 200 + n and not np.isnan(s200[-n:]).any() and (s50[-n:] < s200[-n:]).all()
+                sma50 = float(c) * 1.000001 if crossed else None
             else:
                 history = self.close[sym].iloc[max(0, i - LOOKBACK + 1):i + 1].dropna().values
                 line = trend_line(history, self.exit_line)
@@ -574,6 +585,8 @@ class Backtest:
                     self.counters["exits_in_grace"] += 1
                 sma50 = None
             price, reason = evaluate_exit(pos, {"open": o, "high": h, "low": l, "close": c}, sma50)
+            if self.exit_line == "death_cross" and reason == "PRICE_BELOW_50MA":
+                reason = "DEATH_CROSS"
             if price is None and (self.cash_short_today or not self.stale_needs_cash) \
                     and is_stale(pos, float(c), self.dates[i].date(), self.stale_days, self.stale_gain):
                 price, reason = float(c), "STALE"
@@ -651,7 +664,8 @@ class Backtest:
             l = np.array([b.low for b in bars]); v = np.array([b.volume for b in bars], dtype=float)
             if self.entry_trigger != "none":
                 fired = {"macd": lambda: macd_cross_up(c), "ema21": lambda: ema_reclaim(c),
-                         "breakout": lambda: breakout(c, v)}[self.entry_trigger]()
+                         "breakout": lambda: breakout(c, v),
+                         "golden": lambda: golden_cross_recent(c)}[self.entry_trigger]()
                 if not fired:
                     self.counters["gate_trigger"] += 1
                     continue
@@ -882,7 +896,7 @@ def main() -> int:
     parser.add_argument("--w-rs", type=float, default=0.60)
     parser.add_argument("--w-thesis", type=float, default=0.40)
     parser.add_argument("--slippage-bps", type=float, default=10.0, help="per side")
-    parser.add_argument("--entry-trigger", choices=["none", "macd", "ema21", "breakout"], default="none",
+    parser.add_argument("--entry-trigger", choices=["none", "macd", "ema21", "breakout", "golden"], default="none",
                         help="experimental: only buy when this signal fired")
     parser.add_argument("--atr-stop", type=float, default=0.0,
                         help="experimental: entry stop at this multiple of 14-day ATR instead of a fixed 8%%")
@@ -892,7 +906,7 @@ def main() -> int:
     parser.add_argument("--min-spy-above-50ma", type=float, default=EntryRules().min_spy_above_50ma,
                         help="no new entries unless SPY closes at least this fraction above its 50-day average "
                              "(default: the live rule, config.EntryRules; 0 = off)")
-    parser.add_argument("--exit-line", choices=["sma50", "ema50", "gauss50", "gauss100"], default="sma50",
+    parser.add_argument("--exit-line", choices=["sma50", "ema50", "gauss50", "gauss100", "sma200", "death_cross"], default="sma50",
                         help="experimental: line the close is tested against for the trend-broken exit")
     parser.add_argument("--exit-confirm", type=int, default=1,
                         help="experimental: consecutive closes below the exit line needed to sell")

@@ -57,7 +57,7 @@ ALLOWED_KNOBS = {           # backtest.Backtest arguments a challenger may chang
     "breakeven_at", "trail_at", "trail_pct", "min_spy_above_50ma", "min_above_50ma", "atr_stop",
     "exit_before_earnings", "earnings_keep_gain", "earnings_blackout", "risk_per_trade", "max_atr_pct",
     "stale_days", "stale_gain", "exit_confirm", "exit_line", "w_rs", "w_thesis", "open_limit", "min_adx",
-    "pullback_entry", "exit_grace_days",
+    "pullback_entry", "exit_grace_days", "entry_trigger",
 }
 # Promotion gates, challenger vs champion on the same three-year replay
 GATES = {
@@ -199,8 +199,10 @@ def live_rules() -> Dict:
     exps = contracts.read((DOCS / "experiments.json")).get("experiments") or {}
     atr = exps.get("atr_stop") or {}
     room = exps.get("ma50_room") or {}
+    import exit_logic
     rules = EntryRules()
     return {
+        "exit_line": exit_logic.EXIT_LINE,
         "w_rs": float(weights.get("w_rs", 0.6)), "w_thesis": float(weights.get("w_thesis", 0.4)),
         "atr_stop": float((atr.get("params") or {}).get("multiple", 2.5)) if atr.get("state") == "adopted" else 0.0,
         "min_above_50ma": 0.06 if room.get("state") == "adopted" else 0.0,

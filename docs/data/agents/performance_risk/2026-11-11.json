@@ -1,0 +1,73 @@
+{
+  "agent": "performance_risk",
+  "date": "2026-11-11",
+  "generated_at": "2026-11-11T21:50:00Z",
+  "status": "amber",
+  "headline": "Losing streak continues: last-20-trades profit factor is 0.11 (3 wins in 20, -$3,815) and the account is 11.0% below its peak; WK is broken (-19%, bearish options) and CTLP sits unprotected because its stop cannot be placed.",
+  "calls": [
+    {
+      "subject": "WK",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "medium",
+      "evidence": [
+        "latest.json:positions[WK].unrealized_pnl_pct=-18.96",
+        "options_sentiment.json:reads[WK].options_bearish=true (score -2, 2,436 puts vs 104 calls)",
+        "postmarket.json:positions_at_risk[WK].risk=deep_loss",
+        "screener.json:rs_ranks has no WK entry (diamond sleeve, unranked)"
+      ],
+      "why": "Lags on two measures (deep unrealized loss and a bearish options read); it does have a broker stop at 64.57, 7.5% below the 69.77 price."
+    },
+    {
+      "subject": "HUM",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "options_sentiment.json:reads[HUM].options_bearish=false, options_score=-1 (line reads bearish -1)",
+        "screener.json:rs_ranks.HUM=98",
+        "latest.json:positions[HUM].unrealized_pnl_pct=4.87, stop 427.7 (4.2% below price)"
+      ],
+      "why": "Weakening on one measure only: a mildly bearish options read. RS is leading and the stop is near break-even, so the reason to own it still holds."
+    },
+    {
+      "subject": "EBAY",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[EBAY].score=-1 (short-volume spike 71% vs 48% avg, z +2.5)",
+        "screener.json:rs_ranks.EBAY=92",
+        "options_sentiment.json:reads[EBAY].options_score=3",
+        "latest.json:positions[EBAY].unrealized_pnl_pct=0.74, stop 8.5% below"
+      ],
+      "why": "Weakening on one measure only (negative OSINT short-volume spike); RS and options still support it."
+    },
+    {
+      "subject": "KO",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[KO].score=-1 (short-volume spike 64% vs 47% avg, z +2.2)",
+        "screener.json:rs_ranks.KO=83",
+        "options_sentiment.json:reads[KO].options_score=0",
+        "latest.json:positions[KO].unrealized_pnl_pct=4.0, stop 8.4% below"
+      ],
+      "why": "Weakening on one measure only (negative OSINT short-volume spike); RS is still leading."
+    }
+  ],
+  "notes": [
+    "BAD NEWS FIRST: eval_latest.json live.last_20_trades: 20 trades, win rate 15%, profit factor 0.11, expectancy -6.48%/trade, -$3,814.95. Last 30 days: profit factor 0.31, 36 trades. All-time: profit factor 0.61 over 91 trades (0.667 in the 2026-11-06 weekly review), so it slipped again this week.",
+    "Drawdown: 11.0% below the all-time peak (eval_latest.json account_30d.drawdown_from_peak=-0.1097; history.json peak $120,222.40 on 2026-07-09). Below the 15% red line. Note that latest.json risk_assessment reports 8.2% because it measures from a later peak ($116,590.55 on 2026-10-06); the two drawdown figures do not agree.",
+    "Today: the portfolio was $107,034.45 at the 15:00 run vs $106,045.55 yesterday (+$988.90, +0.93%); $107,343.85 at post-market. No buy signals, 0 orders submitted, 0 skipped (candidates_screened=0 in both history.json and postmarket.json, which is worth checking: the screener did produce 50 candidates at 14:16). No exits. Two trailing-stop updates (CBOE, CRL) were not needed because the existing stops were already higher.",
+    "Thesis health across 19 holdings: 14 intact, 3 weakening (HUM, EBAY, KO), 1 broken (WK), 1 not assessable (CTLP). Weakening means exactly one lagging measure. A stop within 5% of price did not count as lagging when it sits at or above break-even (ACN 3.1%, HUM 4.2%).",
+    "EXECUTION, CTLP: 281 shares (~$3,147) with no stop. Today's decision records show the intraday monitor tried 4 times (18:45 to 20:15 UTC) to place a stop at 10.69 and every attempt failed with 'asset CTLP is not active'. CTLP is also missing from trades.json (18 open trades vs 19 broker positions), from the rs_ranks and from the exit check (latest.json exits.unchecked). The position is untracked and unprotected and needs manual review. It was already flagged untradable in the 2026-11-06 weekly review.",
+    "EXECUTION, stop fills: no stop filled today. Over the last 10 stop fills (eval_latest.json live.stop_fills) the mean slip was -3.55% (median -0.57%), 2 gapped more than 2%, and the worst was VCYT at -24.6%. trade_attribution by_tag.exit.stop_gapped: 7 trades, 0% won, avg -15.19%, -$3,293.86. The mean is driven by gap-downs rather than routine slippage.",
+    "WK stop mismatch: trades.json records stop_loss 73.53 for WK, but the broker/latest stop is 64.57 and the price (69.77) is already below 73.53. The sleeve may follow different rules; worth confirming which stop applies.",
+    "Tracking: live -7.11% vs backtest -5.6% over 30 days, a gap of 1.51 points. That is within the 3-point threshold, so there is no tracking issue.",
+    "Patterns (91 closed trades, enough to recommend action): trade_attribution findings are unchanged in direction this week. (1) Quick failures: 27 trades closed within 3 days, 0% won, -$4,556, nearly all of the total loss (the other 64 trades are about flat at -$198). (2) Trend-break exits: 69 trades, 16% won, -$5,244. (3) Entries 15%+ above the 50-day average did better (32% won, +3.6% avg) than the rest (15% won, -3.6%). (4) Neutral regime: 14 trades, avg -6.54%. The new rules (breakeven5_spy2, live since 2026-11-10) have 0 trades, so it is too early to judge them.",
+    "Only one trade closed this week (PM, -6.3%, 2026-11-09, trend break). Since the last weekly review the all-time profit factor fell from 0.667 to 0.61, mostly from losses that closed late in the prior week.",
+    "Data gaps: the four diamond-sleeve names (KVYO, PCOR, VCEL, WK) and CTLP have no rs_rank in screener.json. experiments.json is from 2026-11-07 (4 days old). theses.json is from 2026-10-31; ops says 8 theses go stale for ranking on 2026-11-14. ops_status is red: the intraday_exit.yml, ops_monitor.yml and tests.yml jobs failed, and there is a scope breach on postmarket.json. All other required files are dated today."
+  ]
+}

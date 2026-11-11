@@ -564,6 +564,24 @@ def news_precursors(rows: List[Dict]) -> Dict:
             "patterns": out}
 
 
+def possible_themes(ret_row: pd.Series, eligible_row: pd.Series, themes: Dict[str, List[str]],
+                    sectors: Dict[str, str], min_size: int = 3) -> List[Dict]:
+    """
+    Stocks up SECTOR_MOVE_PCT+ today that belong to no theme, grouped by
+    sector: groups of `min_size`+ are candidates for a new theme, for the
+    evening review to name (or dismiss).
+    """
+    themed = {m for ms in themes.values() for m in ms}
+    groups: Dict[str, List[str]] = {}
+    for sym, r in ret_row.items():
+        if sym == "SPY" or sym in themed or pd.isna(r) or r < SECTOR_MOVE_PCT or not bool(eligible_row.get(sym)):
+            continue
+        groups.setdefault(sectors.get(sym, "other"), []).append(sym)
+    return [{"sector": sec, "symbols": sorted(syms, key=lambda x: -ret_row[x]),
+             "median_ret": round(float(np.median([ret_row[x] for x in syms])), 3)}
+            for sec, syms in sorted(groups.items()) if len(syms) >= min_size]
+
+
 def _r(x, nd=3):
     return None if x is None or pd.isna(x) else round(float(x), nd)
 
@@ -884,6 +902,7 @@ def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = Fa
                                    if e["date"] >= (today - timedelta(days=365)).isoformat()]),
             "precursors": table,
             "news_precursors": news_table,
+            "possible_new_themes": possible_themes(ret.loc[last], eligible.loc[last], themes, sectors),
             "themes_hot": {t: round(float(np.nanmedian([feats["close"][m].iloc[-1] / feats["close"][m].iloc[-6] - 1
                                                         for m in ms if m in c.columns])), 3)
                            for t, ms in themes.items() if any(m in c.columns for m in ms)},

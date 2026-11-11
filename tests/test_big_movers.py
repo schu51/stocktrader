@@ -1,4 +1,5 @@
 """Big movers: detection, pre-move state without lookahead, catalysts, precursors, watch list."""
+import re
 from datetime import date, timedelta
 
 import numpy as np
@@ -251,3 +252,21 @@ def test_evening_review_can_add_a_theme_member(tmp_path):
     themes = bm.load_themes(p, {"CRWV@2026-11-11": {"theme": "ai_compute"},
                                 "BAD@2026-11-11": {"theme": "made_up"}})
     assert themes == {"ai_compute": ["NVDA", "CRWV"]}
+
+
+def test_unthemed_stocks_moving_together_are_flagged_as_a_possible_theme():
+    row = pd.Series({"A": 0.12, "B": 0.10, "C": 0.09, "D": 0.15, "E": 0.01, "SPY": 0.01})
+    elig = pd.Series(True, index=row.index)
+    sectors = {"A": "financials", "B": "financials", "C": "financials", "D": "financials", "E": "financials"}
+    out = bm.possible_themes(row, elig, {"banks": ["D"]}, sectors)
+    assert out == [{"sector": "financials", "symbols": ["A", "B", "C"], "median_ret": 0.1}]
+    assert bm.possible_themes(row, elig, {"banks": ["A", "D"]}, sectors) == []   # only 2 left
+
+
+def test_themes_file_is_valid_and_covers_more_than_tech():
+    import json
+    themes = json.loads(bm.THEMES_FILE.read_text())["themes"]
+    assert {"biotech", "regional_banks", "oil_gas", "homebuilders", "retail_consumer", "gold_miners"} <= set(themes)
+    for name, t in themes.items():
+        assert t["description"] and len(t["members"]) >= 3, name
+        assert all(re.fullmatch(r"[A-Z]{1,5}(-[A-Z]{1,2})?", m) for m in t["members"]), name

@@ -358,10 +358,10 @@ BREAKEVEN_AT_PCT = 5.0
 # ── Trend exit ───────────────────────────────────────────────────────────────
 # Which trend line the bot sells on. Both live exit paths (intraday_exit.py and
 # run_daily_analysis.py) and the backtest's champion read this one constant.
-#   sma50        sell when the price is below the 50-day average (the rule today)
-#   sma200       sell when the price is below the 200-day average
+#   sma50        sell when the price is below the 50-day average (the rule until 2026-11-11)
+#   sma200       sell when the price is below the 200-day average (the rule today)
 #   death_cross  sell once the 50-day average is below the 200-day
-EXIT_LINE = "sma50"
+EXIT_LINE = "sma200"     # since 2026-11-12 (was sma50): see PR "Exit on the 200-day"
 EXIT_LINES = ("sma50", "sma200", "death_cross")
 EXIT_LABEL = {"sma50": "PRICE_BELOW_50MA", "sma200": "PRICE_BELOW_200MA", "death_cross": "DEATH_CROSS"}
 _ALWAYS_ABOVE = 1e9      # a death cross is a state, not a price level: a line above any price fires the exit

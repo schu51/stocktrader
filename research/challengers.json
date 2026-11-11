@@ -83,19 +83,19 @@
       "added": "2026-11-11"
     },
     {
-      "name": "sma200_exit",
-      "change": {
-        "exit_line": "sma200"
-      },
-      "why": "sell on a close below the 200-day instead of the 50-day: the slowest trend exit",
-      "added": "2026-11-11"
-    },
-    {
       "name": "golden20",
       "change": {
         "entry_trigger": "golden"
       },
       "why": "buy only stocks whose 50-day crossed above the 200-day in the last 20 sessions: is a fresh golden cross a better entry than the alignment alone?",
+      "added": "2026-11-11"
+    },
+    {
+      "name": "sma50_exit",
+      "change": {
+        "exit_line": "sma50"
+      },
+      "why": "the old 50-day exit, kept running against the new 200-day rule so a reversal shows up",
       "added": "2026-11-11"
     }
   ],

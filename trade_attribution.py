@@ -69,7 +69,7 @@ def exit_tag(t: Dict) -> str:
         if stop and px and px < stop * (1 - GAP):
             return "stop_gapped"
         return "stop"
-    return {"PRICE_BELOW_50MA": "trend_break", "HARD_LOSS_STOP": "hard_loss", "REDUCE": "reduce",
+    return {"PRICE_BELOW_50MA": "trend_break", "PRICE_BELOW_200MA": "trend_break", "DEATH_CROSS": "trend_break", "HARD_LOSS_STOP": "hard_loss", "REDUCE": "reduce",
             "STALE": "stale", "ROTATION": "rotation", "LOSS_CUT": "hard_loss"}.get(r, r.lower() or "unknown")
 
 

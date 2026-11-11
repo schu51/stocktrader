@@ -276,6 +276,9 @@ def evaluate_position(pos: Dict, sma50: Optional[float]) -> Optional[Dict]:
         sma50=sma50,
     )
 
+    if should_exit and trigger == "PRICE_BELOW_50MA":
+        from exit_logic import describe_trend_exit
+        trigger, reason = describe_trend_exit(current, sma50)      # labelled for the live exit line
     if should_exit:
         return {
             "symbol":  sym,

@@ -199,8 +199,10 @@ def live_rules() -> Dict:
     exps = contracts.read((DOCS / "experiments.json")).get("experiments") or {}
     atr = exps.get("atr_stop") or {}
     room = exps.get("ma50_room") or {}
+    import exit_logic
     rules = EntryRules()
     return {
+        "exit_line": exit_logic.EXIT_LINE,
         "w_rs": float(weights.get("w_rs", 0.6)), "w_thesis": float(weights.get("w_thesis", 0.4)),
         "atr_stop": float((atr.get("params") or {}).get("multiple", 2.5)) if atr.get("state") == "adopted" else 0.0,
         "min_above_50ma": 0.06 if room.get("state") == "adopted" else 0.0,

@@ -1,1 +1,41 @@
-{}
+{
+  "CRWV@2026-11-11": {
+    "catalyst": "earnings",
+    "why": "CoreWeave reported a Q3 revenue beat and raised its full-year outlook, easing financing fears and reviving the AI-compute trade.",
+    "lesson": "An earnings date was known, but the stock was 65% below its 52-week high, down 39% in a month, rs_rank 3 and failed the momentum gate, so only an earnings-far-from-high watch would have flagged it.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "NBIL@2026-11-11": {
+    "catalyst": "theme_move",
+    "why": "NBIL is a 2x leveraged Nebius (NBIS) ETF; NBIS jumped as CoreWeave's beat lifted AI-cloud names ahead of Nebius's own results due Thursday.",
+    "lesson": "Leveraged single-stock ETF, not a company: the move is 2x the underlying NBIS, whose earnings were due the next day; the bot should exclude these from mover stats.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "NEBX@2026-11-11": {
+    "catalyst": "theme_move",
+    "why": "NEBX is a 2x leveraged Nebius (NBIS) ETF; NBIS rallied on CoreWeave's beat-and-raise ahead of Nebius's Thursday earnings.",
+    "lesson": "Leveraged single-stock ETF duplicating NBIL; exclude from mover stats and track the underlying NBIS instead.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "AXTX@2026-11-11": {
+    "catalyst": "sector_move",
+    "why": "AXTX is a 2x leveraged AXT Inc (AXTI) ETF; AXTI jumped about 23% in a broad tech rally with no company-specific news found (the evidence headlines about Austria's ATX index are a false match).",
+    "lesson": "Nothing visible beforehand; the ETF was down 69% in a month and the headline matcher confused AXTX with the ATX index.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "THEME@2026-11-11": {
+    "proposed_theme": "ai_optical",
+    "members": [
+      "LITE",
+      "COHR",
+      "CIEN"
+    ],
+    "why": "Optical networking and transceiver suppliers for AI data centers moved together today on the AI-hardware rally; MPWR and TER in the flagged group are power/test names and don't belong.",
+    "by": "claude",
+    "date": "2026-11-11"
+  }
+}

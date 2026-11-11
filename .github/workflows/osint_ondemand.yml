@@ -20,7 +20,6 @@ jobs:
     permissions:
       contents: write
       issues: write          # to open a failure issue
-    env:
 
     steps:
       - uses: actions/checkout@v4

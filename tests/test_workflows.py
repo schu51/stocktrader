@@ -23,3 +23,15 @@ def test_the_suite_runs_on_github_on_the_bots_python():
     text = (WORKFLOWS / "tests.yml").read_text()
     assert "python-version: '3.12'" in text and "pytest" in text
     assert "push:" in text
+
+
+def test_every_workflow_file_is_valid_yaml_with_no_empty_env():
+    # An env: block left empty after removing its only key makes GitHub reject the
+    # whole file, and every push then shows a failed run (2026-11-11).
+    import yaml
+    for f in sorted(WORKFLOWS.glob("*.yml")):
+        doc = yaml.safe_load(f.read_text())
+        for name, job in (doc.get("jobs") or {}).items():
+            assert job.get("env", {}) is not None, f"{f.name}: job {name} has an empty env:"
+            for step in job.get("steps") or []:
+                assert step.get("env", {}) is not None, f"{f.name}: a step in {name} has an empty env:"

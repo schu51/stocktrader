@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-11-11T18:29:20+00:00",
+  "generated_at": "2026-11-11T20:57:59+00:00",
   "status": "red",
   "red": [
     "jobs",
-    "model",
     "scope"
   ],
   "amber": [
+    "model",
     "issues"
   ],
   "checks": [
@@ -16,8 +16,7 @@
       "detail": "1 trading-path job(s) failed or missed",
       "items": [
         "intraday_exit.yml: failed",
-        "macro_research.yml: failed",
-        "osint_ondemand.yml: failed",
+        "ops_monitor.yml: failed",
         "tests.yml: failed"
       ]
     },
@@ -28,11 +27,11 @@
     },
     {
       "name": "model",
-      "status": "red",
-      "detail": "Anthropic API account out of credit: macro research and the diamond judge cannot run",
+      "status": "amber",
+      "detail": "macro research last ran 2026-11-07 and failed (out of API credit (the API is now retired)); the next run is Saturday through the Macro research analyst task",
       "items": [
-        "Anthropic API account out of credit: macro research and the diamond judge cannot run",
-        "8 live thesis(es) not re-checked in 8 days but still used in ranking"
+        "macro research last ran 2026-11-07 and failed (out of API credit (the API is now retired)); the next run is Saturday through the Macro research analyst task",
+        "8 thesis(es) not re-checked since 2026-10-31: they stop counting in ranking on 2026-11-14"
       ]
     },
     {

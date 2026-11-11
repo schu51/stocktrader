@@ -34,6 +34,7 @@ Writes docs/data/put_shadow.json. Usage:
 """
 
 import json
+import contracts
 import logging
 import math
 import os
@@ -280,7 +281,7 @@ def holdings(positions: List[Dict], trades: List[Dict]) -> List[Dict]:
 
 def _load(path: Path, default):
     try:
-        return json.loads(path.read_text())
+        return contracts.read(path)
     except Exception:
         return default
 

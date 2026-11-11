@@ -11,6 +11,7 @@ Stop price is calculated using the same trailing stop tiers as the daily runner.
 
 import logging
 import json
+import contracts
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -145,7 +146,7 @@ def load_trades() -> Optional[List[Dict]]:
     if not path.exists():
         return []
     try:
-        trades = json.loads(path.read_text())
+        trades = contracts.read(path)
         return trades if isinstance(trades, list) else None
     except Exception as e:
         logger.error(f"Could not read trade log ({e})")

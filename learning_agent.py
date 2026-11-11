@@ -22,6 +22,7 @@ The agent never edits source code — only weights.json.
 """
 
 import json
+import contracts
 import logging
 import os
 import sys
@@ -59,7 +60,7 @@ def load_weights(path: Path = WEIGHTS_FILE) -> Dict:
     """Load weights.json, or return the seed default if absent/malformed."""
     try:
         if path.exists():
-            data = json.loads(path.read_text())
+            data = contracts.read(path)
             if "active" in data and "w_rs" in data["active"]:
                 return data
     except Exception as e:
@@ -319,7 +320,7 @@ def _candidate_evidence(w_rs_new: float, w_rs_current: float) -> Dict:
 
 def main():
     logger.info("=== Learning Agent Starting ===")
-    trades = json.loads(TRADES_FILE.read_text()) if TRADES_FILE.exists() else []
+    trades = contracts.read(TRADES_FILE) if TRADES_FILE.exists() else []
     report = run(trades, candidate_evidence=_candidate_evidence)
     logger.info(f"Status: {report['status']} | instrumented trades: {report['trades_so_far']}")
     if report.get("new_weights"):

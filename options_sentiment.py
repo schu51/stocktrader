@@ -49,6 +49,8 @@ Usage:
 
 import argparse
 import json
+import identity
+import contracts
 import logging
 import math
 import os
@@ -421,7 +423,7 @@ def _get_pages(url: str, params: Dict, key: str, session) -> List:
 
 def fetch_chain(symbol: str, price: float, today: date, session) -> List[Dict]:
     """One stock's contracts within a year and half to one-and-a-half times the price."""
-    alp = symbol.replace("-", ".")
+    alp = identity.alpaca(symbol)
     window = {"expiration_date_gte": today.isoformat(),
               "expiration_date_lte": (today + timedelta(days=LONG_DAYS)).isoformat(),
               "strike_price_gte": round(price * STRIKE_BAND[0], 2),
@@ -451,7 +453,7 @@ def fetch_bars(symbols: List[str], lookback_days: int):
 
 def _read(path: Path, default):
     try:
-        return json.loads(Path(path).read_text())
+        return contracts.read(Path(path))
     except Exception:
         return default
 

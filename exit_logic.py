@@ -17,6 +17,7 @@ Exit triggers:
 """
 
 import json
+import contracts
 import logging
 import re
 from datetime import date, datetime, timezone
@@ -282,7 +283,7 @@ def sleeve_holdings(broker, positions: list, trades_path=None) -> Optional[set]:
         trades = []
     else:
         try:
-            trades = json.loads(path.read_text())
+            trades = contracts.read(path)
             if not isinstance(trades, list):
                 return None
         except Exception:
@@ -310,7 +311,7 @@ def read_sleeve_symbols(path=None) -> Optional[set]:
     if not path.exists():
         return set()
     try:
-        trades = json.loads(path.read_text())
+        trades = contracts.read(path)
         return sleeve_symbols(trades) if isinstance(trades, list) else None
     except Exception:
         return None
@@ -674,7 +675,7 @@ def load_sma50_cache() -> dict:
     import json
     try:
         if _SMA50_CACHE.exists():
-            data = json.loads(_SMA50_CACHE.read_text())
+            data = contracts.read(_SMA50_CACHE)
             if data.get("date") == _today_str():
                 return data.get("values", {})
     except Exception as e:

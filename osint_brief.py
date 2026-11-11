@@ -30,6 +30,8 @@ Daily run:
 
 import argparse
 import json
+import identity
+import contracts
 import logging
 import os
 import re
@@ -68,7 +70,7 @@ _TICKER = re.compile(r"^[A-Z]{1,5}(-[A-Z]{1,2})?$")
 
 def _read(path: Path, default):
     try:
-        return json.loads(Path(path).read_text())
+        return contracts.read(Path(path))
     except Exception:
         return default
 
@@ -85,7 +87,7 @@ def coverage(data_dir: Path = DOCS_DATA) -> Dict[str, List[str]]:
     out: Dict[str, List[str]] = {}
     for why, symbols in groups:
         for s in symbols:
-            s = str(s or "").upper().replace(".", "-")
+            s = identity.canonical(s)
             if _TICKER.match(s):
                 out.setdefault(s, []).append(why)
     return dict(list(out.items())[:MAX_SYMBOLS])
@@ -387,7 +389,7 @@ def main(argv=None) -> int:
     cache = _read(CACHE_FILE, {})
 
     if args.tickers:
-        wanted = [t.strip().upper().replace(".", "-") for t in args.tickers.split(",")]
+        wanted = [identity.canonical(t) for t in args.tickers.split(",")]
         symbols = {t: ["on demand"] for t in wanted if _TICKER.match(t)}
         if not symbols:
             logger.error("No valid tickers given")

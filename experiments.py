@@ -58,6 +58,7 @@ Usage:
 
 import hashlib
 import json
+import contracts
 import logging
 import math
 import os
@@ -177,7 +178,7 @@ def load_registry(path: Path = REGISTRY_FILE, today: Optional[date] = None, crea
             return default_registry(today or date.today())
         raise RegistryError(f"{path.name} does not exist")
     try:
-        reg = json.loads(path.read_text())
+        reg = contracts.read(path)
     except Exception as e:
         raise RegistryError(f"{path.name} is not valid JSON: {e}")
     exps = reg.get("experiments") if isinstance(reg, dict) else None
@@ -234,7 +235,7 @@ def _vetoes_today(log_path: Path, day: date, symbol: str) -> int:
     if not path.exists():
         return 0
     try:
-        log = json.loads(path.read_text())
+        log = contracts.read(path)
         if not isinstance(log, list):
             raise ValueError("signal log is not a list")
     except Exception as e:
@@ -366,7 +367,7 @@ def on_buy_signal(symbol: str, price_bars, day: date, registry_path: Path = REGI
     # Logging is separate: a log that cannot be written must not switch the gate off.
     try:
         try:
-            log = json.loads(Path(log_path).read_text())
+            log = contracts.read(Path(log_path))
         except Exception:
             log = []
         cutoff = (day - timedelta(days=LOG_KEEP_DAYS)).isoformat()
@@ -706,11 +707,11 @@ def main() -> int:
     today = date.today()
     registry = load_registry(REGISTRY_FILE, today, create=True)   # a corrupt file raises: fix it, do not reset it
     try:
-        log = json.loads(SIGNAL_LOG_FILE.read_text())
+        log = contracts.read(SIGNAL_LOG_FILE)
     except Exception:
         log = []
     try:
-        trades = json.loads((ROOT / "docs" / "data" / "trades.json").read_text())
+        trades = contracts.read((ROOT / "docs" / "data" / "trades.json"))
     except Exception:
         trades = []
 
@@ -725,7 +726,7 @@ def main() -> int:
         sentiment_rows = []
     try:
         from osint_brief import LOG_FILE as OSINT_LOG
-        osint_rows = [r for r in json.loads(OSINT_LOG.read_text()) if r.get("date") and r.get("symbol")]
+        osint_rows = [r for r in contracts.read(OSINT_LOG) if r.get("date") and r.get("symbol")]
     except Exception:
         osint_rows = []
     try:

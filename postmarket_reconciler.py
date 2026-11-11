@@ -15,6 +15,7 @@ Does NOT place orders or modify positions.
 """
 
 import json
+import contracts
 import logging
 import sys
 from datetime import datetime
@@ -33,7 +34,7 @@ DOCS_DATA = ROOT / "docs" / "data"
 
 def load_json(path: Path) -> dict:
     try:
-        return json.loads(path.read_text()) if path.exists() else {}
+        return contracts.read(path) if path.exists() else {}
     except Exception as e:
         logger.warning(f"Could not read {path}: {e}")
         return {}
@@ -119,7 +120,7 @@ def main():
 
     latest = load_json(DOCS_DATA / "latest.json")
     trades_path = DOCS_DATA / "trades.json"
-    trades = json.loads(trades_path.read_text()) if trades_path.exists() else []
+    trades = contracts.read(trades_path) if trades_path.exists() else []
 
     if not latest:
         logger.error("latest.json not found or empty — cannot reconcile")

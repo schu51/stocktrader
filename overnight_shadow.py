@@ -33,6 +33,8 @@ Writes docs/data/overnight_shadow.json. Usage:
 """
 
 import json
+import identity
+import contracts
 import logging
 import math
 import os
@@ -77,7 +79,7 @@ def select(positions: List[Dict], trades: List[Dict], screener: Dict, n: int = C
         out.append({"symbol": sym, "group": "sleeve" if sym in sleeve else "book"})
     picked = 0
     for c in (screener or {}).get("candidates") or []:
-        sym = str(c.get("symbol") or "").replace("-", ".")
+        sym = identity.alpaca(c.get("symbol"))
         if picked >= n or not sym or sym in held:
             continue
         out.append({"symbol": sym, "group": "candidates"})
@@ -219,7 +221,7 @@ def report_soon(symbol: str, day: date, next_day: date) -> bool:
 
 def _load(path: Path, default):
     try:
-        return json.loads(path.read_text())
+        return contracts.read(path)
     except Exception:
         return default
 

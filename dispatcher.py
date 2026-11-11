@@ -50,6 +50,7 @@ TIMETABLE = [
     ("daily_trade.yml",    WEEKDAYS,   "10:00", "10:00", None),  # exits, stops, rotation, stale exit
     ("diamond_sleeve.yml", WEEKDAYS,   "10:30", "10:30", None),  # after the large-cap run has spent its cash
     ("intraday_exit.yml",  WEEKDAYS,   "09:45", "15:45", 30),    # :15/:45, offset from sync
+    ("put_shadow.yml",     WEEKDAYS,   "15:30", "15:30", None),  # put shadow test before the close, no orders (put_shadow.py)
     ("postmarket.yml",     WEEKDAYS,   "16:15", "16:15", None),
     ("overnight_shadow.yml", WEEKDAYS, "16:30", "16:30", None),  # overnight shadow test, no orders (overnight_shadow.py)
     ("daily_eval.yml",     WEEKDAYS,   "16:45", "16:45", None),  # scorecard + backtest tournament (daily_eval.py)

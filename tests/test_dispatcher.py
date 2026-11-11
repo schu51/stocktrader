@@ -185,7 +185,8 @@ def test_missed_repeating_job_is_caught_up_one_slot_later_only():
 def test_repeating_catch_up_stays_inside_the_timetable():
     assert _catch_up(2026, 10, 7, 7, 45) == []                                         # nothing due before 08:00
     assert _catch_up(2026, 10, 7, 8, 45) == [("osint_brief.yml", "08:00")]             # OSINT brief missed at 08:00
-    assert _catch_up(2026, 10, 7, 16, 0) == [("intraday_exit.yml", "15:45")]           # last check of the day
+    assert _catch_up(2026, 10, 7, 16, 0) == [("put_shadow.yml", "15:30"),               # put shadow missed at 15:30
+                                             ("intraday_exit.yml", "15:45")]           # last check of the day
     assert _catch_up(2026, 10, 7, 19, 0) == []                                         # sync ended at 18:30, caught at 18:45 only
 
 
@@ -255,3 +256,13 @@ def test_overnight_shadow_runs_after_the_close_on_weekdays_only():
     assert "overnight_shadow.yml" in due_workflows(datetime(2026, 11, 10, 16, 31, tzinfo=et))
     assert "overnight_shadow.yml" not in due_workflows(datetime(2026, 11, 10, 16, 1, tzinfo=et))
     assert "overnight_shadow.yml" not in due_workflows(datetime(2026, 11, 14, 16, 31, tzinfo=et))
+
+
+def test_put_shadow_runs_before_the_close_on_weekdays_only():
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from dispatcher import due_workflows
+    et = ZoneInfo("America/New_York")
+    assert "put_shadow.yml" in due_workflows(datetime(2026, 11, 11, 15, 31, tzinfo=et))
+    assert "put_shadow.yml" not in due_workflows(datetime(2026, 11, 11, 16, 1, tzinfo=et))
+    assert "put_shadow.yml" not in due_workflows(datetime(2026, 11, 14, 15, 31, tzinfo=et))

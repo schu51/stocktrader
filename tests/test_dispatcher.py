@@ -188,7 +188,8 @@ def test_repeating_catch_up_stays_inside_the_timetable():
     assert _catch_up(2026, 10, 7, 8, 45) == [("osint_brief.yml", "08:00")]             # OSINT brief missed at 08:00
     assert _catch_up(2026, 10, 7, 16, 0) == [("put_shadow.yml", "15:30"),               # put shadow missed at 15:30
                                              ("intraday_exit.yml", "15:45")]           # last check of the day
-    assert _catch_up(2026, 10, 7, 19, 0) == []                                         # sync ended at 18:30, caught at 18:45 only
+    assert _catch_up(2026, 10, 7, 19, 0) == [("pit.yml", "18:45")]                     # sync ended at 18:30; history at 18:45 is the last job
+    assert _catch_up(2026, 10, 7, 19, 45) == []
 
 
 def test_catch_up_covers_the_saturday_chain_and_never_crosses_days():

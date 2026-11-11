@@ -73,8 +73,8 @@ import exit_logic
 from exit_logic import EXIT_LINE, check_exit_triggers, describe_trend_exit, trend_exit_line
 
 
-def test_live_exit_line_is_still_the_50_day():
-    assert EXIT_LINE == "sma50"          # changing this is a live rule change: it needs its own PR
+def test_live_exit_line_is_the_200_day():
+    assert EXIT_LINE == "sma200"         # changing this is a live rule change: it needs its own PR
 
 
 def test_trend_exit_line_modes():
@@ -101,6 +101,7 @@ def test_death_cross_exit_fires_through_the_shared_trigger_check():
 
 def test_intraday_exit_labels_by_live_line(monkeypatch):
     import intraday_exit
+    monkeypatch.setattr(exit_logic, "EXIT_LINE", "sma50")
     pos = {"symbol": "X", "current_price": "90", "avg_entry_price": "95", "unrealized_plpc": "-0.05", "qty": "10"}
     assert intraday_exit.evaluate_position(pos, 100.0)["trigger"] == "PRICE_BELOW_50MA"
     monkeypatch.setattr(exit_logic, "EXIT_LINE", "death_cross")
@@ -109,6 +110,7 @@ def test_intraday_exit_labels_by_live_line(monkeypatch):
 
 
 def test_sma_cache_is_ignored_after_the_exit_line_changes(tmp_path, monkeypatch):
+    monkeypatch.setattr(exit_logic, "EXIT_LINE", "sma50")
     monkeypatch.setattr(exit_logic, "_SMA50_CACHE", tmp_path / "sma50_cache.json")
     exit_logic._write_sma50_cache({"X": 10.0})
     assert exit_logic.load_sma50_cache() == {"X": 10.0}
@@ -118,6 +120,6 @@ def test_sma_cache_is_ignored_after_the_exit_line_changes(tmp_path, monkeypatch)
 
 def test_champion_backtest_uses_the_live_exit_line(monkeypatch):
     import daily_eval
-    assert daily_eval.live_rules()["exit_line"] == "sma50"
+    assert daily_eval.live_rules()["exit_line"] == "sma200"
     monkeypatch.setattr(exit_logic, "EXIT_LINE", "death_cross")
     assert daily_eval.live_rules()["exit_line"] == "death_cross"

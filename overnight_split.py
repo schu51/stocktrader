@@ -184,16 +184,14 @@ def main(argv=None) -> int:
     today = date.today()
     start = (pd.Timestamp(today) - pd.DateOffset(years=YEARS)).date().isoformat()
     end = (today + timedelta(days=1)).isoformat()
-    universe = bt.load_universe()
-    prices = bt.load_prices(list(universe), start, end)
-    universe = {s: v for s, v in universe.items() if s in prices["Close"].columns}
+    universe, prices, members = bt.load_backtest_data(start, end, "market")
     earnings = bt.load_earnings(list(universe))
     rules = live_rules()
-    b = bt.Backtest(universe, prices, start, None, earnings=earnings, **rules)
+    b = bt.Backtest(universe, prices, start, None, earnings=earnings, members=members, **rules)
     b.run(progress_every=0)
     report = {"generated_at": datetime.now().isoformat(), "start": start, "end": b.dates[b.last].date().isoformat(),
-              "rules": rules, "universe": len(universe), "caveat": "today's index members replayed back: "
-              "absolute returns are flattered; compare the legs", **split_report(b, earnings)}
+              "rules": rules, "universe": len(universe), "caveat": "whole market day by day, delisted stocks included "
+              "(market_history.py); compare the legs", **split_report(b, earnings)}
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(report, indent=2, default=str))
     print_report(report)

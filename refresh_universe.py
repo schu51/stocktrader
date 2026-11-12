@@ -1,8 +1,10 @@
 """
 Refresh the screener's scan universe
 ====================================
-Writes docs/data/universe.json: every S&P 500 and Nasdaq-100 member with its
-sector, in the screener's sector keys.
+Writes docs/data/universe.json: the whole liquid US stock market (about
+1,000 names trading $50M+ a day on any exchange, market_universe.py), with S&P 500 and Nasdaq-100 members keeping
+their GICS sector and the rest taking one from their SEC industry code.
+--index-only writes just the two indexes, as before.
 
 Index membership changes a few times a quarter, so the screener reads this
 saved file every morning instead of scraping a website at 9:15 (the Finviz
@@ -226,10 +228,45 @@ def build(sp500: Dict[str, str], ndx: Dict[str, str], previous: Optional[dict]) 
     }
 
 
+def add_market(result: dict, previous: Optional[dict], assets_fn=None, bars_fn=None, sec_fn=None,
+               sic_fetch=None) -> dict:
+    """
+    Widen `result` (the index lists) to the whole liquid US market (market_universe.py).
+    The index members keep their GICS sectors; the rest get one from their SEC SIC code.
+    Raises if the market list comes out implausibly short, so the caller can keep the index-only file.
+    """
+    import requests
+    import market_universe as mu
+    import screener
+    from config import SEC_EDGAR_USER_AGENT
+    session = requests.Session()
+    assets_fn = assets_fn or (lambda: identity.fetch_alpaca_assets(session))
+    bars_fn = bars_fn or (lambda tickers: screener._alpaca_daily_bars(tickers, session=session))
+    sec_fn = sec_fn or (lambda: identity.fetch_sec_tickers(session))
+    sic_fetch = sic_fetch or (lambda cik: mu.fetch_sic(cik, session, SEC_EDGAR_USER_AGENT))
+    gics = {t: s for t, s in result["tickers"].items() if s != "other"}
+    tickers, sics, counts = mu.build_market(assets_fn(), bars_fn, sec_fn(), gics,
+                                            (previous or {}).get("sic") or {}, sic_fetch)
+    for t in result["tickers"]:          # index members without a GICS sector and no SIC match
+        tickers.setdefault(t, "other")
+    tickers = dict(sorted(tickers.items()))
+    if counts["market"] < mu.MIN_MARKET:
+        raise RuntimeError(f"market universe has only {counts['market']} names ({counts})")
+    out = dict(result)
+    out.update({"mode": "market", "count": len(tickers), "tickers": tickers, "sic": sics,
+                "index_members": sorted(result["tickers"]),
+                "sources": {**result["sources"], **counts}})
+    out["notes"] = list(result.get("notes") or []) + [
+        f"Whole market: {counts['market']} liquid common stocks ($3+, median "
+        f"${mu.MIN_DOLLAR_VOLUME / 1e6:.0f}M+/day, 200+ closes)"]
+    return out
+
+
 def main(argv=None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s  %(levelname)s  %(message)s")
     parser = argparse.ArgumentParser(description="Refresh the screener universe")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--index-only", action="store_true", help="S&P 500 + Nasdaq-100 only (the old universe)")
     args = parser.parse_args(argv)
 
     previous = load_previous()
@@ -237,6 +274,15 @@ def main(argv=None) -> int:
     if result is None:
         logger.error("S&P 500 list could not be fetched — keeping the existing universe file")
         return 1
+    if not args.index_only:
+        try:
+            result = add_market(result, previous)
+        except Exception as e:
+            logger.error(f"Whole-market universe failed ({e})")
+            if (previous or {}).get("mode") == "market":
+                logger.error("Keeping last week's whole-market file")
+                return 1
+            logger.error("Writing the index-only universe instead")
 
     logger.info(f"Universe: {result['count']} tickers ({result['sources']})")
     if args.dry_run:

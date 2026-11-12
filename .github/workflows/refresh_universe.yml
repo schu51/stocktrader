@@ -1,6 +1,6 @@
 name: Refresh Screener Universe
 # Saturday 7:00 ET: rewrite docs/data/universe.json (the whole liquid US market,
-# about 3,000 stocks with sectors) that the screener scans every morning. A failed fetch leaves last
+# about 1,000 stocks trading $50M+/day, with sectors) that the screener scans every morning. A failed fetch leaves last
 # week's file in place. Started by dispatcher.yml — timetable in dispatcher.py.
 
 on:

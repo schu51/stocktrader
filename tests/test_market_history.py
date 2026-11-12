@@ -1,8 +1,14 @@
+import pytest
 import numpy as np
 import pandas as pd
 
 import market_history as mh
 import market_universe as mu
+
+
+@pytest.fixture(autouse=True)
+def _floor(monkeypatch):
+    monkeypatch.setattr(mu, "MIN_DOLLAR_VOLUME", 2_000_000)   # fixtures are sized for a $2M floor
 
 
 def test_delisted_names_are_kept_unless_their_ticker_was_reused():

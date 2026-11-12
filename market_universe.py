@@ -10,8 +10,9 @@ Built weekly by refresh_universe.py:
      units, rights, preferreds, notes).
   3. A year of daily bars from Alpaca for what is left; a stock stays if it has
      200+ closes (the RS score needs them), last closed at $3+, and traded a
-     median $2M+ a day over the last 50 sessions. The screener's own gates
-     ($5, 500k shares) then run on top, as before.
+     median $50M+ a day over the last 50 sessions (about 1,000 stocks; see
+     MIN_DOLLAR_VOLUME for why). The screener's own gates ($5, 500k shares)
+     then run on top, as before.
   4. Each survivor needs an SEC CIK and a standard industry (SIC) code: that
      drops ETF trusts and blank-check companies (SPACs, SIC 6770) that slipped
      past the name filter, and gives the sector. S&P 500 / Nasdaq-100 members
@@ -36,11 +37,19 @@ logger = logging.getLogger(__name__)
 
 EXCHANGES = {"NYSE", "NASDAQ", "AMEX", "BATS"}      # Alpaca exchange codes; ARCA (ETFs) left out
 MIN_PRICE = 3.0
-MIN_DOLLAR_VOLUME = 2_000_000                      # median over MEDIAN_DAYS sessions
+# Median dollars traded per day over MEDIAN_DAYS sessions. Chosen on a 3-year,
+# survivorship-free backtest of the live rules (2026-11-12, delisted stocks included):
+#   $2M+ (~2,700 names/day)  13.3%/yr, profit factor 1.36, max drawdown -17%
+#   $20M+ (~1,570)           19.0%/yr, PF 1.54, -16%
+#   $50M+ (~1,040)           22.1%/yr, PF 1.69, -13%   <- best; SPY 21.3%, -19%
+#   $150M+ (~500)            16.4%/yr, PF 1.59, -15%
+# Thinner names gap through stops (average loss -13% vs -11%). One window: re-check
+# before changing, with backtest.py on the whole market.
+MIN_DOLLAR_VOLUME = 50_000_000
 MEDIAN_DAYS = 50
 MIN_CLOSES = 200
 SEC_PAUSE = 0.125                                  # ~8 requests/second
-MIN_MARKET = 1500                                  # fewer survivors means a fetch went wrong
+MIN_MARKET = 600                                   # fewer survivors means a fetch went wrong
 
 _NOT_COMMON = re.compile(
     r"\b(ETFS?|ETNS?|FUNDS?|WARRANTS?|RIGHTS?|UNITS?|PREFERRED|PFD|DEBENTURES?|NOTES? DUE|BONDS?|"
@@ -66,9 +75,13 @@ def candidate_assets(assets: Iterable[Dict]) -> Dict[str, Dict]:
     return out
 
 
-def liquid(closes, volumes, min_price: float = MIN_PRICE, min_dollar_volume: float = MIN_DOLLAR_VOLUME,
-           median_days: int = MEDIAN_DAYS, min_closes: int = MIN_CLOSES) -> List[str]:
+def liquid(closes, volumes, min_price: Optional[float] = None, min_dollar_volume: Optional[float] = None,
+           median_days: Optional[int] = None, min_closes: Optional[int] = None) -> List[str]:
     """Tickers (columns) passing the price, dollar-volume and history-length rules on the last day."""
+    min_price = MIN_PRICE if min_price is None else min_price
+    min_dollar_volume = MIN_DOLLAR_VOLUME if min_dollar_volume is None else min_dollar_volume
+    median_days = MEDIAN_DAYS if median_days is None else median_days
+    min_closes = MIN_CLOSES if min_closes is None else min_closes
     out = []
     for sym in closes.columns:
         if pd.isna(closes[sym].iloc[-1]):          # didn't trade on the last day (delisted or halted)

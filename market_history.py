@@ -10,7 +10,7 @@ it would have been. This module gives the backtest:
             included (Alpaca's inactive assets), from 2016 on
   members   a dates x tickers True/False table: was the stock in the universe
             on that day, by the same rules the weekly universe uses
-            (market_universe.py: $3+, median $2M+/day over 50 sessions, 200+
+            (market_universe.py: $3+, median $50M+/day over 50 sessions, 200+
             closes in the last year), using only data up to that day
   universe  {ticker: sector}: today's sector where the stock is still listed
             (universe.json), "other" for delisted ones

@@ -5,6 +5,11 @@ import pytest
 import market_universe as mu
 
 
+@pytest.fixture(autouse=True)
+def _floor(monkeypatch):
+    monkeypatch.setattr(mu, "MIN_DOLLAR_VOLUME", 2_000_000)   # fixtures are sized for a $2M floor
+
+
 def _frames(n=260, spec=None):
     """spec: {sym: (price, shares_per_day, n_closes)}"""
     idx = pd.bdate_range("2025-01-01", periods=n)

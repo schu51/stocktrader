@@ -2,7 +2,7 @@
 Refresh the screener's scan universe
 ====================================
 Writes docs/data/universe.json: the whole liquid US stock market (about
-3,000 names, market_universe.py), with S&P 500 and Nasdaq-100 members keeping
+1,000 names trading $50M+ a day on any exchange, market_universe.py), with S&P 500 and Nasdaq-100 members keeping
 their GICS sector and the rest taking one from their SEC industry code.
 --index-only writes just the two indexes, as before.
 
@@ -257,7 +257,8 @@ def add_market(result: dict, previous: Optional[dict], assets_fn=None, bars_fn=N
                 "index_members": sorted(result["tickers"]),
                 "sources": {**result["sources"], **counts}})
     out["notes"] = list(result.get("notes") or []) + [
-        f"Whole market: {counts['market']} liquid common stocks ($3+, median $2M+/day, 200+ closes)"]
+        f"Whole market: {counts['market']} liquid common stocks ($3+, median "
+        f"${mu.MIN_DOLLAR_VOLUME / 1e6:.0f}M+/day, 200+ closes)"]
     return out
 
 

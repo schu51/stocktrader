@@ -59,6 +59,9 @@ ALLOWED_KNOBS = {           # backtest.Backtest arguments a challenger may chang
     "exit_before_earnings", "earnings_keep_gain", "earnings_blackout", "risk_per_trade", "max_atr_pct",
     "stale_days", "stale_gain", "exit_confirm", "exit_line", "w_rs", "w_thesis", "open_limit", "min_adx",
     "pullback_entry", "exit_grace_days", "entry_trigger",
+    # swing-post variants (2026-11-12, research/swing_post_study.md)
+    "tight_boost", "min_adr", "max_adr", "max_ext_atr20", "swing_exit", "partial_size",
+    "qqq_above_ema20", "max_vix", "min_breadth",
 }
 # Promotion gates, challenger vs champion on the same three-year replay
 GATES = {
@@ -218,7 +221,7 @@ def check_challenger(change: Dict) -> Optional[str]:
     bad = set(change) - ALLOWED_KNOBS
     if bad:
         return f"unknown settings {sorted(bad)}"
-    knobs = {k for k in change if k not in ("trail_pct", "earnings_keep_gain", "stale_gain", "w_thesis")}
+    knobs = {k for k in change if k not in ("trail_pct", "earnings_keep_gain", "stale_gain", "w_thesis", "partial_size")}
     if len(knobs) > MAX_CHANGED_KNOBS:
         return f"changes {len(knobs)} settings (max {MAX_CHANGED_KNOBS})"
     return None

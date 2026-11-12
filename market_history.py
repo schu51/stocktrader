@@ -158,6 +158,23 @@ def membership(closes: pd.DataFrame, volumes: pd.DataFrame, min_price: Optional[
     return (enough & priced & traded).fillna(False)
 
 
+def _add_vix(prices: Dict[str, pd.DataFrame], start: str) -> Dict[str, pd.DataFrame]:
+    """The VIX close (yfinance; Alpaca has no index data) for the backtest's max_vix gate. Missing never blocks."""
+    try:
+        import yfinance as yf
+        vx = yf.download("^VIX", start=start, progress=False, auto_adjust=True)["Close"]
+        vx = (vx.iloc[:, 0] if isinstance(vx, pd.DataFrame) else vx).reindex(prices["Close"].index)
+    except Exception as e:
+        logger.warning(f"VIX download failed ({e}); the max_vix gate will see no data")
+        return prices
+    out = dict(prices)
+    out["Close"] = prices["Close"].assign(**{"^VIX": vx.values})
+    for f in ("Open", "High", "Low"):
+        out[f] = prices[f].assign(**{"^VIX": vx.values})
+    out["Volume"] = prices["Volume"].assign(**{"^VIX": np.nan})
+    return out
+
+
 def load(start: str, end: Optional[str] = None, session=None, refresh: bool = False
          ) -> Tuple[Dict[str, str], Dict[str, pd.DataFrame], pd.DataFrame]:
     """
@@ -176,18 +193,22 @@ def load(start: str, end: Optional[str] = None, session=None, refresh: bool = Fa
         active = fetch_assets("active", session)
         inactive = fetch_assets("inactive", session)
         syms = symbols_for_history(active, inactive)
-        if BENCHMARK not in syms:
-            syms.append(BENCHMARK)
+        for extra in (BENCHMARK, "QQQ"):           # benchmark + market context (never traded)
+            if extra not in syms:
+                syms.append(extra)
         logger.info(f"Market history: {len(syms)} symbols ({len(active)} active / {len(inactive)} inactive assets)")
         prices = fetch_bars(syms, fetch_from, session)
+        prices = _add_vix(prices, fetch_from)
         cache.mkdir(parents=True, exist_ok=True)
         for f, frame in prices.items():
             frame.to_pickle(cache / f"{f}.pkl")
     if end:
         prices = {f: v.loc[:pd.Timestamp(end)] for f, v in prices.items()}
     members = membership(prices["Close"], prices["Volume"])
-    if BENCHMARK in members.columns:
-        members[BENCHMARK] = False
+    for extra in (BENCHMARK, "QQQ", "^VIX"):
+        if extra in members.columns:
+            members[extra] = False
     sectors = screener._load_saved_universe() or {}
-    universe = {s: sectors.get(s, "other") for s in prices["Close"].columns if s != BENCHMARK}
+    universe = {s: sectors.get(s, "other") for s in prices["Close"].columns
+                if s not in (BENCHMARK, "QQQ", "^VIX")}
     return universe, prices, members

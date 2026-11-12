@@ -46,6 +46,7 @@ from exit_logic import BREAKEVEN_AT_PCT, calculate_stop_price, check_exit_trigge
 from config import EntryRules
 from technical_signals import (adx, atr_pct, breakout, ema_reclaim, golden_cross_recent, macd_cross_up,  # noqa: F401
                                stop_distance)
+from technical_signals import adr_pct, above_ema, breadth_above_sma, ema_last, extension_atr, tightness
 
 ROOT = Path(__file__).parent.resolve()
 RESEARCH = ROOT / "research"
@@ -56,6 +57,8 @@ MAX_CANDIDATES = 30       # run_daily_analysis --max-candidates default
 MAX_ORDERS_PER_DAY = 8    # run_daily_analysis keeps the top 8 opportunities
 SECTOR_LEADER_BOOST = 1.05
 BENCHMARK = "SPY"
+# Market context the swing-post variants read (never traded): Nasdaq 100 and the VIX
+MARKET_TICKERS = ("QQQ", "^VIX")
 
 
 # ---------------------------------------------------------------------------
@@ -400,6 +403,9 @@ class Backtest:
                  exit_before_earnings: bool = False, earnings_keep_gain: Optional[float] = None,
                  breakeven_at: float = 0.0, trail_at: float = 0.0, trail_pct: float = 0.0,
                  pullback_entry: bool = False, exit_grace_days: int = 0,
+                 tight_boost: float = 0.0, min_adr: float = 0.0, max_adr: float = 0.0,
+                 max_ext_atr20: float = 0.0, swing_exit: bool = False, partial_size: float = 0.33,
+                 qqq_above_ema20: bool = False, max_vix: float = 0.0, min_breadth: float = 0.0,
                  members: Optional[pd.DataFrame] = None):
         self.universe = universe
         # Survivorship-free runs (market_history.py): who was in the universe on each day.
@@ -445,6 +451,19 @@ class Backtest:
         self.breakeven_at, self.trail_at, self.trail_pct = breakeven_at, trail_at, trail_pct
         # Short-horizon variants (experimental, 2026-11-10; see pullback_entry_ok, in_exit_grace)
         self.pullback_entry, self.exit_grace_days = bool(pullback_entry), int(exit_grace_days)
+        # Swing-post variants (experimental, 2026-11-12; research/swing_post_study.md). All off = live rules.
+        #   tight_boost      rank boost for a tight base: score x (1 + tight_boost x tightness 0-1)
+        #   min_adr/max_adr  only names whose 20-day average daily range (percent) is in this band
+        #   max_ext_atr20    no entry with the close more than this many ATRs above its 20-day EMA
+        #   swing_exit       sell partial_size at +1R (R = the entry stop distance), stop to break-even,
+        #                    then sell the rest on a close below the 20-day EMA (stop trails it)
+        #   qqq_above_ema20  no new buys unless QQQ closes above its 20-day EMA
+        #   max_vix          no new buys when the VIX closes at or above this
+        #   min_breadth      no new buys unless this share of the universe is above its 50-day average
+        self.tight_boost, self.min_adr, self.max_adr = float(tight_boost), float(min_adr), float(max_adr)
+        self.max_ext_atr20 = float(max_ext_atr20)
+        self.swing_exit, self.partial_size = bool(swing_exit), float(partial_size)
+        self.qqq_above_ema20, self.max_vix, self.min_breadth = bool(qqq_above_ema20), float(max_vix), float(min_breadth)
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -461,7 +480,9 @@ class Backtest:
                          "gate_trigger": 0, "gate_adx": 0, "gate_50ma_room": 0, "gate_volatile": 0, "days_market_weak": 0, "engine_buy": 0, "engine_hold": 0, "orders": 0, "fills": 0,
                          "unfilled_no_cash": 0, "unfilled_at_cap": 0, "gate_earnings": 0,
                          "earnings_exits": 0, "earnings_held": 0,
-                         "pullback_entries": 0, "exits_in_grace": 0}
+                         "pullback_entries": 0, "exits_in_grace": 0,
+                         "gate_adr": 0, "gate_extended": 0, "days_qqq_weak": 0, "days_vix_high": 0,
+                         "days_breadth_weak": 0, "market_data_missing": 0, "partial_exits": 0}
 
         if quiet:
             logging.disable(logging.WARNING)
@@ -607,9 +628,7 @@ class Backtest:
             if np.isnan(c):
                 if i > self.last_valid.get(sym, i):
                     # Prices stopped: delisted or bought out. Close at the last price seen.
-                    fill = float(pos["last_price"]) * (1 - self.slip)
-                    self.cash += pos["shares"] * fill
-                    self._record_exit(sym, pos, i, fill, "DELISTED")
+                    self._sell(sym, pos, pos["shares"], float(pos["last_price"]), "DELISTED", i)
                     self.counters["delisted_exits"] = self.counters.get("delisted_exits", 0) + 1
                     del self.positions[sym]
                 continue
@@ -638,6 +657,9 @@ class Backtest:
                     self.counters["exits_in_grace"] += 1
                 sma50 = None
             price, reason = evaluate_exit(pos, {"open": o, "high": h, "low": l, "close": c}, sma50)
+            ema20 = None
+            if price is None and self.swing_exit:
+                price, reason, ema20 = self._swing_exit(sym, pos, i, float(o), float(h), float(c))
             if self.exit_line == "death_cross" and reason == "PRICE_BELOW_50MA":
                 reason = "DEATH_CROSS"
             if price is None and (self.cash_short_today or not self.stale_needs_cash) \
@@ -655,24 +677,60 @@ class Backtest:
             if price is None:
                 pos["last_price"] = float(c)
                 pos["stop"] = next_stop(pos, float(c), self.breakeven_at, self.trail_at, self.trail_pct)
+                if ema20 is not None:
+                    pos["stop"] = max(pos["stop"], round(ema20, 2))
                 pos["stop_active"] = True
                 continue
-            fill = float(price) * (1 - self.slip)
-            self.cash += pos["shares"] * fill
-            self._record_exit(sym, pos, i, fill, reason)
+            self._sell(sym, pos, pos["shares"], float(price), reason, i)
             del self.positions[sym]
 
-    def _record_exit(self, sym: str, pos: Dict, i: int, fill: float, reason: str) -> None:
+    def _sell(self, sym: str, pos: Dict, shares: int, price: float, reason: str, i: int) -> None:
+        """Sell `shares` of a holding at `price` (less slippage) and record the trade."""
+        fill = float(price) * (1 - self.slip)
+        self.cash += shares * fill
         self.trades.append({
             "symbol": sym, "status": "CLOSED", "entry_date": pos["entry_date"].isoformat(),
             "exit_date": self.dates[i].date().isoformat(), "entry_price": round(pos["avg_cost"], 4),
-            "exit_price": round(fill, 4), "shares": pos["shares"], "exit_reason": reason,
-            "pnl_usd": round(pos["shares"] * (fill - pos["avg_cost"]), 2),
+            "exit_price": round(fill, 4), "shares": shares, "exit_reason": reason,
+            "pnl_usd": round(shares * (fill - pos["avg_cost"]), 2),
             "pnl_pct": round((fill / pos["avg_cost"] - 1) * 100, 3),
             "hold_days": (self.dates[i].date() - pos["entry_date"]).days,
             "rs_rank": pos["rs_rank"], "thesis_score": pos["thesis_score"],
             "trend_score": pos["trend_score"], "confidence": pos["confidence"],
             "sector": pos["sector"], "weight_version": 1, "stop_at_exit": pos["stop"]})
+
+    def _swing_exit(self, sym: str, pos: Dict, i: int, o: float, h: float, c: float):
+        """
+        The post's exit, on a session where no live exit fired. Returns
+        (price, reason, ema20): a full-exit price and reason, or (None, "", ema20)
+        with the 20-day EMA the stop should trail once the partial is taken.
+
+        1. First time the high reaches +1R (R = entry stop distance), sell
+           partial_size of the shares there (at the open if it gapped above)
+           and lift the stop to break-even.
+        2. After that, a close below the 20-day EMA sells the rest; otherwise
+           the stop trails the EMA.
+        A stop hit on the same bar is handled before this (the conservative order).
+        """
+        r = pos.get("stop_dist") or 0.08
+        target = pos["avg_cost"] * (1 + r)
+        if not pos.get("partial_done") and h >= target:
+            n = int(round(pos["shares"] * self.partial_size))
+            if 1 <= n < pos["shares"]:
+                self._sell(sym, pos, n, max(o, target), "PARTIAL_1R", i)
+                pos["shares"] -= n
+                self.counters["partial_exits"] += 1
+            pos["partial_done"] = True
+            pos["stop"] = max(pos["stop"], round(pos["avg_cost"] * 1.005, 2))
+        if not pos.get("partial_done"):
+            return None, "", None
+        history = self.close[sym].iloc[max(0, i - 99):i + 1].dropna().values
+        if len(history) < 20:
+            return None, "", None
+        ema20 = ema_last(history, 20)
+        if c < ema20:
+            return c, "EMA20_TRAIL", None
+        return None, "", ema20
 
     def _decide(self, i: int, total_value: float):
         lo = i - LOOKBACK + 1
@@ -682,12 +740,21 @@ class Backtest:
             # Experimental: no new entries while the index is not clearly above its own 50-day average
             self.counters["days_market_weak"] += 1
             return
+        if not self._market_ok(closes):
+            return
         universe = self.universe
         if self.members is not None:
             row = self.members.iloc[i]
             universe = {s: self.universe.get(s, "other") for s in row.index[row.values]}
             self.member_counts.append(len(universe))
         candidates = screen_asof(universe, closes, volumes, spy, self.w_rs, self.w_thesis)
+        tight = {}
+        if self.tight_boost:
+            for cand in candidates:
+                sym = cand["symbol"]
+                tight[sym] = tightness(closes[sym].dropna().values, volumes[sym].dropna().values)
+                cand["effective_score"] *= 1 + self.tight_boost * tight[sym]
+            candidates.sort(key=lambda x: x["effective_score"], reverse=True)
         self.counters["candidates"] += len(candidates)
 
         portfolio = self._portfolio_state(i, total_value)
@@ -744,6 +811,14 @@ class Backtest:
             if self.max_atr_pct and atr_pct(h, l, c) > self.max_atr_pct:
                 self.counters["gate_volatile"] += 1
                 continue
+            if self.min_adr or self.max_adr:
+                adr = adr_pct(h, l)
+                if not (adr == adr) or (self.min_adr and adr < self.min_adr) or (self.max_adr and adr > self.max_adr):
+                    self.counters["gate_adr"] += 1
+                    continue
+            if self.max_ext_atr20 and extension_atr(h, l, c) > self.max_ext_atr20:
+                self.counters["gate_extended"] += 1
+                continue
 
             decision = self.engine.evaluate_entry(
                 symbol=sym, portfolio=portfolio, research_score=None,
@@ -759,12 +834,14 @@ class Backtest:
                                          self.max_stop_dist)
             d["shares"] = risk_capped_shares(d.get("shares") or 0, float(c[-1]), d["stop_dist"] or 0.08,
                                              total_value, self.risk_per_trade)
+            d["tightness"] = tight.get(sym, 0.0)
             d["features"] = {"rs_rank": cand["rs_rank"], "thesis_score": cand["thesis_score"],
                              "trend_score": d.get("trend_score"), "confidence": d.get("confidence"),
                              "sector": cand["sector"]}
             opportunities.append(d)
 
-        opportunities.sort(key=lambda x: (x.get("signal_strength", 0), x.get("trend_score") or 0),
+        boost = lambda x: 1 + self.tight_boost * x.get("tightness", 0.0)
+        opportunities.sort(key=lambda x: ((x.get("signal_strength") or 0) * boost(x), x.get("trend_score") or 0),
                            reverse=True)
         for d in opportunities[:MAX_ORDERS_PER_DAY]:
             if (d.get("confidence") or 0) < self.min_confidence or (d.get("shares") or 0) <= 0:
@@ -772,6 +849,34 @@ class Backtest:
             self.pending.append({"symbol": d["symbol"], "shares": int(d["shares"]),
                                  "features": d["features"], "stop_dist": d.get("stop_dist")})
             self.counters["orders"] += 1
+
+    def _market_ok(self, closes: pd.DataFrame) -> bool:
+        """The swing-post market gates (all off by default). Missing index data never blocks a buy."""
+        if self.qqq_above_ema20:
+            q = closes["QQQ"].dropna().values if "QQQ" in closes.columns else np.array([])
+            if len(q) < 20:
+                self.counters["market_data_missing"] += 1
+            elif not above_ema(q, 20):
+                self.counters["days_qqq_weak"] += 1
+                return False
+        if self.max_vix:
+            vx = closes["^VIX"].dropna() if "^VIX" in closes.columns else pd.Series(dtype=float)
+            if not len(vx) or vx.index[-1] != closes.index[-1]:
+                self.counters["market_data_missing"] += 1
+            elif float(vx.iloc[-1]) >= self.max_vix:
+                self.counters["days_vix_high"] += 1
+                return False
+        if self.min_breadth:
+            pool = self.universe
+            if self.members is not None:          # point-in-time runs: that day's members
+                row = self.members.iloc[self.dates.get_loc(closes.index[-1])]
+                pool = row.index[row.values]
+            cols = [s for s in pool if s in closes.columns]
+            b = breadth_above_sma(closes[cols], 50) if cols else float("nan")
+            if b == b and b < self.min_breadth:
+                self.counters["days_breadth_weak"] += 1
+                return False
+        return True
 
     def run(self, progress_every: int = 50) -> None:
         risk = self.engine.risk_manager
@@ -817,7 +922,11 @@ class Backtest:
                         "exit_before_earnings": self.exit_before_earnings,
                         "earnings_keep_gain": self.earnings_keep_gain,
                         "breakeven_at": self.breakeven_at, "trail_at": self.trail_at, "trail_pct": self.trail_pct,
-                        "pullback_entry": self.pullback_entry, "exit_grace_days": self.exit_grace_days},
+                        "pullback_entry": self.pullback_entry, "exit_grace_days": self.exit_grace_days,
+                        "tight_boost": self.tight_boost, "min_adr": self.min_adr, "max_adr": self.max_adr,
+                        "max_ext_atr20": self.max_ext_atr20, "swing_exit": self.swing_exit,
+                        "partial_size": self.partial_size, "qqq_above_ema20": self.qqq_above_ema20,
+                        "max_vix": self.max_vix, "min_breadth": self.min_breadth},
             "stop_exits": stop_slippage(trades),
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),
@@ -865,7 +974,7 @@ def load_prices(tickers: List[str], start: str, end: Optional[str]) -> Dict[str,
 
     import yfinance as yf
     fetch_from = (pd.Timestamp(start) - pd.Timedelta(days=400)).strftime("%Y-%m-%d")
-    raw = yf.download(sorted(set(tickers) | {BENCHMARK}), start=fetch_from, end=end,
+    raw = yf.download(sorted(set(tickers) | {BENCHMARK} | set(MARKET_TICKERS)), start=fetch_from, end=end,
                       auto_adjust=True, progress=False, threads=True)
     prices = {f: raw[f] for f in fields}
     cache.mkdir(parents=True, exist_ok=True)
@@ -1039,6 +1148,19 @@ def main() -> int:
                         help="let a name the 50-day room gate turns away enter on a 21-day EMA reclaim above a rising 50-day average")
     parser.add_argument("--exit-grace-days", type=int, default=0,
                         help="sessions after a fill during which a close below the 50-day line does not exit")
+    parser.add_argument("--tight-boost", type=float, default=0.0,
+                        help="swing post: rank boost for a tight base, score x (1 + this x tightness)")
+    parser.add_argument("--min-adr", type=float, default=0.0, help="swing post: minimum 20-day average daily range, percent")
+    parser.add_argument("--max-adr", type=float, default=0.0, help="swing post: maximum 20-day average daily range, percent")
+    parser.add_argument("--max-ext-atr20", type=float, default=0.0,
+                        help="swing post: no entry more than this many ATRs above the 20-day EMA")
+    parser.add_argument("--swing-exit", action="store_true",
+                        help="swing post: sell --partial-size at +1R, stop to break-even, trail the rest on the 20-day EMA")
+    parser.add_argument("--partial-size", type=float, default=0.33)
+    parser.add_argument("--qqq-above-ema20", action="store_true", help="swing post: no buys unless QQQ is above its 20-day EMA")
+    parser.add_argument("--max-vix", type=float, default=0.0, help="swing post: no buys when the VIX closes at or above this")
+    parser.add_argument("--min-breadth", type=float, default=0.0,
+                        help="swing post: no buys unless this share of the universe is above its 50-day average")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--universe", choices=("market", "index"), default="market",
                         help="market: every US stock incl. delisted, day by day (default); "
@@ -1065,6 +1187,9 @@ def main() -> int:
                   exit_before_earnings=args.exit_before_earnings, earnings_keep_gain=args.earnings_keep_gain,
                   breakeven_at=args.breakeven_at, trail_at=args.trail_at, trail_pct=args.trail_pct,
                   pullback_entry=args.pullback_entry, exit_grace_days=args.exit_grace_days,
+                  tight_boost=args.tight_boost, min_adr=args.min_adr, max_adr=args.max_adr,
+                  max_ext_atr20=args.max_ext_atr20, swing_exit=args.swing_exit, partial_size=args.partial_size,
+                  qqq_above_ema20=args.qqq_above_ema20, max_vix=args.max_vix, min_breadth=args.min_breadth,
                   members=members)
     bt.run()
     result = bt.results()

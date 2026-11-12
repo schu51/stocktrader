@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-11-11T15:30:51.297890",
+  "generated_at": "2026-11-12T15:30:54.052220",
   "mode": "EXECUTE",
   "holdings": [
     {
       "symbol": "KVYO",
-      "market_value": 2775.05,
-      "pnl_pct": -0.41
+      "market_value": 2851.52,
+      "pnl_pct": 2.34
     },
     {
       "symbol": "PCOR",
-      "market_value": 3360.5,
-      "pnl_pct": 21.54
+      "market_value": 3409.56,
+      "pnl_pct": 23.31
     },
     {
       "symbol": "VCEL",
-      "market_value": 3756.16,
-      "pnl_pct": 35.76
+      "market_value": 3713.28,
+      "pnl_pct": 34.21
     },
     {
       "symbol": "WK",
-      "market_value": 1924.16,
-      "pnl_pct": -20.18
+      "market_value": 1931.3,
+      "pnl_pct": -19.88
     }
   ],
   "sells": [],
@@ -28,11 +28,17 @@
   "buys": [],
   "skipped": [],
   "failures": [],
-  "alerts": [],
+  "alerts": [
+    "WK: held on a judgment from 2026-10-17, made before its latest filings; its thesis cannot be checked until it is re-judged",
+    "KVYO: held on a judgment from 2026-10-17, made before its latest filings; its thesis cannot be checked until it is re-judged",
+    "VCEL: held on a judgment from 2026-10-31, made before its latest filings; its thesis cannot be checked until it is re-judged",
+    "PCOR: a stop at 47.13 was below the sleeve's 63.15 (sleeve: 20%+ peak gain \u2192 break-even+0.5%); replaced",
+    "VCEL: a stop at 32.42 was below the sleeve's 43.45 (sleeve: 20%+ peak gain \u2192 break-even+0.5%); replaced"
+  ],
   "note": null,
-  "equity": 106993.95,
-  "budget": 21398.79,
-  "slot": 2674.85,
-  "invested": 11815.86,
+  "equity": 106887.68,
+  "budget": 21377.54,
+  "slot": 2672.19,
+  "invested": 11905.66,
   "list_date": "2026-11-07"
 }

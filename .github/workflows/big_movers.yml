@@ -36,6 +36,7 @@ jobs:
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}       # price history from Alpaca's data API
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}     # optional: scheduled earnings dates + company news
           BACKFILL_DAYS: ${{ inputs.backfill_days }}
         run: python big_movers.py --backfill-days "${BACKFILL_DAYS:-0}"
 

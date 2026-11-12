@@ -1,0 +1,39 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-12",
+  "generated_at": "2026-11-12T22:38:48+00:00",
+  "status": "amber",
+  "headline": "The 200-day exit went live today with 0 trades under it yet; no challenger is near promotion (all 0/5), and the closest, spy3 (PF 3.11, DD -10.5%), has seen its last-6-month return slide to -5.5%.",
+  "calls": [
+    {
+      "subject": "challenger:spy3",
+      "direction": "bearish",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.spy3.gates",
+        "docs/data/eval_history.json:challengers.spy3.recent_return"
+      ],
+      "why": "Best PF and drawdown, but it fails annual_return (30.2% vs 32.8%), recent and pf_second_half, and its recent return has worsened three evals running."
+    },
+    {
+      "subject": "challenger:death_cross_exit",
+      "direction": "bearish",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.death_cross_exit"
+      ],
+      "why": "PF 2.69 vs the 200-day champion's 2.67 on 597 vs 600 trades: no room to clear the +0.1 PF gate."
+    }
+  ],
+  "notes": [
+    "No change to research/challengers.json: 3 eval rows, no retire criterion met, no errors, list full at 11, and no clean new weakness (the entry-distance finding was measured under the old 50-day exit, so it is confounded).",
+    "Crossovers vs champion (sma200: PF 2.67, DD -13.2%, win 65%, 600 trades): death_cross_exit PF 2.69 / DD -13.1%; sma50_exit PF 2.30 / DD -13.1% / win 60% / 662 trades; golden20 PF 4.21 / DD -3.3% on 72 trades, 7.4%/yr. Share closed within 3 days per challenger is not in the eval output; live under the 50-day exit 27 of 91 (0% won, -$4,556).",
+    "Live: last 20 trades 15% win, PF 0.11; 30d 36 trades PF 0.31, -7.9% vs SPY -2.7%; account -10.6% from peak. Tracking gap -2.1pt (was -0.5pt); matched trades live -1.0% vs backtest -2.1%, so not execution.",
+    "Stop fills unchanged: 10 fills, mean -3.5%, median -0.6%, worst VCYT -24.6%, 2 gapped >2%.",
+    "All 8 theses last validated 2026-10-31 (12 days, over the 8-day mark); revalidation is the Saturday macro research analyst (first run 2026-11-14). macro_brief error dated 2026-11-07 is the retired API path.",
+    "grace5 is a no-op under the 200-day exit (identical to champion); first slot to free when a weakness needs it.",
+    "Nothing ready to propose; no PR or issue opened."
+  ]
+}

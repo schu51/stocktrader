@@ -264,3 +264,16 @@ def test_history_records_a_do_not_buy_mark():
         {"rank": 2, "ticker": "BBB", "score": {"total": 70.0}, "judgment": {"edge": 5, "demand": 5}}]}
     h = update_history([], doc)
     assert h[0]["do_not_buy"] is True and "do_not_buy" not in h[1]
+
+
+def test_companies_failing_a_single_gate_are_reported_as_near_misses():
+    # SLOW is AAA growing about 10% a year: the growth gate (15%) is all that keeps it off the
+    # list. CCC fails three gates, so it is not a near miss.
+    slow = _fin()
+    slow["revenue"] = _rows([110, 108, 106, 104, 100, 98, 96, 94])
+    fins = {**FINS, 6: slow}
+    listings = {**LISTINGS, 6: {"ticker": "SLOW", "name": "Slow Inc", "exchange": "NYSE"}}
+    nm = build_watchlist(CUTOFF, fins, COVERAGE, listings, _prices, _sic)["near_misses"]
+    assert nm["total"] == 1 and nm["by_gate"]["growth"] == 1 and sum(nm["by_gate"].values()) == 1
+    assert [(r["ticker"], r["gate"]) for r in nm["names"]] == [("SLOW", "growth")]
+    assert 0.05 < nm["names"][0]["revenue_growth"] < 0.15                    # the figure that decides it comes along

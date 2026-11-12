@@ -75,6 +75,7 @@ def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listing
         raise CoverageError(f"only {len(listings)} companies listed (need {MIN_LISTED}): the SEC ticker file looks incomplete")
 
     gate_counts, with_metrics, passed = Counter(), 0, []
+    near: List[Dict] = []          # failed exactly one gate: who a looser gate would let in
     for cik, listing in listings.items():
         try:
             m = company_metrics(fins.get(cik), data_cutoff or cutoff)
@@ -88,6 +89,9 @@ def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listing
         gate_counts.update(failed)
         if not failed:
             passed.append((cik, listing, m))
+        elif len(failed) == 1:
+            near.append({"ticker": listing["ticker"], "gate": failed[0],
+                         **{k: m.get(k) for k in NEAR_MISS_KEYS}})
 
     if with_metrics < MIN_WITH_METRICS:
         # A whole figure missing from the SEC data (every operating-income frame
@@ -149,10 +153,29 @@ def build_watchlist(cutoff: date, fins: Dict[int, dict], coverage: dict, listing
                      "passed_size": len(sized), "excluded_industry": excluded, "faded": len(faded),
                      "watchlist": len(rows)},
         "gate_failures": {g: gate_counts.get(g, 0) for g in GATES},
+        "near_misses": near_misses(near),
         "size_failures": dict(size_counts),
         "faded": faded,
         "watchlist": rows,
     }
+
+
+NEAR_MISS_KEYS = ("ttm_revenue", "revenue_growth", "margin_change", "ttm_op_margin", "prior_ttm_op_margin",
+                  "ttm_gross_margin", "shares_growth")
+NEAR_MISS_NAMES = 60
+
+
+def near_misses(rows: List[Dict]) -> Dict:
+    """
+    Companies that failed exactly one financial gate (2026-11-12). The list is
+    the bottleneck of the sleeve (48 of about 2,200 companies passed every gate
+    on 2026-11-07), and this says which gate holds back the most, and whom,
+    before any gate is loosened. Size and liquidity are not checked here.
+    """
+    by_gate = Counter(r["gate"] for r in rows)
+    ordered = sorted(rows, key=lambda r: (-(r.get("revenue_growth") or 0), r["ticker"]))
+    return {"total": len(rows), "by_gate": {g: by_gate.get(g, 0) for g in GATES},
+            "names": ordered[:NEAR_MISS_NAMES]}
 
 
 def update_history(history: list, doc: dict) -> list:

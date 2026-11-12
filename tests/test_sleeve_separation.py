@@ -130,8 +130,8 @@ def test_daily_run_keeps_sleeve_holdings_out_of_its_caps_and_its_cash(monkeypatc
     state = DailyRunner._build_portfolio_state(stub)
     assert set(state.positions) == {"STAA", "AME"}                # still seen, so the trade log reconciles
     assert state.num_positions == 1 and stub._sleeve == {"STAA"}
-    # The sleeve's budget is 20% = $20,000, of which $3,000 is invested: $17,000 of the cash is its own
-    assert state.cash == 23000.0 and state.available_cash == 23000.0 * 0.95
+    # The sleeve's budget is 40% = $40,000, of which $3,000 is invested: $37,000 of the cash is its own
+    assert state.cash == 3000.0 and state.available_cash == 3000.0 * 0.95
     stub.portfolio = state
     assert "STAA" not in json.dumps(DailyRunner._get_sector_allocations(stub))
 

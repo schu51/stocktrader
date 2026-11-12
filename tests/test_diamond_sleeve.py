@@ -48,8 +48,9 @@ def test_nothing_is_bought_from_a_stale_list_or_without_an_earlier_week():
 
 
 def test_only_the_top_names_by_judgment_rank_are_candidates():
-    rows = [_row(f"T{i}", 7, 7, i) for i in range(1, 12)]
-    hist = _hist("2026-10-17", {f"T{i}": i for i in range(1, 12)}) + _hist("2026-10-24", {f"T{i}": i for i in range(1, 12)})
+    n = MAX_POSITIONS + 4
+    rows = [_row(f"T{i}", 7, 7, i) for i in range(1, n)]
+    hist = _hist("2026-10-17", {f"T{i}": i for i in range(1, n)}) + _hist("2026-10-24", {f"T{i}": i for i in range(1, n)})
     assert [r["ticker"] for r in buy_candidates(_doc(rows), hist, TODAY)] == [f"T{i}" for i in range(1, MAX_POSITIONS + 1)]
 
 
@@ -76,8 +77,8 @@ def _plan(held=None, others=(), equity=100_000.0, cash=50_000.0, above=lambda s:
 
 def test_plan_buys_one_slot_each_of_the_eligible_names():
     p = _plan()
-    assert [(b["symbol"], b["shares"], b["limit_price"]) for b in p["buys"]] == [("AAA", 50, 50.0), ("BBB", 50, 50.0)]
-    assert p["sells"] == [] and p["slot"] == 2500.0                     # 20% of $100k over 8 positions
+    assert [(b["symbol"], b["shares"], b["limit_price"]) for b in p["buys"]] == [("AAA", 53, 50.0), ("BBB", 53, 50.0)]
+    assert p["sells"] == [] and p["slot"] == 2666.67                    # 40% of $100k over 15 positions
 
 
 def test_plan_skips_what_is_already_held_below_its_200_day_or_unpriced():
@@ -89,8 +90,8 @@ def test_plan_skips_what_is_already_held_below_its_200_day_or_unpriced():
     assert p["buys"] == []
 
 
-def test_plan_never_spends_past_the_budget_the_cash_or_eight_positions():
-    held = {f"H{i}": 2500.0 for i in range(7)}                          # seven positions, $17,500 of $20,000
+def test_plan_never_spends_past_the_budget_the_cash_or_its_positions():
+    held = {f"H{i}": 2666.67 for i in range(MAX_POSITIONS - 1)}         # every slot but one taken
     doc = _doc([_row("AAA", 7, 7, 1), _row("BBB", 6, 6, 2)] + [_row(h, 6, 6, 5) for h in held])
     hist = HISTORY + _hist("2026-10-17", {h: 5 for h in held}) + _hist("2026-10-24", {h: 5 for h in held})
     p = _plan(held=held, doc=doc, history=hist)
@@ -182,7 +183,8 @@ def _files(tmp_path, monkeypatch, trades=(), doc=DOC, history=HISTORY):
 
 def _run(broker, paths, execute=True, above=lambda s: True, report=lambda s: None):
     from diamond_sleeve import run
-    return run(broker, TODAY, execute=execute, above_200=above, wait_seconds=0, report_of=report, **paths)
+    return run(broker, TODAY, execute=execute, above_200=above, wait_seconds=0, report_of=report,
+               setup=lambda s: {"setup": None}, **paths)
 
 
 SLEEVE_OPEN = {"symbol": "GONE", "status": "OPEN", "sleeve": "diamond", "entry_date": "2026-09-01", "entry_price": 40.0,
@@ -195,16 +197,16 @@ def test_buys_are_sent_logged_as_the_sleeves_and_given_the_wide_stop(tmp_path, m
     out = _run(broker, paths)
     buys = [o for o in broker.sent if o["side"] == "buy"]
     assert [(o["symbol"], o["qty"], o["order_type"], o["limit_price"], o["time_in_force"]) for o in buys] == \
-        [("AAA", 50, "limit", 50.0, "day"), ("BBB", 50, "limit", 50.0, "day")]
+        [("AAA", 53, "limit", 50.0, "day"), ("BBB", 53, "limit", 50.0, "day")]
     trades = json.loads(paths["trades_file"].read_text())
     mine = [t for t in trades if t.get("sleeve") == "diamond"]
     assert [(t["symbol"], t["status"], t["shares"], t["stop_dist"], t["order_id"]) for t in mine] == \
-        [("AAA", "OPEN", 50, 0.25, "o1"), ("BBB", "OPEN", 50, 0.25, "o2")]
+        [("AAA", "OPEN", 53, 0.25, "o1"), ("BBB", "OPEN", 53, 0.25, "o2")]
     stops = {o["symbol"]: o["stop_price"] for o in broker.sent if o["side"] == "sell" and o["order_type"] == "stop"}
     assert stops["AAA"] == 37.5 and stops["BBB"] == 37.5            # 25% below entry
     assert stops["AME"] == round(254.0 * 0.92, 2)                   # the large-cap holding keeps its own rule
     assert out["failures"] == [] and [b["status"] for b in out["buys"]] == ["submitted", "submitted"]
-    assert out["budget"] == 20_000.0 and broker.closed == []
+    assert out["budget"] == 40_000.0 and broker.closed == []
 
 
 def test_a_dry_run_sends_and_records_nothing(tmp_path, monkeypatch):
@@ -279,11 +281,12 @@ def test_a_buy_still_waiting_to_fill_counts_as_held_so_a_second_run_cannot_buy_i
     out = _run(broker, paths)
     assert len([o for o in broker.sent if o["side"] == "buy"]) == 2          # nothing sent the second time
     assert len(json.loads(paths["trades_file"].read_text())) == 2 and out["buys"] == []
-    assert out["invested"] == 5000.0                                         # the two pending buys count against the budget
+    assert out["invested"] == 5300.0                                         # the two pending buys count against the budget
 
 
 def test_pending_buys_fill_slots_and_a_thesis_break_does_not_try_to_sell_shares_not_yet_held(tmp_path, monkeypatch):
-    pending = [dict(SLEEVE_OPEN, symbol=f"P{i}", shares=50, entry_price=50.0) for i in range(8)]     # eight unfilled buys
+    pending = [dict(SLEEVE_OPEN, symbol=f"P{i}", shares=50, entry_price=50.0)
+               for i in range(MAX_POSITIONS)]                                # every slot an unfilled buy
     broker = Broker()
     paths = _files(tmp_path, monkeypatch, trades=pending)
     out = _run(broker, paths)
@@ -360,16 +363,17 @@ def test_a_stop_tighter_than_the_sleeves_is_replaced(tmp_path, monkeypatch):
 
 
 def test_a_failed_sale_does_not_free_its_slot(tmp_path, monkeypatch):
-    held = [_pos(f"H{i}", 50, 50.0, 50.0) for i in range(7)] + [_pos("GONE", 60, 40.0, 44.0)]
+    n = MAX_POSITIONS - 1                                                   # every slot full, one of them breaking
+    held = [_pos(f"H{i}", 50, 50.0, 50.0) for i in range(n)] + [_pos("GONE", 60, 40.0, 44.0)]
     broker = Broker(held)
     broker.close_position = lambda symbol: {"error": "rejected"}
-    trades = [dict(SLEEVE_OPEN, symbol=f"H{i}") for i in range(7)] + [SLEEVE_OPEN]
-    doc = _doc([_row("AAA", 7, 7, 1), _row("BBB", 6, 6, 2)] + [_row(f"H{i}", 6, 6, 5) for i in range(7)])
-    hist = HISTORY + _hist("2026-10-17", {f"H{i}": 5 for i in range(7)}) + _hist("2026-10-24", {f"H{i}": 5 for i in range(7)})
+    trades = [dict(SLEEVE_OPEN, symbol=f"H{i}") for i in range(n)] + [SLEEVE_OPEN]
+    doc = _doc([_row("AAA", 7, 7, 1), _row("BBB", 6, 6, 2)] + [_row(f"H{i}", 6, 6, 5) for i in range(n)])
+    hist = HISTORY + _hist("2026-10-17", {f"H{i}": 5 for i in range(n)}) + _hist("2026-10-24", {f"H{i}": 5 for i in range(n)})
     paths = _files(tmp_path, monkeypatch, trades=trades, doc=doc, history=hist)
     out = _run(broker, paths)
     assert out["sells"][0]["status"] == "failed"
-    assert [o for o in broker.sent if o["side"] == "buy"] == []           # still eight positions
+    assert [o for o in broker.sent if o["side"] == "buy"] == []           # still every slot taken
 
 
 def test_a_broad_mark_on_a_holding_never_sells_it_even_when_it_repeats():
@@ -549,3 +553,57 @@ def test_a_ratcheted_stop_is_not_lowered_when_the_price_falls_back(tmp_path, mon
     out = _run(broker, paths)
     assert "s1" not in broker.cancelled and not [o for o in broker.sent if o.get("order_type") == "stop"]
     assert not out["failures"]
+
+
+# ── 2026-11-12: the sleeve becomes the main bet ─────────────────────────────
+
+def _bars(n=260, base=50.0, drift=0.002, swing=0.04, last_swing=None, last_vol=None):
+    import numpy as np
+    closes = base * (1 + drift) ** np.arange(n)
+    rng = np.full(n, swing)
+    if last_swing is not None:
+        rng[-10:] = last_swing
+    highs, lows = closes * (1 + rng / 2), closes * (1 - rng / 2)
+    vols = np.full(n, 1e6)
+    if last_vol is not None:
+        vols[-1] = last_vol
+    return closes, highs, lows, vols
+
+
+def test_pent_up_is_a_stock_basing_near_its_high_that_is_tightening_or_breaking_out():
+    from diamond_sleeve import pent_up
+    assert pent_up(*_bars(last_swing=0.015))["setup"] is True               # at its high, range coiling
+    assert pent_up(*_bars(last_vol=3e6))["breakout"] is True                # new 20-day high on volume
+    assert pent_up(*_bars(last_vol=3e6))["setup"] is True
+    plain = pent_up(*_bars())                                               # at its high, nothing else going on
+    assert plain["near_high"] is True and plain["setup"] is False
+    falling = pent_up(*_bars(drift=-0.003, last_swing=0.015))               # tight, but far under its high
+    assert falling["near_high"] is False and falling["setup"] is False
+    assert pent_up(*_bars(n=40))["setup"] is None                           # too little history: unknown
+
+
+def test_a_name_showing_the_setup_is_bought_first_but_none_is_blocked():
+    rows = [_row("AAA", 7, 7, 1), _row("BBB", 6, 6, 2), _row("CCC", 6, 6, 3)]
+    hist = _hist("2026-10-17", {"AAA": 1, "BBB": 2, "CCC": 3}) + _hist("2026-10-24", {"AAA": 1, "BBB": 2, "CCC": 3})
+    marks = {"AAA": {"setup": False}, "BBB": {"setup": None}, "CCC": {"setup": True}}
+    p = plan(_doc(rows), hist, {}, set(), 100_000.0, 50_000.0, TODAY, lambda s: True, lambda s: 50.0,
+             setup=lambda s: marks[s])
+    assert [b["symbol"] for b in p["buys"]] == ["CCC", "AAA", "BBB"]        # setup first, then judgment order
+    assert p["buys"][0]["setup"] == {"setup": True} and set(p["setups"]) == {"AAA", "BBB", "CCC"}
+    p = plan(_doc(rows), hist, {}, set(), 100_000.0, 2_660.0, TODAY, lambda s: True, lambda s: 50.0,
+             setup=lambda s: marks[s])
+    assert [b["symbol"] for b in p["buys"]] == ["CCC"]                      # cash for one: the setup gets it
+
+
+def test_the_step_up_is_suggested_only_when_the_tracker_says_ready(tmp_path):
+    from diamond_sleeve import step_up_note
+    track = tmp_path / "diamond_track.json"
+    def write(status):
+        track.write_text(json.dumps({"generated_at": "2026-11-12", "picks": 8, "rows": [],
+                                     "verdict": {"status": status, "text": "12 lists ahead"}}))
+    write("collecting")
+    assert step_up_note(0.40, track) is None
+    write("ready")
+    assert "40% -> 60%" in step_up_note(0.40, track) and "60% -> 80%" in step_up_note(0.60, track)
+    assert step_up_note(0.80, track) is None                                # the last step
+    assert step_up_note(0.40, tmp_path / "missing.json") is None

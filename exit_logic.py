@@ -215,7 +215,7 @@ def sale_status(broker, order_id: Optional[str], wait_seconds: float = 20, poll:
 # must leave them alone: they would sell a diamond on its first ordinary dip.
 
 DIAMOND_SLEEVE = "diamond"
-SLEEVE_SHARE = 0.20            # of the account, set aside for the sleeve
+SLEEVE_SHARE = 0.40            # of the account, set aside for the sleeve (owner decision 2026-11-12, was 0.20)
 SLEEVE_STOP = 0.25             # its disaster stop: this far below entry until a holding has run
 # The sleeve's own ratchet (owner decision, 2026-11-12), wider than the large-cap
 # tiers so a small company's ordinary swings do not sell it. Measured on the best

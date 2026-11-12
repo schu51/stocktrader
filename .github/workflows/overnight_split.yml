@@ -34,6 +34,10 @@ jobs:
           restore-keys: earnings-dates-
 
       - name: Split
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}       # whole-market history incl. delisted stocks (market_history.py)
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
         run: python overnight_split.py
 
       - name: Commit result

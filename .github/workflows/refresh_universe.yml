@@ -1,6 +1,6 @@
 name: Refresh Screener Universe
-# Saturday 7:00 ET: rewrite docs/data/universe.json (S&P 500 + Nasdaq-100 with
-# sectors) that the screener scans every morning. A failed fetch leaves last
+# Saturday 7:00 ET: rewrite docs/data/universe.json (the whole liquid US market,
+# about 3,000 stocks with sectors) that the screener scans every morning. A failed fetch leaves last
 # week's file in place. Started by dispatcher.yml — timetable in dispatcher.py.
 
 on:
@@ -9,7 +9,7 @@ on:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30
     permissions:
       contents: write
       issues: write          # to open a failure issue
@@ -25,6 +25,10 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Refresh universe
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}       # asset list + a year of bars for the liquidity rules
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
         run: python refresh_universe.py
 
       # Stable security ids (Alpaca asset id + SEC CIK) with ticker history (identity.py).

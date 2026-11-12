@@ -331,3 +331,98 @@ def test_new_short_horizon_settings_are_allowed_challenger_knobs():
     from daily_eval import check_challenger
     assert check_challenger({"pullback_entry": True}) is None
     assert check_challenger({"exit_grace_days": 5}) is None
+
+
+def _bt_prices(n=300, syms=("AAA", "BBB", "SPY")):
+    idx = pd.bdate_range("2024-01-01", periods=n)
+    base = {s: pd.Series(np.linspace(50, 80, n), index=idx) for s in syms}
+    c = pd.DataFrame(base)
+    return {"Open": c, "High": c * 1.01, "Low": c * 0.99, "Close": c,
+            "Volume": pd.DataFrame(1e6, index=idx, columns=c.columns)}
+
+
+def test_point_in_time_members_decide_who_can_be_screened(monkeypatch):
+    import backtest as bt
+    prices = _bt_prices()
+    members = pd.DataFrame(False, index=prices["Close"].index, columns=prices["Close"].columns)
+    members.loc[members.index[280]:, "AAA"] = True
+    seen = []
+    monkeypatch.setattr(bt, "screen_asof", lambda universe, *a, **k: seen.append(sorted(universe)) or [])
+    b = bt.Backtest({"AAA": "technology", "BBB": "technology"}, prices, str(prices["Close"].index[260].date()),
+                    members=members)
+    b._decide(270, 100_000)
+    b._decide(285, 100_000)
+    assert seen == [[], ["AAA"]]
+    assert b.results is not None
+
+
+def test_a_holding_whose_prices_stop_is_closed_at_its_last_close():
+    import backtest as bt
+    prices = _bt_prices()
+    for f in ("Open", "High", "Low", "Close"):
+        prices[f].iloc[200:, 1] = np.nan     # BBB delisted after session 199
+    b = bt.Backtest({"AAA": "technology", "BBB": "technology"}, prices, str(prices["Close"].index[150].date()))
+    b.positions["BBB"] = {"symbol": "BBB", "shares": 10, "avg_cost": 60.0, "last_price": 70.0, "stop": 55.0,
+                          "stop_active": True, "entry_date": date(2024, 6, 3), "entry_i": 150,
+                          "rs_rank": 90, "thesis_score": 50, "trend_score": 1, "confidence": 0.7, "sector": "technology"}
+    cash = b.cash
+    b._process_exits(199)                    # still trading: no exit
+    assert "BBB" in b.positions
+    b.positions["BBB"]["last_price"] = 70.0
+    b._process_exits(201)
+    assert "BBB" not in b.positions
+    assert b.trades[-1]["exit_reason"] == "DELISTED"
+    assert abs(b.cash - cash - 10 * 70.0 * (1 - b.slip)) < 1e-6
+
+
+def _old_screen_asof(universe, closes, volumes, spy_closes, w_rs, w_thesis, top_n=50, min_price=5.0,
+                     min_avg_volume=500_000):
+    """The per-ticker screen as it was before the fast path (reference)."""
+    import backtest as bt
+    from forward_thesis import score_forward_thesis
+    from screener import calculate_rs_scores, get_sector_leaders, percentile_rank
+    _, threshold = bt.regime_threshold(spy_closes)
+    rs_ranks = percentile_rank(calculate_rs_scores(list(universe), {"Close": closes}))
+    top_sectors = set(get_sector_leaders(rs_ranks, universe)[:3])
+    out = []
+    for sym in universe:
+        if sym not in closes.columns:
+            continue
+        p = closes[sym].dropna().values
+        if len(p) < 200 or rs_ranks.get(sym, 0) < threshold or float(p[-1]) < min_price:
+            continue
+        v = volumes[sym].dropna().values if sym in volumes.columns else None
+        if v is not None and len(v) and float(v[-20:].mean()) < min_avg_volume:
+            continue
+        if not (p[-1] > p[-50:].mean() > p[-200:].mean()):
+            continue
+        if v is None or len(v) < 40:
+            v = np.ones(len(p))
+        try:
+            ts = score_forward_thesis(sym, p, v, include_earnings=False)["thesis_score"]
+        except Exception:
+            ts = 0.0
+        sector = universe.get(sym, "other")
+        boost = bt.SECTOR_LEADER_BOOST if sector in top_sectors else 1.0
+        out.append({"symbol": sym, "rs_rank": rs_ranks.get(sym, 0), "thesis_score": ts, "sector": sector,
+                    "sector_leader": sector in top_sectors, "price": float(p[-1]),
+                    "effective_score": (w_rs * rs_ranks.get(sym, 0) + w_thesis * ts) * boost})
+    out.sort(key=lambda c: c["effective_score"], reverse=True)
+    return out[:top_n]
+
+
+def test_fast_screen_matches_the_per_ticker_screen():
+    import backtest as bt
+    rng = np.random.default_rng(7)
+    n, k = 252, 400
+    idx = pd.bdate_range("2024-01-01", periods=n)
+    cols = [f"S{i}" for i in range(k)]
+    closes = pd.DataFrame(np.cumprod(1 + rng.normal(0.001, 0.02, (n, k)), axis=0) * 20, index=idx, columns=cols)
+    closes.iloc[:80, 5:40] = np.nan          # late listings
+    closes.iloc[100:103, 50:60] = np.nan     # gaps
+    closes.iloc[:, 70] = 3.0                 # cheap
+    vols = pd.DataFrame(rng.random((n, k)) * 2e6, index=idx, columns=cols)
+    sectors = ["technology", "healthcare", "energy", "financials"]
+    universe = {c: sectors[i % 4] for i, c in enumerate(cols[:380])}
+    spy = closes["S0"].values
+    assert bt.screen_asof(universe, closes, vols, spy, 0.6, 0.4) == _old_screen_asof(universe, closes, vols, spy, 0.6, 0.4)

@@ -19,7 +19,9 @@ What it cannot replay, and therefore leaves out:
   - macro theses (LLM on today's news)            -> multiplier fixed at 1.0
   - the earnings blackout and earnings score     -> no point-in-time earnings data
   - unfilled limit orders                         -> every order fills at the open
-  - index membership changes                      -> today's universe (survivorship bias)
+  - nothing on survivorship any more: by default the universe is every US
+    stock on each day, delisted ones included (market_history.py);
+    --universe index replays today's list back, as before
 
 Usage:
     python backtest.py --start 2023-10-01
@@ -288,6 +290,22 @@ def summarize_trades(trades: pd.DataFrame) -> Dict:
 # Screening as of a past date (the repo's own scoring functions)
 # ---------------------------------------------------------------------------
 
+def _rs_full_columns(a: np.ndarray, syms: List[str]) -> Dict[str, float]:
+    """screener.calculate_rs_scores for columns with no missing values, vectorised."""
+    n = a.shape[0]
+    if n < 200 or not syms:
+        return {}
+
+    def ret(start_idx, end_idx=None):
+        s_ = a[max(0, n + start_idx)]
+        e_ = a[-1] if end_idx is None else a[max(0, n + end_idx)]
+        with np.errstate(divide="ignore", invalid="ignore"):
+            return np.where(s_ > 0, e_ / s_ - 1, 0.0)
+
+    rs = 0.40 * ret(-63) + 0.20 * ret(-126, -63) + 0.20 * ret(-189, -126) + 0.20 * ret(-252, -189)
+    return {sym: round(float(v), 5) for sym, v in zip(syms, rs)}
+
+
 def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.DataFrame,
                 spy_closes: np.ndarray, w_rs: float, w_thesis: float,
                 top_n: int = 50, min_price: float = 5.0,
@@ -299,15 +317,33 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
     from forward_thesis import score_forward_thesis
     from screener import calculate_rs_scores, get_sector_leaders, percentile_rank
 
-    tickers = list(universe)
     _, threshold = regime_threshold(spy_closes)
-    raw_scores = calculate_rs_scores(tickers, {"Close": closes})
+    # Fast path (whole-market runs screen ~3,000 names a day): columns with no
+    # gap in the window are scored and pre-gated with numpy; the rest go through
+    # the screener's own per-ticker code. Same numbers either way
+    # (tests/test_backtest.py::test_fast_screen_matches_the_per_ticker_screen).
+    cols = [s for s in universe if s in closes.columns]
+    arr = closes[cols].to_numpy(dtype=float) if cols else np.empty((0, 0))
+    full = ~np.isnan(arr).any(axis=0) if cols else np.zeros(0, dtype=bool)
+    raw_scores = _rs_full_columns(arr[:, full], [c for c, f in zip(cols, full) if f]) if len(arr) >= 200 else {}
+    gappy = [c for c, f in zip(cols, full) if not f]
+    raw_scores.update(calculate_rs_scores(gappy, {"Close": closes[gappy]}) if gappy else {})
+    raw_scores = {s: raw_scores[s] for s in cols if s in raw_scores}      # universe order, as before
     rs_ranks = percentile_rank(raw_scores)
     top_sectors = set(get_sector_leaders(rs_ranks, universe)[:3])
 
+    # Pre-gate the gap-free columns on rank, price and trend; anything that could pass is checked below
+    maybe = set(gappy)
+    if full.any() and len(arr) >= 200:
+        a = arr[:, full]
+        price, sma50, sma200 = a[-1], a[-50:].mean(axis=0), a[-200:].mean(axis=0)
+        ranks = np.array([rs_ranks.get(c, 0) for c, f in zip(cols, full) if f])
+        ok = (ranks >= threshold) & (price >= min_price) & (price > sma50) & (sma50 > sma200)
+        maybe |= {c for c, keep in zip([c for c, f in zip(cols, full) if f], ok) if keep}
+
     candidates = []
     for sym in universe:
-        if sym not in closes.columns:
+        if sym not in maybe:
             continue
         price_arr = closes[sym].dropna().values
         if len(price_arr) < 200:
@@ -363,8 +399,18 @@ class Backtest:
                  earnings: Optional[Dict[str, List]] = None, earnings_blackout: int = 0,
                  exit_before_earnings: bool = False, earnings_keep_gain: Optional[float] = None,
                  breakeven_at: float = 0.0, trail_at: float = 0.0, trail_pct: float = 0.0,
-                 pullback_entry: bool = False, exit_grace_days: int = 0):
+                 pullback_entry: bool = False, exit_grace_days: int = 0,
+                 members: Optional[pd.DataFrame] = None):
         self.universe = universe
+        # Survivorship-free runs (market_history.py): who was in the universe on each day.
+        # None = every ticker in `universe` on every day (the old, survivors-only replay).
+        self.members = members.reindex(index=prices["Close"].index).fillna(False).astype(bool) \
+            if members is not None else None
+        self.member_counts: List[int] = []
+        # Last session with a close, per ticker: a holding past it was delisted or bought out
+        closes = prices["Close"]
+        last_idx = closes.notna().values[::-1].argmax(axis=0)
+        self.last_valid = {sym: len(closes.index) - 1 - int(k) for sym, k in zip(closes.columns, last_idx)}
         self.open, self.high, self.low = prices["Open"], prices["High"], prices["Low"]
         self.close, self.volume = prices["Close"], prices["Volume"]
         self.dates = self.close.index
@@ -559,6 +605,13 @@ class Backtest:
             o, h, l, c = (self.open[sym].iloc[i], self.high[sym].iloc[i],
                           self.low[sym].iloc[i], self.close[sym].iloc[i])
             if np.isnan(c):
+                if i > self.last_valid.get(sym, i):
+                    # Prices stopped: delisted or bought out. Close at the last price seen.
+                    fill = float(pos["last_price"]) * (1 - self.slip)
+                    self.cash += pos["shares"] * fill
+                    self._record_exit(sym, pos, i, fill, "DELISTED")
+                    self.counters["delisted_exits"] = self.counters.get("delisted_exits", 0) + 1
+                    del self.positions[sym]
                 continue
             if self.exit_line == "sma50" and self.exit_confirm == 1:      # the live rule, unchanged
                 history = self.close[sym].iloc[max(0, i - 49):i + 1].dropna().values
@@ -606,17 +659,20 @@ class Backtest:
                 continue
             fill = float(price) * (1 - self.slip)
             self.cash += pos["shares"] * fill
-            self.trades.append({
-                "symbol": sym, "status": "CLOSED", "entry_date": pos["entry_date"].isoformat(),
-                "exit_date": self.dates[i].date().isoformat(), "entry_price": round(pos["avg_cost"], 4),
-                "exit_price": round(fill, 4), "shares": pos["shares"], "exit_reason": reason,
-                "pnl_usd": round(pos["shares"] * (fill - pos["avg_cost"]), 2),
-                "pnl_pct": round((fill / pos["avg_cost"] - 1) * 100, 3),
-                "hold_days": (self.dates[i].date() - pos["entry_date"]).days,
-                "rs_rank": pos["rs_rank"], "thesis_score": pos["thesis_score"],
-                "trend_score": pos["trend_score"], "confidence": pos["confidence"],
-                "sector": pos["sector"], "weight_version": 1, "stop_at_exit": pos["stop"]})
+            self._record_exit(sym, pos, i, fill, reason)
             del self.positions[sym]
+
+    def _record_exit(self, sym: str, pos: Dict, i: int, fill: float, reason: str) -> None:
+        self.trades.append({
+            "symbol": sym, "status": "CLOSED", "entry_date": pos["entry_date"].isoformat(),
+            "exit_date": self.dates[i].date().isoformat(), "entry_price": round(pos["avg_cost"], 4),
+            "exit_price": round(fill, 4), "shares": pos["shares"], "exit_reason": reason,
+            "pnl_usd": round(pos["shares"] * (fill - pos["avg_cost"]), 2),
+            "pnl_pct": round((fill / pos["avg_cost"] - 1) * 100, 3),
+            "hold_days": (self.dates[i].date() - pos["entry_date"]).days,
+            "rs_rank": pos["rs_rank"], "thesis_score": pos["thesis_score"],
+            "trend_score": pos["trend_score"], "confidence": pos["confidence"],
+            "sector": pos["sector"], "weight_version": 1, "stop_at_exit": pos["stop"]})
 
     def _decide(self, i: int, total_value: float):
         lo = i - LOOKBACK + 1
@@ -626,7 +682,12 @@ class Backtest:
             # Experimental: no new entries while the index is not clearly above its own 50-day average
             self.counters["days_market_weak"] += 1
             return
-        candidates = screen_asof(self.universe, closes, volumes, spy, self.w_rs, self.w_thesis)
+        universe = self.universe
+        if self.members is not None:
+            row = self.members.iloc[i]
+            universe = {s: self.universe.get(s, "other") for s in row.index[row.values]}
+            self.member_counts.append(len(universe))
+        candidates = screen_asof(universe, closes, volumes, spy, self.w_rs, self.w_thesis)
         self.counters["candidates"] += len(candidates)
 
         portfolio = self._portfolio_state(i, total_value)
@@ -745,6 +806,8 @@ class Backtest:
             "generated_at": datetime.now().isoformat(),
             "start": equity.index[0].date().isoformat(), "end": equity.index[-1].date().isoformat(),
             "sessions": int(len(equity)), "universe": len(self.universe),
+            "universe_mode": "market, point in time" if self.members is not None else "today's list",
+            "universe_daily_avg": int(np.mean(self.member_counts)) if self.member_counts else None,
             "w_rs": self.w_rs, "w_thesis": self.w_thesis, "slippage_bps": self.slip * 10_000,
             "variant": {"entry_trigger": self.entry_trigger, "atr_stop": self.atr_stop, "min_adx": self.min_adx,
                         "min_above_50ma": self.min_above_50ma, "min_spy_above_50ma": self.min_spy_above_50ma,
@@ -811,16 +874,50 @@ def load_prices(tickers: List[str], start: str, end: Optional[str]) -> Dict[str,
     return prices
 
 
+def load_backtest_data(start: str, end: Optional[str] = None, mode: str = "market"
+                       ) -> Tuple[Dict[str, str], Dict[str, pd.DataFrame], Optional[pd.DataFrame]]:
+    """
+    (universe, prices, members) for a backtest.
+      market  every US common stock Alpaca has, delisted ones included, with a
+              day-by-day membership table (market_history.py): no survivorship bias
+      index   today's universe.json replayed back with yfinance prices (the old way,
+              survivors only); members is None
+    """
+    if mode == "market":
+        import market_history
+        return market_history.load(start, end)
+    universe = load_universe()
+    prices = load_prices(list(universe), start, end)
+    universe = {s: v for s, v in universe.items() if s in prices["Close"].columns}
+    return universe, prices, None
+
+
+SEC_EARNINGS_CACHE = ROOT / "docs" / "data" / "big_movers_cache.json"
+YF_EARNINGS_PER_RUN = 300   # yfinance lookups per run for names the SEC cache lacks (cached, so coverage grows)
+
+
 def load_earnings(tickers: List[str]) -> Dict[str, List]:
     """
-    Historical (and scheduled) earnings report dates per ticker from yfinance,
-    cached on disk. Report dates are announced weeks ahead, so using them as of
-    a past session is not look-ahead in any way that matters for a blackout.
+    Earnings report dates per ticker: from the SEC 8-K (item 2.02) dates the
+    big-mover job keeps for the whole universe, then yfinance for names it
+    lacks (at most YF_EARNINGS_PER_RUN per run), cached on disk. Report dates
+    are announced weeks ahead, so using them as of a past session is not
+    look-ahead in any way that matters for a blackout. Delisted names usually
+    have none, so an earnings rule simply doesn't apply to them.
     """
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache = CACHE_DIR / "earnings_dates.json"
     saved = json.loads(cache.read_text()) if cache.exists() else {}
-    missing = [t for t in tickers if t not in saved]
+    import contracts
+    try:
+        sec = contracts.read(SEC_EARNINGS_CACHE, default={}).get("earnings") or {}
+    except Exception:
+        sec = {}
+    for sym in tickers:
+        dates = (sec.get(sym) or {}).get("dates")
+        if dates and sym not in saved:
+            saved[sym] = sorted(set(dates))
+    missing = [t for t in tickers if t not in saved][:YF_EARNINGS_PER_RUN]
     if missing:
         import yfinance as yf
         for n, sym in enumerate(missing, 1):
@@ -943,15 +1040,16 @@ def main() -> int:
     parser.add_argument("--exit-grace-days", type=int, default=0,
                         help="sessions after a fill during which a close below the 50-day line does not exit")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
+    parser.add_argument("--universe", choices=("market", "index"), default="market",
+                        help="market: every US stock incl. delisted, day by day (default); "
+                             "index: today's list replayed back (survivors only)")
     parser.add_argument("--tag", default=None, help="suffix for output files")
     args = parser.parse_args()
 
-    universe = load_universe()
+    universe, prices, members = load_backtest_data(args.start, args.end, args.universe)
     if args.max_universe:
         universe = dict(list(universe.items())[:args.max_universe])
-    print(f"Universe: {len(universe)} tickers (today's index members)")
-    prices = load_prices(list(universe), args.start, args.end)
-    universe = {s: sec for s, sec in universe.items() if s in prices["Close"].columns}
+    print(f"Universe: {len(universe)} tickers ({args.universe})")
     earnings = load_earnings(list(universe)) if (args.earnings_blackout or args.exit_before_earnings) else None
 
     bt = Backtest(universe, prices, args.start, args.end, args.capital,
@@ -966,7 +1064,8 @@ def main() -> int:
                   earnings=earnings, earnings_blackout=args.earnings_blackout,
                   exit_before_earnings=args.exit_before_earnings, earnings_keep_gain=args.earnings_keep_gain,
                   breakeven_at=args.breakeven_at, trail_at=args.trail_at, trail_pct=args.trail_pct,
-                  pullback_entry=args.pullback_entry, exit_grace_days=args.exit_grace_days)
+                  pullback_entry=args.pullback_entry, exit_grace_days=args.exit_grace_days,
+                  members=members)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

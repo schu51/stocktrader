@@ -50,6 +50,7 @@ CHALLENGERS = ROOT / "research" / "challengers.json"
 LATEST, HISTORY, REPORT = DOCS / "eval_latest.json", DOCS / "eval_history.json", DOCS / "eval_report.md"
 
 YEARS = 3
+UNIVERSE_MODE = "market"   # every US stock day by day, delisted ones included (market_history.py)
 RECENT_MONTHS = 6
 PROMOTE_STREAK = 5          # straight evals a challenger must clear every gate
 MAX_CHANGED_KNOBS = 2       # a challenger may differ from the live rules in at most this many settings
@@ -281,14 +282,12 @@ def run_tournament(today: date, challengers: List[Dict], previous: Optional[Dict
     import backtest as bt
     start = (pd.Timestamp(today) - pd.DateOffset(years=YEARS)).date().isoformat()
     end = (today + timedelta(days=1)).isoformat()     # yfinance end is exclusive: include today's close
-    universe = bt.load_universe()
-    prices = bt.load_prices(list(universe), start, end)
-    universe = {s: v for s, v in universe.items() if s in prices["Close"].columns}
+    universe, prices, members = bt.load_backtest_data(start, end, UNIVERSE_MODE)
     earnings = bt.load_earnings(list(universe))
     champ_args = live_rules()
 
     def replay(args: Dict):
-        b = bt.Backtest(universe, prices, start, None, earnings=earnings, **args)
+        b = bt.Backtest(universe, prices, start, None, earnings=earnings, members=members, **args)
         b.run(progress_every=0)
         return pd.Series(b.equity), pd.DataFrame(b.trades)
 

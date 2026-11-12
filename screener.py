@@ -330,7 +330,7 @@ def get_universe() -> Dict[str, str]:
     # Drop anything that looks like a bad ticker or is an excluded instrument
     universe = {
         t: s for t, s in universe.items()
-        if 2 <= len(t) <= 5 and t.replace("-", "").isalpha()
+        if 1 <= len(t) <= 7 and t.replace("-", "").isalpha()      # 1-letter tickers (F, T, C, V) are real
         and t not in EXCLUDED_TICKERS
     }
 
@@ -590,16 +590,13 @@ def percentile_rank(scores: Dict[str, float]) -> Dict[str, int]:
     if not scores:
         return {}
 
+    import numpy as np
     syms = list(scores.keys())
-    vals = list(scores.values())
-
-    ranks = {}
+    vals = np.asarray(list(scores.values()), dtype=float)
     total = len(vals)
-    for sym, val in zip(syms, vals):
-        pct = sum(v <= val for v in vals) / total * 100
-        ranks[sym] = min(99, max(1, round(pct)))
-
-    return ranks
+    # count of scores <= each score: same as the old pairwise loop, in O(n log n)
+    at_or_below = np.searchsorted(np.sort(vals), vals, side="right")
+    return {sym: min(99, max(1, round(float(n) / total * 100))) for sym, n in zip(syms, at_or_below)}
 
 
 def get_market_regime() -> Dict:

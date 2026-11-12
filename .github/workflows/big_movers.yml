@@ -17,7 +17,7 @@ on:
 jobs:
   movers:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60       # first run on the whole market looks up ~3,000 companies' filings
     permissions:
       contents: write
       issues: write          # to open a failure issue

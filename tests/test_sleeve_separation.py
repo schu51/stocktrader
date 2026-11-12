@@ -238,6 +238,7 @@ def test_daily_exits_on_a_mixed_portfolio_sell_only_the_large_cap_holding(monkey
     # Both holdings are far below their 50-day average; only the large-cap one may be sold.
     import exit_logic, pandas as pd, yfinance
     from run_daily_analysis import DailyRunner
+    monkeypatch.setattr(exit_logic, "trend_exit_window_open", lambda now=None: True)   # trend exits fire only from 15:30 ET
     (tmp_path / "trades.json").write_text(json.dumps([SLEEVE_TRADE, PLAIN_TRADE]))
     monkeypatch.setattr(exit_logic, "TRADES_PATH", tmp_path / "trades.json")
     monkeypatch.setattr(exit_logic, "CANCEL_POLL_SECONDS", 0)

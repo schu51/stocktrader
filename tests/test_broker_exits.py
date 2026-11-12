@@ -188,3 +188,25 @@ def test_a_sale_by_hand_records_no_stop():
     trades = [_trade()]
     _settle(trades, sells=[_sell(kind="market")])
     assert "exit_stop" not in trades[0]
+
+
+def test_a_sleeve_stop_record_follows_the_fill_not_the_limit():
+    # WK 2026-10-26: logged at its 98.04 limit with a 73.53 stop; filled 86.09, and the
+    # broker stop (from the fill) was 64.57 while the log still said 73.53
+    from exit_logic import confirm_entry_fills
+    trades = [_trade("WK", shares=28, entry_price=98.04, stop_loss=73.53, stop_arm="sleeve", stop_dist=0.25,
+                     order_id="b1")]
+    confirm_entry_fills(trades, _orders(b1={"status": "filled", "filled_qty": "28", "filled_avg_price": "86.09"}))
+    assert (trades[0]["entry_price"], trades[0]["stop_loss"]) == (86.09, 64.57)
+
+
+def test_an_already_confirmed_sleeve_record_is_repaired_and_others_are_left_alone():
+    from exit_logic import confirm_entry_fills, sync_sleeve_stop_records
+    wk = _trade("WK", entry_price=86.09, stop_loss=73.53, stop_arm="sleeve", stop_dist=0.25, entry_filled=True)
+    large = _trade("DE", entry_price=693.03, stop_loss=650.0, stop_dist=0.25, entry_filled=True)  # not the sleeve's
+    closed = _trade("VCYT", status="CLOSED", entry_price=48.86, stop_loss=41.23, stop_arm="sleeve",
+                    stop_dist=0.25, entry_filled=True)                                       # history stays as it was
+    trades = [wk, large, closed]
+    confirm_entry_fills(trades, lambda oid: 1 / 0)
+    assert (wk["stop_loss"], large["stop_loss"], closed["stop_loss"]) == (64.57, 650.0, 41.23)
+    assert sync_sleeve_stop_records(trades) == 0                                            # settled: no churn

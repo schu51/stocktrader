@@ -29,9 +29,13 @@ Rules (owner decisions, 2026-10-08 and 2026-10-11):
            for a human (the check can match ordinary wording); it is sold only
            for an unmistakable attempt to steer the score, or the model's own
            report of one, on last week's list as well as this week's.
-  Stop     one price exit, a disaster stop SLEEVE_STOP below entry that never
-           trails. Placed by the same sweep that protects every position
-           (stop_placement.place_missing_stops).
+  Stop     a disaster stop SLEEVE_STOP below entry until a holding has run;
+           then (owner decision, 2026-11-12) its own wider ratchet off the best
+           price since entry: break-even at +SLEEVE_BREAKEVEN_AT_PCT, and from
+           +SLEEVE_TRAIL_AT_PCT a trail SLEEVE_TRAIL_PCT under that best price
+           (exit_logic.sleeve_stop_level). It only moves up. Placed by the same
+           sweep that protects every position (stop_placement.place_missing_stops)
+           and raised here once a day.
   Earnings (owner decision, 2026-11-10) a stop cannot protect against a gap on
            a report (VCYT filled 33% under its stop on 2026-11-05). With a report
            due within EARNINGS_TRIM_DAYS, a holding up less than
@@ -560,8 +564,32 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
                 pending=set(still_held))
     out["skipped"] = todo["skipped"]
 
-    # A stop on a holding tighter than its disaster level (the large-cap rule
-    # caught it before its record arrived) would sell a diamond on a dip: replace it
+    # Each holding's stop to its level (exit_logic.sleeve_stop_level): the disaster
+    # stop until it has run, then the sleeve's ratchet off its best price so far.
+    # The best price is kept in the trade log (peak_price), so the stop only rises.
+    from exit_logic import sleeve_stop_level
+    peaks = {}
+    trades = _load(trades_file) if trades_file.exists() else trades
+    log_changed = False
+    for t in trades:
+        sym = t.get("symbol")
+        if t.get("status") != "OPEN" or not t.get("sleeve") or sym not in still_held or sym not in by_symbol:
+            continue
+        try:
+            current = float(by_symbol[sym]["current_price"])
+            peak = max(float(t.get("peak_price") or 0), current)
+        except (TypeError, ValueError, KeyError):
+            continue
+        if t.get("peak_price") != round(peak, 2):
+            t["peak_price"] = round(peak, 2)
+            log_changed = True
+        peaks[sym] = peak
+    if log_changed:
+        _write(trades_file, trades)
+
+    # A stop tighter than the sleeve's level (the large-cap rule caught it before
+    # its record arrived) would sell a diamond on a dip, and one below it gives
+    # back a gain the ratchet has locked: either way, move it to the level
     open_orders = broker.get_orders(status="open", limit=500) or []
     cover = stop_coverage(open_orders) if getattr(broker, "last_orders_ok", True) else {}
     for symbol in sorted(set(still_held) - pending):
@@ -574,17 +602,22 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
             dist = float(trade.get("stop_dist") or SLEEVE_STOP)
         except (TypeError, ValueError):
             dist = SLEEVE_STOP
-        level = round(float(pos["avg_entry_price"]) * (1 - dist), 2)
-        if live > level + 0.01:
-            from exit_logic import replace_stop
-            moved = replace_stop(broker, symbol, int(float(pos["qty"])), level, previous=live)
-            if moved["status"] == "replaced":
-                out["alerts"].append(f"{symbol}: a stop at {live:.2f} was tighter than the sleeve's {level:.2f}; replaced")
-            else:
-                back = {True: "the old stop was put back", False: "the old stop could NOT be put back",
-                        None: "nothing was changed"}[moved.get("restored")]
-                out["failures"].append(f"{symbol}: a stop at {live:.2f} is tighter than the sleeve's {level:.2f} and "
-                                       f"could not be replaced ({moved['error']}); {back}")
+        cost = float(pos["avg_entry_price"])
+        level, tier = sleeve_stop_level(cost, peaks.get(symbol, float(pos["current_price"])), dist)
+        if abs(live - level) <= 0.01:
+            continue
+        from exit_logic import replace_stop
+        why = "tighter than" if live > level else "below"
+        moved = replace_stop(broker, symbol, int(float(pos["qty"])), level, previous=live)
+        if moved["status"] == "replaced":
+            decisions.why(symbol, f"sleeve stop moved {live:.2f} → {level:.2f} ({tier})", rule="sleeve_stop",
+                          stop_price=level, previous=live)
+            out["alerts"].append(f"{symbol}: a stop at {live:.2f} was {why} the sleeve's {level:.2f} ({tier}); replaced")
+        else:
+            back = {True: "the old stop was put back", False: "the old stop could NOT be put back",
+                    None: "nothing was changed"}[moved.get("restored")]
+            out["failures"].append(f"{symbol}: a stop at {live:.2f} is {why} the sleeve's {level:.2f} and "
+                                   f"could not be replaced ({moved['error']}); {back}")
 
     # Buys: a limit at the ask, good for the day, tagged so the broker records whose it is
     sent = []

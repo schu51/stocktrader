@@ -46,12 +46,18 @@ def test_without_sleeve_splits_positions():
     assert without_sleeve([a, b], set()) == ([a, b], [])
 
 
-def test_a_sleeve_position_gets_its_wide_stop_and_it_never_trails():
+def test_a_sleeve_position_gets_its_wide_stop_and_only_its_own_wider_ratchet():
     from stop_placement import calculate_stop_for_position
     stop, tier = calculate_stop_for_position(_long("STAA", 96, 30.0, 29.0), SLEEVE_TRADE)
     assert stop == 22.5 and "sleeve" in tier
+    stop, _ = calculate_stop_for_position(_long("STAA", 96, 30.0, 33.0), SLEEVE_TRADE)     # +10%
+    assert stop == 22.5                                           # the large-cap break-even at +5% does not apply
+    stop, _ = calculate_stop_for_position(_long("STAA", 96, 30.0, 39.0), SLEEVE_TRADE)     # +30%
+    assert stop == 30.15                                          # +20%: break-even + 0.5%
     stop, _ = calculate_stop_for_position(_long("STAA", 96, 30.0, 60.0), SLEEVE_TRADE)     # doubled
-    assert stop == 22.5                                           # not break-even, not a trail: thesis exits only
+    assert stop == 45.0                                           # +50%: 25% under the peak, not the 8% large-cap trail
+    stop, _ = calculate_stop_for_position(_long("STAA", 96, 30.0, 40.0), dict(SLEEVE_TRADE, peak_price=60.0))
+    assert stop == 45.0                                           # the peak, not today's price: it never moves down
     stop, _ = calculate_stop_for_position(_long("STAA", 96, 30.0, 29.0), dict(SLEEVE_TRADE, stop_dist="junk"))
     assert stop == 22.5                                           # a damaged record still gets the sleeve's stop
     stop, _ = calculate_stop_for_position(_long("AME", 16, 254.01, 250.0), PLAIN_TRADE)

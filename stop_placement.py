@@ -116,21 +116,25 @@ def calculate_stop_for_position(pos: Dict, trade: Optional[Dict] = None) -> Tupl
     (experiments.py), its entry stop — the under-5%-gain tier — is its own
     volatility-sized distance instead of the fixed 8%. Higher tiers are unchanged.
     """
-    from exit_logic import BREAKEVEN_AT_PCT, SLEEVE_STOP, calculate_stop_price
+    from exit_logic import BREAKEVEN_AT_PCT, SLEEVE_STOP, calculate_stop_price, sleeve_stop_level
     current  = float(pos["current_price"])
     avg_cost = float(pos["avg_entry_price"])
     pnl_pct  = float(pos["unrealized_plpc"]) * 100   # Alpaca returns decimal
     if trade and trade.get("sleeve"):
-        # A diamond-sleeve holding has one price exit, a wide disaster stop that
-        # never moves: it is sold when its thesis breaks, not when it dips or
-        # when a trailing tier catches it (diamond_sleeve.py).
+        # A diamond-sleeve holding is sold when its thesis breaks, not when it
+        # dips or a large-cap tier catches it (diamond_sleeve.py). Its stop is a
+        # wide disaster stop until it has run, then its own wider ratchet.
         try:
             wide = float(trade.get("stop_dist"))
         except (TypeError, ValueError):
             wide = SLEEVE_STOP
         if not 0.05 <= wide <= 0.50:
             wide = SLEEVE_STOP
-        return round(avg_cost * (1 - wide), 2), f"sleeve disaster stop → {wide:.0%} below entry"
+        try:
+            peak = max(float(trade.get("peak_price") or 0), current)
+        except (TypeError, ValueError):
+            peak = current
+        return sleeve_stop_level(avg_cost, peak, wide)
     dist = entry_stop_dist(trade)
     if pnl_pct < BREAKEVEN_AT_PCT and dist != DEFAULT_ENTRY_STOP:
         return round(avg_cost * (1 - dist), 2), f"ATR stop → {dist:.1%} below entry"

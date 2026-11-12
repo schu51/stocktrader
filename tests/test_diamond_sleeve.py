@@ -520,3 +520,32 @@ def test_a_holding_held_on_a_stale_judgment_is_flagged(tmp_path, monkeypatch):
     assert any("AAA" in a and "re-judged" in a and "2026-10-24" in a for a in out["alerts"])
     assert not any("BBB" in a and "re-judged" in a for a in out["alerts"])        # not held: no alert
     assert not out["sells"]                                                       # stale never sells
+
+
+def test_a_holding_that_has_run_has_its_stop_raised_and_its_peak_kept(tmp_path, monkeypatch):
+    # VCEL 2026-11-12: +36% with its stop still 25% under entry; the sleeve's ratchet
+    # moves it to break-even, and the best price is kept so the stop never falls back
+    broker = Broker([_pos("GONE", 60, 40.0, 54.0)])                    # +35%
+    broker.orders["s1"] = {"id": "s1", "symbol": "GONE", "side": "sell", "type": "stop", "status": "new", "qty": "60",
+                           "stop_price": "30.00"}
+    doc = _doc([_row("GONE", 7, 7, 1)])
+    hist = _hist("2026-10-17", {"GONE": 1}) + _hist("2026-10-24", {"GONE": 1})
+    paths = _files(tmp_path, monkeypatch, trades=[SLEEVE_OPEN], doc=doc, history=hist)
+    out = _run(broker, paths)
+    stops = [(o["symbol"], o["stop_price"]) for o in broker.sent if o.get("order_type") == "stop"]
+    assert "s1" in broker.cancelled and stops == [("GONE", 40.2)]
+    assert any("GONE" in a and "below" in a and "40.20" in a for a in out["alerts"])
+    logged = [t for t in json.loads(paths["trades_file"].read_text()) if t["symbol"] == "GONE"][0]
+    assert logged["peak_price"] == 54.0
+
+
+def test_a_ratcheted_stop_is_not_lowered_when_the_price_falls_back(tmp_path, monkeypatch):
+    broker = Broker([_pos("GONE", 60, 40.0, 45.0)])                    # back to +12.5%
+    broker.orders["s1"] = {"id": "s1", "symbol": "GONE", "side": "sell", "type": "stop", "status": "new", "qty": "60",
+                           "stop_price": "40.20"}
+    doc = _doc([_row("GONE", 7, 7, 1)])
+    hist = _hist("2026-10-17", {"GONE": 1}) + _hist("2026-10-24", {"GONE": 1})
+    paths = _files(tmp_path, monkeypatch, trades=[dict(SLEEVE_OPEN, peak_price=54.0)], doc=doc, history=hist)
+    out = _run(broker, paths)
+    assert "s1" not in broker.cancelled and not [o for o in broker.sent if o.get("order_type") == "stop"]
+    assert not out["failures"]

@@ -216,8 +216,31 @@ def sale_status(broker, order_id: Optional[str], wait_seconds: float = 20, poll:
 
 DIAMOND_SLEEVE = "diamond"
 SLEEVE_SHARE = 0.20            # of the account, set aside for the sleeve
-SLEEVE_STOP = 0.25             # its only price exit: a disaster stop this far below entry
+SLEEVE_STOP = 0.25             # its disaster stop: this far below entry until a holding has run
+# The sleeve's own ratchet (owner decision, 2026-11-12), wider than the large-cap
+# tiers so a small company's ordinary swings do not sell it. Measured on the best
+# price seen since entry (the trade's peak_price), so it only ever moves up:
+SLEEVE_BREAKEVEN_AT_PCT = 20.0  # peak gain at which the stop moves up to break-even + 0.5%
+SLEEVE_TRAIL_AT_PCT = 50.0      # peak gain at which it trails ...
+SLEEVE_TRAIL_PCT = 0.25         # ... this far below the peak (never under break-even)
 TRADES_PATH = Path(__file__).parent / "docs" / "data" / "trades.json"
+
+
+def sleeve_stop_level(avg_cost: float, peak: float, dist: float = SLEEVE_STOP) -> Tuple[float, str]:
+    """
+    (stop price, tier) for a diamond-sleeve holding bought at `avg_cost` whose
+    best price since entry is `peak`. VCEL 2026-11-12: bought 43.23, at 58.88
+    (+36%) with its stop still 25% under entry at 32.42; here it is 43.45.
+    """
+    peak = max(float(peak or 0), avg_cost)
+    gain = (peak / avg_cost - 1) * 100
+    breakeven = round(avg_cost * BREAKEVEN_STOP, 2)
+    if gain >= SLEEVE_TRAIL_AT_PCT:
+        return max(round(peak * (1 - SLEEVE_TRAIL_PCT), 2), breakeven), \
+            f"sleeve: {SLEEVE_TRAIL_AT_PCT:.0f}%+ peak gain → {SLEEVE_TRAIL_PCT:.0%} below the peak {peak:.2f}"
+    if gain >= SLEEVE_BREAKEVEN_AT_PCT:
+        return breakeven, f"sleeve: {SLEEVE_BREAKEVEN_AT_PCT:.0f}%+ peak gain → break-even+0.5%"
+    return round(avg_cost * (1 - dist), 2), f"sleeve disaster stop → {dist:.0%} below entry"
 
 
 SLEEVE_ORDER_PREFIX = "dmd-"   # client order id of every sleeve buy: ownership the broker itself keeps
@@ -573,19 +596,20 @@ def confirm_entry_fills(trades: list, get_order, limit: int = MAX_FILL_LOOKUPS) 
 
 def sync_sleeve_stop_records(trades: list) -> int:
     """
-    Keep an open sleeve trade's recorded stop at its disaster level from the
-    price it filled at. The sleeve logs a buy at its limit and records the stop
-    from that; the broker stop is placed from the fill (stop_placement, and the
-    sleeve's own replace check). WK 2026-10-26: limit 98.04, filled 86.09; the
-    log said 73.53 while the broker held 64.57, and the agents read the log.
-    Edits `trades` in place; returns how many records changed.
+    Keep an open sleeve trade's recorded stop at its level from the price it
+    filled at (sleeve_stop_level, with its peak_price). The sleeve logs a buy at
+    its limit and records the stop from that; the broker stop is placed from the
+    fill (stop_placement, and the sleeve's own stop check). WK 2026-10-26: limit
+    98.04, filled 86.09; the log said 73.53 while the broker held 64.57, and the
+    agents read the log. Edits `trades` in place; returns how many records changed.
     """
     changed = 0
     for t in trades:
         if t.get("status") != "OPEN" or t.get("stop_arm") != "sleeve" or not t.get("entry_filled"):
             continue
         try:
-            level = round(float(t["entry_price"]) * (1 - float(t["stop_dist"])), 2)
+            entry = float(t["entry_price"])
+            level, _ = sleeve_stop_level(entry, float(t.get("peak_price") or entry), float(t["stop_dist"]))
         except (KeyError, TypeError, ValueError):
             continue
         if t.get("stop_loss") != level:

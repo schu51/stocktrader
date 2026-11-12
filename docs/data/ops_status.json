@@ -1,12 +1,13 @@
 {
-  "generated_at": "2026-11-11T22:30:50+00:00",
+  "generated_at": "2026-11-12T15:45:48+00:00",
   "status": "red",
   "red": [
-    "jobs"
+    "jobs",
+    "contracts",
+    "scope"
   ],
   "amber": [
     "model",
-    "scope",
     "issues"
   ],
   "checks": [
@@ -36,17 +37,20 @@
     },
     {
       "name": "contracts",
-      "status": "green",
-      "detail": "every shared file matches its contract"
+      "status": "red",
+      "detail": "1 shared file(s) off contract",
+      "items": [
+        "decisions/2026-11-12/diamond_sleeve.json: : Input should be a valid dictionary or instance of DiamondSleeve"
+      ]
     },
     {
       "name": "scope",
-      "status": "amber",
-      "detail": "3 code change(s) pushed to main without a pull request",
+      "status": "red",
+      "detail": "1 write(s) outside a job's lane",
       "items": [
-        "direct: babbd9ea [direct push] Daily eval: live scorecard, backtest tournament and tracking -> .github/workflows/daily_eval.yml, daily_eval.py, dispatcher.py",
-        "direct: d54c3821 [direct push] Model: break-even stop from +5% and an SPY market filter for -> backtest.py, config.py, exit_logic.py",
-        "direct: 09e8e846 [direct push] OSINT brief: run rules-only, analysis moves to the scheduled -> .github/workflows/osint_brief.yml"
+        "breach: fd1d32fd [unknown writer] Add ai_optical theme (LITE, COHR, CIEN, AXTI) [skip ci] -> docs/data/themes.json",
+        "direct: 01a146c0 [direct push] Tests: drop duplicate clock pin (PR #40 already added it) [s -> tests/test_clear_stops.py, tests/test_sleeve_separation.py",
+        "direct: f708cd08 [direct push] Tests: pin the trend-exit clock so exit tests pass at any ti -> tests/test_clear_stops.py, tests/test_sleeve_separation.py"
       ]
     },
     {
@@ -54,11 +58,11 @@
       "status": "amber",
       "detail": "5 failure issue(s) open more than 2 days",
       "items": [
-        "#15 \ud83d\udea8 Macro Research run failed 2026-11-07 (4 days)",
-        "#14 \ud83d\udea8 Daily Opening Buys run failed 2026-11-05 (6 days)",
-        "#12 \ud83d\udea8 Macro Research run failed 2026-10-31 (11 days)",
-        "#4 \ud83d\udea8 Intraday Exit Monitor failed 2026-10-15 (27 days)",
-        "#3 \ud83d\udea8 Dispatcher failed 2026-10-14 (28 days)"
+        "#15 \ud83d\udea8 Macro Research run failed 2026-11-07 (5 days)",
+        "#14 \ud83d\udea8 Daily Opening Buys run failed 2026-11-05 (7 days)",
+        "#12 \ud83d\udea8 Macro Research run failed 2026-10-31 (12 days)",
+        "#4 \ud83d\udea8 Intraday Exit Monitor failed 2026-10-15 (28 days)",
+        "#3 \ud83d\udea8 Dispatcher failed 2026-10-14 (29 days)"
       ]
     }
   ]

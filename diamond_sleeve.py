@@ -14,8 +14,17 @@ among companies under $10 billion. That is 34 companies over one stretch of
 the market: enough to trade on paper, not proof. This sleeve is the test.
 
 Rules (owner decisions, 2026-10-08 and 2026-10-11):
-  Budget   20% of the account (exit_logic.SLEEVE_SHARE), at most
-           MAX_POSITIONS equal slots.
+  Budget   40% of the account (exit_logic.SLEEVE_SHARE; owner decision
+           2026-11-12, was 20%), at most MAX_POSITIONS equal slots. It steps
+           up to 60% and then 80% (SHARE_STEPS) by pull request, once the
+           tracker (diamond_track.py) shows the picks ahead at 13 weeks: the
+           run raises an alert when it does. Budget not yet invested stays
+           reserved as cash (exit_logic.sleeve_cash_reserved), so the
+           large-cap strategy cannot spend it.
+  Setup    a candidate showing pent-up momentum on its chart (pent_up: near
+           its 52-week high with a tightening range, or a breakout on volume)
+           is bought first. A ranking only, never a gate; recorded for every
+           candidate in the run's "setups" so it can be judged.
   Rank     by the judgment alone, edge + demand out of 20. Blending in the
            numbers score made the ordering worse in the test.
   Buy      in the top MAX_POSITIONS by judgment on two weekly lists running,
@@ -88,7 +97,7 @@ HISTORY_FILE = DOCS_DATA / "diamond_history.json"
 TRADES_FILE = DOCS_DATA / "trades.json"
 OUT_FILE = DOCS_DATA / "diamond_sleeve.json"
 
-MAX_POSITIONS = 8
+MAX_POSITIONS = 15          # owner decision 2026-11-12 (was 8): smaller slots as the sleeve grows to 40%
 MIN_JUDGMENT = 10.0          # edge + demand, of 20, to be bought
 SELL_BELOW = 8.0             # a fresh judgment under this: the thesis is not there
 LIST_MAX_AGE_DAYS = 9        # the list is weekly; older than this, nothing is decided on it
@@ -198,7 +207,8 @@ def broken(symbol: str, doc: Dict, history: List[Dict], today: date) -> Optional
 
 def plan(doc: Dict, history: List[Dict], held: Dict[str, float], other_holdings: Set[str], equity: float,
          cash: float, today: date, above_200: Callable[[str], Optional[bool]],
-         price_of: Callable[[str], Optional[float]], pending: Set[str] = frozenset()) -> Dict:
+         price_of: Callable[[str], Optional[float]], pending: Set[str] = frozenset(),
+         setup: Callable[[str], Dict] = lambda s: {"setup": None}) -> Dict:
     """
     What the sleeve should do today. `held`: {symbol: market value} of its own
     positions. `other_holdings`: symbols the large-cap strategy holds. `cash`:
@@ -220,7 +230,11 @@ def plan(doc: Dict, history: List[Dict], held: Dict[str, float], other_holdings:
 
     room, slots, cash = budget - sum(keeping.values()), MAX_POSITIONS - len(keeping), float(cash)
     buys, skipped = [], []
-    for row in buy_candidates(doc, history, today):
+    # Names showing the pent-up setup are bought first; the rest keep their judgment order
+    candidates = [r for r in buy_candidates(doc, history, today) if r["ticker"] not in held]
+    setups = {r["ticker"]: (setup(r["ticker"]) or {"setup": None}) for r in candidates}
+    candidates.sort(key=lambda r: (setups[r["ticker"]].get("setup") is not True, r["judgment_rank"], r["ticker"]))
+    for row in candidates:
         symbol = row["ticker"]
         if symbol in held:
             continue
@@ -244,9 +258,11 @@ def plan(doc: Dict, history: List[Dict], held: Dict[str, float], other_holdings:
             skipped.append({"symbol": symbol, "reason": "not enough budget or cash for one share"})
             continue
         buys.append({"symbol": symbol, "shares": shares, "limit_price": round(price, 2),
-                     "judgment": judgment_of(row), "judgment_rank": row["judgment_rank"], "name": row.get("name")})
+                     "judgment": judgment_of(row), "judgment_rank": row["judgment_rank"], "name": row.get("name"),
+                     "setup": setups[symbol]})
         room, cash, slots = room - shares * price, cash - shares * price, slots - 1
-    return {"budget": round(budget, 2), "slot": slot, "sells": sells, "buys": buys, "skipped": skipped}
+    return {"budget": round(budget, 2), "slot": slot, "sells": sells, "buys": buys, "skipped": skipped,
+            "setups": setups}
 
 
 def earnings_trim(symbol: str, qty: int, price: float, pnl_pct: float, equity: float,
@@ -290,6 +306,63 @@ def trend_above_200(symbol: str) -> Optional[bool]:
         return bool(closes[-1] > closes[-200:].mean())
     except Exception:
         return None
+
+
+SETUP_NEAR_HIGH = 0.15      # within this of its 52-week closing high: basing near the top, not broken
+SETUP_CONTRACTION = 0.80    # 10-day range (ATR) at most this share of the 50-day: a coil tightening
+
+
+def pent_up(closes, highs, lows, volumes) -> Dict:
+    """
+    The price side of "pent-up momentum" (owner decision, 2026-11-12): a stock
+    basing near its highs with its daily range tightening, or breaking out of
+    its base on rising volume. Used to buy such names first, never to block one,
+    and recorded for every candidate so it can be judged before it is trusted.
+    {"setup": True | False | None (too little history), "near_high", "tight", "breakout"}.
+    """
+    import numpy as np
+    from technical_signals import atr_pct, breakout
+    c, h, l, v = (np.asarray(x, dtype=float) for x in (closes, highs, lows, volumes))
+    if min(len(c), len(h), len(l), len(v)) < 60:
+        return {"setup": None}
+    near = bool(c[-1] >= (1 - SETUP_NEAR_HIGH) * c[-252:].max())
+    short, long_ = atr_pct(h, l, c, 10), atr_pct(h, l, c, 50)
+    tight = bool(long_ == long_ and short == short and long_ > 0 and short <= SETUP_CONTRACTION * long_)
+    broke = breakout(c, v, 20)
+    return {"setup": near and (tight or broke), "near_high": near, "tight": tight, "breakout": broke}
+
+
+def setup_of(symbol: str) -> Dict:
+    """pent_up() on a year of daily bars; {"setup": None} if they cannot be had."""
+    try:
+        import yfinance as yf
+        bars = yf.Ticker(symbol).history(period="1y").dropna()
+        return pent_up(bars["Close"].values, bars["High"].values, bars["Low"].values, bars["Volume"].values)
+    except Exception:
+        return {"setup": None}
+
+
+TRACK_FILE = Path(__file__).parent / "docs" / "data" / "diamond_track.json"
+SHARE_STEPS = (0.40, 0.60, 0.80)    # owner decision 2026-11-12: the sleeve earns its way from 40% to 80%
+
+
+def step_up_note(share: float, track_file: Path = TRACK_FILE) -> Optional[str]:
+    """
+    An alert when the sleeve's tracker (diamond_track.py) says its picks have
+    beaten both the index and the numbers screen at 13 weeks, and there is a
+    next step. Raising the share stays a one-line pull request Alex merges.
+    """
+    nxt = next((x for x in SHARE_STEPS if x > share + 1e-9), None)
+    if nxt is None:
+        return None
+    try:
+        verdict = (contracts.read(track_file) or {}).get("verdict") or {}
+    except Exception:
+        return None
+    if verdict.get("status") != "ready":
+        return None
+    return (f"sleeve tracker is ready ({verdict.get('text') or 'picks ahead at 13 weeks'}): "
+            f"the next step is SLEEVE_SHARE {share:.0%} -> {nxt:.0%}, by pull request")
 
 
 def ask_price(broker, symbol: str) -> Optional[float]:
@@ -375,8 +448,15 @@ def adopt(symbol: str, pos: Dict, trades_file: Path) -> None:
 
 def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seconds: float = FILL_WAIT_SECONDS,
         list_file: Path = None, history_file: Path = None, trades_file: Path = None,
-        report_of: Callable[[str], Optional[date]] = None) -> Dict:
+        report_of: Callable[[str], Optional[date]] = None, setup: Callable[[str], Dict] = None) -> Dict:
     """One pass of the sleeve. Returns the result document; `failures` non-empty means a human should look."""
+    setup_cache: Dict[str, Dict] = {}
+
+    def setup_once(symbol: str) -> Dict:                 # plan() runs twice: download each name once
+        if symbol not in setup_cache:
+            setup_cache[symbol] = (setup or setup_of)(symbol)
+        return setup_cache[symbol]
+
     list_file, history_file, trades_file = list_file or LIST_FILE, history_file or HISTORY_FILE, trades_file or TRADES_FILE
     report_of = report_of or (lambda s: next_report(s, today))
     out = {"generated_at": datetime.now().isoformat(), "mode": "EXECUTE" if execute else "DRY-RUN",
@@ -469,8 +549,13 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
             out["alerts"].append(f"{row['ticker']}: held on a judgment from {j.get('judged_at') or 'an unknown date'}, "
                                  f"made before its latest filings; its thesis cannot be checked until it is re-judged")
 
+    step = step_up_note(SLEEVE_SHARE)
+    if step:
+        out["alerts"].append(step)
+
     todo = plan(doc, history, held, others, equity, cash, today, above_200, lambda s: ask_price(broker, s),
-                pending=pending)
+                pending=pending, setup=setup_once)
+    out["setups"] = todo["setups"]          # every candidate's setup, bought or not: the measurement
     out.update(budget=todo["budget"], slot=todo["slot"], skipped=todo["skipped"],
                invested=round(sum(held.values()), 2), list_date=_list_day(doc))
     # Earnings trims, for holdings that are staying (not being sold, not pending, not already being sold)
@@ -561,8 +646,9 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
     sold = {s["symbol"] for s in out["sells"] if s.get("status") == "sold"}
     still_held = {k: v for k, v in held.items() if k not in sold}
     todo = plan(doc, history, still_held, others, equity, cash, today, above_200, lambda s: ask_price(broker, s),
-                pending=set(still_held))
+                pending=set(still_held), setup=setup_once)
     out["skipped"] = todo["skipped"]
+    out["setups"] = todo["setups"]
 
     # Each holding's stop to its level (exit_logic.sleeve_stop_level): the disaster
     # stop until it has run, then the sleeve's ratchet off its best price so far.

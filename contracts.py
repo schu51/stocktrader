@@ -406,7 +406,10 @@ def contract_for(path: Union[str, Path]) -> Optional[Type[BaseModel]]:
     except ValueError:
         # outside docs/data (a test's tmp path): match by the trailing parts
         rel = "/".join(p.parts[-3:])
-    for pattern, model in CONTRACTS:
+    # Deeper patterns first: decisions/<date>/diamond_sleeve.json is a decision
+    # log, not the sleeve's result file, though its name matches that too
+    # (2026-11-12, the sleeve's first decision log).
+    for pattern, model in sorted(CONTRACTS, key=lambda c: -c[0].count("/")):
         if fnmatch.fnmatch(rel, pattern) or fnmatch.fnmatch(rel, "*/" + pattern) or fnmatch.fnmatch(p.name, pattern):
             return model
     return None

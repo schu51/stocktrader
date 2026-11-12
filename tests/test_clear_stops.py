@@ -102,6 +102,8 @@ def test_a_stop_being_cancelled_does_not_count_as_protection():
 
 
 def test_intraday_exit_sells_once_the_stop_is_cancelled(monkeypatch, tmp_path):
+    import exit_logic as _el
+    monkeypatch.setattr(_el, "trend_exit_window_open", lambda now=None: True)   # trend exits wait for 15:30 ET; pin the clock
     import alpaca_broker, exit_logic, intraday_exit
     broker = SlowCancelBroker([_long("NET", 8, 312.8, 316.99)], [_stop("NET", 8, 290.0, "s1")])
     (tmp_path / "trades.json").write_text(json.dumps([{"symbol": "NET", "status": "OPEN", "entry_date": "2026-09-01",
@@ -119,6 +121,8 @@ def test_intraday_exit_sells_once_the_stop_is_cancelled(monkeypatch, tmp_path):
 
 
 def test_intraday_exit_that_cannot_clear_the_stop_leaves_the_position_protected(monkeypatch, tmp_path):
+    import exit_logic as _el
+    monkeypatch.setattr(_el, "trend_exit_window_open", lambda now=None: True)   # trend exits wait for 15:30 ET; pin the clock
     import alpaca_broker, exit_logic, intraday_exit
     broker = SlowCancelBroker([_long("NET", 8, 312.8, 316.99)], [_stop("NET", 8, 290.0, "s1")], cancel_never=True)
     (tmp_path / "trades.json").write_text(json.dumps([{"symbol": "NET", "status": "OPEN", "entry_date": "2026-09-01"}]))
@@ -183,6 +187,8 @@ def test_both_trailing_stop_updates_use_the_safe_replacement():
 
 
 def test_a_daily_exit_that_could_not_clear_its_stop_is_swept_afterwards(monkeypatch):
+    import exit_logic as _el
+    monkeypatch.setattr(_el, "trend_exit_window_open", lambda now=None: True)   # trend exits wait for 15:30 ET; pin the clock
     # The cancel may still go through after the sale was given up: without a
     # sweep the position could sit with no stop until the next intraday check.
     import exit_logic, pandas as pd, stop_placement, yfinance

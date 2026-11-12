@@ -233,6 +233,8 @@ def test_the_dispatcher_never_starts_the_sleeve_beside_a_job_that_writes_the_tra
 
 
 def test_daily_exits_on_a_mixed_portfolio_sell_only_the_large_cap_holding(monkeypatch, tmp_path):
+    import exit_logic as _el
+    monkeypatch.setattr(_el, "trend_exit_window_open", lambda now=None: True)   # trend exits wait for 15:30 ET; pin the clock
     # Both holdings are far below their 50-day average; only the large-cap one may be sold.
     import exit_logic, pandas as pd, yfinance
     from run_daily_analysis import DailyRunner

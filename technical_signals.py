@@ -132,3 +132,83 @@ def compute_signals(closes, highs, lows, volumes) -> Dict:
         "adx": None if np.isnan(strength) else round(strength, 1),
         "atr_pct": None if np.isnan(volatility) else round(volatility, 5),
     }
+
+
+# ── Swing-post signals (2026-11-12) ──────────────────────────────────────────
+# From a r/swingtrading write-up (u/30RITUALS, "How Trading Really Works, part 3"):
+# buy strong stocks while they are tight, in names that move enough to matter,
+# never when stretched far above the 20-day line, and only in a healthy market.
+
+def adr_pct(high: np.ndarray, low: np.ndarray, n: int = 20) -> float:
+    """Average daily range: mean of (high / low - 1) over the last `n` sessions, in percent."""
+    h, l = np.asarray(high, dtype=float)[-n:], np.asarray(low, dtype=float)[-n:]
+    if len(h) < n or (l <= 0).any():
+        return float("nan")
+    return float((h / l - 1).mean() * 100)
+
+
+def tightness(closes: np.ndarray, volumes: np.ndarray, short: int = 10, long: int = 50,
+              near_high: float = 0.10) -> float:
+    """
+    How "tight" a stock is, 0 (loose) to 1 (very tight): the last `short`
+    sessions trade in a narrow band compared with the last `long`, on volume
+    that has dried up, near the top of the range (a coiled base, not a
+    stock lying quietly at its lows).
+
+      range part   short-window close range / long-window close range;
+                   0.5 or more scores 0, 0.1 or less scores 1
+      volume part  short-window average volume / long-window average;
+                   1.0 or more scores 0, 0.5 or less scores 1
+      gate         0 if the close is more than `near_high` below the long-window high
+    """
+    c = np.asarray(closes, dtype=float)
+    v = np.asarray(volumes, dtype=float)
+    if len(c) < long or len(v) < long:
+        return 0.0
+    cl, cs = c[-long:], c[-short:]
+    if cl.max() <= 0 or c[-1] < cl.max() * (1 - near_high):
+        return 0.0
+    long_range = cl.max() - cl.min()
+    if long_range <= 0:
+        return 0.0
+    range_ratio = (cs.max() - cs.min()) / long_range
+    vl = v[-long:].mean()
+    vol_ratio = v[-short:].mean() / vl if vl > 0 else 1.0
+    range_part = float(np.clip((0.5 - range_ratio) / 0.4, 0.0, 1.0))
+    vol_part = float(np.clip((1.0 - vol_ratio) / 0.5, 0.0, 1.0))
+    return round(0.5 * range_part + 0.5 * vol_part, 4)
+
+
+def extension_atr(high: np.ndarray, low: np.ndarray, closes: np.ndarray, span: int = 20, n: int = 14) -> float:
+    """How far the close sits above its `span`-day EMA, in multiples of ATR(n) (negative when below)."""
+    c = np.asarray(closes, dtype=float)
+    if len(c) < max(span, n) + 1:
+        return float("nan")
+    atr = atr_pct(high, low, c, n) * c[-1]
+    if not atr or atr != atr:
+        return float("nan")
+    return float((c[-1] - _ema(c, span)[-1]) / atr)
+
+
+def ema_last(closes: np.ndarray, span: int = 20) -> float:
+    """The latest value of the `span`-day EMA."""
+    c = np.asarray(closes, dtype=float)
+    return float(_ema(c, span)[-1]) if len(c) else float("nan")
+
+
+def above_ema(closes: np.ndarray, span: int = 20) -> bool:
+    """Close above its `span`-day EMA: the post's minimum test for QQQ before any long entry."""
+    c = np.asarray(closes, dtype=float)
+    if len(c) < span:
+        return False
+    return bool(c[-1] > _ema(c, span)[-1])
+
+
+def breadth_above_sma(closes: pd.DataFrame, n: int = 50) -> float:
+    """Share of columns whose last close is above their own `n`-day average (NaN-safe)."""
+    tail = closes.tail(n)
+    full = tail.notna().sum() >= n
+    if not full.any():
+        return float("nan")
+    last, avg = tail.iloc[-1][full], tail.mean()[full]
+    return float((last > avg).mean())

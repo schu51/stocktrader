@@ -944,5 +944,91 @@
     "sha": "cb97b3ecbc52"
    }
   }
+ },
+ {
+  "at": "2026-11-12T20:15:38+00:00",
+  "job": "intraday_exit_monitor",
+  "kind": "stop",
+  "symbol": "CTLP",
+  "output": {
+   "request": {
+    "symbol": "CTLP",
+    "qty": "281",
+    "side": "sell",
+    "type": "stop",
+    "time_in_force": "gtc",
+    "stop_price": "10.69"
+   },
+   "order_id": null,
+   "status": null,
+   "error": "asset CTLP is not active"
+  },
+  "why": {
+   "reason": "stop moved to 10.69",
+   "rule": "stop_move",
+   "facts": {
+    "previous": null,
+    "new_stop": 10.69
+   }
+  },
+  "rule_version": {
+   "code": "beab6ba",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-12T14:15:58.507915",
+    "sha": "23a633021674"
+   },
+   "latest.json": {
+    "at": "2026-11-12T15:01:05.595436",
+    "sha": "ae2d351ee41e"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "ac4d46d25ad9"
+   },
+   "experiments.json": {
+    "at": "2026-11-07T13:15:48.396413",
+    "sha": "b4c604d9fb69"
+   },
+   "theses.json": {
+    "at": "2026-10-31T13:04:09.054290",
+    "sha": "28e8091145c5"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-07T12:00:55+00:00",
+    "sha": "e7e7797ea3a2"
+   },
+   "premarket.json": {
+    "at": "2026-11-12T06:00:51.520242-08:00",
+    "sha": "64828eb2f5f7"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-12",
+    "sha": "651c0af0ffa5"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-12T13:01:45+00:00",
+    "sha": "a3ea81c4e1ea"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-11T21:17:13+00:00",
+    "sha": "eddbdca332c9"
+   },
+   "big_movers.json": {
+    "at": "2026-11-11T21:33:42+00:00",
+    "sha": "cb97b3ecbc52"
+   }
+  }
  }
 ]

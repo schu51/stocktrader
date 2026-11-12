@@ -3,11 +3,11 @@
   "run_id": "20261112_150052",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 106470.62,
+    "portfolio_value": 106429.31,
     "cash": 38342.57,
     "buying_power": 36425.4415,
-    "long_market_value": 68128.05,
-    "unrealized_pnl": 2559.68
+    "long_market_value": 68086.74,
+    "unrealized_pnl": 2518.37
   },
   "positions": [
     {
@@ -235,10 +235,10 @@
       "symbol": "KDP",
       "qty": 103,
       "avg_cost": 36.66,
-      "current_price": 35.25,
-      "market_value": 3630.75,
-      "unrealized_pnl": -145.23,
-      "unrealized_pnl_pct": -3.85,
+      "current_price": 35.41,
+      "market_value": 3647.23,
+      "unrealized_pnl": -128.75,
+      "unrealized_pnl_pct": -3.41,
       "stop_loss": 33.95,
       "side": "long",
       "asset_class": "us_equity",
@@ -257,10 +257,10 @@
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 97.48,
-      "market_value": 3704.24,
-      "unrealized_pnl": 141.76,
-      "unrealized_pnl_pct": 3.98,
+      "current_price": 97.6,
+      "market_value": 3708.8,
+      "unrealized_pnl": 146.32,
+      "unrealized_pnl_pct": 4.11,
       "stop_loss": 89.28,
       "side": "long",
       "asset_class": "us_equity",
@@ -279,10 +279,10 @@
       "symbol": "KVYO",
       "qty": 133,
       "avg_cost": 20.95,
-      "current_price": 21.41,
-      "market_value": 2847.53,
-      "unrealized_pnl": 61.18,
-      "unrealized_pnl_pct": 2.2,
+      "current_price": 20.95,
+      "market_value": 2786.35,
+      "unrealized_pnl": 0.0,
+      "unrealized_pnl_pct": 0.0,
       "stop_loss": 15.71,
       "side": "long",
       "asset_class": "us_equity",
@@ -323,10 +323,10 @@
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 77.95,
-      "market_value": 3819.74,
-      "unrealized_pnl": 74.28,
-      "unrealized_pnl_pct": 1.98,
+      "current_price": 77.93,
+      "market_value": 3818.57,
+      "unrealized_pnl": 73.11,
+      "unrealized_pnl_pct": 1.95,
       "stop_loss": 71.93,
       "side": "long",
       "asset_class": "us_equity",
@@ -671,7 +671,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-11-12T22:00:53.201844+00:00",
+  "sync_at": "2026-11-12T22:30:40.310872+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -732,6 +732,10 @@
       {
         "time": "22:00",
         "value": 106470.62
+      },
+      {
+        "time": "22:30",
+        "value": 106429.31
       }
     ]
   }

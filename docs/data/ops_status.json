@@ -1,24 +1,21 @@
 {
-  "generated_at": "2026-11-12T15:45:48+00:00",
+  "generated_at": "2026-11-12T22:30:47+00:00",
   "status": "red",
   "red": [
-    "jobs",
-    "contracts",
     "scope"
   ],
   "amber": [
+    "jobs",
     "model",
     "issues"
   ],
   "checks": [
     {
       "name": "jobs",
-      "status": "red",
-      "detail": "1 trading-path job(s) failed or missed",
+      "status": "amber",
+      "detail": "1 job(s) failed or missed",
       "items": [
-        "intraday_exit.yml: failed",
-        "ops_monitor.yml: failed",
-        "tests.yml: failed"
+        "ops_monitor.yml: failed"
       ]
     },
     {
@@ -37,11 +34,8 @@
     },
     {
       "name": "contracts",
-      "status": "red",
-      "detail": "1 shared file(s) off contract",
-      "items": [
-        "decisions/2026-11-12/diamond_sleeve.json: : Input should be a valid dictionary or instance of DiamondSleeve"
-      ]
+      "status": "green",
+      "detail": "every shared file matches its contract"
     },
     {
       "name": "scope",

@@ -1,0 +1,56 @@
+{
+  "agent": "manager",
+  "date": "2026-11-12",
+  "generated_at": "2026-11-12T23:10:00+00:00",
+  "status": "red",
+  "headline": "Red: ops scope check caught an unknown-writer change to themes.json (ai_optical theme incl. AXTI); separately, KDP is broken after its $2B stock offering and the account is 10.64% below peak with a last-20 profit factor of 0.11.",
+  "calls": [
+    {
+      "subject": "KDP",
+      "direction": "broken",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "agents/research_analyst/2026-11-12.json:calls[KDP] bearish medium (424B5 2026-11-12, short share 0.76)",
+        "agents/performance_risk/2026-11-12.json:calls[KDP] broken low (stop 33.95, 4.1% below 35.40)",
+        "options_sentiment.json:reads[KDP].options_score=3"
+      ],
+      "why": "A dilutive $2B offering is a fundamental event, and the bullish options read predates it; the broker stop at 33.95 is the protection."
+    },
+    {
+      "subject": "FDS",
+      "direction": "broken",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "agents/performance_risk/2026-11-12.json:calls[FDS] (full-chain put/call 1.63, short volume 79% vs 61%)",
+        "options_sentiment.json:reads[FDS].options_score=1"
+      ],
+      "why": "Two specialists lean bearish on a short-volume spike; the repo options read is only +1 and the stop is 9.3% away, so watch rather than act."
+    },
+    {
+      "subject": "CTLP",
+      "direction": "broken",
+      "horizon_days": 5,
+      "confidence": "high",
+      "evidence": [
+        "agents/performance_risk/2026-11-12.json:notes (13 stop attempts failed, 'asset CTLP is not active'; missing from trades.json)"
+      ],
+      "why": "281 shares still unprotected and untracked; needs Alex's manual review, flagged since 2026-11-06."
+    }
+  ],
+  "notes": [
+    "RED ops: scope - breach fd1d32fd [unknown writer] 'Add ai_optical theme (LITE, COHR, CIEN, AXTI)' -> docs/data/themes.json; plus direct pushes 01a146c0 and f708cd08 to tests/. The big-mover read proposed ai_optical as LITE, COHR, CIEN only; AXTI was not in the proposal. Action: review/revert fd1d32fd. https://github.com/schu51/stocktrader/blob/main/docs/data/themes.json",
+    "AMBER ops: jobs (ops_monitor.yml failed: https://github.com/schu51/stocktrader/actions/workflows/ops_monitor.yml), model (macro research failed 2026-11-07, API retired; 8 theses not re-checked since 2026-10-31, stop counting in ranking 2026-11-14), issues (#15, #14, #12, #4, #3 open >2 days).",
+    "Freshness note: research_analyst and performance_risk cited an earlier ops_status (jobs red with intraday_exit/ops_monitor/tests, contracts red). Today's ops_status (22:30Z) has jobs amber (ops_monitor.yml only) and contracts green; the brief uses today's file.",
+    "Specialists: research_analyst amber, performance_risk amber, thesis_strategy amber. All three reported.",
+    "Conflict 1 (KDP): research_analyst bearish medium + performance_risk broken low vs repo options score +3 and full-chain put/call 0.48. Call: broken, because the offering is a fundamental event and the options flow predates it.",
+    "Conflict 2 (FDS): performance_risk full-chain put/call 1.63 bearish vs options_sentiment score +1. Call: broken-watch, stop 300.83 (9.3% below) stays; no action.",
+    "Conflict 3 (drawdown): eval_latest.json account_30d.drawdown_from_peak=-0.1064 (value 106811.81) vs performance_risk 11.4% (post-market $106,473.59 vs $120,222.40) vs latest.json risk_assessment 8.4%. Call: report eval_latest -0.1064 per the brief contract; performance_risk's figure uses a later post-market value. All below the 15% red line.",
+    "Conflict 4 (tracking gap): performance_risk cites -0.51 pts (from the 2026-11-11 eval), thesis_strategy -2.1pt; today's eval_latest tracking.gap=-0.0213. Call: use -0.0213; inside the 3-point threshold, and matched trades (live -1.0% vs backtest -2.1%) say it is not execution.",
+    "Watch: performance_risk flags a third straight day of candidates_screened=0 in the 15:00 buy run while the screener ranked 50 names (top APA, TRGP, AMD). Not a red check, but the buy path may not be reading the screener; worth Alex checking.",
+    "Options vs top candidates: no conflict - APA +2, TRGP +2, AMD +2; none options_bearish.",
+    "Strategy: 200-day exit live from 2026-11-12, 0 trades under it (eval current_rules.trades=0). No challenger near promotion (all 0/5); thesis_strategy bearish on spy3 and death_cross_exit. research/challengers.json unchanged. experiments.json unchanged since 2026-11-07.",
+    "Big movers (20%+): NBIZ +34.38% (2x short Nebius ETF; NBIS fell after trimming 2026 outlook), SMCZ +22.36% (2x short SMCI ETF; DOJ probe report). Both leveraged ETFs, not tradeable setups."
+  ]
+}

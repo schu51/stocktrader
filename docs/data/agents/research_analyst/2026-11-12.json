@@ -1,0 +1,115 @@
+{
+ "agent": "research_analyst",
+ "date": "2026-11-12",
+ "generated_at": "2026-11-12T14:24:44+00:00",
+ "status": "amber",
+ "headline": "KDP (held) launched a $2B stock offering this morning; AI/semis gapping down hard; call SELECTIVE.",
+ "calls": [
+  {
+   "subject": "KDP",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "medium",
+   "evidence": [
+    "osint_latest.json:companies[KDP].events 424B5 2026-11-12",
+    "osint_latest.json:companies[KDP].detail.headlines",
+    "osint_latest.json:companies[KDP].detail.short_share_latest=0.76"
+   ],
+   "why": "Holding: $2B common stock offering announced this morning (dilution) with short share spiking to 76%; yesterday's bullish call flow predates the news."
+  },
+  {
+   "subject": "ACN",
+   "direction": "bullish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "osint_latest.json:companies[ACN].detail.insiders_30d.buy_value=3200889",
+    "options_sentiment.json:reads[ACN].options_score=+2",
+    "latest.json:positions[ACN] stop 245.88 vs 255.00"
+   ],
+   "why": "Holding 3.6% above its stop, but $3.2M insider open-market buying in 30d and call-heavy flow lean bullish; federal awards match is loose."
+  },
+  {
+   "subject": "WK",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "options_sentiment.json:reads[WK].options_score=-2",
+    "latest.json:positions[WK].unrealized_pnl_pct=-17.75"
+   ],
+   "why": "Holding down 17.8% with heavy put flow (2,436 puts vs 104 calls); options signal still unproven."
+  },
+  {
+   "subject": "FDS",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "osint_latest.json:companies[FDS].events finra short_volume z+2.1"
+   ],
+   "why": "Holding: short volume jumped to 79% vs 61% average; no fundamental event behind it."
+  },
+  {
+   "subject": "TRGP",
+   "direction": "bullish",
+   "horizon_days": 5,
+   "confidence": "medium",
+   "evidence": [
+    "screener.json:candidates[TRGP] rs_rank=93 thesis_grade=B fresh setup",
+    "options_sentiment.json:reads[TRGP].options_score=+2"
+   ],
+   "why": "Only B-grade fresh setup in the top screener names, energy sector leader, call-heavy flow."
+  },
+  {
+   "subject": "APA",
+   "direction": "bullish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "screener.json:candidates[APA] rs_rank=97 thesis_grade=C"
+   ],
+   "why": "Top-ranked candidate, modest 13% extension, but C thesis grade fails a SELECTIVE day."
+  },
+  {
+   "subject": "AMD",
+   "direction": "neutral",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "screener.json:candidates[AMD] rs_rank=99 thesis_grade=D 37% extended",
+    "premarket.json:gap_alerts NVDA -10.2%, ARM -6.3%, MRVL -5.8%"
+   ],
+   "why": "RS 99 but D grade, 37% extended, and semis are gapping down hard this morning."
+  },
+  {
+   "subject": "NUE",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "osint_latest.json:companies[NUE].detail.insiders_30d.discretionary_sell_value=7881324"
+   ],
+   "why": "Candidate with $7.9M discretionary insider selling in 30d and a sour crowd read."
+  },
+  {
+   "subject": "theme:ai_semis",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "medium",
+   "evidence": [
+    "premarket.json:gap_alerts",
+    "premarket.json:avoids"
+   ],
+   "why": "Broad AI/semis/crypto gap-down pre-market (CRWV -13.8%, NVDA -10.2%, SMCI -8.6%, ARM -6.3%) on 2x volume; no holdings exposed."
+  }
+ ],
+ "notes": [
+  "Call for the day: SELECTIVE - regime neutral (SPY 759.81 below 50MA 764.55), heavy AI/semis gap-downs; only A/B thesis entries (TRGP B, V B in premarket).",
+  "Not from today: options_sentiment.json and big_movers.json (2026-11-11 close, expected), ops_status.json (2026-11-11 22:30Z), theses.json (2026-10-31; stop counting in ranking 2026-11-14).",
+  "Ops red: jobs - intraday_exit.yml, ops_monitor.yml, tests.yml failed. Amber: macro research failed (API retired), 3 direct pushes to main.",
+  "Screener health: universe 520, alpaca prices, coverage 99.2%, 50 final candidates.",
+  "Catalyst watch (watch-only): AMAT, LUNR, ONDS, DIS earnings today; ADI, TGT, WSM, NDSN earnings_leader 11-18; KEYS, PANW, NVDA beaten-down 11-17/18.",
+  "Holdings near stop: ACN 3.6%, HUM 5.4%. CTLP has no stop_loss; CTLP/KVYO/PCOR/VCEL/WK have no rs_rank."
+ ]
+}

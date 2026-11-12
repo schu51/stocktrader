@@ -567,7 +567,31 @@ def confirm_entry_fills(trades: list, get_order, limit: int = MAX_FILL_LOOKUPS) 
             t["shares"] = int(qty) if qty == int(qty) else qty
         t["entry_filled"] = True
         confirmed += 1
+    sync_sleeve_stop_records(trades)
     return confirmed
+
+
+def sync_sleeve_stop_records(trades: list) -> int:
+    """
+    Keep an open sleeve trade's recorded stop at its disaster level from the
+    price it filled at. The sleeve logs a buy at its limit and records the stop
+    from that; the broker stop is placed from the fill (stop_placement, and the
+    sleeve's own replace check). WK 2026-10-26: limit 98.04, filled 86.09; the
+    log said 73.53 while the broker held 64.57, and the agents read the log.
+    Edits `trades` in place; returns how many records changed.
+    """
+    changed = 0
+    for t in trades:
+        if t.get("status") != "OPEN" or t.get("stop_arm") != "sleeve" or not t.get("entry_filled"):
+            continue
+        try:
+            level = round(float(t["entry_price"]) * (1 - float(t["stop_dist"])), 2)
+        except (KeyError, TypeError, ValueError):
+            continue
+        if t.get("stop_loss") != level:
+            t["stop_loss"] = level
+            changed += 1
+    return changed
 
 
 BROKER_STOP, SOLD_AT_BROKER = "BROKER_STOP", "SOLD_AT_BROKER"

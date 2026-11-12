@@ -458,6 +458,12 @@ def run(broker, today: date, execute: bool, above_200=trend_above_200, wait_seco
         if row.get("ticker") in held and j.get("do_not_buy") and not j.get("stale"):
             out["failures"].append(f"{row['ticker']}: its filings appear to address the model; review this holding "
                                    f"(sold automatically only if it is an unmistakable attempt, two weeks running)")
+        # A stale judgment cannot sell a holding (broken() needs one made on the current
+        # filings), so a holding whose newer report went unjudged rides on the old one.
+        # Say so: WK reported 2026-11-05 and was still held on its 2026-10-17 judgment.
+        if row.get("ticker") in held and j.get("stale"):
+            out["alerts"].append(f"{row['ticker']}: held on a judgment from {j.get('judged_at') or 'an unknown date'}, "
+                                 f"made before its latest filings; its thesis cannot be checked until it is re-judged")
 
     todo = plan(doc, history, held, others, equity, cash, today, above_200, lambda s: ask_price(broker, s),
                 pending=pending)

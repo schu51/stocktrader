@@ -507,3 +507,16 @@ def test_a_failed_trim_is_a_failure_and_the_holding_keeps_a_stop(tmp_path, monke
     assert "AAA: earnings trim failed" in out["failures"][0]
     assert json.loads(paths["trades_file"].read_text())[0]["shares"] == 60
     assert [(o["symbol"], o["qty"]) for o in broker.sent if o["order_type"] == "stop"] == [("AAA", 60)]
+
+
+def test_a_holding_held_on_a_stale_judgment_is_flagged(tmp_path, monkeypatch):
+    # WK 2026-11-07: its Q3 report changed the filings, the re-judge failed, and it
+    # stayed held on the October judgment with nothing saying so
+    held = _row("AAA", 6.5, 5.5, 1, stale=True)
+    doc = _doc([held, _row("BBB", 6, 6, 2)])
+    broker = Broker([_pos("AAA", 50, 50.0, 50.0)])
+    paths = _files(tmp_path, monkeypatch, trades=[dict(SLEEVE_OPEN, symbol="AAA")], doc=doc)
+    out = _run(broker, paths)
+    assert any("AAA" in a and "re-judged" in a and "2026-10-24" in a for a in out["alerts"])
+    assert not any("BBB" in a and "re-judged" in a for a in out["alerts"])        # not held: no alert
+    assert not out["sells"]                                                       # stale never sells

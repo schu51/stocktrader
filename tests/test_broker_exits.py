@@ -210,3 +210,17 @@ def test_an_already_confirmed_sleeve_record_is_repaired_and_others_are_left_alon
     confirm_entry_fills(trades, lambda oid: 1 / 0)
     assert (wk["stop_loss"], large["stop_loss"], closed["stop_loss"]) == (64.57, 650.0, 41.23)
     assert sync_sleeve_stop_records(trades) == 0                                            # settled: no churn
+
+
+def test_a_sleeve_stop_record_follows_its_ratchet_from_the_peak():
+    from exit_logic import sleeve_stop_level, sync_sleeve_stop_records
+    # VCEL 2026-11-12: bought 43.23, at 58.88 (+36%): break-even, not 32.42
+    assert sleeve_stop_level(43.23, 58.88) == (43.45, "sleeve: 20%+ peak gain → break-even+0.5%")
+    assert sleeve_stop_level(43.23, 52.0)[0] == 43.45                       # +20.3%: break-even
+    assert sleeve_stop_level(43.23, 51.8)[0] == 32.42                       # +19.8%: still the disaster stop
+    assert sleeve_stop_level(20.0, 40.0)[0] == 30.0                         # doubled: 25% under the peak
+    assert sleeve_stop_level(20.0, 30.0)[0] == 22.5                         # +50% exactly: the trail starts
+    assert sleeve_stop_level(20.0, 30.0, 0.25)[0] > sleeve_stop_level(20.0, 29.9)[0]   # and is above break-even
+    vcel = _trade("VCEL", entry_price=43.23, stop_loss=32.42, stop_arm="sleeve", stop_dist=0.25,
+                  entry_filled=True, peak_price=58.88)
+    assert sync_sleeve_stop_records([vcel]) == 1 and vcel["stop_loss"] == 43.45

@@ -707,8 +707,14 @@ def _write(path: Path, payload) -> None:
 def build_events(days: List[pd.Timestamp], data, feats, earn_panel, ret, gap, eligible,
                  sectors: Dict[str, str], universe: set, filings: Dict[str, List[Dict]],
                  headlines: Dict[str, List[Dict]], reads: Dict,
-                 themes: Optional[Dict[str, List[str]]] = None) -> List[Dict]:
-    """One event per (stock, day) that closed 20%+ up, with its pre-move state and catalyst."""
+                 themes: Optional[Dict[str, List[str]]] = None,
+                 catalyst_headlines: Optional[Dict[str, List[Dict]]] = None) -> List[Dict]:
+    """
+    One event per (stock, day) that closed 20%+ up, with its pre-move state and catalyst.
+    catalyst_headlines (Google News plus Finnhub) only feed the catalyst label;
+    news_before stays on Google News so it compares like with like over time.
+    """
+    catalyst_headlines = catalyst_headlines or headlines
     events = []
     spy = data["Close"]["SPY"] if "SPY" in data["Close"].columns else None
     for day in days:
@@ -729,7 +735,7 @@ def build_events(days: List[pd.Timestamp], data, feats, earn_panel, ret, gap, el
             sector = sectors.get(sym, "other")
             others = movers_by_sector.get(sector, 0) - (1 if sym in universe else 0)
             peers_up, sym_themes = theme_movers(row, sym, themes or {})
-            cat, evidence = classify(d, filings.get(sym, []), headlines.get(sym, []),
+            cat, evidence = classify(d, filings.get(sym, []), catalyst_headlines.get(sym, []),
                                      bool(earn_panel[sym].loc[day]) if sym in earn_panel.columns else False,
                                      others if sector != "other" else 0, spy_ret, peers_up, sym_themes)
             pre = pre_move(feats, sym, day)
@@ -772,9 +778,14 @@ def merge_log(log: Dict, new: List[Dict], today: date, reads: Dict) -> Dict:
 
 def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = False,
         bars_fn=fetch_bars, movers_fn=fetch_market_movers, news_fn=None,
-        index_fn=None, submissions_fn=None, universe_fn=None) -> Dict:
+        index_fn=None, submissions_fn=None, universe_fn=None,
+        finnhub_key: Optional[str] = None, calendar_fn=None, fh_news_fn=None) -> Dict:
+    import finnhub_feed as fh
     import osint_collect as oc
     import screener
+    finnhub_key = fh.api_key() if finnhub_key is None else finnhub_key
+    calendar_fn = calendar_fn or fh.earnings_calendar
+    fh_news_fn = fh_news_fn or fh.company_news
     universe_fn = universe_fn or screener.get_universe
     index_fn = index_fn or oc.fetch_company_index
     submissions_fn = submissions_fn or fetch_filing_history
@@ -841,9 +852,17 @@ def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = Fa
             except Exception as e:
                 logger.warning(f"Headlines for {sym} failed: {e}")
 
+    # Finnhub company news: a second source for the catalyst label only
+    catalyst_headlines = dict(headlines)
+    if finnhub_key and not backfill_days:
+        for sym in movers:
+            extra = fh_news_fn(sym, today - timedelta(days=7), today, key=finnhub_key)
+            if extra:
+                catalyst_headlines[sym] = fh.merge_headlines(headlines.get(sym, []), extra)
+
     feats = features(data, themes)
     new = build_events(days, data, feats, earn_panel, ret, gap, eligible, sectors,
-                       universe, filings, headlines, reads, themes)
+                       universe, filings, headlines, reads, themes, catalyst_headlines)
     log = merge_log(log, new, today, reads)
     spy = c["SPY"] if "SPY" in c.columns else None
     drift(log["events"], data, spy)
@@ -858,7 +877,17 @@ def run(today: Optional[date] = None, backfill_days: int = 0, dry_run: bool = Fa
     # Forward watch list: state at today's close, earnings expected in the next week
     state = {k: v[uni_cols].iloc[-1] for k, v in feats.items()}
     expected = {s: d for s in uni_cols if (d := expected_earnings(earn_dates.get(s), today))}
+    # Finnhub's scheduled dates replace the estimates where it has them
+    scheduled = {}
+    if finnhub_key and not backfill_days:
+        cal = calendar_fn(today + timedelta(days=1), today + timedelta(days=EARNINGS_AHEAD_DAYS),
+                          key=finnhub_key)
+        scheduled = {s: v["date"] for s, v in cal.items() if s in set(uni_cols)}
+        expected.update(scheduled)
     watch = watch_list(table, state, expected, sectors)
+    for w in watch:
+        if w.get("earnings_expected"):
+            w["earnings_source"] = "finnhub" if w["symbol"] in scheduled else "estimate"
 
     # News: score past snapshots against the session that followed, then take today's
     news_log = log.setdefault("news_log", [])

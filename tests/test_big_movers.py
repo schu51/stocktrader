@@ -137,6 +137,7 @@ def test_score_watch_records_hits():
 
 
 def test_run_end_to_end_with_injected_sources(tmp_path, monkeypatch):
+    monkeypatch.delenv("FINNHUB_API_KEY", raising=False)
     data = _bars()
     _jump(data, "CCC", len(data["Close"]) - 1, 0.30)       # today's mover
     last = data["Close"].index[-1].date()
@@ -270,3 +271,41 @@ def test_themes_file_is_valid_and_covers_more_than_tech():
     for name, t in themes.items():
         assert t["description"] and len(t["members"]) >= 3, name
         assert all(re.fullmatch(r"[A-Z]{1,5}(-[A-Z]{1,2})?", m) for m in t["members"]), name
+
+
+def test_finnhub_news_feeds_the_catalyst_and_its_calendar_the_watch(tmp_path, monkeypatch):
+    data = _bars()
+    _jump(data, "CCC", len(data["Close"]) - 1, 0.30)
+    last = data["Close"].index[-1].date()
+    for name in ("LATEST_FILE", "LOG_FILE", "CACHE_FILE", "READS_FILE", "THEMES_FILE"):
+        monkeypatch.setattr(bm, name, tmp_path / f"{name}.json")
+    monkeypatch.setattr(bm, "NEWS_PAUSE", 0)
+    (tmp_path / "THEMES_FILE.json").write_text('{"themes": {}}')
+    (tmp_path / "READS_FILE.json").write_text("{}")
+    calls = {}
+
+    def calendar(start, end, key):
+        calls["calendar"] = (start, end, key)
+        return {"AAA": {"date": (last + timedelta(days=2)).isoformat(), "hour": "amc", "eps_estimate": 0.1}}
+
+    def fh_news(sym, start, end, key):
+        calls.setdefault("news", []).append(sym)
+        return [{"title": "Acme agrees to be acquired by BigCo", "publisher": "Reuters",
+                 "published": f"{last.isoformat()}T14:00:00+00:00", "source": "finnhub"}]
+
+    out = bm.run(
+        bars_fn=lambda tickers, lookback: data,
+        movers_fn=lambda: [],
+        news_fn=lambda sym, name, session: [],
+        index_fn=lambda session: {s: {"cik": i, "name": s} for i, s in enumerate(["AAA", "BBB", "CCC", "DDD", "EEE"])},
+        submissions_fn=lambda cik, session, since: {},
+        universe_fn=lambda: {s: "technology" for s in ["AAA", "BBB", "CCC", "DDD", "EEE"]},
+        finnhub_key="k", calendar_fn=calendar, fh_news_fn=fh_news,
+    )
+    assert calls["news"] == ["CCC"]
+    assert calls["calendar"][2] == "k"
+    ev = out["today"][0]
+    assert ev["symbol"] == "CCC" and ev["catalyst_rule"] == "mna"
+    for w in out["watch"]:
+        if w.get("earnings_expected"):
+            assert w["earnings_source"] in ("finnhub", "estimate")

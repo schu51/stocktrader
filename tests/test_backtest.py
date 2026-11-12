@@ -331,3 +331,58 @@ def test_new_short_horizon_settings_are_allowed_challenger_knobs():
     from daily_eval import check_challenger
     assert check_challenger({"pullback_entry": True}) is None
     assert check_challenger({"exit_grace_days": 5}) is None
+
+
+# ── swing-post variants (2026-11-12) ─────────────────────────────────────────
+
+def test_tightness_scores_a_coiled_base_high_and_a_base_at_the_lows_zero():
+    from technical_signals import tightness
+    vol = np.r_[np.full(60, 2e6), np.full(15, 8e5)]
+    coiled = np.r_[np.linspace(50, 100, 60), 100 + np.sin(np.arange(15)) * 0.5]
+    at_lows = np.r_[np.linspace(100, 60, 60), np.full(15, 60.0)]
+    assert tightness(coiled, vol) == 1.0
+    assert tightness(at_lows, vol) == 0.0
+    assert tightness(coiled[:20], vol[:20]) == 0.0          # not enough history
+
+
+def test_adr_and_extension_from_the_20_day_ema():
+    from technical_signals import adr_pct, extension_atr
+    c = np.linspace(50, 100, 75)
+    assert abs(adr_pct(c * 1.02, c * 0.98) - 4.08) < 0.01
+    assert extension_atr(c * 1.02, c * 0.98, c) > 0
+    assert extension_atr(c[::-1] * 1.02, c[::-1] * 0.98, c[::-1]) < 0
+
+
+def test_breadth_counts_names_above_their_own_50_day_average():
+    from technical_signals import breadth_above_sma
+    up, down = np.linspace(10, 20, 60), np.linspace(20, 10, 60)
+    frame = pd.DataFrame({"A": up, "B": up, "C": down, "D": [np.nan] * 60})
+    assert breadth_above_sma(frame, 50) == 2 / 3
+
+
+def test_swing_settings_are_allowed_challenger_knobs_and_partial_size_rides_free():
+    from daily_eval import check_challenger
+    assert check_challenger({"swing_exit": True, "partial_size": 0.5}) is None
+    assert check_challenger({"qqq_above_ema20": True, "max_vix": 15}) is None
+    assert check_challenger({"min_adr": 4, "max_adr": 8}) is None
+    assert check_challenger({"tight_boost": 0.3, "min_breadth": 0.5, "max_vix": 15}) is not None
+
+
+def test_swing_exit_sells_a_third_at_1r_then_trails_the_20_day_ema():
+    from backtest import Backtest
+    dates = pd.bdate_range("2026-01-01", periods=40)
+    b = Backtest.__new__(Backtest)
+    b.close = pd.DataFrame({"X": np.linspace(90, 110, 40)}, index=dates)
+    b.dates, b.slip, b.partial_size = dates, 0.0, 0.33
+    b.cash, b.trades, b.counters = 0.0, [], {"partial_exits": 0}
+    pos = {"symbol": "X", "shares": 300, "avg_cost": 100.0, "stop": 92.0, "stop_dist": 0.08,
+           "entry_date": dates[30].date(), "rs_rank": 90, "thesis_score": 1, "trend_score": 1,
+           "confidence": 1, "sector": "technology"}
+    # High reaches +1R (108): 99 shares sold at 108, stop to break-even, rest held above the EMA
+    price, reason, ema20 = b._swing_exit("X", pos, 39, 106.0, 109.0, 110.0)
+    assert price is None and ema20 is not None and ema20 < 110
+    assert pos["shares"] == 201 and b.trades[-1]["exit_reason"] == "PARTIAL_1R"
+    assert b.trades[-1]["exit_price"] == 108.0 and pos["stop"] >= 100.5
+    # Later, a close under the 20-day EMA sells the rest
+    price, reason, _ = b._swing_exit("X", pos, 39, 100.0, 101.0, 100.0)
+    assert reason == "EMA20_TRAIL" and price == 100.0 and b.counters["partial_exits"] == 1

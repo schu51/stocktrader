@@ -1,0 +1,71 @@
+{
+  "agent": "manager",
+  "date": "2026-11-13",
+  "generated_at": "2026-11-13T23:20:00+00:00",
+  "status": "red",
+  "headline": "Red: ops scope check flagged commit 8584571a (unknown writer) adding docs/data/weekly_review_2026-11-13.json outside any job's lane; separately the survivorship-free backtest (PR #48) cut the champion to PF 1.39 / 15.9%/yr, below SPY, and live last-20 profit factor is still 0.11 with the account 10.49% below peak.",
+  "calls": [
+    {
+      "subject": "KDP",
+      "direction": "intact",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "agents/research_analyst/2026-11-13.json:calls[KDP] bearish medium (424B5 2026-11-12)",
+        "agents/performance_risk/2026-11-13.json:calls[KDP] intact low (weakening; stop 33.95, 6.9% below; full-chain put/call 0.19; RS 81)",
+        "options_sentiment.json:reads[KDP].options_score=3"
+      ],
+      "why": "Downgraded from yesterday's broken to weakening: the offering is known and priced, the stop is now 6.9% away and live put/call 0.19 is bullish, but RS slipped 92 -> 81, so watch."
+    },
+    {
+      "subject": "EBAY",
+      "direction": "broken",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "agents/performance_risk/2026-11-13.json:calls[EBAY] broken low (insider selling $5,411,797; full-chain put/call 1.81)",
+        "agents/research_analyst/2026-11-13.json:calls[EBAY] bearish low",
+        "options_sentiment.json:reads[EBAY].options_score=0",
+        "screener.json:rs_ranks.EBAY=86"
+      ],
+      "why": "Both specialists lean bearish; RS 86 and a neutral repo options read argue against acting, so the broker stop at 112.31 (7.1% below) is the protection."
+    },
+    {
+      "subject": "WK",
+      "direction": "broken",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "agents/performance_risk/2026-11-13.json:calls[WK] broken medium (RS 21, -20.83%, stop 64.57)",
+        "agents/research_analyst/2026-11-13.json:calls[WK] bearish low",
+        "options_sentiment.json:reads[WK].options_score=-2"
+      ],
+      "why": "All inputs agree; it has a broker stop at 64.57."
+    },
+    {
+      "subject": "CTLP",
+      "direction": "broken",
+      "horizon_days": 5,
+      "confidence": "high",
+      "evidence": [
+        "agents/performance_risk/2026-11-13.json:notes (13 stop attempts failed 'asset CTLP is not active'; missing from trades.json)"
+      ],
+      "why": "281 shares still unprotected and untracked; needs Alex's manual broker handling, flagged since 2026-11-06."
+    }
+  ],
+  "notes": [
+    "RED ops: scope - breach 8584571a [unknown writer] 'Post-market: Weekly review 2026-11-13 (Friday)' -> docs/data/weekly_review_2026-11-13.json (committed 2026-11-13T21:08:48Z from a Claude session, not a lane-registered job); plus direct pushes 01a146c0 and f708cd08 to tests/. Action: confirm which task wrote it and register its lane or remove the file. https://github.com/schu51/stocktrader/commit/8584571ace31f3291e458c6428b3a64fbddbd0e7. Yesterday's themes.json breach (fd1d32fd) is no longer listed.",
+    "AMBER ops: jobs (ops_monitor.yml failed: https://github.com/schu51/stocktrader/actions/workflows/ops_monitor.yml), model (macro research failed 2026-11-07, API retired; 8 theses not re-checked since 2026-10-31 stop counting in ranking 2026-11-14 - the Saturday macro analyst run must succeed), issues (#15, #12 open >2 days).",
+    "Specialists: research_analyst amber, performance_risk amber, thesis_strategy amber. All three reported.",
+    "Freshness: research_analyst cited the 2026-11-12 ops_status (themes.json breach) and stale options/big_movers; performance_risk cited eval_latest dated 2026-11-12. The brief uses today's files (ops 22:30Z, eval 22:04Z, options 21:17Z, big_movers 21:36Z).",
+    "Conflict 1 (KDP): research_analyst bearish medium vs performance_risk intact/weakening low and options +3. Call: weakening, hold with stop 33.95; the offering is a known event and price has recovered.",
+    "Conflict 2 (EBAY): performance_risk broken low vs options 0 and RS 86. Call: broken-watch, no action beyond the 112.31 stop.",
+    "Conflict 3 (weekly review vs performance_risk): weekly_review_2026-11-13.json (the out-of-lane file) says 17 intact, 2 weakening, 0 broken; performance_risk says 13 intact, 5 weakening, 2 broken (WK, EBAY). Call: use performance_risk, the in-lane specialist with cited evidence.",
+    "Conflict 4 (drawdown): eval_latest account_30d.drawdown_from_peak=-0.1049 vs performance_risk 10.5% vs research_analyst 8.5% (latest.json risk_assessment, later peak). Call: report -0.1049 per the brief contract; all below the 15% red line.",
+    "Conflict 5 (tracking gap): eval_latest tracking.gap=-0.0524 (live -0.0732 vs backtest -0.0208) is past the 3-point threshold and alerts 'live bot is not matching its rules'; performance_risk cited -2.13 pts from the stale eval. Call: amber, not red - thesis_strategy notes the backtest moved to the new survivorship-free universe (PR #48) while trade_attribution is on the old one, and matched trades (live -1.0% vs backtest -2.1%) do not point at execution; re-check once attribution runs on the new universe.",
+    "Options vs top candidates: no conflict - HNGE +3, AMD +1, APA +3; none options_bearish.",
+    "Strategy: PR #48 survivorship-free backtest - champion PF 2.67 / 33%/yr -> PF 1.39 / 15.9%/yr / DD -18.2%, below SPY ~21%/yr; spy3 (PF 1.69, 19.5%/yr) the only challenger clearing every gate (1/5); streaks restart. research/challengers.json unchanged; experiments.json unchanged since 2026-11-07. 0 trades under the 200-day exit.",
+    "Watch: fourth day of candidates_screened=0 in the 15:00 buy run while the screener ranked 50 names (top HNGE, AMD, APA) - buy path may not be reading the screener. Diamond sleeve bought REAL and TTAN with all setup flags false (TTAN RS 29).",
+    "Big movers (20%+): LFTO +30.63% (Q3 earnings beat, BTIG target $31; outside universe), MOD +27.86% (Samsung buyout talks; RS 10), NBIZ +20.08% (2x short Nebius ETF; AI-compute selloff). None tradeable by the bot."
+  ]
+}

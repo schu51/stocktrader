@@ -1,0 +1,169 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-13",
+  "generated_at": "2026-11-13T14:47:25+00:00",
+  "status": "amber",
+  "headline": "KDP (held) filed a 424B5 share offering - the one material negative filing on a holding; regime neutral, call SELECTIVE.",
+  "calls": [
+    {
+      "subject": "KDP",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "osint_latest.json:companies[KDP].events 424B5 2026-11-12",
+        "options_sentiment.json:reads[KDP].options_score=+3"
+      ],
+      "why": "Holding filed a 424B5 securities offering (possible dilution); options lean bullish (+3) but that signal is unproven, so the filing dominates."
+    },
+    {
+      "subject": "MAR",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[MAR].events insider 2026-11-10",
+        "options_sentiment.json:reads[MAR].options_score=-1"
+      ],
+      "why": "Holding with $35.1M of discretionary insider selling outside 10b5-1 by 5 sellers plus a news surge; options mildly bearish."
+    },
+    {
+      "subject": "EBAY",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[EBAY].events insider 2026-11-10"
+      ],
+      "why": "Holding with $5.4M discretionary insider selling by 3 sellers; options lean bullish (+2), so low conviction."
+    },
+    {
+      "subject": "DG",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[DG].events short_volume 2026-11-13",
+        "options_sentiment.json:reads[DG].options_score=+2"
+      ],
+      "why": "Short volume jumped to 60% vs 44% average (z +2.3) on a holding; options lean bullish, so treat as a caution only."
+    },
+    {
+      "subject": "ACN",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[ACN].events awards (loose name match)",
+        "latest.json:positions[ACN].stop_loss"
+      ],
+      "why": "Federal-awards spike is a loose name match so discounted; price is only 2.1% above the stop."
+    },
+    {
+      "subject": "CTLP",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "high",
+      "evidence": [
+        "latest.json:positions[CTLP].untradable"
+      ],
+      "why": "Asset inactive on Alpaca (delisted/acquired); needs a broker close, not a market call."
+    },
+    {
+      "subject": "HUM",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks[HUM]=95",
+        "latest.json:positions[HUM].stop_loss",
+        "options_sentiment.json:reads[HUM].options_score=0"
+      ],
+      "why": "Holding flagged: 4.1% above stop."
+    },
+    {
+      "subject": "KVYO",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks[KVYO]=38",
+        "latest.json:positions[KVYO].stop_loss",
+        "options_sentiment.json:reads[KVYO].options_score=0"
+      ],
+      "why": "Holding flagged: rs 38."
+    },
+    {
+      "subject": "WK",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks[WK]=21",
+        "latest.json:positions[WK].stop_loss",
+        "options_sentiment.json:reads[WK].options_score=-2"
+      ],
+      "why": "Holding flagged: rs 21, options -2."
+    },
+    {
+      "subject": "HNGE",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[HNGE]"
+      ],
+      "why": "RS 99, thesis C; highly extended 37% \u2014 late entry risk - momentum leader but grade below B, watch only on a SELECTIVE day."
+    },
+    {
+      "subject": "AMD",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[AMD]"
+      ],
+      "why": "RS 98, thesis C; highly extended 45% \u2014 late entry risk - momentum leader but grade below B, watch only on a SELECTIVE day."
+    },
+    {
+      "subject": "APA",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[APA]"
+      ],
+      "why": "RS 95, thesis C; modest extension (15% from base) \u00b7 room to run in BB - momentum leader but grade below B, watch only on a SELECTIVE day."
+    },
+    {
+      "subject": "ZETA",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[ZETA]"
+      ],
+      "why": "RS 96, thesis C; extended 29% from base \u00b7 BB overextended (%B=1.03) - momentum leader but grade below B, watch only on a SELECTIVE day."
+    },
+    {
+      "subject": "BRZE",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[BRZE]"
+      ],
+      "why": "RS 98, thesis D; highly extended 101% \u2014 late entry risk - momentum leader but grade below B, watch only on a SELECTIVE day."
+    }
+  ],
+  "notes": [
+    "Call for the day: SELECTIVE - SPY below its 50MA (neutral regime, RS threshold 80), drawdown 8.5% from peak (CAUTION), and the top screener names are C/D grades and mostly extended.",
+    "Screener health: universe_size 1380 (expected ~518 - universe has grown or changed, worth checking), price_source alpaca, data_coverage 0.997, 50 candidates.",
+    "Stale inputs: options_sentiment.json and big_movers.json from 2026-11-12 (prior close); theses.json from 2026-10-31 (not re-checked, macro research failing); ops_status.json from 2026-11-12 22:30 UTC.",
+    "Ops red: scope - 1 write outside a job's lane (themes.json by unknown writer) plus direct pushes to tests/.",
+    "CTLP untradable on Alpaca - ask the broker to close it. WK down 19.4% per risk_assessment.",
+    "Premarket: MSFT avoid (crossed below 50MA); NVDA 4.5x volume spike ahead of 2026-11-18 earnings (catalyst_watch top pattern, watch-only). Big-mover watch went 0/15 on its first scored day.",
+    "Options signals are measured-only (2 days of evidence, options_bullish edge negative so far) - context, not proof.",
+    "This run fired at 14:42 UTC, after the 09:30 ET open."
+  ]
+}

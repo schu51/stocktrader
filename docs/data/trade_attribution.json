@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-13T15:45:45",
+  "generated_at": "2026-11-13T22:30:49",
   "findings": [
     "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 20% of 91.",
     "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 20% of 91.",
@@ -70,16 +70,16 @@
       },
       "earnings": {
         "False": {
-          "trades": 74,
-          "win_rate": 0.162,
-          "avg_pnl_pct": -2.4,
-          "total_pnl_usd": -5643.64
+          "trades": 73,
+          "win_rate": 0.164,
+          "avg_pnl_pct": -1.83,
+          "total_pnl_usd": -4582.12
         },
         "True": {
-          "trades": 17,
-          "win_rate": 0.353,
-          "avg_pnl_pct": 2.5,
-          "total_pnl_usd": 889.87
+          "trades": 18,
+          "win_rate": 0.333,
+          "avg_pnl_pct": -0.05,
+          "total_pnl_usd": -171.65
         }
       },
       "extended": {
@@ -185,7 +185,7 @@
         "tags": {
           "exit": "stop_gapped",
           "quick_fail": false,
-          "earnings": false,
+          "earnings": true,
           "extended": null,
           "regime": "neutral",
           "backtest": "unmatched",
@@ -2126,7 +2126,7 @@
       "tags": {
         "exit": "stop_gapped",
         "quick_fail": false,
-        "earnings": false,
+        "earnings": true,
         "extended": null,
         "regime": "neutral",
         "backtest": "unmatched",

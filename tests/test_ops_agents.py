@@ -33,6 +33,24 @@ def test_code_on_main_without_a_pr_is_flagged_and_merges_are_not():
     assert sa.classify("Diamond sleeve: trim holdings", ["diamond_sleeve.py"], 1)["kind"] == "direct"
 
 
+def test_an_acked_commit_is_skipped(tmp_path):
+    f = tmp_path / "acks.json"
+    f.write_text('{"acks": [{"sha": "fd1d32fd", "by": "Alex", "why": "theme add accepted"}, {"sha": "abc"}]}')
+    acks = sa.load_acks(f)
+    assert acks == ["fd1d32fd"]                       # too-short prefixes are ignored
+    assert sa.is_acked("fd1d32fd", acks) and sa.is_acked("FD1D32FD222425c9", acks)
+    assert not sa.is_acked("01a146c0", acks)
+    assert sa.load_acks(tmp_path / "missing.json") == []
+
+
+def test_audit_drops_acked_findings(monkeypatch):
+    rows = [{"sha": "fd1d32fd", "parents": 1, "at": "t", "message": "Add theme [skip ci]", "paths": ["docs/data/themes.json"]},
+            {"sha": "01a146c0", "parents": 1, "at": "t", "message": "Tests: x", "paths": ["tests/test_x.py"]}]
+    monkeypatch.setattr(sa, "commits", lambda *a, **k: rows)
+    found = sa.audit(acks=["fd1d32fd"])
+    assert [f["sha"] for f in found] == ["01a146c0"] and found[0]["kind"] == "direct"
+
+
 # ── ops monitor ──────────────────────────────────────────────────────────────
 
 def test_jobs_check_reds_on_trading_path_failures_and_misses():

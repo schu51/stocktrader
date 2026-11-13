@@ -12,6 +12,11 @@ message) and its changed paths are checked against that job's allowed paths.
   breach    a job wrote outside its paths, or an unknown writer changed shared data
   direct    code changed on main outside a merged pull request
 
+A commit a person has reviewed and accepted can be listed in scope_acks.json
+(sha prefix, who, why). Acked commits are skipped, so a known, accepted
+breach does not keep ops red for the rest of the audit window. The ack file
+itself only reaches main through a pull request, which is the review.
+
     python scope_audit.py --since "2 days ago"
 """
 
@@ -25,6 +30,7 @@ from typing import Dict, List, Optional, Tuple
 
 ROOT = Path(__file__).parent.resolve()
 D = "docs/data/"
+ACKS = ROOT / "scope_acks.json"
 
 # (job, commit-message pattern, allowed path globs[, needs "[skip ci]"])
 # Model answers are pushed WITHOUT [skip ci] on purpose: the push starts apply_replies.yml.
@@ -92,9 +98,25 @@ def commits(since: str, ref: str = "HEAD", repo: Path = ROOT) -> List[Dict]:
     return rows
 
 
-def audit(since: str = "2 days ago", repo: Path = ROOT, ref: str = "HEAD") -> List[Dict]:
+def load_acks(path: Path = ACKS) -> List[str]:
+    """Reviewed commit sha prefixes (at least 7 characters) from scope_acks.json."""
+    import contracts
+    acks = contracts.read(path, default={}).get("acks", [])
+    return [a["sha"].lower() for a in acks if len(a.get("sha", "")) >= 7]
+
+
+def is_acked(sha: str, acks: List[str]) -> bool:
+    sha = sha.lower()
+    return any(sha.startswith(a) or a.startswith(sha) for a in acks)
+
+
+def audit(since: str = "2 days ago", repo: Path = ROOT, ref: str = "HEAD",
+          acks: Optional[List[str]] = None) -> List[Dict]:
+    acks = load_acks() if acks is None else acks
     findings = []
     for c in commits(since, ref, repo):
+        if is_acked(c["sha"], acks):
+            continue                                  # reviewed and accepted by a person
         f = classify(c["message"], c["paths"], c["parents"])
         if f:
             findings.append(dict(f, sha=c["sha"], at=c["at"], message=c["message"][:100]))

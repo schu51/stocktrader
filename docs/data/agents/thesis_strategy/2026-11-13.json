@@ -1,0 +1,40 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-13",
+  "generated_at": "2026-11-13T22:39:22+00:00",
+  "status": "amber",
+  "headline": "The survivorship-free backtest (PR #48) cut the champion from PF 2.67 / 33%/yr to PF 1.39 / 15.9%/yr / DD -18.2%, below SPY's ~21%/yr; spy3 (PF 1.69, 19.5%/yr) is now the only challenger clearing every gate (1/5).",
+  "calls": [
+    {
+      "subject": "challenger:spy3",
+      "direction": "bullish",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.spy3.gates",
+        "docs/data/eval_latest.json:tournament.streaks.spy3"
+      ],
+      "why": "On the clean baseline it beats the champion by +0.30 PF, +3.6pt/yr and a better worst month (-5.9% vs -8.5%) with both halves passing, so it has room to hold the gates for 5 evals."
+    },
+    {
+      "subject": "challenger:death_cross_exit",
+      "direction": "bearish",
+      "horizon_days": 20,
+      "confidence": "high",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.death_cross_exit"
+      ],
+      "why": "882 vs 883 trades and PF 1.39 vs 1.39: still a copy of the champion, no room for the +0.1 PF gate."
+    }
+  ],
+  "notes": [
+    "Baseline break: PR #48 (merged 2026-11-12) replaced the survivors-only S&P/NDX replay with a whole-market, delisting-aware universe. Eval rows before 2026-11-13 are not comparable; retire streaks and trends restart today. Noted in research/eval_journal.md.",
+    "Champion now trails SPY in backtest (15.9%/yr vs ~21%/yr per PR #48 evidence). spy3 at 19.5%/yr is closest to SPY.",
+    "Crossovers vs champion (PF 1.39, DD -18.2%, win 59%): death_cross_exit identical; sma50_exit PF 1.40 / DD -17.5% / 16.5%/yr / win 56% (fails win_rate) - the 200-day exit's edge mostly vanished without survivorship bias; golden20 PF 1.63 / DD -6.5% on 74 trades, 2.4%/yr. Share closed within 3 days still not in the eval output.",
+    "Live: last 20 trades 15% win, PF 0.11; 30d 35 trades PF 0.28, -7.3% vs SPY -3.0%; -10.5% from peak; 0 closed trades under sma200_exit. Tracking gap -5.2pt, but the backtest is on the new universe while trade_attribution's same-window/matched figures are on the old one, so the gap's source can't be split tonight.",
+    "Stop fills unchanged: 10 fills, mean -3.5%, median -0.6%, worst VCYT -24.6%, 2 gapped >2%.",
+    "No change to research/challengers.json: one comparable row, no retire criterion met, no errors, list full at 11; no new weakness with 10+ trades not already tested (neutral-regime losses -> spy3; gapped stops only 7 trades).",
+    "All 8 theses last validated 2026-10-31 (13 days, over 8); revalidation is the Saturday macro analyst (2026-11-14). macro_brief error dated 2026-11-07 is the retired API path.",
+    "Nothing ready to propose; no PR or issue opened."
+  ]
+}

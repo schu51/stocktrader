@@ -5044,7 +5044,7 @@
     "sleeve": "diamond",
     "entry_date": "2026-11-13",
     "entry_ts": "2026-11-13T15:31:04.472947",
-    "entry_price": 14.03,
+    "entry_price": 14.02,
     "shares": 202,
     "stop_loss": 10.52,
     "stop_arm": "sleeve",
@@ -5057,7 +5057,9 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 14.03,
+    "entry_filled": true
   },
   {
     "trade_id": "DMD-20261113153104-TTAN",
@@ -5066,9 +5068,9 @@
     "sleeve": "diamond",
     "entry_date": "2026-11-13",
     "entry_ts": "2026-11-13T15:31:04.707694",
-    "entry_price": 82.96,
+    "entry_price": 82.58,
     "shares": 34,
-    "stop_loss": 62.22,
+    "stop_loss": 61.94,
     "stop_arm": "sleeve",
     "stop_dist": 0.25,
     "order_id": "2c36585d-da57-4d88-af94-cad1769c8d1d",
@@ -5079,6 +5081,8 @@
     "exit_reason": null,
     "pnl_usd": null,
     "pnl_pct": null,
-    "hold_days": null
+    "hold_days": null,
+    "entry_limit": 82.96,
+    "entry_filled": true
   }
 ]

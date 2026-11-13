@@ -1,0 +1,366 @@
+[
+ {
+  "at": "2026-11-13T15:31:04+00:00",
+  "job": "diamond_sleeve",
+  "kind": "buy",
+  "symbol": "REAL",
+  "output": {
+   "request": {
+    "symbol": "REAL",
+    "qty": "202",
+    "side": "buy",
+    "type": "limit",
+    "time_in_force": "day",
+    "limit_price": "14.03",
+    "client_order_id": "dmd-REAL-20261113153104"
+   },
+   "order_id": "ff5d4b7f-623b-4dc1-9f8a-a60215324421",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "diamond list pick",
+   "rule": "sleeve_buy",
+   "facts": {
+    "shares": 202,
+    "limit_price": 14.03,
+    "judgment": 10.0,
+    "judgment_rank": 1,
+    "name": "TheRealReal, Inc.",
+    "setup": {
+     "setup": false,
+     "near_high": false,
+     "tight": false,
+     "breakout": false
+    }
+   }
+  },
+  "rule_version": {
+   "code": "53637d3",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-13T14:15:57.996859",
+    "sha": "5d6e08c228ff"
+   },
+   "latest.json": {
+    "at": "2026-11-13T15:01:16.904881",
+    "sha": "16a3d0c7c913"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "022c42f76fa8"
+   },
+   "experiments.json": {
+    "at": "2026-11-07T13:15:48.396413",
+    "sha": "b4c604d9fb69"
+   },
+   "theses.json": {
+    "at": "2026-10-31T13:04:09.054290",
+    "sha": "28e8091145c5"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-13T13:03:22+00:00",
+    "sha": "e5ddbcf5c789"
+   },
+   "premarket.json": {
+    "at": "2026-11-13T06:00:49.420556-08:00",
+    "sha": "0440a49694f9"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-13",
+    "sha": "c46b59cfbd3b"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-13T13:01:33+00:00",
+    "sha": "c736f7379986"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-12T21:17:13+00:00",
+    "sha": "fa2172aab347"
+   },
+   "big_movers.json": {
+    "at": "2026-11-12T21:33:28+00:00",
+    "sha": "6a1c3e329e95"
+   }
+  }
+ },
+ {
+  "at": "2026-11-13T15:31:04+00:00",
+  "job": "diamond_sleeve",
+  "kind": "buy",
+  "symbol": "TTAN",
+  "output": {
+   "request": {
+    "symbol": "TTAN",
+    "qty": "34",
+    "side": "buy",
+    "type": "limit",
+    "time_in_force": "day",
+    "limit_price": "82.96",
+    "client_order_id": "dmd-TTAN-20261113153104"
+   },
+   "order_id": "2c36585d-da57-4d88-af94-cad1769c8d1d",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "diamond list pick",
+   "rule": "sleeve_buy",
+   "facts": {
+    "shares": 34,
+    "limit_price": 82.96,
+    "judgment": 10.0,
+    "judgment_rank": 2,
+    "name": "ServiceTitan, Inc.",
+    "setup": {
+     "setup": false,
+     "near_high": false,
+     "tight": false,
+     "breakout": false
+    }
+   }
+  },
+  "rule_version": {
+   "code": "53637d3",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-13T14:15:57.996859",
+    "sha": "5d6e08c228ff"
+   },
+   "latest.json": {
+    "at": "2026-11-13T15:01:16.904881",
+    "sha": "16a3d0c7c913"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "022c42f76fa8"
+   },
+   "experiments.json": {
+    "at": "2026-11-07T13:15:48.396413",
+    "sha": "b4c604d9fb69"
+   },
+   "theses.json": {
+    "at": "2026-10-31T13:04:09.054290",
+    "sha": "28e8091145c5"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-13T13:03:22+00:00",
+    "sha": "e5ddbcf5c789"
+   },
+   "premarket.json": {
+    "at": "2026-11-13T06:00:49.420556-08:00",
+    "sha": "0440a49694f9"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-13",
+    "sha": "c46b59cfbd3b"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-13T13:01:33+00:00",
+    "sha": "c736f7379986"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-12T21:17:13+00:00",
+    "sha": "fa2172aab347"
+   },
+   "big_movers.json": {
+    "at": "2026-11-12T21:33:28+00:00",
+    "sha": "6a1c3e329e95"
+   }
+  }
+ },
+ {
+  "at": "2026-11-13T15:31:13+00:00",
+  "job": "diamond_sleeve",
+  "kind": "stop",
+  "symbol": "REAL",
+  "output": {
+   "request": {
+    "symbol": "REAL",
+    "qty": "202",
+    "side": "sell",
+    "type": "stop",
+    "time_in_force": "gtc",
+    "stop_price": "10.52"
+   },
+   "order_id": "bb02fac5-85e3-4da1-8a93-d09a95e10a05",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "missing stop placed (sleeve disaster stop \u2192 25% below entry)",
+   "rule": "stop_placement",
+   "facts": {
+    "stop_price": 10.52,
+    "qty": 202
+   }
+  },
+  "rule_version": {
+   "code": "53637d3",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-13T14:15:57.996859",
+    "sha": "5d6e08c228ff"
+   },
+   "latest.json": {
+    "at": "2026-11-13T15:01:16.904881",
+    "sha": "16a3d0c7c913"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "022c42f76fa8"
+   },
+   "experiments.json": {
+    "at": "2026-11-07T13:15:48.396413",
+    "sha": "b4c604d9fb69"
+   },
+   "theses.json": {
+    "at": "2026-10-31T13:04:09.054290",
+    "sha": "28e8091145c5"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-13T13:03:22+00:00",
+    "sha": "e5ddbcf5c789"
+   },
+   "premarket.json": {
+    "at": "2026-11-13T06:00:49.420556-08:00",
+    "sha": "0440a49694f9"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-13",
+    "sha": "c46b59cfbd3b"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-13T13:01:33+00:00",
+    "sha": "c736f7379986"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-12T21:17:13+00:00",
+    "sha": "fa2172aab347"
+   },
+   "big_movers.json": {
+    "at": "2026-11-12T21:33:28+00:00",
+    "sha": "6a1c3e329e95"
+   }
+  }
+ },
+ {
+  "at": "2026-11-13T15:31:13+00:00",
+  "job": "diamond_sleeve",
+  "kind": "stop",
+  "symbol": "TTAN",
+  "output": {
+   "request": {
+    "symbol": "TTAN",
+    "qty": "34",
+    "side": "sell",
+    "type": "stop",
+    "time_in_force": "gtc",
+    "stop_price": "61.94"
+   },
+   "order_id": "9fec3f5d-4bfe-4a41-95d7-363e14dc7b51",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "missing stop placed (sleeve disaster stop \u2192 25% below entry)",
+   "rule": "stop_placement",
+   "facts": {
+    "stop_price": 61.94,
+    "qty": 34
+   }
+  },
+  "rule_version": {
+   "code": "53637d3",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-13T14:15:57.996859",
+    "sha": "5d6e08c228ff"
+   },
+   "latest.json": {
+    "at": "2026-11-13T15:01:16.904881",
+    "sha": "16a3d0c7c913"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "022c42f76fa8"
+   },
+   "experiments.json": {
+    "at": "2026-11-07T13:15:48.396413",
+    "sha": "b4c604d9fb69"
+   },
+   "theses.json": {
+    "at": "2026-10-31T13:04:09.054290",
+    "sha": "28e8091145c5"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-13T13:03:22+00:00",
+    "sha": "e5ddbcf5c789"
+   },
+   "premarket.json": {
+    "at": "2026-11-13T06:00:49.420556-08:00",
+    "sha": "0440a49694f9"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-13",
+    "sha": "c46b59cfbd3b"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-13T13:01:33+00:00",
+    "sha": "c736f7379986"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-12T21:17:13+00:00",
+    "sha": "fa2172aab347"
+   },
+   "big_movers.json": {
+    "at": "2026-11-12T21:33:28+00:00",
+    "sha": "6a1c3e329e95"
+   }
+  }
+ }
+]

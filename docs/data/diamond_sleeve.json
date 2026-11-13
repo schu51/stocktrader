@@ -1,44 +1,93 @@
 {
-  "generated_at": "2026-11-12T15:30:54.052220",
+  "generated_at": "2026-11-13T15:30:59.380816",
   "mode": "EXECUTE",
   "holdings": [
     {
       "symbol": "KVYO",
-      "market_value": 2851.52,
-      "pnl_pct": 2.34
+      "market_value": 2899.4,
+      "pnl_pct": 4.06
     },
     {
       "symbol": "PCOR",
-      "market_value": 3409.56,
-      "pnl_pct": 23.31
+      "market_value": 3429.8,
+      "pnl_pct": 24.04
     },
     {
       "symbol": "VCEL",
-      "market_value": 3713.28,
-      "pnl_pct": 34.21
+      "market_value": 3672.32,
+      "pnl_pct": 32.73
     },
     {
       "symbol": "WK",
-      "market_value": 1931.3,
-      "pnl_pct": -19.88
+      "market_value": 1922.76,
+      "pnl_pct": -20.23
     }
   ],
   "sells": [],
   "trims": [],
-  "buys": [],
+  "buys": [
+    {
+      "symbol": "REAL",
+      "shares": 202,
+      "limit_price": 14.03,
+      "judgment": 10.0,
+      "judgment_rank": 1,
+      "name": "TheRealReal, Inc.",
+      "setup": {
+        "setup": false,
+        "near_high": false,
+        "tight": false,
+        "breakout": false
+      },
+      "status": "submitted",
+      "order_id": "ff5d4b7f-623b-4dc1-9f8a-a60215324421"
+    },
+    {
+      "symbol": "TTAN",
+      "shares": 34,
+      "limit_price": 82.96,
+      "judgment": 10.0,
+      "judgment_rank": 2,
+      "name": "ServiceTitan, Inc.",
+      "setup": {
+        "setup": false,
+        "near_high": false,
+        "tight": false,
+        "breakout": false
+      },
+      "status": "submitted",
+      "order_id": "2c36585d-da57-4d88-af94-cad1769c8d1d"
+    }
+  ],
   "skipped": [],
   "failures": [],
   "alerts": [
     "WK: held on a judgment from 2026-10-17, made before its latest filings; its thesis cannot be checked until it is re-judged",
     "KVYO: held on a judgment from 2026-10-17, made before its latest filings; its thesis cannot be checked until it is re-judged",
-    "VCEL: held on a judgment from 2026-10-31, made before its latest filings; its thesis cannot be checked until it is re-judged",
-    "PCOR: a stop at 47.13 was below the sleeve's 63.15 (sleeve: 20%+ peak gain \u2192 break-even+0.5%); replaced",
-    "VCEL: a stop at 32.42 was below the sleeve's 43.45 (sleeve: 20%+ peak gain \u2192 break-even+0.5%); replaced"
+    "VCEL: held on a judgment from 2026-10-31, made before its latest filings; its thesis cannot be checked until it is re-judged"
   ],
   "note": null,
-  "equity": 106887.68,
-  "budget": 21377.54,
-  "slot": 2672.19,
-  "invested": 11905.66,
-  "list_date": "2026-11-07"
+  "equity": 106768.33,
+  "setups": {
+    "REAL": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "TTAN": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    }
+  },
+  "budget": 42707.33,
+  "slot": 2847.16,
+  "invested": 11924.28,
+  "list_date": "2026-11-07",
+  "stops_placed": [
+    "REAL",
+    "TTAN"
+  ]
 }

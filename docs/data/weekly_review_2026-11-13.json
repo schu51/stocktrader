@@ -1,0 +1,98 @@
+{
+  "date": "2026-11-13",
+  "generated_at": "2026-11-13T21:08:00",
+  "type": "weekly_review",
+  "thesis_health": {
+    "intact": 17,
+    "weakening": 2,
+    "broken": 0,
+    "untradable": 1,
+    "note": "Live MA data unavailable (yfinance proxy-blocked). Assessment based on SMA50/SMA200 cache (mode=sma200, dated 2026-11-13), P&L, and distance from 52-week high.",
+    "weakening_detail": [
+      "WK: -20.8% unrealized, 25.8% below 52-week high ($68.16 vs high $93.71). Stop at $64.57. LARGE_LOSS flag. Above stop but significant underwater position — monitor closely.",
+      "KVYO: +5.6% unrealized but 34.9% below 52-week high ($22.13 vs high $33.35). Stop at $15.71. Structurally weak recovery pattern."
+    ],
+    "untradable_detail": "CTLP: flagged 'asset is inactive on Alpaca (delisted or acquired)'. P&L +5.3% but position cannot be managed.",
+    "strong_performers": {
+      "VCEL": "+31.8% (2.8% from 52w high — approaching all-time high range)",
+      "PCOR": "+23.5% (2.1% from 52w high — near breakout)",
+      "CRL": "+10.0% (11.2% from 52w high)",
+      "CBOE": "+8.2% (0.9% from 52w high — at all-time highs)",
+      "KO": "+5.9% (at 52w high, breaking out)"
+    }
+  },
+  "weekly_summary": {
+    "week": "2026-11-10 to 2026-11-13",
+    "entries_opened": 11,
+    "entries_detail": ["DG", "SJM", "FDS", "HLT", "KO", "GILD", "EBAY", "KDP", "MAR", "REAL", "TTAN"],
+    "closes": 2,
+    "closes_wins": 0,
+    "closes_losses": 2,
+    "win_rate_pct": 0,
+    "closes_detail": [
+      "PM: -6.3% (PRICE_BELOW_50MA)",
+      "TXN: -8.2% (PRICE_BELOW_50MA)"
+    ],
+    "portfolio_value": 106989.72,
+    "cash": 32702.81,
+    "cash_pct": 30.6,
+    "unrealized_pnl": 3064.98,
+    "drawdown_from_peak_pct": 8.23,
+    "drawdown_status": "CAUTION (peak $116,590 on 2026-10-06, within 15% max allowed)",
+    "market_regime": "NEUTRAL — SPY $757 above 200MA ($729) but below 50MA ($764). RS threshold elevated at 80.",
+    "major_model_change": {
+      "date": "2026-11-12",
+      "name": "sma200_exit",
+      "change": "Exit rule changed from PRICE_BELOW_50MA to PRICE_BELOW_200MA (PR #38, #39). Break-even trigger retained (+5% with SPY 2% above 50MA).",
+      "trades_under_new_rule": 0,
+      "implication": "All future exits will now require price to close below the 200-day MA rather than the 50-day MA. This directly addresses the pattern finding that short holds (-4.4% avg) underperform long holds (+5.6% avg). The new rule should allow positions to weather 50MA crosses without triggering premature exits."
+    },
+    "notable": "Second consecutive week of 0 wins from closes. Both exits were PRICE_BELOW_50MA — these would NOT have triggered under the new SMA200 rule that went live Nov 12. 11 new defensive/value entries made this week (Consumer Defensive names dominate: KO, SJM, KDP, MO already held). Portfolio now has 21 open positions."
+  },
+  "pattern_findings": {
+    "sample_size": 91,
+    "win_rate_pct": 19.8,
+    "avg_win_pct": 14.2,
+    "avg_loss_pct": -5.4,
+    "profit_factor_alltime": 0.61,
+    "expectancy_pct": -1.48,
+    "last_20_trades": {
+      "win_rate_pct": 15.0,
+      "profit_factor": 0.11,
+      "expectancy_pct": -6.48,
+      "note": "Critically low PF — reflects the sharp correction period. Backtest champion PF is 2.67 over 600 trades."
+    },
+    "exit_reason_analysis": {
+      "REDUCE": {"n": 4, "avg_pnl": "+45.9%", "win_rate": "100%", "note": "Best outcome by far — holds that grew large enough to partially reduce"},
+      "STALE": {"n": 1, "avg_pnl": "+6.7%", "win_rate": "100%"},
+      "PRICE_BELOW_50MA": {"n": 69, "avg_pnl": "-2.4%", "win_rate": "16%", "note": "Now replaced by SMA200 exit — 76% of all closed trades used this rule"},
+      "HARD_LOSS_STOP": {"n": 4, "avg_pnl": "-6.4%", "win_rate": "0%"},
+      "BROKER_STOP": {"n": 13, "avg_pnl": "-10.4%", "win_rate": "15%"}
+    },
+    "hold_time_analysis": {
+      "long_30plus_days": {"n": 25, "avg_pnl": "+5.6%"},
+      "short_under_30_days": {"n": 61, "avg_pnl": "-4.4%"},
+      "finding": "CONFIRMED: Long holds strongly outperform. The SMA200 exit change directly addresses this — SMA50 was creating most of the short-hold losses."
+    },
+    "sector_analysis": {
+      "best": {"sector": "energy", "avg_pnl": "+2.8%", "n": 9},
+      "worst": {"sector": "consumer_defensive", "avg_pnl": "-6.3%", "n": 1},
+      "technology": {"avg_pnl": "-2.5%", "n": 35},
+      "note": "Energy leads closed trades. Technology (35 trades, -2.5%) is largest sample — tech momentum was premature. Healthcare -4.2% (8 trades). Note: 12 trades classified Unknown, avg +4.8% — may be unlabeled sector."
+    },
+    "recommendations": "NO parameter changes. The sma200_exit rule change directly addresses the core finding (short holds underperform). Allow 10+ trades under the new rule before evaluating further changes. The pattern data strongly supports patience: winners need 48 days on average to mature."
+  },
+  "screener_alignment": {
+    "top_screener_names": ["VRNS", "OVV", "DOCU", "KNTK", "TS", "RRC", "ACN", "CHRD", "PK", "TRGP"],
+    "in_portfolio": ["ACN"],
+    "sector_leaders_today": ["energy", "healthcare", "technology", "consumer_defensive", "industrials", "consumer_cyclical"],
+    "notable_gaps": [
+      "VRNS (RS=86, grade=B): Not held — cybersecurity",
+      "TRGP (RS=90, grade=B): Not held — energy infrastructure",
+      "CHRD (RS=89, grade=B): Not held — energy"
+    ],
+    "portfolio_screener_status": "19 of 21 positions are NOT in the top screener candidates. This is expected: 11 of these were defensive entries made last week. The screener is showing energy/infrastructure names as leaders while the portfolio holds more diversified defensive positions. ACN is the only cross-match (RS=88, grade=C, +2.4%).",
+    "note": "Screener dry-run blocked by proxy. Using screener.json cached at 2026-11-13T14:15 (earlier today)."
+  },
+  "action_taken": "None. No model parameter changes. No position closures initiated. Model health check passed (config and signals imports OK). Weekly review file written and committed. Screener and thesis MA checks blocked by proxy — using cached data."
+}

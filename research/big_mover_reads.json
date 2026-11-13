@@ -51,5 +51,26 @@
     "lesson": "Nothing visible beforehand (no headlines in the prior week); inverse leveraged ETF whose -95% distance from the 52-week high is decay, not a setup, so exclude it.",
     "by": "claude",
     "date": "2026-11-12"
+  },
+  "LFTO@2026-11-13": {
+    "catalyst": "earnings",
+    "why": "Liftoff Mobile gapped up 27% after its Q3 results (8-K filed Nov 12) beat estimates, and BTIG raised its price target to $31.",
+    "lesson": "The results were filed the evening before with volume already 1.8x normal, but LFTO sits outside the bot's universe (no rs_rank) and was 13% down over 3 months, so the bot could not have traded it.",
+    "by": "claude",
+    "date": "2026-11-13"
+  },
+  "MOD@2026-11-13": {
+    "catalyst": "mna",
+    "why": "Modine gapped up 34% on reports that Samsung Electronics is in talks to buy the data-center cooling maker.",
+    "lesson": "Nothing visible beforehand: MOD was rs_rank 10, down 33% in a month, 64% below its 52-week high and failed the momentum gate; takeover talk can't be anticipated.",
+    "by": "claude",
+    "date": "2026-11-13"
+  },
+  "NBIZ@2026-11-13": {
+    "catalyst": "theme_move",
+    "why": "NBIZ is a 2x short Nebius (NBIS) ETF; NBIS slid again as AI-compute stocks sold off on reports that Nvidia CEO Jensen Huang is resigning, on top of Nebius's trimmed outlook from Thursday's results.",
+    "lesson": "Inverse leveraged single-stock ETF (a -99% distance from the 52-week high is decay, not a setup) and a second straight day on the list; exclude these from mover stats.",
+    "by": "claude",
+    "date": "2026-11-13"
   }
 }

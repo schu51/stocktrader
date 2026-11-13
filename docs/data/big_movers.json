@@ -1,66 +1,101 @@
 {
- "date": "2026-11-12",
- "generated_at": "2026-11-12T21:33:28+00:00",
+ "date": "2026-11-13",
+ "generated_at": "2026-11-13T21:36:01+00:00",
  "threshold": 0.2,
  "today": [
   {
-   "symbol": "NBIZ",
-   "date": "2026-11-12",
-   "ret": 0.3438,
-   "gap": 0.4577,
+   "symbol": "LFTO",
+   "date": "2026-11-13",
+   "ret": 0.3063,
+   "gap": 0.271,
    "in_universe": false,
    "sector": "other",
    "themes": [],
    "pre": {
     "rs_rank": null,
-    "ret_1m": 0.157,
-    "ret_3m": 0.362,
-    "dist_52w_high": -0.994,
+    "ret_1m": 0.175,
+    "ret_3m": -0.134,
+    "dist_52w_high": null,
     "trend_up": false,
     "momentum_gate": false,
-    "vol_surge": 1.68,
+    "vol_surge": 1.77,
     "theme_heat": null,
     "news_before": {
-     "n_7d": 7,
-     "tone": 0.0
+     "n_7d": 6,
+     "tone": 0.167
     }
    },
-   "catalyst": "news",
-   "catalyst_rule": "news",
+   "catalyst": "earnings",
+   "catalyst_rule": "earnings",
    "evidence": [
-    "3 headlines the same day",
-    "Nebius Crashes 20% as Jensen Huang Shock Rocks AI Stocks: One ETF Is Having a Field Day",
-    "NBIZ270115C00018000 interactive stock chart | NBIZ Jan 2027 18.000 call stock",
-    "META_TITLE_QUOTE"
+    "2026-11-12: 8-K results announced (item 2.02)",
+    "BTIG raises Liftoff Mobile stock price target to $31 on earnings beat",
+    "Liftoff Mobile (NASDAQ:LFTO) Sees Unusually-High Trading Volume Following Strong Earnings"
    ],
    "why": null,
    "lesson": null
   },
   {
-   "symbol": "SMCZ",
-   "date": "2026-11-12",
-   "ret": 0.2236,
-   "gap": 0.2016,
+   "symbol": "MOD",
+   "date": "2026-11-13",
+   "ret": 0.2786,
+   "gap": 0.3384,
+   "in_universe": true,
+   "sector": "consumer_cyclical",
+   "themes": [
+    "ai_power"
+   ],
+   "pre": {
+    "rs_rank": 10,
+    "ret_1m": -0.327,
+    "ret_3m": -0.45,
+    "dist_52w_high": -0.643,
+    "trend_up": false,
+    "momentum_gate": false,
+    "vol_surge": 0.76,
+    "theme_heat": 0.188,
+    "news_before": {
+     "n_7d": 12,
+     "tone": -0.083
+    }
+   },
+   "catalyst": "mna",
+   "catalyst_rule": "mna",
+   "evidence": [
+    "Modine Manufacturing Shares Jump on Samsung Electronics Buyout Talks"
+   ],
+   "why": null,
+   "lesson": null
+  },
+  {
+   "symbol": "NBIZ",
+   "date": "2026-11-13",
+   "ret": 0.2008,
+   "gap": 0.0797,
    "in_universe": false,
    "sector": "other",
    "themes": [],
    "pre": {
-    "rs_rank": 1,
-    "ret_1m": 0.309,
-    "ret_3m": 0.034,
-    "dist_52w_high": -0.952,
+    "rs_rank": null,
+    "ret_1m": 0.293,
+    "ret_3m": 1.221,
+    "dist_52w_high": -0.992,
     "trend_up": false,
     "momentum_gate": false,
-    "vol_surge": 0.72,
+    "vol_surge": 1.69,
     "theme_heat": null,
     "news_before": {
-     "n_7d": 0,
-     "tone": null
+     "n_7d": 7,
+     "tone": -0.143
     }
    },
    "catalyst": "unknown",
    "catalyst_rule": "unknown",
-   "evidence": [],
+   "evidence": [
+    "NBIZ261120P00011000 Interactive Stock Chart | NBIZ Nov 2026 11.000 put Stock",
+    "Nebius Crashes 20% as Jensen Huang Shock Rocks AI Stocks: One ETF Is Having a Field Day",
+    "NBIZ270115C00018000 interactive stock chart | NBIZ Jan 2027 18.000 call stock"
+   ],
    "why": null,
    "lesson": null
   }
@@ -71,303 +106,303 @@
    "pattern": "earnings_theme_hot",
    "why": "earnings due, theme peers up 10%+ in a week",
    "hit_rate": 0.03226,
-   "lift": 38.83,
+   "lift": 32.32,
    "earnings_expected": "2026-11-18",
    "sector": "technology",
-   "ret_1m": -0.249,
-   "rs_rank": 14,
+   "ret_1m": -0.25,
+   "rs_rank": 10,
+   "earnings_source": "estimate"
+  },
+  {
+   "symbol": "ACM",
+   "pattern": "earnings_far_from_high",
+   "why": "earnings due, 40%+ below the 52-week high",
+   "hit_rate": 0.02804,
+   "lift": 28.09,
+   "earnings_expected": "2026-11-17",
+   "sector": "industrials",
+   "ret_1m": 0.193,
+   "rs_rank": 11,
+   "earnings_source": "estimate"
+  },
+  {
+   "symbol": "BMNR",
+   "pattern": "earnings_far_from_high",
+   "why": "earnings due, 40%+ below the 52-week high",
+   "hit_rate": 0.02804,
+   "lift": 28.09,
+   "earnings_expected": "2026-11-20",
+   "sector": "financials",
+   "ret_1m": -0.247,
+   "rs_rank": 4,
+   "earnings_source": "estimate"
+  },
+  {
+   "symbol": "DY",
+   "pattern": "earnings_far_from_high",
+   "why": "earnings due, 40%+ below the 52-week high",
+   "hit_rate": 0.02804,
+   "lift": 28.09,
+   "earnings_expected": "2026-11-18",
+   "sector": "industrials",
+   "ret_1m": -0.141,
+   "rs_rank": 8,
+   "earnings_source": "estimate"
+  },
+  {
+   "symbol": "IESC",
+   "pattern": "earnings_far_from_high",
+   "why": "earnings due, 40%+ below the 52-week high",
+   "hit_rate": 0.02804,
+   "lift": 28.09,
+   "earnings_expected": "2026-11-20",
+   "sector": "industrials",
+   "ret_1m": -0.351,
+   "rs_rank": 12,
+   "earnings_source": "estimate"
+  },
+  {
+   "symbol": "INFQ",
+   "pattern": "earnings_far_from_high",
+   "why": "earnings due, 40%+ below the 52-week high",
+   "hit_rate": 0.02804,
+   "lift": 28.09,
+   "earnings_expected": "2026-11-17",
+   "sector": "technology",
+   "ret_1m": -0.105,
+   "rs_rank": 2,
    "earnings_source": "estimate"
   },
   {
    "symbol": "INTU",
    "pattern": "earnings_far_from_high",
    "why": "earnings due, 40%+ below the 52-week high",
-   "hit_rate": 0.02521,
-   "lift": 30.34,
+   "hit_rate": 0.02804,
+   "lift": 28.09,
    "earnings_expected": "2026-11-19",
    "sector": "technology",
-   "ret_1m": 0.096,
-   "rs_rank": 9,
+   "ret_1m": 0.035,
+   "rs_rank": 8,
+   "earnings_source": "estimate"
+  },
+  {
+   "symbol": "POWL",
+   "pattern": "earnings_far_from_high",
+   "why": "earnings due, 40%+ below the 52-week high",
+   "hit_rate": 0.02804,
+   "lift": 28.09,
+   "earnings_expected": "2026-11-17",
+   "sector": "industrials",
+   "ret_1m": -0.165,
+   "rs_rank": 52,
    "earnings_source": "estimate"
   },
   {
    "symbol": "ADI",
    "pattern": "earnings_leader",
    "why": "earnings due, passes the momentum gate",
-   "hit_rate": 0.01839,
-   "lift": 22.13,
+   "hit_rate": 0.02301,
+   "lift": 23.05,
    "earnings_expected": "2026-11-18",
    "sector": "technology",
-   "ret_1m": 0.014,
-   "rs_rank": 94,
+   "ret_1m": -0.015,
+   "rs_rank": 87,
    "earnings_source": "estimate"
   },
   {
    "symbol": "DE",
    "pattern": "earnings_leader",
    "why": "earnings due, passes the momentum gate",
-   "hit_rate": 0.01839,
-   "lift": 22.13,
+   "hit_rate": 0.02301,
+   "lift": 23.05,
    "earnings_expected": "2026-11-19",
    "sector": "industrials",
-   "ret_1m": 0.044,
-   "rs_rank": 84,
+   "ret_1m": 0.035,
+   "rs_rank": 81,
    "earnings_source": "estimate"
   },
   {
    "symbol": "NDSN",
    "pattern": "earnings_leader",
    "why": "earnings due, passes the momentum gate",
-   "hit_rate": 0.01839,
-   "lift": 22.13,
+   "hit_rate": 0.02301,
+   "lift": 23.05,
    "earnings_expected": "2026-11-18",
    "sector": "industrials",
-   "ret_1m": -0.006,
-   "rs_rank": 79,
+   "ret_1m": -0.012,
+   "rs_rank": 76,
+   "earnings_source": "estimate"
+  },
+  {
+   "symbol": "PVH",
+   "pattern": "earnings_leader",
+   "why": "earnings due, passes the momentum gate",
+   "hit_rate": 0.02301,
+   "lift": 23.05,
+   "earnings_expected": "2026-11-17",
+   "sector": "consumer_cyclical",
+   "ret_1m": 0.093,
+   "rs_rank": 73,
    "earnings_source": "estimate"
   },
   {
    "symbol": "ROST",
    "pattern": "earnings_leader",
    "why": "earnings due, passes the momentum gate",
-   "hit_rate": 0.01839,
-   "lift": 22.13,
+   "hit_rate": 0.02301,
+   "lift": 23.05,
    "earnings_expected": "2026-11-19",
    "sector": "consumer_cyclical",
-   "ret_1m": 0.029,
-   "rs_rank": 76,
+   "ret_1m": -0.013,
+   "rs_rank": 71,
    "earnings_source": "estimate"
   },
   {
    "symbol": "TGT",
    "pattern": "earnings_leader",
    "why": "earnings due, passes the momentum gate",
-   "hit_rate": 0.01839,
-   "lift": 22.13,
+   "hit_rate": 0.02301,
+   "lift": 23.05,
    "earnings_expected": "2026-11-18",
    "sector": "consumer_defensive",
-   "ret_1m": 0.043,
-   "rs_rank": 94,
+   "ret_1m": 0.038,
+   "rs_rank": 91,
    "earnings_source": "estimate"
   },
   {
-   "symbol": "WSM",
+   "symbol": "WMG",
    "pattern": "earnings_leader",
    "why": "earnings due, passes the momentum gate",
-   "hit_rate": 0.01839,
-   "lift": 22.13,
-   "earnings_expected": "2026-11-18",
-   "sector": "consumer_cyclical",
-   "ret_1m": 0.036,
-   "rs_rank": 77,
-   "earnings_source": "estimate"
-  },
-  {
-   "symbol": "CPRT",
-   "pattern": "earnings",
-   "why": "earnings report due",
-   "hit_rate": 0.01076,
-   "lift": 12.95,
+   "hit_rate": 0.02301,
+   "lift": 23.05,
    "earnings_expected": "2026-11-19",
-   "sector": "industrials",
-   "ret_1m": 0.218,
-   "rs_rank": 17,
-   "earnings_source": "estimate"
-  },
-  {
-   "symbol": "GAP",
-   "pattern": "earnings",
-   "why": "earnings report due",
-   "hit_rate": 0.01076,
-   "lift": 12.95,
-   "earnings_expected": "2026-11-19",
-   "sector": "other",
-   "ret_1m": -0.063,
-   "rs_rank": 32,
-   "earnings_source": "estimate"
-  },
-  {
-   "symbol": "HD",
-   "pattern": "earnings",
-   "why": "earnings report due",
-   "hit_rate": 0.01076,
-   "lift": 12.95,
-   "earnings_expected": "2026-11-17",
    "sector": "consumer_cyclical",
-   "ret_1m": 0.179,
-   "rs_rank": 35,
-   "earnings_source": "estimate"
-  },
-  {
-   "symbol": "KEYS",
-   "pattern": "earnings",
-   "why": "earnings report due",
-   "hit_rate": 0.01076,
-   "lift": 12.95,
-   "earnings_expected": "2026-11-17",
-   "sector": "technology",
-   "ret_1m": -0.149,
-   "rs_rank": 85,
-   "earnings_source": "estimate"
-  },
-  {
-   "symbol": "LOW",
-   "pattern": "earnings",
-   "why": "earnings report due",
-   "hit_rate": 0.01076,
-   "lift": 12.95,
-   "earnings_expected": "2026-11-18",
-   "sector": "consumer_cyclical",
-   "ret_1m": 0.216,
-   "rs_rank": 43,
-   "earnings_source": "estimate"
-  },
-  {
-   "symbol": "MDT",
-   "pattern": "earnings",
-   "why": "earnings report due",
-   "hit_rate": 0.01076,
-   "lift": 12.95,
-   "earnings_expected": "2026-11-17",
-   "sector": "healthcare",
-   "ret_1m": 0.072,
-   "rs_rank": 61,
-   "earnings_source": "estimate"
-  },
-  {
-   "symbol": "PANW",
-   "pattern": "earnings",
-   "why": "earnings report due",
-   "hit_rate": 0.01076,
-   "lift": 12.95,
-   "earnings_expected": "2026-11-18",
-   "sector": "technology",
-   "ret_1m": -0.14,
-   "rs_rank": 83,
+   "ret_1m": 0.052,
+   "rs_rank": 70,
    "earnings_source": "estimate"
   }
  ],
  "watch_scored_today": [
   {
-   "symbol": "AMAT",
-   "pattern": "earnings_far_from_high",
-   "ret": -0.0358,
+   "symbol": "NVDA",
+   "pattern": "earnings_theme_hot",
+   "ret": -0.0201,
    "hit": false
   },
   {
-   "symbol": "LUNR",
+   "symbol": "INTU",
    "pattern": "earnings_far_from_high",
-   "ret": 0.0698,
-   "hit": false
-  },
-  {
-   "symbol": "ONDS",
-   "pattern": "earnings_far_from_high",
-   "ret": -0.0716,
+   "ret": 0.0045,
    "hit": false
   },
   {
    "symbol": "ADI",
    "pattern": "earnings_leader",
-   "ret": 0.0005,
+   "ret": -0.0277,
+   "hit": false
+  },
+  {
+   "symbol": "DE",
+   "pattern": "earnings_leader",
+   "ret": -0.0077,
    "hit": false
   },
   {
    "symbol": "NDSN",
    "pattern": "earnings_leader",
-   "ret": -0.008,
+   "ret": -0.0057,
+   "hit": false
+  },
+  {
+   "symbol": "ROST",
+   "pattern": "earnings_leader",
+   "ret": -0.0234,
    "hit": false
   },
   {
    "symbol": "TGT",
    "pattern": "earnings_leader",
-   "ret": -0.0111,
+   "ret": 0.0034,
    "hit": false
   },
   {
    "symbol": "WSM",
    "pattern": "earnings_leader",
-   "ret": -0.0447,
+   "ret": 0.0147,
    "hit": false
   },
   {
-   "symbol": "KEYS",
-   "pattern": "earnings_beaten_down",
-   "ret": -0.0046,
-   "hit": false
-  },
-  {
-   "symbol": "NVDA",
-   "pattern": "earnings_beaten_down",
-   "ret": -0.0434,
-   "hit": false
-  },
-  {
-   "symbol": "PANW",
-   "pattern": "earnings_beaten_down",
-   "ret": -0.0353,
-   "hit": false
-  },
-  {
-   "symbol": "DIS",
+   "symbol": "CPRT",
    "pattern": "earnings",
-   "ret": -0.0119,
+   "ret": -0.0052,
+   "hit": false
+  },
+  {
+   "symbol": "GAP",
+   "pattern": "earnings",
+   "ret": -0.0085,
    "hit": false
   },
   {
    "symbol": "HD",
    "pattern": "earnings",
-   "ret": -0.0087,
+   "ret": 0.0012,
+   "hit": false
+  },
+  {
+   "symbol": "KEYS",
+   "pattern": "earnings",
+   "ret": -0.0215,
    "hit": false
   },
   {
    "symbol": "LOW",
    "pattern": "earnings",
-   "ret": -0.0179,
+   "ret": 0.0012,
    "hit": false
   },
   {
    "symbol": "MDT",
    "pattern": "earnings",
-   "ret": -0.0061,
+   "ret": 0.0185,
    "hit": false
   },
   {
-   "symbol": "TJX",
+   "symbol": "PANW",
    "pattern": "earnings",
-   "ret": 0.0001,
+   "ret": -0.0013,
    "hit": false
   }
  ],
  "watch_record": {
-  "days": 1,
-  "names": 15,
+  "days": 2,
+  "names": 30,
   "hits": 0,
-  "avg_next_day": -0.0152
+  "avg_next_day": -0.0102
  },
  "lessons": {
   "profile_1y": {
-   "events": 130,
-   "in_universe": 53,
+   "events": 133,
+   "in_universe": 54,
    "catalysts": {
-    "earnings": 53,
+    "earnings": 55,
     "theme_move": 53,
     "unknown": 16,
-    "mna": 3,
+    "mna": 4,
     "contract": 2,
     "sector_move": 2,
-    "news": 1
+    "regulatory": 1
    },
    "passed_momentum_gate": 0.26,
-   "median_rs_rank": 76.0,
-   "median_ret_1m": 0.065,
-   "median_dist_52w_high": -0.211,
+   "median_rs_rank": 69.5,
+   "median_ret_1m": 0.062,
+   "median_dist_52w_high": -0.222,
    "earnings_share": 0.41
   },
   "precursors": {
-   "stock_days": 173318,
-   "jumps": 144,
-   "base_rate": 0.00083,
+   "stock_days": 375676,
+   "jumps": 375,
+   "base_rate": 0.001,
    "patterns": [
     {
      "pattern": "earnings_theme_hot",
@@ -375,172 +410,172 @@
      "days": 155,
      "hits": 5,
      "hit_rate": 0.03226,
-     "lift": 38.83,
-     "share_of_all_jumps": 0.035,
+     "lift": 32.32,
+     "share_of_all_jumps": 0.013,
      "avg_day_return": -0.0116,
      "watchable": true
     },
     {
      "pattern": "earnings_far_from_high",
      "description": "earnings due, 40%+ below the 52-week high",
-     "days": 714,
-     "hits": 18,
-     "hit_rate": 0.02521,
-     "lift": 30.34,
-     "share_of_all_jumps": 0.125,
-     "avg_day_return": -0.005,
-     "watchable": true
-    },
-    {
-     "pattern": "earnings_beaten_down",
-     "description": "earnings due, down 15%+ in a month",
-     "days": 428,
-     "hits": 8,
-     "hit_rate": 0.01869,
-     "lift": 22.5,
-     "share_of_all_jumps": 0.056,
-     "avg_day_return": -0.0042,
+     "days": 1605,
+     "hits": 45,
+     "hit_rate": 0.02804,
+     "lift": 28.09,
+     "share_of_all_jumps": 0.12,
+     "avg_day_return": -0.0006,
      "watchable": true
     },
     {
      "pattern": "earnings_leader",
      "description": "earnings due, passes the momentum gate",
-     "days": 1251,
-     "hits": 23,
-     "hit_rate": 0.01839,
-     "lift": 22.13,
-     "share_of_all_jumps": 0.16,
-     "avg_day_return": 0.0031,
+     "days": 2521,
+     "hits": 58,
+     "hit_rate": 0.02301,
+     "lift": 23.05,
+     "share_of_all_jumps": 0.155,
+     "avg_day_return": 0.0034,
+     "watchable": true
+    },
+    {
+     "pattern": "earnings_beaten_down",
+     "description": "earnings due, down 15%+ in a month",
+     "days": 960,
+     "hits": 18,
+     "hit_rate": 0.01875,
+     "lift": 18.78,
+     "share_of_all_jumps": 0.048,
+     "avg_day_return": -0.0006,
      "watchable": true
     },
     {
      "pattern": "earnings",
      "description": "earnings report due",
-     "days": 6132,
-     "hits": 66,
-     "hit_rate": 0.01076,
-     "lift": 12.95,
-     "share_of_all_jumps": 0.458,
-     "avg_day_return": 0.001,
+     "days": 12388,
+     "hits": 184,
+     "hit_rate": 0.01485,
+     "lift": 14.88,
+     "share_of_all_jumps": 0.491,
+     "avg_day_return": 0.0023,
      "watchable": true
     },
     {
      "pattern": "theme_hot",
      "description": "theme peers up 10%+ in a week, no earnings",
-     "days": 3372,
-     "hits": 8,
-     "hit_rate": 0.00237,
-     "lift": 2.86,
-     "share_of_all_jumps": 0.056,
-     "avg_day_return": 0.0008,
+     "days": 3435,
+     "hits": 9,
+     "hit_rate": 0.00262,
+     "lift": 2.62,
+     "share_of_all_jumps": 0.024,
+     "avg_day_return": 0.0002,
      "watchable": false
     },
     {
      "pattern": "volume_surge",
      "description": "volume 2x+ normal the day before, no earnings",
-     "days": 5368,
-     "hits": 12,
-     "hit_rate": 0.00224,
-     "lift": 2.69,
-     "share_of_all_jumps": 0.083,
-     "avg_day_return": 0.0027,
+     "days": 13148,
+     "hits": 33,
+     "hit_rate": 0.00251,
+     "lift": 2.51,
+     "share_of_all_jumps": 0.088,
+     "avg_day_return": 0.0026,
      "watchable": false
     },
     {
      "pattern": "beaten_down",
      "description": "down 15%+ in a month, no earnings",
-     "days": 12459,
-     "hits": 27,
-     "hit_rate": 0.00217,
-     "lift": 2.61,
-     "share_of_all_jumps": 0.188,
+     "days": 28990,
+     "hits": 53,
+     "hit_rate": 0.00183,
+     "lift": 1.83,
+     "share_of_all_jumps": 0.141,
      "avg_day_return": 0.0025,
      "watchable": false
     },
     {
      "pattern": "momentum_leader",
      "description": "passes the momentum gate, no earnings",
-     "days": 35116,
-     "hits": 19,
-     "hit_rate": 0.00054,
-     "lift": 0.65,
-     "share_of_all_jumps": 0.132,
-     "avg_day_return": 0.0003,
+     "days": 76282,
+     "hits": 75,
+     "hit_rate": 0.00098,
+     "lift": 0.98,
+     "share_of_all_jumps": 0.2,
+     "avg_day_return": 0.0007,
      "watchable": false
     }
    ]
   },
   "news_precursors": {
-   "rows": 118,
-   "base_rate": 0.0,
+   "rows": 237,
+   "base_rate": 0.00422,
    "control_base_rate": 0.0,
    "patterns": [
     {
      "pattern": "news_surge",
      "description": "headlines 3x+ their normal pace in the last day",
-     "days": 14,
+     "days": 33,
      "hits": 0,
      "hit_rate": 0.0,
-     "lift": null,
-     "avg_next_day": -0.0301,
+     "lift": 0.0,
+     "avg_next_day": -0.0236,
      "watchable": false
     },
     {
      "pattern": "news_positive",
      "description": "last day's headlines lean positive",
-     "days": 54,
+     "days": 102,
      "hits": 0,
      "hit_rate": 0.0,
-     "lift": null,
-     "avg_next_day": -0.0108,
+     "lift": 0.0,
+     "avg_next_day": -0.0089,
      "watchable": false
     },
     {
      "pattern": "news_surge_positive",
      "description": "headline surge with positive tone",
-     "days": 8,
+     "days": 15,
      "hits": 0,
      "hit_rate": 0.0,
-     "lift": null,
-     "avg_next_day": -0.0239,
+     "lift": 0.0,
+     "avg_next_day": -0.0264,
      "watchable": false
     }
    ]
   },
   "possible_new_themes": [],
   "themes_hot": {
-   "ai_compute": 0.245,
-   "ai_power": 0.186,
-   "memory_storage": 0.163,
-   "quantum": 0.087,
-   "crypto": 0.169,
-   "space": 0.26,
-   "defense_tech": 0.077,
-   "obesity_drugs": 0.03,
-   "uranium": 0.032,
-   "software_ai_apps": 0.059,
-   "biotech": 0.01,
-   "regional_banks": 0.013,
-   "oil_gas": 0.034,
-   "homebuilders": -0.081,
-   "rate_sensitive_fintech": -0.075,
-   "retail_consumer": 0.002,
-   "shipping": 0.046,
-   "gold_miners": -0.041,
-   "copper": 0.044,
-   "cybersecurity": 0.042,
-   "pharmacy_distribution": 0.034,
-   "solar": -0.085,
-   "airlines": 0.016,
-   "defense_suppliers": 0.079,
-   "lng_natgas": 0.06,
-   "discount_retail": 0.006,
-   "industrial_distributors": 0.05,
-   "ai_optical": 0.25
+   "ai_compute": 0.091,
+   "ai_power": 0.1,
+   "memory_storage": 0.121,
+   "quantum": -0.115,
+   "crypto": 0.048,
+   "space": 0.086,
+   "defense_tech": 0.034,
+   "obesity_drugs": 0.05,
+   "uranium": -0.024,
+   "software_ai_apps": 0.02,
+   "biotech": 0.011,
+   "regional_banks": 0.019,
+   "oil_gas": 0.042,
+   "homebuilders": -0.041,
+   "rate_sensitive_fintech": -0.09,
+   "retail_consumer": 0.02,
+   "shipping": 0.037,
+   "gold_miners": -0.067,
+   "copper": -0.003,
+   "cybersecurity": 0.033,
+   "pharmacy_distribution": 0.053,
+   "solar": -0.134,
+   "airlines": -0.006,
+   "defense_suppliers": 0.029,
+   "lng_natgas": 0.069,
+   "discount_retail": 0.015,
+   "industrial_distributors": 0.042,
+   "ai_optical": 0.12
   },
   "after_the_jump": {
    "mna": {
-    "events": 3,
+    "events": 4,
     "d5": {
      "n": 3,
      "mean": -0.0077,
@@ -561,12 +596,12 @@
     }
    },
    "earnings": {
-    "events": 53,
+    "events": 55,
     "d5": {
-     "n": 50,
-     "mean": 0.0037,
-     "median": 0.0066,
-     "win": 0.54
+     "n": 52,
+     "mean": -0.0016,
+     "median": 0.0027,
+     "win": 0.52
     },
     "d10": {
      "n": 47,
@@ -580,6 +615,9 @@
      "median": 0.0447,
      "win": 0.61
     }
+   },
+   "regulatory": {
+    "events": 1
    },
    "contract": {
     "events": 2,
@@ -605,10 +643,10 @@
    "theme_move": {
     "events": 53,
     "d5": {
-     "n": 48,
-     "mean": -0.0075,
-     "median": -0.0392,
-     "win": 0.38
+     "n": 51,
+     "mean": 0.0005,
+     "median": -0.0264,
+     "win": 0.41
     },
     "d10": {
      "n": 48,
@@ -622,9 +660,6 @@
      "median": -0.0708,
      "win": 0.35
     }
-   },
-   "news": {
-    "events": 1
    },
    "sector_move": {
     "events": 2,
@@ -669,11 +704,11 @@
     }
    },
    "all": {
-    "events": 130,
+    "events": 133,
     "d5": {
-     "n": 119,
-     "mean": -0.0032,
-     "median": -0.0084,
+     "n": 124,
+     "mean": -0.0022,
+     "median": -0.0081,
      "win": 0.48
     },
     "d10": {

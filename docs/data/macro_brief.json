@@ -1,11 +1,103 @@
 {
-  "generated_at": "2026-11-07T14:00:45.940975",
-  "status": "error",
-  "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgogvawxvpGxeAoRiQYqB'}",
+  "generated_at": "2026-11-14T14:27:57.663115",
+  "status": "generated",
+  "admitted": 1,
+  "rejected": [],
   "revalidation": {
     "checked": 8,
-    "confirmed": [],
+    "confirmed": [
+      "TH-2026-0001",
+      "TH-2026-0002",
+      "TH-2026-0003",
+      "TH-2026-0004",
+      "TH-2026-0005",
+      "TH-2026-0006",
+      "TH-2026-0007",
+      "TH-2026-0008"
+    ],
     "invalidated": []
   },
-  "revalidation_error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CgogvZC3WJ2wwCwywtwky'}"
+  "active_total": 9,
+  "active": [
+    {
+      "id": "TH-2026-0001",
+      "theme": "Oil-driven inflation forces the Fed to hike: sustained high crude favors oilfield services and midstream over the integrated majors",
+      "conviction": 0.512,
+      "beneficiary_sectors": [
+        "energy",
+        "industrials"
+      ]
+    },
+    {
+      "id": "TH-2026-0002",
+      "theme": "Higher-for-longer policy rates: asset-sensitive regional and mid-cap banks and non-bank lenders over the money-center banks",
+      "conviction": 0.475,
+      "beneficiary_sectors": [
+        "financials"
+      ]
+    },
+    {
+      "id": "TH-2026-0003",
+      "theme": "AI/capex-driven demand keeps inflation sticky, so grid equipment makers and merchant power generators benefit more than the AI chip and hyperscaler leaders",
+      "conviction": 0.562,
+      "beneficiary_sectors": [
+        "industrials",
+        "utilities"
+      ]
+    },
+    {
+      "id": "TH-2026-0004",
+      "theme": "Robust capex plus sticky 3.4% inflation supports the electrification metals supply chain (copper and electrical inputs) as an underpriced input to the investment cycle",
+      "conviction": 0.5,
+      "beneficiary_sectors": [
+        "basic_materials",
+        "industrials"
+      ]
+    },
+    {
+      "id": "TH-2026-0005",
+      "theme": "US gas-oil price dislocation: LNG export growth and unhedged gas producers over the integrated majors",
+      "conviction": 0.6,
+      "beneficiary_sectors": [
+        "energy",
+        "utilities"
+      ]
+    },
+    {
+      "id": "TH-2026-0006",
+      "theme": "Munitions and missile-defense replenishment: the defense supply chain over the prime contractors",
+      "conviction": 0.525,
+      "beneficiary_sectors": [
+        "industrials",
+        "basic_materials",
+        "technology"
+      ]
+    },
+    {
+      "id": "TH-2026-0007",
+      "theme": "Real-wage squeeze and stagnating payrolls drive trade-down: discount, dollar-channel and off-price retail over the big-box leaders",
+      "conviction": 0.5,
+      "beneficiary_sectors": [
+        "consumer_defensive",
+        "consumer_cyclical"
+      ]
+    },
+    {
+      "id": "TH-2026-0008",
+      "theme": "Producer-price pass-through: PPI running well ahead of CPI favors pricing-power industrial distributors over the industrial conglomerate leaders",
+      "conviction": 0.575,
+      "beneficiary_sectors": [
+        "industrials"
+      ]
+    },
+    {
+      "id": "TH-2026-0009",
+      "theme": "Gulf petrochemical outage plus an oil-gas price gap: US ethane-advantaged polyolefin producers capture an export arbitrage that outlasts the conflict",
+      "conviction": 0.6,
+      "beneficiary_sectors": [
+        "basic_materials"
+      ]
+    }
+  ],
+  "replies_date": "2026-11-14"
 }

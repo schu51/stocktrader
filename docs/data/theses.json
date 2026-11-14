@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T13:04:09.054290",
+  "generated_at": "2026-11-14T14:27:57.662677",
   "theses": [
     {
       "theme": "Oil-driven inflation forces the Fed to hike: sustained high crude favors oilfield services and midstream over the integrated majors",
@@ -30,7 +30,7 @@
       "conviction": 0.512,
       "status": "active",
       "created_at": "2026-10-03",
-      "last_validated": "2026-10-31"
+      "last_validated": "2026-11-14"
     },
     {
       "theme": "Higher-for-longer policy rates: asset-sensitive regional and mid-cap banks and non-bank lenders over the money-center banks",
@@ -59,7 +59,7 @@
       "conviction": 0.475,
       "status": "active",
       "created_at": "2026-10-03",
-      "last_validated": "2026-10-31"
+      "last_validated": "2026-11-14"
     },
     {
       "theme": "AI/capex-driven demand keeps inflation sticky, so grid equipment makers and merchant power generators benefit more than the AI chip and hyperscaler leaders",
@@ -94,7 +94,7 @@
       "conviction": 0.562,
       "status": "active",
       "created_at": "2026-10-10",
-      "last_validated": "2026-10-31"
+      "last_validated": "2026-11-14"
     },
     {
       "theme": "Robust capex plus sticky 3.4% inflation supports the electrification metals supply chain (copper and electrical inputs) as an underpriced input to the investment cycle",
@@ -128,7 +128,7 @@
       "conviction": 0.5,
       "status": "active",
       "created_at": "2026-10-10",
-      "last_validated": "2026-10-31"
+      "last_validated": "2026-11-14"
     },
     {
       "theme": "US gas-oil price dislocation: LNG export growth and unhedged gas producers over the integrated majors",
@@ -163,7 +163,7 @@
       "conviction": 0.6,
       "status": "active",
       "created_at": "2026-10-17",
-      "last_validated": "2026-10-31"
+      "last_validated": "2026-11-14"
     },
     {
       "theme": "Munitions and missile-defense replenishment: the defense supply chain over the prime contractors",
@@ -199,7 +199,7 @@
       "conviction": 0.525,
       "status": "active",
       "created_at": "2026-10-17",
-      "last_validated": "2026-10-31"
+      "last_validated": "2026-11-14"
     },
     {
       "theme": "Real-wage squeeze and stagnating payrolls drive trade-down: discount, dollar-channel and off-price retail over the big-box leaders",
@@ -235,7 +235,7 @@
       "conviction": 0.5,
       "status": "active",
       "created_at": "2026-10-17",
-      "last_validated": "2026-10-31"
+      "last_validated": "2026-11-14"
     },
     {
       "theme": "Producer-price pass-through: PPI running well ahead of CPI favors pricing-power industrial distributors over the industrial conglomerate leaders",
@@ -266,7 +266,40 @@
       "conviction": 0.575,
       "status": "active",
       "created_at": "2026-10-24",
-      "last_validated": "2026-10-31"
+      "last_validated": "2026-11-14"
+    },
+    {
+      "theme": "Gulf petrochemical outage plus an oil-gas price gap: US ethane-advantaged polyolefin producers capture an export arbitrage that outlasts the conflict",
+      "causal_chain": "The Hormuz disruption has halted most Persian Gulf exports and damaged Iranian petrochemical capacity, while Brent (~$95) stays far above US gas (~$3.24/MMBtu Henry Hub). US crackers running ethane therefore make polyethylene far below the cost of oil- and naphtha-based rivals in Europe and Asia. Global PE stocks are below pre-conflict levels and China has resumed importing, which lifts US PE prices and export volumes. LyondellBasell management expects the tightness to persist for many quarters after the disruption ends, so margins should stay elevated even if peace talks succeed.",
+      "beneficiary_sectors": [
+        "basic_materials"
+      ],
+      "second_order": "US Gulf Coast ethane-based olefin/polyolefin producers and integrated chlor-vinyl/PE players (e.g. LYB, DOW, WLK) rather than the oil producers whose upstream earnings are the obvious winners of the oil shock.",
+      "consensus_names_excluded": [
+        "XOM",
+        "CVX",
+        "COP",
+        "OXY"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.6,
+        "causal_directness": 0.6,
+        "non_consensus": 0.45,
+        "invalidation_clarity": 0.75
+      },
+      "invalidation_condition": "Before the horizon date, Brent front-month closes below $70/bbl for 20 consecutive trading days (closing the oil-gas feedstock gap), or LyondellBasell reports quarterly Olefins & Polyolefins Americas EBITDA below $320 million (half of Q3 2026's $641 million), or US polyethylene contract prices give back their full 2026 year-to-date increase of $0.25/lb.",
+      "horizon": "2027-12-31",
+      "sources": [
+        "https://www.fool.com/earnings/call-transcripts/2026/10/30/lyondellbasell-lyb-q3-2026-earnings-call-transcript/",
+        "https://www.ifpri.org/blog/how-are-fertilizer-markets-coping-with-the-continued-closure-of-the-strait-of-hormuz/",
+        "https://globaloilshock.com/en/news/oil-price-week-45-2026/",
+        "https://www.oilpriceapi.com/live/natural-gas-price"
+      ],
+      "id": "TH-2026-0009",
+      "conviction": 0.6,
+      "status": "active",
+      "created_at": "2026-11-14",
+      "last_validated": "2026-11-14"
     }
   ]
 }

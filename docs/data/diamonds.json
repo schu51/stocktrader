@@ -748,7 +748,27 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.292547941483219,
-      "rank": 1
+      "rank": 1,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 6.0,
+        "confidence": "medium",
+        "thesis": "Jelmyto was the first FDA-approved drug for low-grade UTUC and Zusduri extends the proprietary RTGel platform into intermediate-risk bladder cancer, a regulatory and formulation moat. Q3 revenue tripled to $89.0M with the first operating profit ($8.3M), but the balance sheet is stretched and receivables jumped.",
+        "breaks_if": "Quarterly revenue stalls or receivables keep outgrowing sales (channel stocking), or a competing intravesical therapy wins share.",
+        "customers": "Urologists/hospitals via specialty distributors; concentration not disclosed",
+        "red_flags": [
+          "Accounts receivable up $84M to $117M in nine months",
+          "Shareholders' deficit of $125M; $189M debt plus $125M prepaid forward obligation",
+          "Nine-month operating cash burn still $93.5M",
+          "Two products on one generic drug (mitomycin)",
+          "Customer/distributor concentration not disclosed"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 51.0,
+      "conviction_rank": 1,
+      "judgment_rank": 1
     },
     {
       "ticker": "ETON",
@@ -789,7 +809,27 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.07031709685880576,
-      "rank": 2
+      "rank": 2,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "A roll-up of acquired rare-disease products, several of them generics, now profitable with Q3 product sales of $57.9M vs $22.5M. Growth is bought through licenses (INCRELEX, GALZIN, IMPAVIDO, LIBERVANT, ASN-001) rather than proven organic demand.",
+        "breaks_if": "Organic sales of existing products stall, or generic competition hits carglumic acid, betaine or nitisinone.",
+        "customers": "Patients via specialty pharmacies; payer/pharmacy concentration not disclosed",
+        "red_flags": [
+          "Growth largely acquisition-driven",
+          "Q3 net income boosted by $12.9M tax valuation-allowance release",
+          "Three products are generics with little protection",
+          "Accrued Medicaid rebates and specialty-pharmacy dependence",
+          "Share count +7%"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 40.9,
+      "conviction_rank": 3,
+      "judgment_rank": 9
     },
     {
       "ticker": "MXL",
@@ -830,7 +870,27 @@
       "backlog_growth": null,
       "prepaid_growth": 2.736842105263158,
       "rd_share": null,
-      "rank": 3
+      "rank": 3,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 5.0,
+        "confidence": "low",
+        "thesis": "Revenue is up 72% in the latest quarter and the company just turned operating-profitable (Q3 operating income of $30M versus a $41M loss a year ago), with data center optical DSP exposure and a jump in prepaid assets. But this looks like a cyclical rebound from a trough in a competitive fabless chip business, and the evidence for durable switching costs or named wins is missing.",
+        "breaks_if": "Gross margin stalls near 58% and the quarterly revenue run-rate of about $218M fades, with inventory and receivables still growing faster than sales, which would indicate a restocking bounce rather than durable demand.",
+        "customers": "Distributors, module makers, OEMs and ODMs; data center end customers (Meta, Amazon, Microsoft, Google) are named only as end markets, and customer concentration is not quantified in the supplied text.",
+        "red_flags": [
+          "Recovery from a deep trough (revenue previously declined, 9-month operating loss a year ago of $112M), so this is not a clean inflection",
+          "No backlog, named design wins or contract figures supplied; the business section lists end markets and customers only generically",
+          "Inventory up 46% and receivables up 59% since December, which could signal channel stuffing or a restocking cycle; prepaid and other current assets also rose 14",
+          "Nine-month net loss of $14M after a $17M tax charge; debt rose to $164M with another credit amendment; share count up 4%",
+          "Terminated Silicon Motion merger, with arbitration and class action and potential damages; auditor change in June 2026"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-24"
+      },
+      "conviction": 36.3,
+      "conviction_rank": 4,
+      "judgment_rank": 14
     },
     {
       "ticker": "KLIC",
@@ -871,7 +931,27 @@
       "backlog_growth": null,
       "prepaid_growth": 2.1441067623640238,
       "rd_share": 0.1699966218100573,
-      "rank": 4
+      "rank": 4,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 6.0,
+        "confidence": "medium",
+        "thesis": "A semiconductor assembly-equipment leader riding a sharp cyclical upturn: Q3 revenue $330M vs $148M and deferred revenue +214%. Equipment orders are cyclical and the prior year's loss came from impairments and an exited business, so this looks more like a cycle than a structural inflection.",
+        "breaks_if": "Orders and deferred revenue roll over as customers digest capacity.",
+        "customers": "IDMs, OSATs and foundries; concentration not disclosed",
+        "red_flags": [
+          "Cyclical capital-equipment recovery",
+          "Prior-year results distorted by EA business exit and impairment",
+          "Manufacturing in Israel and China (geopolitical risk)",
+          "Customer concentration not disclosed",
+          "No backlog reported"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 34.9,
+      "conviction_rank": 6,
+      "judgment_rank": 15
     },
     {
       "ticker": "STAA",
@@ -912,7 +992,27 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.12055052411284647,
-      "rank": 5
+      "rank": 5,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 2.0,
+        "confidence": "medium",
+        "thesis": "STAAR is the leading phakic ICL maker with proprietary Collamer, a real niche advantage. But Q3 sales fell 12% and gross margin dropped; the nine-month gain is a rebound from the 2025 China destocking collapse, not a new inflection.",
+        "breaks_if": "Quarterly sales keep declining or China demand fails to recover.",
+        "customers": "Surgeons via direct sales and distributors in 85+ countries; 91% of revenue outside the US",
+        "red_flags": [
+          "Latest quarter revenue -12% with gross margin falling",
+          "Recovery from a collapse, not inflection",
+          "Heavy China/distributor dependence",
+          "Receivables up $37M this year",
+          "Failed Alcon merger and governance changes"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 25.6,
+      "conviction_rank": 12,
+      "judgment_rank": 18
     },
     {
       "ticker": "NMAX",
@@ -953,7 +1053,27 @@
       "backlog_growth": null,
       "prepaid_growth": -0.05173697780748254,
       "rd_share": null,
-      "rank": 6
+      "rank": 6,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 3.0,
+        "confidence": "medium",
+        "thesis": "A cable/streaming news broadcaster whose Q3 profit rests on a one-off $14M termination fee; excluding it, operating income was near zero. Carriage and brand give some position, but nothing points to structural demand growth.",
+        "breaks_if": "Service revenue growth slows without one-off fees, or settlement payments strain cash.",
+        "customers": "Advertisers, MVPD carriage partners and subscribers; concentration not disclosed",
+        "red_flags": [
+          "Q3 included a $14M one-off termination fee",
+          "$45M settlement liabilities outstanding",
+          "Deferred revenue down",
+          "Dual-class control by CEO",
+          "Large prior-year corporate-matter charges"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 19.3,
+      "conviction_rank": 19,
+      "judgment_rank": 23
     },
     {
       "ticker": "ESTA",
@@ -994,7 +1114,27 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.0760674016869359,
-      "rank": 7
+      "rank": 7,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Motiva implants hold US PMA approval in a market with only three other US-approved makers and show strong safety data. Revenue grows 34% with losses narrowing, but it is still loss-making and leveraged.",
+        "breaks_if": "US launch adoption stalls or operating losses widen again.",
+        "customers": "Plastic surgeons via direct sales and exclusive distributors; concentration not disclosed",
+        "red_flags": [
+          "Still operating at a loss (-7% margin)",
+          "Single-source silicone supplier (NuSil)",
+          "Term-loan minimum liquidity covenant",
+          "Negative news tone",
+          "Emerging-market exposure"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 33.6,
+      "conviction_rank": 7,
+      "judgment_rank": 6
     },
     {
       "ticker": "SLAB",
@@ -1035,7 +1175,27 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.4066499627547911,
-      "rank": 8
+      "rank": 8,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 5.0,
+        "confidence": "high",
+        "thesis": "Wireless IoT chips with long design-in lifecycles give a real edge, and revenue grew 22% to a small Q3 profit. But Texas Instruments has agreed to buy the company for $231 cash, which caps the upside.",
+        "breaks_if": "The TI merger closes at $231 (fixed payout) or breaks for regulatory reasons.",
+        "customers": "Electronics manufacturers worldwide; concentration not disclosed",
+        "red_flags": [
+          "Pending $231/share cash acquisition by TI caps upside",
+          "Nine-month operating loss still",
+          "Inventory up 40% this year",
+          "Heavy stock-based compensation",
+          "Cyclical semiconductor demand"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 32.5,
+      "conviction_rank": 8,
+      "judgment_rank": 7
     },
     {
       "ticker": "WK",
@@ -1076,7 +1236,26 @@
       "backlog_growth": 0.16500000000000004,
       "prepaid_growth": 0.14919929588681913,
       "rd_share": 0.22156528560648445,
-      "rank": 9
+      "rank": 9,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 6.0,
+        "confidence": "high",
+        "thesis": "Workiva is embedded in SEC and financial reporting at over 85% of the Fortune 1000, giving high switching costs. Backlog +17%, deferred revenue +15% and subscription revenue +17% show steady compounding demand.",
+        "breaks_if": "Remaining performance obligations growth drops below 10% or net retention falls.",
+        "customers": "6,600+ organizations incl. 85% of the Fortune 1000; no concentration",
+        "red_flags": [
+          "Stockholders' deficit; $698M convertible notes",
+          "Sustainability/CSRD demand subject to regulatory rollback",
+          "Growth steady, not accelerating",
+          "Sales and marketing still 43% of revenue"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 42.3,
+      "conviction_rank": 2,
+      "judgment_rank": 2
     },
     {
       "ticker": "FRSH",
@@ -1117,7 +1296,27 @@
       "backlog_growth": 0.19175749318801083,
       "prepaid_growth": 0.16212309734742147,
       "rd_share": 0.19224708781409966,
-      "rank": 10
+      "rank": 10,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "A mid-market ITSM/CX software vendor with backlog +19% and deferred revenue +16%, now modestly profitable. It faces larger rivals and growth is slowly decelerating.",
+        "breaks_if": "Backlog growth falls toward revenue growth or SMB churn rises.",
+        "customers": "75,000 businesses; over 60% of ARR from 250+ employee customers",
+        "red_flags": [
+          "Decelerating growth (16% to 14%)",
+          "Intense competition in ITSM and CX",
+          "Restructuring charges this year",
+          "SMB exposure",
+          "Profit helped by cost cuts rather than demand"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 24.6,
+      "conviction_rank": 13,
+      "judgment_rank": 16
     },
     {
       "ticker": "CELH",
@@ -1158,7 +1357,27 @@
       "backlog_growth": null,
       "prepaid_growth": 0.32351214931329975,
       "rd_share": null,
-      "rank": 11
+      "rank": 11,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Energy drink brands with PepsiCo as primary distributor; recent growth comes mostly from buying Alani Nu and Rockstar. Organic demand evidence is thin and promotional allowances are swelling.",
+        "breaks_if": "Same-brand sales decline or promotional spend keeps rising faster than revenue.",
+        "customers": "PepsiCo is the primary US/Canada distributor ($390M of $667M receivables)",
+        "red_flags": [
+          "Growth largely from acquisitions",
+          "Heavy PepsiCo concentration (related party)",
+          "Accrued promotional allowance up from $308M to $479M",
+          "$668M term debt plus $1.76B preferred",
+          "Consumer brand with no structural moat"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 21.6,
+      "conviction_rank": 17,
+      "judgment_rank": 19
     },
     {
       "ticker": "DK",
@@ -1199,7 +1418,26 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": null,
-      "rank": 12
+      "rank": 12,
+      "judgment": {
+        "edge": 1.0,
+        "demand": 1.0,
+        "confidence": "high",
+        "thesis": "A refiner whose Q3 profit swing came from crack spreads, not anything durable. Margins follow commodity prices.",
+        "breaks_if": "Crack spreads normalize.",
+        "customers": "Wholesale fuel buyers and jobbers; concentration not disclosed",
+        "red_flags": [
+          "Profit driven by refining margins",
+          "$3.4B long-term debt",
+          "New $460M convertible notes",
+          "Commodity business with no pricing power"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 7.6,
+      "conviction_rank": 25,
+      "judgment_rank": 26
     },
     {
       "ticker": "MQ",
@@ -1240,7 +1478,27 @@
       "backlog_growth": -0.17913832199546487,
       "prepaid_growth": -0.15532682796417596,
       "rd_share": null,
-      "rank": 13
+      "rank": 13,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 2.0,
+        "confidence": "medium",
+        "thesis": "Marqeta's card issuing platform has integration switching costs, but revenue growth slowed to 8% and backlog fell 18%. Q3 net income was mostly a $104M tax benefit.",
+        "breaks_if": "Backlog keeps shrinking or a major customer renegotiates.",
+        "customers": "Fintechs and card program operators; concentration not disclosed here",
+        "red_flags": [
+          "Backlog -18% and deferred revenue -16%",
+          "Q3 net income mostly from $104M tax benefit",
+          "Revenue growth slowed to 8%",
+          "Operating margin barely positive",
+          "Customer concentration not disclosed"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 16.8,
+      "conviction_rank": 20,
+      "judgment_rank": 21
     },
     {
       "ticker": "KVYO",
@@ -1281,7 +1539,27 @@
       "backlog_growth": 0.6323597589244321,
       "prepaid_growth": 0.4310442872415441,
       "rd_share": 0.23616849581475366,
-      "rank": 14
+      "rank": 14,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 7.0,
+        "confidence": "medium",
+        "thesis": "Klaviyo's B2C CRM serves 193,000+ businesses and shows building demand: backlog +63%, deferred revenue +43%, revenue +25%. The moat is moderate given Shopify dependence and competition.",
+        "breaks_if": "Backlog growth falls back toward revenue growth or the Shopify relationship weakens.",
+        "customers": "193,000+ businesses, mainly e-commerce; reliant on Shopify integration",
+        "red_flags": [
+          "Still slightly loss-making",
+          "Dependence on Shopify integration",
+          "Mostly monthly plans",
+          "Gross margin down 2 points",
+          "Highly competitive marketing software"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 30.7,
+      "conviction_rank": 10,
+      "judgment_rank": 4
     },
     {
       "ticker": "PBF",
@@ -1322,7 +1600,27 @@
       "backlog_growth": null,
       "prepaid_growth": 0.11498257839721249,
       "rd_share": null,
-      "rank": 15
+      "rank": 15,
+      "judgment": {
+        "edge": 2.0,
+        "demand": 2.0,
+        "confidence": "high",
+        "thesis": "This is not a diamond. PBF is a merchant refiner whose margin swing from -2% to +10% looks like a cyclical and commodity-price recovery, helped by a rebound from the 2025 Martinez fire outage, and its fuels have no switching costs. The material agreements are debt financings (a revolver, 7.25% senior notes and 0% exchangeable notes), not customer wins, and they signal a capital-hungry business that is diluting shareholders.",
+        "breaks_if": "The thesis that this is a cyclical, price-driven recovery would be wrong only if margins held at current levels after crack spreads normalize and Martinez and Chalmette are fully running, which would be evidence of a structural advantage. A fall in refining margins or another outage would confirm it",
+        "customers": "not disclosed; sells unbranded fuels and petrochemical feedstocks to the wholesale market across the US, Canada and Mexico. Logistics revenue is mostly intercompany with PBF Holding.",
+        "red_flags": [
+          "Commodity refiner: margins follow crack spreads and crude prices, not pricing power",
+          "Revenue growth (+32% over twelve months, +59% in the latest quarter) likely reflects fuel prices and recovery from the Martinez fire shutdown",
+          "Operational and regulatory risk: Martinez fire (federal and state investigations, unknown penalties) and a Chalmette fire in May 2026",
+          "Heavy new debt issuance in 2026 (a revolver plus 7.25% and exchangeable notes), and share count up 4%",
+          "No backlog, R&D or named customer evidence; the +11% deferred revenue figure is not meaningful for a refiner"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-31"
+      },
+      "conviction": 6.7,
+      "conviction_rank": 26,
+      "judgment_rank": 25
     },
     {
       "ticker": "ALGM",
@@ -1363,7 +1661,26 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.21748317342968537,
-      "rank": 16
+      "rank": 16,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Allegro is the world's leading magnetic sensor IC supplier by share, with auto design-ins and proprietary BCD process. Revenue +29% looks partly cyclical, and no backlog is disclosed.",
+        "breaks_if": "Auto and industrial orders roll over.",
+        "customers": "15,000+ customers incl. major automakers and tier-1 suppliers",
+        "red_flags": [
+          "Cyclical auto/industrial recovery",
+          "No backlog disclosed",
+          "Related-party dealings with Polar Semiconductor",
+          "$287M debt"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 32.0,
+      "conviction_rank": 9,
+      "judgment_rank": 8
     },
     {
       "ticker": "BILL",
@@ -1404,7 +1721,27 @@
       "backlog_growth": -0.23503649635036494,
       "prepaid_growth": -0.020546626888653607,
       "rd_share": 0.16000210341722582,
-      "rank": 17
+      "rank": 17,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 2.0,
+        "confidence": "medium",
+        "thesis": "BILL has SMB payment network effects, but growth slowed to 13% and backlog fell 24%. Interest on customer funds makes up 11% of revenue.",
+        "breaks_if": "Growth falls below 10% or interest income drops with rates.",
+        "customers": "479,000 SMBs and accounting firms; no concentration",
+        "red_flags": [
+          "Backlog -24%",
+          "Growth slowed to 13%",
+          "Interest float income sensitive to rates",
+          "$1.5B convertible notes",
+          "Operating margin around zero"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 14.7,
+      "conviction_rank": 21,
+      "judgment_rank": 22
     },
     {
       "ticker": "SEDG",
@@ -1445,7 +1782,27 @@
       "backlog_growth": null,
       "prepaid_growth": 0.014104157129466222,
       "rd_share": 0.15712876845347373,
-      "rank": 18
+      "rank": 18,
+      "judgment": {
+        "edge": 4.0,
+        "demand": 2.0,
+        "confidence": "medium",
+        "thesis": "SolarEdge is recovering from a collapse in solar demand; gross margin has rebuilt but Q3 revenue fell 4% and losses continue. Competition is intense.",
+        "breaks_if": "Revenue keeps falling or gross margin slips.",
+        "customers": "Distributors and large installers; concentration not disclosed",
+        "red_flags": [
+          "Recovery from a collapse, not inflection",
+          "Latest quarter revenue -4%",
+          "Still operating at a loss",
+          "$300M warranty obligations",
+          "Negative news and social tone"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 11.4,
+      "conviction_rank": 24,
+      "judgment_rank": 24
     },
     {
       "ticker": "REAL",
@@ -1486,7 +1843,27 @@
       "backlog_growth": null,
       "prepaid_growth": 0.09283196239717983,
       "rd_share": null,
-      "rank": 19
+      "rank": 19,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "TheRealReal has a real niche position as the largest authenticated luxury resale marketplace, with network effects, over 80% of GMV from repeat consignors, and steady growth of about 19%. It is probably not a diamond: operating income is only just breakeven, the balance sheet is heavily indebted with a stockholders' deficit, and its net profit is flattered by non-cash warrant gains.",
+        "breaks_if": "Revenue growth falls below the low teens, or operating margin slips back to negative, while debt service on the roughly $380M of convertible and term notes (including the new $150M Fortress loan) keeps absorbing cash.",
+        "customers": "Consumer consignors and buyers: over 1 million active buyers, and over 80% of GMV from repeat consignors. No concentration, but supply depends on luxury-brand goods that the company does not control.",
+        "red_flags": [
+          "Operating income is only $1.5M in Q3 2026 and -$3.1M for nine months; breakeven is not yet profit",
+          "Net income is boosted by a $50M non-cash warrant fair-value gain; the accumulated deficit is $1.27B",
+          "Stockholders' deficit of $354M, about $380M of notes, and a new $150M Fortress secured term loan in Oct 2026",
+          "Cash fell to $130M from $151M while shares rose 5%; dilution continues",
+          "Competition is broad and low-barrier (brands, auction houses, other resale platforms); no backlog or contract evidence; news tone negative"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-31"
+      },
+      "conviction": 23.3,
+      "conviction_rank": 14,
+      "judgment_rank": 10
     },
     {
       "ticker": "TTAN",
@@ -1527,7 +1904,27 @@
       "backlog_growth": null,
       "prepaid_growth": 0.005780346820809301,
       "rd_share": 0.3278183201374997,
-      "rank": 20
+      "rank": 20,
+      "judgment": {
+        "edge": 6.0,
+        "demand": 4.0,
+        "confidence": "low",
+        "thesis": "ServiceTitan is a trades-specific system of record with a 71% gross margin, 21-23% steady growth and operating margin improving from -26% to -13%, so switching costs are plausible. However, the supplied evidence has no named customers, retention or net revenue retention figures, backlog, or signed contracts, and deferred revenue grew only 1%, so this looks like steady SaaS improvement rather than a visible inflection.",
+        "breaks_if": "Revenue growth falls below about 18%, or operating margin stops improving while stock-based compensation and share dilution (+5%) continue, or disclosed customer retention and net revenue retention fall.",
+        "customers": "Small and mid-sized trades businesses (HVAC, plumbing, roofing, landscaping) plus some PE-owned consolidators; concentration not disclosed in the supplied text.",
+        "red_flags": [
+          "Deferred revenue up only 1% against 21-23% revenue growth, so there is no sign of building prepaid demand",
+          "Backlog not reported and no named customers or contracts in the evidence",
+          "Still loss-making at -13% operating margin with R&D at 33% of revenue",
+          "Share count up 5% in a year, so dilution is eroding shareholder value",
+          "Edge claims (largest data asset, only end-to-end platform) are management's own assertions with no retention data"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 23.1,
+      "conviction_rank": 15,
+      "judgment_rank": 11
     },
     {
       "ticker": "BLZE",
@@ -1568,7 +1965,27 @@
       "backlog_growth": 7.676789587852495,
       "prepaid_growth": -0.04039527462068193,
       "rd_share": 0.27006242649054557,
-      "rank": 21
+      "rank": 21,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 7.0,
+        "confidence": "medium",
+        "thesis": "Backblaze runs low-cost cloud storage on commodity hardware, a thin edge. A CoreWeave master agreement has driven backlog +768% and Q3 revenue +26%, but demand is concentrated.",
+        "breaks_if": "CoreWeave ramp stalls or capacity costs outrun revenue.",
+        "customers": "500,000+ customers, with a large new CoreWeave contract concentrating revenue",
+        "red_flags": [
+          "Heavy CoreWeave concentration",
+          "$201M convertible notes and customer warrants",
+          "Share count +10%",
+          "Still -10% operating margin",
+          "Deferred revenue -4%"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 23.0,
+      "conviction_rank": 16,
+      "judgment_rank": 12
     },
     {
       "ticker": "VCYT",
@@ -1609,7 +2026,27 @@
       "backlog_growth": null,
       "prepaid_growth": 1.0719424460431655,
       "rd_share": 0.18829733474050417,
-      "rank": 22
+      "rank": 22,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "Decipher Prostate is the only gene expression test in the NCCN prostate risk table with broad Medicare and commercial coverage, a durable diagnostic moat. But demand is steady (+15%) and it was already profitable a year ago.",
+        "breaks_if": "Reimbursement cuts or testing volume growth falls below 10%.",
+        "customers": "Clinicians/patients; reimbursed by Medicare and commercial payers",
+        "red_flags": [
+          "Q3 operating income fell from $22.9M to $16.6M",
+          "R&D doubled with MRD launch",
+          "Net income boosted by tax benefit",
+          "Reimbursement dependence",
+          "Negative news tone"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 28.6,
+      "conviction_rank": 11,
+      "judgment_rank": 5
     },
     {
       "ticker": "VCEL",
@@ -1650,7 +2087,26 @@
       "backlog_growth": null,
       "prepaid_growth": null,
       "rd_share": 0.09172628026566226,
-      "rank": 23
+      "rank": 23,
+      "judgment": {
+        "edge": 7.0,
+        "demand": 6.0,
+        "confidence": "medium",
+        "thesis": "MACI is an FDA-approved autologous cartilage implant with few real alternatives, backed by the Epicel burn franchise. Revenue +26% and Q3 operating income of $12.2M show durable growth.",
+        "breaks_if": "MACI growth slows or a competing cartilage repair product wins approval.",
+        "customers": "Orthopedic surgeons and burn centers; concentration not disclosed",
+        "red_flags": [
+          "Nine-month operating margin only 2%",
+          "Single-source membrane supplier (Matricel)",
+          "NexoBrid depends on MediWound",
+          "Federal award match by name is uncertain"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 35.3,
+      "conviction_rank": 5,
+      "judgment_rank": 3
     },
     {
       "ticker": "AMBA",
@@ -1691,7 +2147,27 @@
       "backlog_growth": 1.3316326530612246,
       "prepaid_growth": 0.0709886048660302,
       "rd_share": 0.5473586707547373,
-      "rank": 24
+      "rank": 24,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 5.0,
+        "confidence": "low",
+        "thesis": "Ambarella has proprietary CVflow AI silicon and is moving into automotive and robotics, with backlog up 133% and revenue up 20% while operating losses narrow. But it is still loss-making (-15% operating margin) with R&D at 55% of revenue, no named customers or contracts in the evidence, and design-win cycles that favour larger rivals such as Nvidia, Qualcomm, Mobileye and Hisilicon, so this looks like an ordinary fabless chip company rather than a clear diamond.",
+        "breaks_if": "Revenue growth falls below about 10% or gross margin drops below 55% while operating margin stays negative, which would show the backlog is not turning into profitable automotive or edge-AI volume.",
+        "customers": "not disclosed; end markets are security cameras, automotive, robotics, drones and consumer cameras. Sales run through distributors such as WT Microelectronics, and the concentration level is not given.",
+        "red_flags": [
+          "Still unprofitable at -15% operating margin; R&D is 55% of revenue",
+          "Backlog +133% but deferred/prepaid revenue only +7%, and the backlog's composition and timing are unknown",
+          "No named customers, design wins or signed agreements in the supplied text",
+          "Growth slowed from +20% to +13% in the latest quarter",
+          "Sales through a distributor; share count up 3%; strong competition in edge AI and automotive silicon"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-10-17"
+      },
+      "conviction": 20.0,
+      "conviction_rank": 18,
+      "judgment_rank": 13
     },
     {
       "ticker": "FIGS",
@@ -1732,7 +2208,27 @@
       "backlog_growth": null,
       "prepaid_growth": -0.5959316321617718,
       "rd_share": null,
-      "rank": 25
+      "rank": 25,
+      "judgment": {
+        "edge": 3.0,
+        "demand": 5.0,
+        "confidence": "medium",
+        "thesis": "A direct-to-consumer scrubs brand growing 26% with healthy gross margins, but apparel has low switching costs. It was already profitable a year ago, so this is not really an inflection.",
+        "breaks_if": "Active customer growth stalls or tariffs squeeze gross margin.",
+        "customers": "2.9M healthcare professional customers plus TEAMS B2B",
+        "red_flags": [
+          "Apparel with low switching costs",
+          "CBP withhold release order on Jordanian manufacturer",
+          "Tariff exposure",
+          "Deferred revenue -60%",
+          "Already profitable a year ago"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 12.8,
+      "conviction_rank": 23,
+      "judgment_rank": 20
     },
     {
       "ticker": "CALX",
@@ -1773,7 +2269,35 @@
       "backlog_growth": 0.11590524534686963,
       "prepaid_growth": 0.1389521640091116,
       "rd_share": 0.18736895127907038,
-      "rank": 26
+      "rank": 26,
+      "judgment": {
+        "edge": 5.0,
+        "demand": 4.0,
+        "confidence": "medium",
+        "thesis": "Calix's broadband platform for service providers builds stickiness, with backlog +12% and deferred revenue +14%. But Q3 growth slowed to 14%, gross margin fell and inventory rose sharply.",
+        "breaks_if": "Inventory keeps building while growth slows.",
+        "customers": "Broadband service providers (co-ops, municipalities, ISPs); concentration not disclosed",
+        "red_flags": [
+          "Inventory up $54M this year",
+          "Q3 operating income below last year",
+          "Gross margin falling",
+          "Cash cut by $290M buybacks",
+          "Growth decelerating"
+        ],
+        "instructions_found": false,
+        "judged_at": "2026-11-14"
+      },
+      "conviction": 14.5,
+      "conviction_rank": 22,
+      "judgment_rank": 17
     }
-  ]
+  ],
+  "judged_at": "2026-11-14",
+  "judgment_counts": {
+    "judged": 21,
+    "reused": 5,
+    "failed": 0,
+    "skipped": 0
+  },
+  "judgment_replies_date": "2026-11-14"
 }

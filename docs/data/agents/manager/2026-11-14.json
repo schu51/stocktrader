@@ -1,0 +1,45 @@
+{
+  "agent": "manager",
+  "date": "2026-11-14",
+  "generated_at": "2026-11-14T17:10:24+00:00",
+  "status": "red",
+  "headline": "Weekly: red ops scope check (8584571a, unknown writer of weekly_review_2026-11-13.json, whose trade counts disagree with trades.json) and CTLP (281 shares) still has no stop; the account rose $1,518.66 (+1.44%) on the week but is 10.49% below peak with last-20 profit factor 0.11.",
+  "calls": [
+    {
+      "subject": "CTLP",
+      "direction": "broken",
+      "horizon_days": 5,
+      "confidence": "high",
+      "evidence": [
+        "latest.json:positions[CTLP].untradable='asset is inactive on Alpaca (delisted or acquired)'",
+        "latest.json:positions[CTLP].stop_loss=null"
+      ],
+      "why": "Unprotected and unmanageable by the bot since 2026-11-06; needs Alex's manual broker handling."
+    },
+    {
+      "subject": "WK",
+      "direction": "broken",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:rs_ranks.WK=21",
+        "latest.json:positions[WK].unrealized_pnl_pct=-20.83",
+        "latest.json:positions[WK].stop_loss=64.57"
+      ],
+      "why": "Every specialist call this week agreed; the broker stop at 64.57 is the protection."
+    }
+  ],
+  "notes": [
+    "RED ops (ops_status.json 2026-11-13T22:30:49Z): scope - breach 8584571a [unknown writer] 'Post-market: Weekly review 2026-11-13 (Friday)' -> docs/data/weekly_review_2026-11-13.json; direct pushes 01a146c0, f708cd08 to tests/. Action: add the commits to scope_acks.json (mechanism from PR #49) or register the weekly-review writer's lane; https://github.com/schu51/stocktrader/commit/8584571ace31f3291e458c6428b3a64fbddbd0e7",
+    "Data conflict: weekly_review_2026-11-13.json says 11 entries and closes PM and TXN for 2026-11-10..13; trades.json shows 4 entries Mon-Fri (KDP, MAR 2026-11-09; REAL, TTAN diamond sleeve 2026-11-13) and 1 close (PM 2026-11-09); TXN closed 2026-11-06. Call: trades.json is the source; the review file is untrusted until its writer is identified.",
+    "RED holding: CTLP 281 shares, stop_loss null, asset inactive on Alpaca.",
+    "AMBER ops: jobs (ops_monitor.yml failed), issues #15 and #12 (macro research failures). Macro research ran today: macro_brief.json status generated 2026-11-14, 8 theses confirmed, 0 invalidated, 1 admitted (TH-2026-0009, conviction 0.6); all 9 theses last_validated 2026-11-14, so the model amber and both issues can be closed.",
+    "Week (Mon 2026-11-09 to Fri 2026-11-13): opened 4, closed 1 (PM -6.3%, -$235.00, PRICE_BELOW_50MA, 6 days); win rate 0/1. history.json portfolio 105471.06 (2026-11-06) -> 106989.72 (2026-11-13), +1518.66 / +1.44%. SPY weekly return is not in repo files; 30-day account -7.32% vs SPY -3.04% (eval_latest account_30d). Drawdown from peak -0.1049.",
+    "Live (eval_latest 2026-11-13): last 20 trades win 15%, PF 0.11, -$3,814.95; last 30 days 35 trades PF 0.28; all-time 91 trades PF 0.61, -$4,753.77; 0 trades closed under sma200_exit; tracking gap -0.0524.",
+    "history.json: candidates_screened=0 and buy_signals=0 on 2026-11-10 through 2026-11-13 while the screener produced candidates; consistent with the SPY gate (screener.json spy_price 757.12 below spy_50ma 764.43; rule min_spy_above_50ma 0.02) but not confirmed by any file.",
+    "Calls scored: 0. No call made this week has a passed horizon (manager and research_analyst 5d, performance_risk 10d, thesis_strategy 20d; earliest ends after 2026-11-14). Calls made: research_analyst 23, performance_risk 15, thesis_strategy 6, manager 9.",
+    "Strategy: 200-day exit (sma200_exit) live from 2026-11-12. PR #48 (survivorship-free universe, merged 2026-11-12) cut the champion to PF 1.39, 15.86%/yr, DD -18.23%; spy3 streak 1/5, all others 0. No challenger added or retired; no open PR. experiments.json: no state change Mon-Fri; 2026-11-14 update added observing experiments options_bullish, golden_cross, options_bearish.",
+    "Research: diamonds judged_at 2026-11-14 (21 judged, 5 reused, 0 failed). Big-mover watch_record 2 days, 30 names, 0 hits, avg next day -0.0102. Options evidence 288 rows over 3 days; no flag shows an edge yet.",
+    "Recommendation: identify the writer of weekly_review_2026-11-13.json and either ack/register it or stop it, because it is a red and its weekly figures contradict trades.json. Too few closed trades (1) for a trading recommendation."
+  ]
+}

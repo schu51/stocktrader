@@ -18,6 +18,13 @@ Runs after the post-market reconcile, weekdays. Three parts:
      Claude review opens a pull request for Alex. Nothing here changes the
      live rules.
 
+     Robustness gates (2026-11-15, eval spec): the challenger must also win
+     most half-year walk-forward folds, keep its edge without its 5 best trades,
+     beat the champion on trades it opened after it was added (data nobody had
+     seen when it was designed: the held-out "forward" window, which stands in
+     for a shadow run since there is one paper account), and, once everything
+     else passes, survive a +/-10% nudge to each numeric setting it changes.
+
   3. Tracking: the live account against the champion's own backtest over the
      same 30 days. A large gap means the live bot is not doing what the rules
      say (fills, missed stops, data faults), not that the rules are bad.
@@ -71,6 +78,16 @@ GATES = {
     "max_drawdown_loss": 0.01,      # max drawdown no more than 1 point deeper
     "max_win_rate_loss": 0.02,      # win rate no more than 2 points lower
 }
+# Robustness gates (2026-11-15)
+FOLD_MONTHS = 6             # walk-forward fold length
+FOLD_MIN_TRADES = 10        # a fold counts only when both sides closed this many trades in it
+FOLD_WIN_SHARE = 0.60       # share of counted folds the challenger must match or beat
+FOLD_MIN_COUNTED = 3        # fewer counted folds than this = not enough evidence
+FORWARD_MIN_DAYS = 10       # trading days since the challenger was added
+FORWARD_MIN_TRADES = 15     # closed trades it opened since it was added
+SENSITIVITY_NUDGE = 0.10    # each numeric setting moved this much up and down
+ROLLBACK_DAYS = 10          # trading days a new rules version is watched
+ROLLBACK_LAG = 0.03         # alert when it trails SPY by this much in that time
 ALERTS = {
     "drawdown": -0.10,              # account 10% below its peak
     "stop_slip_pct": -3.0,          # last 10 stop exits filled 3%+ below their stops on average
@@ -247,6 +264,7 @@ def summarize_run(equity: pd.Series, trades: pd.DataFrame, today: date) -> Dict:
         halves[name] = {"trades": s.get("trades", 0), "profit_factor": s.get("profit_factor"),
                         "win_rate": s.get("win_rate")}
     m = equity.resample("ME").last().pct_change().dropna()
+    start = equity.index[0].date() if len(equity) else today
     return {
         "trades": t.get("trades", 0), "win_rate": t.get("win_rate"), "profit_factor": t.get("profit_factor"),
         "avg_win_pct": t.get("avg_win_pct"), "avg_loss_pct": t.get("avg_loss_pct"),
@@ -254,8 +272,83 @@ def summarize_run(equity: pd.Series, trades: pd.DataFrame, today: date) -> Dict:
         "worst_month": round(float(m.min()), 4) if len(m) else None,
         "avg_month": round(float(m.mean()), 4) if len(m) else None,
         "recent_return": ret(recent), "last_30d_return": ret(today - timedelta(days=30)),
+        "pf_without_best_5": pf_without_best(trades, 5),
+        "folds": fold_stats(trades, start, today),
         **halves,
     }
+
+
+def _pf(pnl: List[float]) -> Optional[float]:
+    loss = -sum(x for x in pnl if x <= 0)
+    if not pnl:
+        return None
+    return round(sum(x for x in pnl if x > 0) / loss, 2) if loss > 0 else None
+
+
+def pf_without_best(trades: pd.DataFrame, n: int = 5) -> Optional[float]:
+    """Profit factor with the n best trades removed: is the edge more than a few lucky names?"""
+    if not len(trades) or len(trades) <= n:
+        return None
+    return _pf(sorted(trades["pnl_usd"].astype(float).tolist())[:-n])
+
+
+def fold_stats(trades: pd.DataFrame, start: date, today: date, months: int = FOLD_MONTHS) -> List[Dict]:
+    """Closed trades and profit factor per walk-forward fold (by entry date), oldest first."""
+    out, a = [], pd.Timestamp(start)
+    end = pd.Timestamp(today) + pd.Timedelta(days=1)
+    while a < end:
+        b = min(a + pd.DateOffset(months=months), end)
+        if len(trades):
+            part = trades[(trades["entry_date"] >= a.date().isoformat()) & (trades["entry_date"] < b.date().isoformat())]
+            pnl = part["pnl_usd"].astype(float).tolist()
+        else:
+            pnl = []
+        out.append({"from": a.date().isoformat(), "trades": len(pnl), "profit_factor": _pf(pnl)})
+        a = b
+    return out
+
+
+def fold_wins(ch: List[Dict], champ: List[Dict]) -> Dict:
+    """Folds where the challenger's profit factor matched or beat the champion's."""
+    counted = won = 0
+    for c, k in zip(ch or [], champ or []):
+        if c["trades"] < FOLD_MIN_TRADES or k["trades"] < FOLD_MIN_TRADES:
+            continue
+        counted += 1
+        cpf = c["profit_factor"] if c["profit_factor"] is not None else float("inf")
+        kpf = k["profit_factor"] if k["profit_factor"] is not None else float("inf")
+        won += cpf >= kpf
+    return {"counted": counted, "won": won,
+            "ok": counted >= FOLD_MIN_COUNTED and won / counted >= FOLD_WIN_SHARE}
+
+
+def forward_stats(trades: pd.DataFrame, since: str) -> Dict:
+    """Closed trades opened on or after `since`: the held-out window for a challenger added that day."""
+    part = trades[trades["entry_date"] >= since] if len(trades) else trades
+    pnl = part["pnl_usd"].astype(float).tolist() if len(part) else []
+    return {"since": since, "trades": len(pnl), "pnl_usd": round(sum(pnl), 2), "profit_factor": _pf(pnl)}
+
+
+def forward_gate(ch: Dict, champ: Dict, trading_days: int) -> Dict:
+    """Held-out check: enough time and trades since the challenger was added, and no worse than the champion."""
+    if trading_days < FORWARD_MIN_DAYS or ch["trades"] < FORWARD_MIN_TRADES:
+        return {"ok": False, "status": "insufficient sample", "trading_days": trading_days}
+    cpf = ch["profit_factor"] if ch["profit_factor"] is not None else float("inf")
+    kpf = champ["profit_factor"] if champ["profit_factor"] is not None else float("inf")
+    ok = cpf >= kpf and ch["pnl_usd"] >= champ["pnl_usd"]
+    return {"ok": ok, "status": "pass" if ok else "fail", "trading_days": trading_days}
+
+
+def nudges(change: Dict, by: float = SENSITIVITY_NUDGE) -> List[Dict]:
+    """The change with each numeric setting moved by +/-`by` (booleans and names left alone)."""
+    out = []
+    for k, v in change.items():
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or v == 0:
+            continue
+        for f in (1 - by, 1 + by):
+            nv = v * f
+            out.append({**change, k: int(round(nv)) if isinstance(v, int) else round(nv, 4)})
+    return out
 
 
 def gates(ch: Dict, champ: Dict) -> Dict[str, bool]:
@@ -272,6 +365,10 @@ def gates(ch: Dict, champ: Dict) -> Dict[str, bool]:
     # Better in both halves of the three years, not one lucky stretch
     for half in ("first_half", "second_half"):
         out[f"pf_{half}"] = (ch[half]["profit_factor"] or 0) >= (champ[half]["profit_factor"] or 0)
+    # Most half-year folds, not just the total
+    out["walk_forward"] = fold_wins(ch.get("folds"), champ.get("folds"))["ok"]
+    # Still better without the 5 best trades on each side
+    out["not_concentrated"] = (ch.get("pf_without_best_5") or 0) >= (champ.get("pf_without_best_5") or 0)
     return out
 
 
@@ -279,6 +376,25 @@ def streaks(today_ok: Dict[str, bool], previous: Optional[Dict]) -> Dict[str, in
     """Consecutive evals each challenger has been promotable (reset on a miss or a new name)."""
     before = ((previous or {}).get("tournament") or {}).get("streaks") or {}
     return {name: (before.get(name, 0) + 1 if ok else 0) for name, ok in today_ok.items()}
+
+
+def sensitivity(change: Dict, champ_args: Dict, champion: Dict, replay, today: date) -> Dict:
+    """
+    Replay the change with each numeric setting nudged +/-10%. A real edge should not vanish
+    when a threshold moves a little: each nudge must keep a profit factor at least the
+    champion's and stay inside the drawdown gate.
+    """
+    rows = []
+    for n in nudges(change):
+        try:
+            r = summarize_run(*replay({**champ_args, **n}), today)
+        except Exception as ex:
+            rows.append({"change": n, "error": str(ex), "ok": False})
+            continue
+        held = ((r.get("profit_factor") or 0) >= (champion.get("profit_factor") or 0)
+                and r["max_drawdown"] >= champion["max_drawdown"] - GATES["max_drawdown_loss"])
+        rows.append({"change": n, "profit_factor": r.get("profit_factor"), "max_drawdown": r["max_drawdown"], "ok": held})
+    return {"nudges": rows, "ok": all(x["ok"] for x in rows)}
 
 
 def run_tournament(today: date, challengers: List[Dict], previous: Optional[Dict]) -> Dict:
@@ -297,6 +413,7 @@ def run_tournament(today: date, challengers: List[Dict], previous: Optional[Dict
     eq, tr = replay(champ_args)
     champion = {"rules": champ_args, **summarize_run(eq, tr, today)}
     spy = prices["Close"][bt.BENCHMARK]
+    days = pd.DatetimeIndex(eq.index)
     results, ok = {}, {}
     for c in challengers:
         why = check_challenger(c.get("change") or {})
@@ -311,9 +428,20 @@ def run_tournament(today: date, challengers: List[Dict], previous: Optional[Dict
             continue
         r = summarize_run(e, t, today)
         g = gates(r, champion)
+        # Held-out window: trades opened since the challenger was added
+        since = str(c.get("added") or start)
+        fwd, fwd_champ = forward_stats(t, since), forward_stats(tr, since)
+        fg = forward_gate(fwd, fwd_champ, int((days >= pd.Timestamp(since)).sum()))
+        g["forward"] = fg["ok"]
+        sens = None
+        if all(g.values()):
+            # Only worth the extra replays once everything else passes
+            sens = sensitivity(c["change"], champ_args, champion, replay, today)
+            g["sensitivity"] = sens["ok"]
         ok[c["name"]] = all(g.values())
         results[c["name"]] = {"change": c["change"], "why": c.get("why"), **r, "gates": g,
-                              "promotable_today": ok[c["name"]]}
+                              "forward": {**fwd, "champion": fwd_champ, **fg},
+                              "sensitivity": sens, "promotable_today": ok[c["name"]]}
     st = streaks(ok, previous)
     ready = sorted([n for n, k in st.items() if k >= PROMOTE_STREAK],
                    key=lambda n: -(results[n].get("profit_factor") or 0))
@@ -352,12 +480,34 @@ def alerts(ev: Dict) -> List[str]:
     if tg.get("gap") is not None and abs(tg["gap"]) >= ALERTS["tracking_gap"]:
         out.append(f"Live account {tg['live_return']:+.1%} vs backtest of the same rules {tg['backtest_return']:+.1%} "
                    f"over 30 days: live bot is not matching its rules")
+    rb = ev.get("rollback_watch") or {}
+    if rb.get("triggered"):
+        out.append(f"New rules '{rb['rules']}' are {rb['lag']:.1%} behind SPY in their first {rb['trading_days']} "
+                   f"trading days: consider a revert pull request to '{rb['revert_to']}'")
     for name in (ev.get("tournament") or {}).get("ready_to_propose") or []:
         out.append(f"Challenger '{name}' has beaten the live rules for {PROMOTE_STREAK}+ straight evals: ready to propose")
     for name, r in ((ev.get("tournament") or {}).get("challengers") or {}).items():
         if r.get("error"):
             out.append(f"Challenger '{name}' could not run: {r['error']}")
     return out
+
+
+def rollback_watch(versions: List[Dict], live: Dict, history: List[Dict]) -> Dict:
+    """
+    Watch the newest rules version for its first ROLLBACK_DAYS trading days. Triggered when the
+    account trails SPY by ROLLBACK_LAG or more since the change. The revert is still a pull
+    request Alex approves; this only raises it.
+    """
+    if len(versions) < 2:
+        return {}
+    cur, prev = versions[-1], versions[-2]
+    n = sum(1 for h in history if h.get("portfolio_value") and (h.get("date") or "") >= cur["since"])
+    acc = live.get("account_current_rules") or {}
+    if n > ROLLBACK_DAYS or "return" not in acc or "spy_return" not in acc:
+        return {"rules": cur["name"], "trading_days": n, "watching": n <= ROLLBACK_DAYS, "triggered": False}
+    lag = acc["spy_return"] - acc["return"]
+    return {"rules": cur["name"], "revert_to": prev["name"], "trading_days": n, "watching": True,
+            "lag": round(lag, 4), "triggered": lag >= ROLLBACK_LAG}
 
 
 def pct(x, d=1):
@@ -405,10 +555,14 @@ def to_markdown(ev: Dict) -> str:
                 out.append(f"| {name} | error: {r['error']} | | | | | | | |")
                 continue
             failed = [g for g, ok in r["gates"].items() if not ok]
+            fw = r.get("forward") or {}
+            if fw.get("status") == "insufficient sample":
+                failed = [g for g in failed if g != "forward"] + [f"forward: {fw['trades']} trades / {fw['trading_days']} days so far"]
             out.append(f"| {name} | {r['trades']} | {r['win_rate']:.0%} | {r['profit_factor']:.2f} | {r['cagr']:.1%} | "
                        f"{r['max_drawdown']:.1%} | {r['worst_month']:.1%} | {pct(r['recent_return'])} | "
                        f"{t['streaks'].get(name, 0)}/{t['promote_streak']}{'' if not failed else ' (fails: ' + ', '.join(failed) + ')'} |")
-        out.append("")
+        out += ["", "Gates also check: most half-year folds, the edge without the 5 best trades, trades opened since "
+                "the challenger was added (held-out), and, once all else passes, a +/-10% nudge to each setting.", ""]
     return "\n".join(out) + "\n"
 
 
@@ -441,6 +595,7 @@ def main(argv=None) -> int:
     ev = {"date": today.isoformat(), "generated_at": datetime.now().isoformat(timespec="seconds"),
           "rules_version": version, "live": live, "tracking": tracking(live, champ_eq, today),
           "tournament": tournament}
+    ev["rollback_watch"] = rollback_watch(cfg.get("rules_versions") or [], live, _read(DOCS / "history.json", []))
     ev["alerts"] = alerts(ev)
 
     DOCS.mkdir(parents=True, exist_ok=True)

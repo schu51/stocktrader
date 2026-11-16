@@ -1,15 +1,15 @@
 {
-  "date": "2026-11-13",
-  "generated_at": "2026-11-13T21:15:54.108234",
+  "date": "2026-11-16",
+  "generated_at": "2026-11-16T21:15:58.590185",
   "portfolio": {
-    "value": 106975.92,
-    "cash": 32702.81,
-    "total_unrealized": 3064.98,
-    "positions": 21,
-    "winners": 16,
+    "value": 106995.51,
+    "cash": 36102.24,
+    "total_unrealized": 2450.1,
+    "positions": 20,
+    "winners": 15,
     "losers": 5,
     "risk_level": "MODERATE",
-    "risk_score": 33.9
+    "risk_score": 33.3
   },
   "execution": {
     "signals_generated": 0,
@@ -20,15 +20,42 @@
   },
   "exits": {
     "triggered": 0,
-    "stops_updated": 3,
+    "stops_updated": 4,
     "detail": []
   },
-  "closed_today": [],
+  "closed_today": [
+    {
+      "trade_id": "DMD-20261026143049-PCOR",
+      "symbol": "PCOR",
+      "status": "CLOSED",
+      "sleeve": "diamond",
+      "entry_date": "2026-10-26",
+      "entry_ts": "2026-10-26T14:30:49.419504",
+      "entry_price": 62.84,
+      "shares": 44,
+      "stop_loss": 63.15,
+      "stop_arm": "sleeve",
+      "stop_dist": 0.25,
+      "order_id": "1535e42d-7f12-4b46-8244-612e13dcef06",
+      "judgment": 12.0,
+      "judgment_rank": 2,
+      "exit_date": "2026-11-16",
+      "exit_price": 77.26,
+      "exit_reason": "SOLD_AT_BROKER",
+      "pnl_usd": 634.48,
+      "pnl_pct": 22.95,
+      "hold_days": 21,
+      "entry_limit": 62.85,
+      "entry_filled": true,
+      "peak_price": 77.95,
+      "exit_ts": "2026-11-16T15:31:06.289388"
+    }
+  ],
   "positions_at_risk": [
     {
       "symbol": "WK",
-      "pnl_pct": -20.83,
-      "value": 1908.48,
+      "pnl_pct": -20.79,
+      "value": 1909.32,
       "has_stop": true,
       "risk": "deep_loss"
     },

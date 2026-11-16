@@ -1,0 +1,27 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-16",
+  "generated_at": "2026-11-16T14:30:00+00:00",
+  "status": "amber",
+  "headline": "ACN sits 1.8% above its stop and KO carries a bearish insider/short-volume stack while AI/semis gap down 3-8%; screener has not run since Friday, so trade SELECTIVE.",
+  "calls": [
+    {"subject": "KO", "direction": "bearish", "horizon_days": 5, "confidence": "medium", "evidence": ["osint_latest.json:companies[KO].score=-3", "osint_latest.json:KO insider discretionary_sell_value=9849457", "osint_latest.json:KO short_volume 66% vs 49% (z +2.1)", "latest.json:positions[KO] 5.7% above stop"], "why": "Heavy discretionary insider selling plus a short-volume spike outweigh Friday's bullish options read (+3); 5.7% from stop."},
+    {"subject": "KDP", "direction": "bearish", "horizon_days": 5, "confidence": "low", "evidence": ["osint_latest.json:companies[KDP].events 424B5 2026-11-12 and 2026-11-16"], "why": "Two 424B5 offerings in four days flag possible dilution/supply; options were bullish (+3) Friday, so conviction is low."},
+    {"subject": "ACN", "direction": "neutral", "horizon_days": 5, "confidence": "low", "evidence": ["latest.json:positions[ACN] price 250.49 vs stop 245.88 (1.8%)", "options_sentiment.json:reads[ACN].options_score=3 unusual_calls", "osint_latest.json:ACN federal awards spike (loose name match)"], "why": "Bullish options and RS 88 offset by being 1.8% above stop; a weak tape could trigger it."},
+    {"subject": "WK", "direction": "bearish", "horizon_days": 5, "confidence": "medium", "evidence": ["options_sentiment.json:reads[WK].options_score=-2", "screener.json:rs_ranks[WK]=21", "latest.json:positions[WK] -20.8%, 5.3% above stop"], "why": "Bearish puts-heavy options, RS 21 and 5.3% from stop on a -21% position."},
+    {"subject": "MAR", "direction": "bearish", "horizon_days": 5, "confidence": "low", "evidence": ["osint_latest.json:companies[MAR].events insider $36.2M discretionary, 5 sellers; news surge 12 headlines"], "why": "Large discretionary insider selling with a news surge; OSINT score only 0, so low confidence."},
+    {"subject": "KVYO", "direction": "neutral", "horizon_days": 5, "confidence": "low", "evidence": ["screener.json:rs_ranks[KVYO]=38", "options_sentiment.json:reads[KVYO].options_score=3"], "why": "RS rank below 50 flags weakness, though options read bullish with unusual calls."},
+    {"subject": "TTAN", "direction": "bearish", "horizon_days": 5, "confidence": "low", "evidence": ["screener.json:rs_ranks[TTAN]=29"], "why": "RS rank 29 is well below 50 for a momentum holding."},
+    {"subject": "AMD", "direction": "bearish", "horizon_days": 5, "confidence": "medium", "evidence": ["premarket.json:gap_alerts[AMD] -5.57%", "osint_latest.json:companies[AMD].score=-1 crowd sour"], "why": "Top-ranked candidate (RS 98) is gapping down 5.6% with the semis and is on the premarket avoid list."},
+    {"subject": "HNGE", "direction": "bullish", "horizon_days": 5, "confidence": "low", "evidence": ["screener.json:candidates[HNGE] rs_rank 99, thesis C"], "why": "Top screener candidate (Friday's list), but thesis grade C fails a SELECTIVE day."},
+    {"subject": "TXN", "direction": "neutral", "horizon_days": 5, "confidence": "low", "evidence": ["osint_latest.json:TXN insider $9.1M discretionary, 5 sellers", "options_sentiment.json:reads[TXN].options_score=3 unusual_calls"], "why": "Insider selling and bullish options flow conflict; semis gapping down today."}
+  ],
+  "notes": [
+    "screener.json, latest.json, options_sentiment.json, big_movers.json, ops_status.json are from 2026-11-13; theses.json from 2026-11-14. Only osint_latest.json and premarket.json are from today. Screener has not finished today; candidates are Friday's list.",
+    "screener universe_size is 1380, not the expected ~518; price_source alpaca, coverage 99.7%.",
+    "No holdings appear in premarket gap alerts; 22 gap-downs concentrated in AI/semis/crypto (MSTR -8.4, COIN -7.6, AMD -5.6, NVDA -3.4; AVGO and ANET crossed below 50MA).",
+    "CTLP is inactive on Alpaca (untradable) with no stop.",
+    "Ops red (as of 2026-11-13): scope breach (weekly_review written outside lane, direct pushes to tests).",
+    "Catalyst watch (watch-only): NVDA 11-18, ADI 11-18, NDSN 11-18, INTU 11-19, DE 11-19, ROST 11-19."
+  ]
+}

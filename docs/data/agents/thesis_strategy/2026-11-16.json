@@ -1,0 +1,40 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-16",
+  "generated_at": "2026-11-16T22:39:09+00:00",
+  "status": "amber",
+  "headline": "No challenger clears the backtest gates tonight: spy3 slipped back to 0/5 on second-half PF (1.49 vs champion 1.52) and its edge sits entirely before Nov 2025, while risk40 misses the +0.10 PF gate by 0.01.",
+  "calls": [
+    {
+      "subject": "challenger:spy3",
+      "direction": "neutral",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.spy3.gates",
+        "docs/data/eval_latest.json:tournament.challengers.spy3.folds"
+      ],
+      "why": "Best overall (PF 1.71, worst month -6.1%) but its last two folds (0.40, 0.52) trail the champion, so it will hover on the second-half gate rather than hold 5 straight passes."
+    },
+    {
+      "subject": "challenger:golden20",
+      "direction": "bearish",
+      "horizon_days": 20,
+      "confidence": "high",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.golden20"
+      ],
+      "why": "72 trades, 1.4%/yr and PF 0.32 without its 5 best trades: it cannot pass enough_trades or not_concentrated."
+    }
+  ],
+  "notes": [
+    "No change to research/challengers.json: only 2 eval rows comparable since the PR #48 baseline break, no retire criterion met, no errors, list full at 11; no new 10+-trade weakness not already tested (gapped stops 7 trades). Journal entry appended.",
+    "Live: 1 closed today (+23%, $634); last 20 trades 15% win, PF 0.25; 30d -3.5% vs SPY -3.0%; -10.2% from peak; 0 closed trades under sma200_exit but +0.3% vs SPY -2.6% since 2026-11-12. rollback_watch not triggered.",
+    "Tracking gap -2.7pt (live -3.5% vs backtest -0.8%); trade_attribution same-window/matched still uses the old universe, so the gap can't be attributed to period vs execution.",
+    "Crossovers vs champion (PF 1.41, DD -17.7%): death_cross_exit PF 1.39 / DD -17.7% (copy); sma50_exit PF 1.37 / DD -17.8% / win 57% / 921 trades (11-13 edge reversed); golden20 PF 1.38 / DD -6.5% on 72 trades. Share closed within 3 days per challenger is still not reported by daily_eval.py; adding it would answer the whipsaw question directly.",
+    "Forward (held-out) window: the champion and every challenger opened 0 backtest trades since 2026-11-10, so no one is close to the 15-trade sample; the original eight reach 10 trading days first (~2026-11-24).",
+    "Stops unchanged: 10 fills, mean -3.5%, median -0.6%, worst VCYT -24.6%, 2 gapped >2%.",
+    "Theses: all 8 revalidated 2026-11-14 (plus 1 new admitted); macro_brief status generated, no error.",
+    "Nothing ready to propose; no PR, issue or rollback opened."
+  ]
+}

@@ -1,0 +1,156 @@
+[
+ {
+  "at": "2026-11-16T15:31:01+00:00",
+  "job": "diamond_sleeve",
+  "kind": "cancel",
+  "symbol": "*",
+  "output": {
+   "request": {
+    "order_id": "a5d0d6f2-c0db-40dd-8955-8e81031bd327"
+   },
+   "order_id": null,
+   "status": null,
+   "error": null
+  },
+  "why": null,
+  "rule_version": {
+   "code": "2d7f27f",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-16T15:02:51.758937",
+    "sha": "8b0e31e9dc64"
+   },
+   "latest.json": {
+    "at": "2026-11-16T15:04:17.285630",
+    "sha": "56c1720ec3c7"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "b3073ad3ee65"
+   },
+   "experiments.json": {
+    "at": "2026-11-14T13:15:55.434592",
+    "sha": "0b3848f6749c"
+   },
+   "theses.json": {
+    "at": "2026-11-14T14:27:57.662677",
+    "sha": "3992f1c2a66f"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-14T12:00:47+00:00",
+    "sha": "3380d392207b"
+   },
+   "premarket.json": {
+    "at": "2026-11-16T06:00:46.920708-08:00",
+    "sha": "ab90bdaa4a16"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-16",
+    "sha": "0972ae056374"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-16T13:02:03+00:00",
+    "sha": "89dea9512dd6"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-13T21:17:27+00:00",
+    "sha": "7c754c138af7"
+   },
+   "big_movers.json": {
+    "at": "2026-11-13T21:36:01+00:00",
+    "sha": "0df6ed2dca20"
+   }
+  }
+ },
+ {
+  "at": "2026-11-16T15:31:01+00:00",
+  "job": "diamond_sleeve",
+  "kind": "sell",
+  "symbol": "PCOR",
+  "output": {
+   "request": {
+    "side": "sell",
+    "qty": null,
+    "type": "market"
+   },
+   "order_id": "c6caeb81-2142-4b71-a47b-6a570a1bcbe0",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "off the watchlist two weeks running",
+   "rule": "sleeve_sell",
+   "facts": {}
+  },
+  "rule_version": {
+   "code": "2d7f27f",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-16T15:02:51.758937",
+    "sha": "8b0e31e9dc64"
+   },
+   "latest.json": {
+    "at": "2026-11-16T15:04:17.285630",
+    "sha": "56c1720ec3c7"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "b3073ad3ee65"
+   },
+   "experiments.json": {
+    "at": "2026-11-14T13:15:55.434592",
+    "sha": "0b3848f6749c"
+   },
+   "theses.json": {
+    "at": "2026-11-14T14:27:57.662677",
+    "sha": "3992f1c2a66f"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-14T12:00:47+00:00",
+    "sha": "3380d392207b"
+   },
+   "premarket.json": {
+    "at": "2026-11-16T06:00:46.920708-08:00",
+    "sha": "ab90bdaa4a16"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-16",
+    "sha": "0972ae056374"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-16T13:02:03+00:00",
+    "sha": "89dea9512dd6"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-13T21:17:27+00:00",
+    "sha": "7c754c138af7"
+   },
+   "big_movers.json": {
+    "at": "2026-11-13T21:36:01+00:00",
+    "sha": "0df6ed2dca20"
+   }
+  }
+ }
+]

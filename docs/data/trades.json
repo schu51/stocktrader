@@ -3944,7 +3944,7 @@
   {
     "trade_id": "DMD-20261026143049-PCOR",
     "symbol": "PCOR",
-    "status": "OPEN",
+    "status": "CLOSED",
     "sleeve": "diamond",
     "entry_date": "2026-10-26",
     "entry_ts": "2026-10-26T14:30:49.419504",
@@ -3956,15 +3956,16 @@
     "order_id": "1535e42d-7f12-4b46-8244-612e13dcef06",
     "judgment": 12.0,
     "judgment_rank": 2,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-16",
+    "exit_price": 77.36,
+    "exit_reason": "THESIS_BROKEN",
+    "pnl_usd": 638.87,
+    "pnl_pct": 23.11,
+    "hold_days": 21,
     "entry_limit": 62.85,
     "entry_filled": true,
-    "peak_price": 77.95
+    "peak_price": 77.95,
+    "exit_ts": "2026-11-16T15:31:07.910964"
   },
   {
     "trade_id": "DMD-20261026143049-VCYT",
@@ -4039,7 +4040,7 @@
     "hold_days": null,
     "entry_limit": 20.95,
     "entry_filled": true,
-    "peak_price": 21.8
+    "peak_price": 22.59
   },
   {
     "trade_id": "TRD-20261027133030-ACN",
@@ -5059,7 +5060,8 @@
     "pnl_pct": null,
     "hold_days": null,
     "entry_limit": 14.03,
-    "entry_filled": true
+    "entry_filled": true,
+    "peak_price": 14.06
   },
   {
     "trade_id": "DMD-20261113153104-TTAN",
@@ -5083,6 +5085,7 @@
     "pnl_pct": null,
     "hold_days": null,
     "entry_limit": 82.96,
-    "entry_filled": true
+    "entry_filled": true,
+    "peak_price": 84.22
   }
 ]

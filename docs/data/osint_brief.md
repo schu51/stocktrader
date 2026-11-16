@@ -1,72 +1,71 @@
-# OSINT brief — 2026-11-13
+# OSINT brief — 2026-11-16
 
 **OSINT: 5 companies with new signals**
 
-DG -1: Short-volume spike: 60% of volume vs 44% 20-day average (z +2.3) | EBAY -1: Heavy discretionary insider selling: $5,411,797 outside 10b5-1 plans, 3 seller(s) | KDP -1: securities offering (possible dilution) | MAR -1: Heavy discretionary insider selling: $35,142,075 outside 10b5-1 plans, 5 seller(s) | ACN +1: Federal awards spike: $2,920M in 30 days vs $315M/month pace; largest from Department of Health and Human Services (name match is loose)
+KO -3: StockTwits crowd sour: 50% bullish of 8 tagged posts | KDP -2: securities offering (possible dilution) | ACN +1: Federal awards spike: $2,930M in 30 days vs $315M/month pace; largest from Department of Health and Human Services (name match is loose) | AMD -1: StockTwits crowd sour: 55% bullish of 11 tagged posts | MANH +1: Federal awards spike: $78M in 30 days vs $2M/month pace; largest from Department of Homeland Security (name match is loose)
 
-## ACN · score +1 · holding, candidate
+## KO · score -3 · holding
 
-- 2026-11-13 **usaspending** Federal awards spike: $2,920M in 30 days vs $315M/month pace; largest from Department of Health and Human Services (name match is loose)
-- 2026-11-10 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1467373/000009375126000604/xslSCHEDULE_13G_X02/primary_doc.xml))
+- 2026-11-16 **stocktwits** StockTwits crowd sour: 50% bullish of 8 tagged posts
+- 2026-11-16 **finra** Short-volume spike: 66% of volume vs 49% 20-day average (z +2.1)
+- 2026-11-12 **sec** Heavy discretionary insider selling: $9,849,457 outside 10b5-1 plans, 2 seller(s)
 
-## DG · score -1 · holding
+## KDP · score -2 · holding
 
-- 2026-11-13 **finra** Short-volume spike: 60% of volume vs 44% 20-day average (z +2.3)
-- 2026-11-10 **sec** 8-K: officer or director change ([link](https://www.sec.gov/Archives/edgar/data/29534/000110465926125204/tm2629262d1_8k.htm))
-
-## EBAY · score -1 · holding, candidate
-
-- 2026-11-10 **sec** Heavy discretionary insider selling: $5,411,797 outside 10b5-1 plans, 3 seller(s)
-
-## KDP · score -1 · holding, candidate
-
+- 2026-11-16 **sec** securities offering (possible dilution) ([link](https://www.sec.gov/Archives/edgar/data/1418135/000119312526461405/d111532d424b5.htm))
 - 2026-11-12 **sec** securities offering (possible dilution) ([link](https://www.sec.gov/Archives/edgar/data/1418135/000119312526457001/d111532d424b5.htm))
-- 2026-11-13 **news** News surge: 50 headlines in 24h vs 2.2/day, 35 outlets, tone -0.12
-- 2026-11-09 **sec** periodic report filed ([link](https://www.sec.gov/Archives/edgar/data/1418135/000141813526000066/kdp-20260930.htm))
+- 2026-11-13 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1418135/000142284926000189/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-## MAR · score -1 · holding
+## ACN · score +1 · holding
 
-- 2026-11-10 **sec** Heavy discretionary insider selling: $35,142,075 outside 10b5-1 plans, 5 seller(s)
-- 2026-11-13 **news** News surge: 11 headlines in 24h vs 3.0/day, 8 outlets, tone -0.09
+- 2026-11-16 **usaspending** Federal awards spike: $2,930M in 30 days vs $315M/month pace; largest from Department of Health and Human Services (name match is loose)
 
-## CRL · score +0 · holding, candidate
+## KVYO · score +0 · holding
 
-- 2026-11-10 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1100682/000091420826000392/xslSCHEDULE_13G_X02/primary_doc.xml))
+- 2026-11-13 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1835830/000119312526461315/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-## GILD · score +0 · holding
+## MAR · score +0 · holding
 
-- 2026-11-10 **federal_register** Justice Department, Antitrust Division: Notice Pursuant to the National Cooperative Research and Production Act of 1993-R Consortium, Inc. ([link](https://www.federalregister.gov/documents/2026/11/10/2026-22894/notice-pursuant-to-the-national-cooperative-research-and-production-act-of-1993-r-consortium-inc))
+- 2026-11-16 **news** News surge: 12 headlines in 24h vs 1.7/day, 8 outlets, tone +0.17
+- 2026-11-12 **sec** Heavy discretionary insider selling: $36,164,320 outside 10b5-1 plans, 5 seller(s)
 
-## HUM · score +0 · holding
+## PCOR · score +0 · holding
 
-- 2026-11-09 **sec** 8-K: other event ([link](https://www.sec.gov/Archives/edgar/data/49071/000004907126000068/hum-20261109.htm))
+- 2026-11-13 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1611052/000089542126000354/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-## MO · score +0 · holding
+## REAL · score +0 · holding
 
-- 2026-11-09 **federal_register** Surface Transportation Board: Policy Statement on Jurisdiction and Preemption Under the ICC Termination Act ([link](https://www.federalregister.gov/documents/2026/11/09/2026-22811/policy-statement-on-jurisdiction-and-preemption-under-the-icc-termination-act))
+- 2026-11-16 **news** News surge: 13 headlines in 24h vs 2.2/day, 9 outlets, tone -0.08
 
 ## AMD · score -1 · candidate
 
-- 2026-11-13 **stocktwits** StockTwits crowd sour: 60% bullish of 10 tagged posts
-- 2026-11-13 **news** News surge: 48 headlines in 24h vs 8.7/day, 19 outlets, tone +0.13
+- 2026-11-16 **stocktwits** StockTwits crowd sour: 55% bullish of 11 tagged posts
 
-## HAS · score -1 · candidate
+## MANH · score +1 · candidate
 
-- 2026-11-13 **news** News surge: 41 headlines in 24h vs 9.8/day, 18 outlets, tone -0.32
+- 2026-11-16 **usaspending** Federal awards spike: $78M in 30 days vs $2M/month pace; largest from Department of Homeland Security (name match is loose)
+- 2026-11-13 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1056696/000116755726000264/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-## NUE · score +0 · candidate
+## TEM · score +1 · candidate
 
-- 2026-11-10 **sec** periodic report filed ([link](https://www.sec.gov/Archives/edgar/data/73309/000119312526454565/nue-20261003.htm))
+- 2026-11-16 **usaspending** Federal awards spike: $24M in 30 days vs $3M/month pace; largest from Department of Health and Human Services (name match is loose)
 
-## SWKS · score +0 · candidate
+## TXN · score -1 · candidate
 
-- 2026-11-13 **news** News surge: 13 headlines in 24h vs 4.2/day, 6 outlets, tone +0.08
-- 2026-11-13 **finra** Short volume collapsed: 50% vs 73% average (z -2.6)
-- 2026-11-10 **sec** periodic report filed ([link](https://www.sec.gov/Archives/edgar/data/4127/000000412726000055/swks-20261002.htm))
-- 2026-11-10 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/4127/000009375126000724/xslSCHEDULE_13G_X02/primary_doc.xml))
+- 2026-11-12 **sec** Heavy discretionary insider selling: $9,090,033 outside 10b5-1 plans, 5 seller(s)
+- 2026-11-16 **wikipedia** Attention spike: Wikipedia views 3.3x normal (2,284/day vs 691) ([link](https://en.wikipedia.org/wiki/Texas_Instruments))
 
-## TXN · score +0 · candidate
+## BB · score +0 · candidate
 
-- 2026-11-09 **sec** 8-K: other event ([link](https://www.sec.gov/Archives/edgar/data/97476/000119312526453606/d180182d8k.htm))
+- 2026-11-13 **federal_register** Environmental Protection Agency: Ethephon; Pesticide Tolerances ([link](https://www.federalregister.gov/documents/2026/11/13/2026-23120/ethephon-pesticide-tolerances))
 
-_No new signals: CBOE, CTLP, FDS, HLT, KO, KVYO, PCOR, SJM, VCEL, WK, ADI, APA, BBY, SWK, TRGP_
+## TRGP · score +0 · candidate
+
+- 2026-11-16 **finra** Short volume collapsed: 43% vs 61% average (z -3.0)
+
+## U · score +0 · candidate
+
+- 2026-11-16 **news** News surge: 32 headlines in 24h vs 8.8/day, 3 outlets, tone -0.09
+- 2026-11-13 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1810806/000119312526460756/xslSCHEDULE_13G_X02/primary_doc.xml))
+
+_No new signals: CBOE, CRL, CTLP, DG, EBAY, FDS, GILD, HLT, HUM, MO, SJM, TTAN, VCEL, WK, ANF, APA, BRZE, CHRD, ECO, HNGE, PAYC, ZETA_

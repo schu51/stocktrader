@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16T15:45:49",
+  "generated_at": "2026-11-16T22:30:49",
   "findings": [
     "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 21% of 92.",
     "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 21% of 92.",
@@ -13,7 +13,7 @@
       "trades": 92,
       "win_rate": 0.207,
       "avg_pnl_pct": -1.21,
-      "total_pnl_usd": -4114.9
+      "total_pnl_usd": -4119.29
     },
     "by_tag": {
       "exit": {
@@ -28,6 +28,12 @@
           "win_rate": 1.0,
           "avg_pnl_pct": 45.87,
           "total_pnl_usd": 4979.0
+        },
+        "sold_at_broker": {
+          "trades": 1,
+          "win_rate": 1.0,
+          "avg_pnl_pct": 22.95,
+          "total_pnl_usd": 634.48
         },
         "stale": {
           "trades": 1,
@@ -47,12 +53,6 @@
           "avg_pnl_pct": -15.19,
           "total_pnl_usd": -3293.86
         },
-        "thesis_broken": {
-          "trades": 1,
-          "win_rate": 1.0,
-          "avg_pnl_pct": 23.11,
-          "total_pnl_usd": 638.87
-        },
         "trend_break": {
           "trades": 69,
           "win_rate": 0.159,
@@ -65,7 +65,7 @@
           "trades": 65,
           "win_rate": 0.292,
           "avg_pnl_pct": 0.5,
-          "total_pnl_usd": 441.25
+          "total_pnl_usd": 436.86
         },
         "True": {
           "trades": 27,
@@ -84,8 +84,8 @@
         "True": {
           "trades": 19,
           "win_rate": 0.368,
-          "avg_pnl_pct": 1.17,
-          "total_pnl_usd": 467.22
+          "avg_pnl_pct": 1.16,
+          "total_pnl_usd": 462.83
         }
       },
       "extended": {
@@ -99,7 +99,7 @@
           "trades": 26,
           "win_rate": 0.231,
           "avg_pnl_pct": -0.48,
-          "total_pnl_usd": -1132.49
+          "total_pnl_usd": -1136.88
         },
         "True": {
           "trades": 19,
@@ -118,8 +118,8 @@
         "neutral": {
           "trades": 15,
           "win_rate": 0.267,
-          "avg_pnl_pct": -4.56,
-          "total_pnl_usd": -2008.18
+          "avg_pnl_pct": -4.57,
+          "total_pnl_usd": -2012.57
         }
       },
       "backtest": {
@@ -133,7 +133,7 @@
           "trades": 74,
           "win_rate": 0.189,
           "avg_pnl_pct": -1.26,
-          "total_pnl_usd": -3692.7
+          "total_pnl_usd": -3697.09
         }
       },
       "sleeve": {
@@ -146,8 +146,8 @@
         "True": {
           "trades": 2,
           "win_rate": 0.5,
-          "avg_pnl_pct": -10.17,
-          "total_pnl_usd": -422.65
+          "avg_pnl_pct": -10.25,
+          "total_pnl_usd": -427.04
         }
       }
     },
@@ -304,7 +304,7 @@
         }
       }
     ],
-    "total_pnl_usd": -4114.9
+    "total_pnl_usd": -4119.29
   },
   "trades": [
     {
@@ -2126,11 +2126,11 @@
       "symbol": "PCOR",
       "entry_date": "2026-10-26",
       "exit_date": "2026-11-16",
-      "pnl_pct": 23.11,
-      "pnl_usd": 638.87,
+      "pnl_pct": 22.95,
+      "pnl_usd": 634.48,
       "hold_days": 21,
       "tags": {
-        "exit": "thesis_broken",
+        "exit": "sold_at_broker",
         "quick_fail": false,
         "earnings": true,
         "extended": null,

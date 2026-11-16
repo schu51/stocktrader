@@ -1,0 +1,102 @@
+{
+  "agent": "performance_risk",
+  "date": "2026-11-16",
+  "generated_at": "2026-11-16T21:55:00Z",
+  "status": "amber",
+  "headline": "Still losing and now off-track: last-20-trades profit factor 0.11 (3 wins in 20), account 10.5% below peak, and the live-vs-backtest gap widened to 5.2 points over 30 days; WK, KDP and KO are broken (all have stops), CTLP still has none, while PCOR closed +23% at the sleeve's sell rule.",
+  "calls": [
+    {
+      "subject": "WK",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:rs_ranks.WK=18",
+        "latest.json:positions[WK].unrealized_pnl_pct=-20.79",
+        "options_sentiment.json:reads[WK].options_bearish=true (score -2, 2,497 puts vs 200 calls)",
+        "latest.json:positions[WK].stop_loss=64.57 (5.3% below 68.19, below cost)"
+      ],
+      "why": "Lags on four measures (RS 18, -20.8% loss, bearish options, stop near and below cost); has a broker stop, so not red. Not re-checked live because repo data already settles it."
+    },
+    {
+      "subject": "KDP",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[KDP].score=-2 (securities offerings 2026-11-12 and 2026-11-16)",
+        "latest.json:positions[KDP].stop_loss=33.95 (4.6% below 35.58, below cost), unrealized_pnl_pct=-2.94",
+        "alphavantage:REALTIME_PUT_CALL_RATIO (KDP full chain 0.23)",
+        "options_sentiment.json:reads[KDP].options_score=3",
+        "screener.json:rs_ranks.KDP=84"
+      ],
+      "why": "Lags on two measures (a second dilutive offering in four days, and a stop now within 5% and below cost); RS 84 and bullish options (0.23 live) argue the other way, hence low confidence."
+    },
+    {
+      "subject": "KO",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[KO].score=-3 (discretionary insider selling $9,849,457 2026-11-12; short volume 66% vs 49% avg; StockTwits sour)",
+        "alphavantage:REALTIME_PUT_CALL_RATIO (KO full chain 1.96)",
+        "options_sentiment.json:reads[KO].options_score=1",
+        "screener.json:rs_ranks.KO=81",
+        "latest.json:positions[KO].stop_loss=94.22 (5.4% below 99.65, above cost), unrealized_pnl_pct=6.29"
+      ],
+      "why": "Lags on two measures (OSINT -3 and a bearish close-of-day full-chain put/call of 1.96); RS 81 and a stop above cost mean the downside is capped as a small gain, hence low confidence."
+    },
+    {
+      "subject": "EBAY",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "alphavantage:REALTIME_PUT_CALL_RATIO (EBAY full chain 1.69)",
+        "osint_latest.json:companies[EBAY].score=0",
+        "options_sentiment.json:reads[EBAY].options_score=0",
+        "screener.json:rs_ranks.EBAY=87",
+        "latest.json:positions[EBAY].unrealized_pnl_pct=-0.77, stop 112.31 (7.1% below)"
+      ],
+      "why": "Weakening, no longer broken: the insider-selling OSINT flag aged out of the 4-day window, leaving only the bearish live put/call (1.81 Fri -> 1.69 today)."
+    },
+    {
+      "subject": "KVYO",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.KVYO=43",
+        "alphavantage:REALTIME_PUT_CALL_RATIO (KVYO full chain 0.08)",
+        "options_sentiment.json:reads[KVYO].options_score=3",
+        "latest.json:positions[KVYO].unrealized_pnl_pct=9.67, stop 15.71 (31.6% below, sleeve disaster stop)"
+      ],
+      "why": "Weakening on one measure (RS 43, lagging); in profit with very bullish options. Diamond sleeve holding."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN=27",
+        "alphavantage:REALTIME_PUT_CALL_RATIO (TTAN full chain 0.03)",
+        "options_sentiment.json:reads[TTAN].options_score=0",
+        "latest.json:positions[TTAN].unrealized_pnl_pct=0.06, stop 61.94 (25% below)"
+      ],
+      "why": "Weakening on one measure (RS 27, lagging, slipped from 29); live options are bullish. Diamond sleeve holding bought Friday with no setup flags."
+    }
+  ],
+  "notes": [
+    "BAD NEWS FIRST: eval_latest.json live.last_20_trades: 20 trades, win rate 15%, profit factor 0.11, expectancy -6.48%/trade, -$3,814.95. Last 30 days: PF 0.28 over 35 trades. All-time: PF 0.61 over 91 trades. eval_latest.json is dated 2026-11-13, so today's PCOR win (+22.95%) is not in these figures yet; it will lift the last-20 PF only slightly.",
+    "Drawdown: 10.5% below peak ($106,995.51 at post-market vs $119,525.95 on 2026-07-14 in history.json; eval_latest account_30d.drawdown_from_peak=-0.1049 on 11-13). Below the 15% red line and flat vs Friday. latest.json risk_assessment measures 7.9% from a later peak ($116,590.55, 2026-10-06).",
+    "EXECUTION, tracking gap now past threshold: eval_latest tracking: live -7.32% vs backtest -2.08% over 30 days, gap -5.24 pts (was -2.13 in Friday's record, which used the 11-12 eval). eval alert: 'live bot is not matching its rules'. This is the reason for amber beyond the broken holdings.",
+    "Today: post-market $106,995.51 vs $106,975.92 Friday (+$19.59, +0.02%). Intraday high $107,525.78 at 17:30 UTC, faded into the close. 15 winners / 5 losers, $2,450.10 unrealized, 20 positions, cash $36,102.24. Main strategy: 0 signals, 0 orders submitted or skipped. Fifth straight day the 15:00 run shows candidates_screened=0 while daily_opening_buys ranked 50 names (top ELF, APA, CHRD, SEZL, ZETA) in a neutral regime; the buy path still looks disconnected from the screener. Diamond sleeve: sold PCOR at market (reason 'off the watchlist two weeks running', rule sleeve_sell) and cancelled one order (likely its stop); filled 77.26 vs peak 77.95, +$634.48 / +22.95% over 21 days. No buys. Trailing updates for CBOE, CRL, HUM, KO were skipped because existing stops were already higher.",
+    "Thesis health across 20 holdings: 13 intact (ACN, CBOE, CRL, DG, FDS, GILD, HLT, HUM, MAR, MO, REAL, SJM, VCEL), 3 weakening (EBAY, KVYO, TTAN), 3 broken (WK, KDP, KO), 1 not assessable (CTLP). Changes since Friday: KDP and KO newly broken (KDP second offering + stop now 4.6% below cost; KO OSINT -3 + live put/call 1.96); EBAY broken -> weakening (OSINT flag aged out); MAR and DG weakening -> intact (OSINT back to 0); PCOR closed. All three broken holdings have broker stops. ACN sits only 0.7% above its stop (245.88 vs 247.70), but the stop is above cost so it locks in a small gain rather than counting as lagging. REAL and VCEL have no rs_rank.",
+    "Alpha Vantage: 5 of 5 budgeted REALTIME_PUT_CALL_RATIO calls, one at a time, no rate-limit errors (full chain): KDP 0.23, KO 1.96, TTAN 0.03, EBAY 1.69, KVYO 0.08. No morning -> close comparison: today's research_analyst record has no live put/call ratios. Versus Friday's close: KDP 0.19 -> 0.23, EBAY 1.81 -> 1.69, TTAN 0.12 -> 0.03. WK not re-checked.",
+    "EXECUTION, CTLP: 281 shares (~$3,147, +5.3%) still have no stop. The intraday monitor tried 12 times today to place a stop at 10.69; every attempt failed with 'asset CTLP is not active'. Not in trades.json (19 OPEN trades vs 20 broker positions); exit check lists it unchecked. Needs manual broker handling; flagged since the 2026-11-06 weekly review.",
+    "EXECUTION, stop fills: none today (PCOR was a market sell, not a stop). Last 10 (eval live.stop_fills): mean slip -3.55%, median -0.57%, 2 gapped past 2%, worst VCYT -24.6%. by_tag.exit.stop_gapped: 7 trades, 0% won, -$3,293.86.",
+    "Patterns (92 closed trades, enough to recommend action): unchanged this week except one new close (PCOR, sleeve, +22.95%). (1) Quick failures: 27 trades closed within 3 days, 0% won, -$4,556; the other 65 net +$441. (2) Trend-break exits: 69 trades, 16% won, -$5,244. (3) Entries 15%+ above the 50-day average: 32% won (+3.6% avg) vs 15% (-3.6%). (4) Neutral-regime entries: 15 trades, 27% won, -4.6% avg, -$2,008 (just past 10, not yet 20). Diamond sleeve: 2 closed (VCYT -43.5%, PCOR +23.0%), too few to judge. Rules live since Nov 10 still have 0 live trades.",
+    "Stale or missing data: eval_latest.json is from 2026-11-13 (today's eval had not run at 21:45 UTC); experiments.json and theses.json 2026-11-14. Today's decision records were built with options_sentiment.json from 11-13 (refreshed 21:17 UTC today). latest.json account/positions synced 21:31 UTC. ops_status (15:45 UTC) amber only on issues (4 failure issues open more than 2 days); scope, jobs, model and freshness are green, clearing Friday's red."
+  ]
+}

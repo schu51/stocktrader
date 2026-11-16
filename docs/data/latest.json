@@ -3,21 +3,21 @@
   "run_id": "20261116_155317",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 107034.23,
+    "portfolio_value": 107053.03,
     "cash": 36102.24,
     "buying_power": 34297.128,
-    "long_market_value": 70931.99,
-    "unrealized_pnl": 2488.82
+    "long_market_value": 70950.79,
+    "unrealized_pnl": 2507.62
   },
   "positions": [
     {
       "symbol": "ACN",
       "qty": 10,
       "avg_cost": 244.66,
-      "current_price": 247.7,
-      "market_value": 2477.0,
-      "unrealized_pnl": 30.41,
-      "unrealized_pnl_pct": 1.24,
+      "current_price": 246.85,
+      "market_value": 2468.49,
+      "unrealized_pnl": 21.9,
+      "unrealized_pnl_pct": 0.9,
       "stop_loss": 245.88,
       "side": "long",
       "asset_class": "us_equity",
@@ -169,10 +169,10 @@
       "symbol": "GILD",
       "qty": 22,
       "avg_cost": 165.81,
-      "current_price": 167.0,
-      "market_value": 3674.0,
-      "unrealized_pnl": 26.28,
-      "unrealized_pnl_pct": 0.72,
+      "current_price": 167.68,
+      "market_value": 3688.96,
+      "unrealized_pnl": 41.24,
+      "unrealized_pnl_pct": 1.13,
       "stop_loss": 152.28,
       "side": "long",
       "asset_class": "us_equity",
@@ -257,10 +257,10 @@
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 99.58,
-      "market_value": 3784.04,
-      "unrealized_pnl": 221.56,
-      "unrealized_pnl_pct": 6.22,
+      "current_price": 99.52,
+      "market_value": 3781.76,
+      "unrealized_pnl": 219.28,
+      "unrealized_pnl_pct": 6.16,
       "stop_loss": 94.22,
       "side": "long",
       "asset_class": "us_equity",
@@ -279,10 +279,10 @@
       "symbol": "KVYO",
       "qty": 133,
       "avg_cost": 20.95,
-      "current_price": 22.89,
-      "market_value": 3044.37,
-      "unrealized_pnl": 258.02,
-      "unrealized_pnl_pct": 9.26,
+      "current_price": 23.0,
+      "market_value": 3059.0,
+      "unrealized_pnl": 272.65,
+      "unrealized_pnl_pct": 9.79,
       "stop_loss": 15.71,
       "side": "long",
       "asset_class": "us_equity",
@@ -722,7 +722,7 @@
     ],
     "risk_level": "MODERATE"
   },
-  "sync_at": "2026-11-16T22:30:49.695243+00:00",
+  "sync_at": "2026-11-16T23:00:49.032191+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -783,6 +783,10 @@
       {
         "time": "22:30",
         "value": 107034.23
+      },
+      {
+        "time": "23:00",
+        "value": 107053.03
       }
     ]
   }

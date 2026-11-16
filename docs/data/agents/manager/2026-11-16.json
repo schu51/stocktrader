@@ -1,0 +1,33 @@
+{
+  "agent": "manager",
+  "date": "2026-11-16",
+  "generated_at": "2026-11-16T23:15:00+00:00",
+  "status": "red",
+  "headline": "Ops red: postmarket_2026-11-16.json was written by an unknown writer outside any job's lane and has no contract (scope + contracts red, issue #54); Daily Eval also failed (#53). Account 10.2% below peak, last-20 PF 0.25, 30d -3.47% vs SPY -3.05%.",
+  "calls": [
+    {"subject": "MAR", "direction": "intact", "horizon_days": 5, "confidence": "low",
+     "evidence": ["agents/research_analyst/2026-11-16.json:calls[MAR]=bearish low", "agents/performance_risk/2026-11-16.json:notes (MAR weakening -> intact, OSINT back to 0)"],
+     "why": "Research's bearish call rests on insider selling with an OSINT score of 0; performance & risk's later, broader check says intact, so hold and watch."},
+    {"subject": "TTAN", "direction": "intact", "horizon_days": 10, "confidence": "low",
+     "evidence": ["agents/research_analyst/2026-11-16.json:calls[TTAN]=bearish low (RS 29)", "agents/performance_risk/2026-11-16.json:calls[TTAN]=intact (weakening, RS 27, live put/call 0.03, stop 25% below)"],
+     "why": "Both see the weak RS; bullish live options and a diamond-sleeve hold bought Friday make it weakening, not broken."},
+    {"subject": "KDP", "direction": "broken", "horizon_days": 10, "confidence": "low",
+     "evidence": ["agents/performance_risk/2026-11-16.json:calls[KDP]=broken", "agents/research_analyst/2026-11-16.json:calls[KDP]=bearish", "options_sentiment.json:reads[KDP].options_score=3"],
+     "why": "Two specialists agree on dilution risk over bullish options (score 3, live put/call 0.23); a broker stop at 33.95 caps it."}
+  ],
+  "notes": [
+    "RED ops (ops_status.json 22:30 UTC): contracts - 'postmarket_2026-11-16.json: no contract'; scope - 'breach: 0892a3e3 [unknown writer] ... -> docs/data/postmarket_2026-11-16.json'. Action: identify which job/session wrote it and either add a contract + lane or remove the file. Issue #54 https://github.com/schu51/stocktrader/issues/54",
+    "AMBER ops: jobs - daily_eval.yml failed (run https://github.com/schu51/stocktrader/actions/runs/43963269235, issue #53); eval_latest.json was still written 2026-11-16T22:06:37, so verify it is complete. issues - 5 failure issues open more than 2 days (#50, #43, #34, #15, #12).",
+    "Specialists: research_analyst amber, performance_risk amber, thesis_strategy amber; all three reported today.",
+    "CONFLICT (numbers): performance_risk used the 11-13 eval (last-20 PF 0.11, drawdown -0.1049, tracking gap -5.24 pts) and called the tracking gap past threshold. Today's eval_latest.json: last-20 PF 0.25, drawdown_from_peak -0.1016, tracking gap -0.0269 (live -0.0347 vs backtest -0.0078). Call: use today's eval; the 'gap past threshold' amber reason is superseded. performance_risk also reported ops green from the 15:45 run; ops is red as of 22:30.",
+    "CONFLICT (MAR): research bearish vs performance & risk intact. Call intact - see calls.",
+    "CONFLICT (TTAN): research bearish vs performance & risk intact/weakening. Call weakening, hold - see calls.",
+    "CONFLICT (KDP): options score 3 bullish vs both specialists bearish/broken. Call broken - see calls.",
+    "Options vs top candidates: none of the top five (ELF 0, APA 0, CHRD -1, SEZL 3, ZETA 3) is flagged options_bearish; no conflict.",
+    "Holdings (performance_risk): 13 intact, 3 weakening (EBAY, KVYO, TTAN), 3 broken (WK, KDP, KO), 1 not assessable (CTLP). CTLP 281 shares still has no stop ('asset CTLP is not active'), needs manual broker handling. ACN 0.7% above its stop (above cost).",
+    "Execution: fifth straight day the 15:00 run shows candidates_screened=0 while the screener ranked 50 names; buy path still looks disconnected (performance_risk).",
+    "Movers: OFRM +21.24%, catalyst unknown - oversold relief bounce after recall slide; not a momentum setup.",
+    "Strategy: no change. thesis_strategy: no challenger clears the gates (spy3 0/5 on second-half PF 1.49 vs 1.52; risk40 misses +0.10 PF by 0.01); research/challengers.json unchanged; experiments.json last changed 2026-11-14 with no new state changes.",
+    "Today: PCOR closed +22.95% (+$634.48) on the diamond sleeve's sell rule."
+  ]
+}

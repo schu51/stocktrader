@@ -1,22 +1,15 @@
 {
-  "generated_at": "2026-11-13T22:30:49+00:00",
-  "status": "red",
-  "red": [
-    "scope"
-  ],
+  "generated_at": "2026-11-16T15:45:49+00:00",
+  "status": "amber",
+  "red": [],
   "amber": [
-    "jobs",
-    "model",
     "issues"
   ],
   "checks": [
     {
       "name": "jobs",
-      "status": "amber",
-      "detail": "1 job(s) failed or missed",
-      "items": [
-        "ops_monitor.yml: failed"
-      ]
+      "status": "green",
+      "detail": "11 workflows ran in the last 24h, none failed"
     },
     {
       "name": "freshness",
@@ -25,12 +18,8 @@
     },
     {
       "name": "model",
-      "status": "amber",
-      "detail": "macro research last ran 2026-11-07 and failed (out of API credit (the API is now retired)); the next run is Saturday through the Macro research analyst task",
-      "items": [
-        "macro research last ran 2026-11-07 and failed (out of API credit (the API is now retired)); the next run is Saturday through the Macro research analyst task",
-        "8 thesis(es) not re-checked since 2026-10-31: they stop counting in ranking on 2026-11-14"
-      ]
+      "status": "green",
+      "detail": "model-backed jobs healthy"
     },
     {
       "name": "contracts",
@@ -39,21 +28,18 @@
     },
     {
       "name": "scope",
-      "status": "red",
-      "detail": "1 write(s) outside a job's lane",
-      "items": [
-        "breach: 8584571a [unknown writer] Post-market: Weekly review 2026-11-13 (Friday) -> docs/data/weekly_review_2026-11-13.json",
-        "direct: 01a146c0 [direct push] Tests: drop duplicate clock pin (PR #40 already added it) [s -> tests/test_clear_stops.py, tests/test_sleeve_separation.py",
-        "direct: f708cd08 [direct push] Tests: pin the trend-exit clock so exit tests pass at any ti -> tests/test_clear_stops.py, tests/test_sleeve_separation.py"
-      ]
+      "status": "green",
+      "detail": "every commit stayed in its lane"
     },
     {
       "name": "issues",
       "status": "amber",
-      "detail": "2 failure issue(s) open more than 2 days",
+      "detail": "4 failure issue(s) open more than 2 days",
       "items": [
-        "#15 \ud83d\udea8 Macro Research run failed 2026-11-07 (6 days)",
-        "#12 \ud83d\udea8 Macro Research run failed 2026-10-31 (13 days)"
+        "#43 \ud83d\udea8 Ops monitor red 2026-11-12 (3 days)",
+        "#34 \ud83d\udea8 Ops monitor red 2026-11-11 (4 days)",
+        "#15 \ud83d\udea8 Macro Research run failed 2026-11-07 (9 days)",
+        "#12 \ud83d\udea8 Macro Research run failed 2026-10-31 (16 days)"
       ]
     }
   ]

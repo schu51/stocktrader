@@ -1,0 +1,1863 @@
+{
+ "tag": "round5",
+ "date": "2026-11-17",
+ "generated_at": "2026-11-17T14:34:47",
+ "round": 5,
+ "question": "Round 5, measure every earnings variant on the same footing. Round 4 showed the fundamentals data itself flatters results (it lacks delisted names): the has-data universe alone lifted cap98+tight from PF 1.76 to 2.14. So here every variant runs on the has-data universe (min_sue -100 = has data, no condition) and is compared with its has-data twin. Does requiring EPS growth add anything there, with and without the stricter SPY filter? And do the bias-free price-only winners hold with the SPY 3% filter?",
+ "start": "2023-11-17",
+ "champion": {
+  "rules": {
+   "exit_line": "sma200",
+   "w_rs": 0.8,
+   "w_thesis": 0.2,
+   "atr_stop": 2.5,
+   "min_above_50ma": 0.06,
+   "stale_days": 60,
+   "stale_gain": 10.0,
+   "min_spy_above_50ma": 0.02,
+   "earnings_blackout": 5
+  },
+  "trades": 873,
+  "win_rate": 0.5933562428407789,
+  "profit_factor": 1.4073318043576313,
+  "avg_win_pct": 12.789783783783784,
+  "avg_loss_pct": -11.40096338028169,
+  "cagr": 0.1624,
+  "max_drawdown": -0.1677,
+  "worst_month": -0.0836,
+  "avg_month": 0.0138,
+  "recent_return": -0.103,
+  "last_30d_return": -0.0081,
+  "pf_without_best_5": 1.19,
+  "folds": [
+   {
+    "from": "2023-11-17",
+    "trades": 177,
+    "profit_factor": 1.63
+   },
+   {
+    "from": "2024-05-17",
+    "trades": 182,
+    "profit_factor": 1.69
+   },
+   {
+    "from": "2024-11-17",
+    "trades": 81,
+    "profit_factor": 0.6
+   },
+   {
+    "from": "2025-05-17",
+    "trades": 212,
+    "profit_factor": 2.38
+   },
+   {
+    "from": "2025-11-17",
+    "trades": 92,
+    "profit_factor": 1.01
+   },
+   {
+    "from": "2026-05-17",
+    "trades": 129,
+    "profit_factor": 0.39
+   },
+   {
+    "from": "2026-11-17",
+    "trades": 0,
+    "profit_factor": null
+   }
+  ],
+  "first_half": {
+   "trades": 440,
+   "profit_factor": 1.342283757674137,
+   "win_rate": 0.5318181818181819
+  },
+  "second_half": {
+   "trades": 433,
+   "profit_factor": 1.4658199242763421,
+   "win_rate": 0.6558891454965358
+  },
+  "counters": {
+   "candidates": 20200,
+   "gate_rsi": 1164,
+   "gate_bb": 2162,
+   "gate_sector": 714,
+   "gate_trigger": 0,
+   "gate_adx": 0,
+   "gate_50ma_room": 1509,
+   "gate_volatile": 0,
+   "days_market_weak": 346,
+   "engine_buy": 1004,
+   "engine_hold": 5172,
+   "orders": 938,
+   "fills": 874,
+   "unfilled_no_cash": 64,
+   "unfilled_at_cap": 0,
+   "gate_earnings": 395,
+   "earnings_exits": 0,
+   "earnings_held": 0,
+   "pullback_entries": 0,
+   "exits_in_grace": 0,
+   "gate_adr": 0,
+   "gate_extended": 0,
+   "days_qqq_weak": 0,
+   "days_vix_high": 0,
+   "days_breadth_weak": 0,
+   "market_data_missing": 0,
+   "partial_exits": 0,
+   "days_momentum_weak": 0
+  }
+ },
+ "variants": [
+  {
+   "name": "hd_cap98_tight_spy3",
+   "why": "has-data + skip RS 99 + tight + SPY 3%",
+   "change": {
+    "min_sue": -100.0,
+    "max_rs_rank": 98,
+    "tight_boost": 0.5,
+    "min_spy_above_50ma": 0.03
+   },
+   "trades": 587,
+   "win_rate": 0.626916524701874,
+   "profit_factor": 2.1810076523417674,
+   "avg_win_pct": 12.439366847826086,
+   "avg_loss_pct": -9.747872146118722,
+   "cagr": 0.2322,
+   "max_drawdown": -0.1099,
+   "worst_month": -0.0947,
+   "avg_month": 0.0184,
+   "recent_return": 0.0257,
+   "last_30d_return": -0.0006,
+   "pf_without_best_5": 1.79,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 122,
+     "profit_factor": 4.26
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 121,
+     "profit_factor": 1.8
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 38,
+     "profit_factor": 0.96
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 162,
+     "profit_factor": 2.57
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 62,
+     "profit_factor": 3.28
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 82,
+     "profit_factor": 1.0
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 281,
+    "profit_factor": 2.2309221599763496,
+    "win_rate": 0.6014234875444839
+   },
+   "second_half": {
+    "trades": 306,
+    "profit_factor": 2.151059127949484,
+    "win_rate": 0.6503267973856209
+   },
+   "counters": {
+    "candidates": 15250,
+    "gate_rsi": 678,
+    "gate_bb": 1482,
+    "gate_sector": 873,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1090,
+    "gate_volatile": 0,
+    "days_market_weak": 445,
+    "engine_buy": 981,
+    "engine_hold": 3710,
+    "orders": 920,
+    "fills": 590,
+    "unfilled_no_cash": 330,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 336,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 6,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 62,
+      "profit_factor": 3.28
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 82,
+      "profit_factor": 1.0
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.774,
+    "drawdown_change": 0.0578
+   }
+  },
+  {
+   "name": "hd_cap98_tight",
+   "why": "has-data + skip RS 99 + tight bases",
+   "change": {
+    "min_sue": -100.0,
+    "max_rs_rank": 98,
+    "tight_boost": 0.5
+   },
+   "trades": 827,
+   "win_rate": 0.6021765417170496,
+   "profit_factor": 2.13915984782324,
+   "avg_win_pct": 13.53644578313253,
+   "avg_loss_pct": -9.48786018237082,
+   "cagr": 0.3216,
+   "max_drawdown": -0.1501,
+   "worst_month": -0.1059,
+   "avg_month": 0.025,
+   "recent_return": 0.0511,
+   "last_30d_return": -0.0146,
+   "pf_without_best_5": 1.72,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 125,
+     "profit_factor": 3.44
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 188,
+     "profit_factor": 1.77
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 76,
+     "profit_factor": 0.63
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 210,
+     "profit_factor": 2.7
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 110,
+     "profit_factor": 4.06
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 118,
+     "profit_factor": 0.86
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 389,
+    "profit_factor": 1.7365693409097263,
+    "win_rate": 0.5398457583547558
+   },
+   "second_half": {
+    "trades": 438,
+    "profit_factor": 2.3521642545789425,
+    "win_rate": 0.6575342465753424
+   },
+   "counters": {
+    "candidates": 20171,
+    "gate_rsi": 806,
+    "gate_bb": 1933,
+    "gate_sector": 1057,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1568,
+    "gate_volatile": 0,
+    "days_market_weak": 346,
+    "engine_buy": 1284,
+    "engine_hold": 5036,
+    "orders": 1196,
+    "fills": 830,
+    "unfilled_no_cash": 366,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 436,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 6,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 110,
+      "profit_factor": 4.06
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 118,
+      "profit_factor": 0.86
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.732,
+    "drawdown_change": 0.0176
+   }
+  },
+  {
+   "name": "hd_sue025_cap98_tight_spy3",
+   "why": "sensitivity: stricter surprise floor",
+   "change": {
+    "min_sue": 0.25,
+    "max_rs_rank": 98,
+    "tight_boost": 0.5,
+    "min_spy_above_50ma": 0.03
+   },
+   "trades": 555,
+   "win_rate": 0.618018018018018,
+   "profit_factor": 2.437619186808397,
+   "avg_win_pct": 12.484871720116617,
+   "avg_loss_pct": -8.47938679245283,
+   "cagr": 0.2328,
+   "max_drawdown": -0.1081,
+   "worst_month": -0.0617,
+   "avg_month": 0.0174,
+   "recent_return": -0.0081,
+   "last_30d_return": -0.0134,
+   "pf_without_best_5": 1.96,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 124,
+     "profit_factor": 3.47
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 122,
+     "profit_factor": 1.65
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 30,
+     "profit_factor": 1.74
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 147,
+     "profit_factor": 4.28
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 53,
+     "profit_factor": 3.93
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 79,
+     "profit_factor": 0.96
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 276,
+    "profit_factor": 2.2696956593276214,
+    "win_rate": 0.5760869565217391
+   },
+   "second_half": {
+    "trades": 279,
+    "profit_factor": 2.5502715526075455,
+    "win_rate": 0.6594982078853047
+   },
+   "counters": {
+    "candidates": 15235,
+    "gate_rsi": 707,
+    "gate_bb": 1499,
+    "gate_sector": 849,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1175,
+    "gate_volatile": 0,
+    "days_market_weak": 445,
+    "engine_buy": 763,
+    "engine_hold": 3823,
+    "orders": 694,
+    "fills": 556,
+    "unfilled_no_cash": 138,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 334,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 5,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 53,
+      "profit_factor": 3.93
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 79,
+      "profit_factor": 0.96
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 1.03,
+    "drawdown_change": 0.0596
+   }
+  },
+  {
+   "name": "hd_sue0_cap98_tight_spy3",
+   "why": "+ EPS growth (round 4's best risk profile, now against its twin)",
+   "change": {
+    "min_sue": 0.0,
+    "max_rs_rank": 98,
+    "tight_boost": 0.5,
+    "min_spy_above_50ma": 0.03
+   },
+   "trades": 568,
+   "win_rate": 0.6144366197183099,
+   "profit_factor": 2.227824202061724,
+   "avg_win_pct": 13.120332378223496,
+   "avg_loss_pct": -9.090269406392695,
+   "cagr": 0.2358,
+   "max_drawdown": -0.1069,
+   "worst_month": -0.0717,
+   "avg_month": 0.0181,
+   "recent_return": -0.0023,
+   "last_30d_return": -0.0121,
+   "pf_without_best_5": 1.82,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 126,
+     "profit_factor": 5.05
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 119,
+     "profit_factor": 1.32
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 33,
+     "profit_factor": 1.62
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 159,
+     "profit_factor": 3.1
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 56,
+     "profit_factor": 4.79
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 75,
+     "profit_factor": 0.7
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 278,
+    "profit_factor": 2.287425818218491,
+    "win_rate": 0.5935251798561151
+   },
+   "second_half": {
+    "trades": 290,
+    "profit_factor": 2.1902167544988607,
+    "win_rate": 0.6344827586206897
+   },
+   "counters": {
+    "candidates": 15250,
+    "gate_rsi": 701,
+    "gate_bb": 1544,
+    "gate_sector": 827,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1091,
+    "gate_volatile": 0,
+    "days_market_weak": 445,
+    "engine_buy": 907,
+    "engine_hold": 3754,
+    "orders": 817,
+    "fills": 570,
+    "unfilled_no_cash": 247,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 326,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 5,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 56,
+      "profit_factor": 4.79
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 75,
+      "profit_factor": 0.7
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.82,
+    "drawdown_change": 0.0608
+   }
+  },
+  {
+   "name": "hd_sue0_cap98_tight_spy25",
+   "why": "sensitivity: SPY 2.5%",
+   "change": {
+    "min_sue": 0.0,
+    "max_rs_rank": 98,
+    "tight_boost": 0.5,
+    "min_spy_above_50ma": 0.025
+   },
+   "trades": 625,
+   "win_rate": 0.5952,
+   "profit_factor": 2.1239663664102952,
+   "avg_win_pct": 12.902766129032257,
+   "avg_loss_pct": -9.153296442687745,
+   "cagr": 0.2404,
+   "max_drawdown": -0.1285,
+   "worst_month": -0.0739,
+   "avg_month": 0.0185,
+   "recent_return": 0.0107,
+   "last_30d_return": -0.0119,
+   "pf_without_best_5": 1.7,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 127,
+     "profit_factor": 5.12
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 151,
+     "profit_factor": 1.31
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 42,
+     "profit_factor": 1.99
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 167,
+     "profit_factor": 2.45
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 55,
+     "profit_factor": 5.03
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 83,
+     "profit_factor": 0.74
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 320,
+    "profit_factor": 2.2598934316694015,
+    "win_rate": 0.578125
+   },
+   "second_half": {
+    "trades": 305,
+    "profit_factor": 2.0404354882100844,
+    "win_rate": 0.6131147540983607
+   },
+   "counters": {
+    "candidates": 17300,
+    "gate_rsi": 769,
+    "gate_bb": 1698,
+    "gate_sector": 911,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1260,
+    "gate_volatile": 0,
+    "days_market_weak": 404,
+    "engine_buy": 1086,
+    "engine_hold": 4284,
+    "orders": 946,
+    "fills": 627,
+    "unfilled_no_cash": 319,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 372,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 5,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 55,
+      "profit_factor": 5.03
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 83,
+      "profit_factor": 0.74
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.717,
+    "drawdown_change": 0.0392
+   }
+  },
+  {
+   "name": "p_cap98_tight_spy3",
+   "why": "bias-free: skip RS 99 + tight + SPY 3%, all names",
+   "change": {
+    "max_rs_rank": 98,
+    "tight_boost": 0.5,
+    "min_spy_above_50ma": 0.03
+   },
+   "trades": 632,
+   "win_rate": 0.6234177215189873,
+   "profit_factor": 1.8987236378042203,
+   "avg_win_pct": 11.92476649746193,
+   "avg_loss_pct": -9.471869747899161,
+   "cagr": 0.1798,
+   "max_drawdown": -0.1199,
+   "worst_month": -0.0691,
+   "avg_month": 0.0141,
+   "recent_return": -0.0494,
+   "last_30d_return": -0.0004,
+   "pf_without_best_5": 1.6,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 128,
+     "profit_factor": 2.93
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 156,
+     "profit_factor": 1.02
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 40,
+     "profit_factor": 1.44
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 154,
+     "profit_factor": 3.52
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 66,
+     "profit_factor": 2.18
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 88,
+     "profit_factor": 0.55
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 324,
+    "profit_factor": 1.6819345809723087,
+    "win_rate": 0.5864197530864198
+   },
+   "second_half": {
+    "trades": 308,
+    "profit_factor": 2.0627536668574336,
+    "win_rate": 0.6623376623376623
+   },
+   "counters": {
+    "candidates": 15250,
+    "gate_rsi": 701,
+    "gate_bb": 1424,
+    "gate_sector": 483,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1072,
+    "gate_volatile": 0,
+    "days_market_weak": 445,
+    "engine_buy": 1104,
+    "engine_hold": 4048,
+    "orders": 1039,
+    "fills": 635,
+    "unfilled_no_cash": 404,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 318,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 5,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 66,
+      "profit_factor": 2.18
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 88,
+      "profit_factor": 0.55
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.491,
+    "drawdown_change": 0.0478
+   }
+  },
+  {
+   "name": "hd_sue0",
+   "why": "has-data + EPS at least the year-ago quarter's",
+   "change": {
+    "min_sue": 0.0
+   },
+   "trades": 731,
+   "win_rate": 0.5991792065663475,
+   "profit_factor": 1.8570675445493228,
+   "avg_win_pct": 13.3651301369863,
+   "avg_loss_pct": -10.737119453924915,
+   "cagr": 0.2822,
+   "max_drawdown": -0.1367,
+   "worst_month": -0.1028,
+   "avg_month": 0.0218,
+   "recent_return": 0.001,
+   "last_30d_return": -0.0222,
+   "pf_without_best_5": 1.47,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 119,
+     "profit_factor": 2.69
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 163,
+     "profit_factor": 1.8
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 68,
+     "profit_factor": 0.76
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 176,
+     "profit_factor": 2.33
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 96,
+     "profit_factor": 3.09
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 109,
+     "profit_factor": 0.68
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 350,
+    "profit_factor": 1.7295375945326812,
+    "win_rate": 0.5628571428571428
+   },
+   "second_half": {
+    "trades": 381,
+    "profit_factor": 1.9352166944678166,
+    "win_rate": 0.6325459317585301
+   },
+   "counters": {
+    "candidates": 20159,
+    "gate_rsi": 1174,
+    "gate_bb": 2312,
+    "gate_sector": 1257,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1435,
+    "gate_volatile": 0,
+    "days_market_weak": 346,
+    "engine_buy": 862,
+    "engine_hold": 4692,
+    "orders": 816,
+    "fills": 733,
+    "unfilled_no_cash": 83,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 387,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 5,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 96,
+      "profit_factor": 3.09
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 109,
+      "profit_factor": 0.68
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.45,
+    "drawdown_change": 0.031
+   }
+  },
+  {
+   "name": "hd_sue0_cap97_tight_spy3",
+   "why": "sensitivity: cap 97",
+   "change": {
+    "min_sue": 0.0,
+    "max_rs_rank": 97,
+    "tight_boost": 0.5,
+    "min_spy_above_50ma": 0.03
+   },
+   "trades": 537,
+   "win_rate": 0.6163873370577281,
+   "profit_factor": 2.2668711755681534,
+   "avg_win_pct": 12.626722054380664,
+   "avg_loss_pct": -8.556131067961164,
+   "cagr": 0.22,
+   "max_drawdown": -0.1087,
+   "worst_month": -0.0886,
+   "avg_month": 0.0166,
+   "recent_return": 0.0011,
+   "last_30d_return": -0.0079,
+   "pf_without_best_5": 1.83,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 109,
+     "profit_factor": 5.93
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 104,
+     "profit_factor": 1.58
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 32,
+     "profit_factor": 2.67
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 160,
+     "profit_factor": 2.09
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 59,
+     "profit_factor": 4.63
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 73,
+     "profit_factor": 0.77
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 245,
+    "profit_factor": 2.8893553849580402,
+    "win_rate": 0.6
+   },
+   "second_half": {
+    "trades": 292,
+    "profit_factor": 1.932660760522728,
+    "win_rate": 0.6301369863013698
+   },
+   "counters": {
+    "candidates": 15250,
+    "gate_rsi": 645,
+    "gate_bb": 1516,
+    "gate_sector": 931,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1162,
+    "gate_volatile": 0,
+    "days_market_weak": 445,
+    "engine_buy": 897,
+    "engine_hold": 3663,
+    "orders": 835,
+    "fills": 539,
+    "unfilled_no_cash": 296,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 336,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 4,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 59,
+      "profit_factor": 4.63
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 73,
+      "profit_factor": 0.77
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.86,
+    "drawdown_change": 0.059
+   }
+  },
+  {
+   "name": "hd_sue0_cap98_tight",
+   "why": "+ EPS growth",
+   "change": {
+    "min_sue": 0.0,
+    "max_rs_rank": 98,
+    "tight_boost": 0.5
+   },
+   "trades": 782,
+   "win_rate": 0.592071611253197,
+   "profit_factor": 1.905405013627529,
+   "avg_win_pct": 12.536473002159829,
+   "avg_loss_pct": -9.31664576802508,
+   "cagr": 0.2481,
+   "max_drawdown": -0.1246,
+   "worst_month": -0.0843,
+   "avg_month": 0.0196,
+   "recent_return": 0.0283,
+   "last_30d_return": -0.0181,
+   "pf_without_best_5": 1.54,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 133,
+     "profit_factor": 4.43
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 167,
+     "profit_factor": 1.41
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 73,
+     "profit_factor": 0.77
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 195,
+     "profit_factor": 2.12
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 98,
+     "profit_factor": 3.88
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 116,
+     "profit_factor": 0.72
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 373,
+    "profit_factor": 1.7677642299565162,
+    "win_rate": 0.5522788203753352
+   },
+   "second_half": {
+    "trades": 409,
+    "profit_factor": 1.9934964312393513,
+    "win_rate": 0.628361858190709
+   },
+   "counters": {
+    "candidates": 20148,
+    "gate_rsi": 826,
+    "gate_bb": 1999,
+    "gate_sector": 961,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1531,
+    "gate_volatile": 0,
+    "days_market_weak": 346,
+    "engine_buy": 1277,
+    "engine_hold": 5080,
+    "orders": 1137,
+    "fills": 784,
+    "unfilled_no_cash": 353,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 434,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 10,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 4,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 98,
+      "profit_factor": 3.88
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 116,
+      "profit_factor": 0.72
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.498,
+    "drawdown_change": 0.0431
+   }
+  },
+  {
+   "name": "p_cap98_tight03",
+   "why": "bias-free sensitivity: tight 0.3",
+   "change": {
+    "max_rs_rank": 98,
+    "tight_boost": 0.3
+   },
+   "trades": 894,
+   "win_rate": 0.5883668903803132,
+   "profit_factor": 1.9129041678439078,
+   "avg_win_pct": 12.084701520912548,
+   "avg_loss_pct": -9.48173641304348,
+   "cagr": 0.2475,
+   "max_drawdown": -0.1519,
+   "worst_month": -0.079,
+   "avg_month": 0.0194,
+   "recent_return": -0.0434,
+   "last_30d_return": -0.0065,
+   "pf_without_best_5": 1.55,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 147,
+     "profit_factor": 2.38
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 219,
+     "profit_factor": 1.24
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 95,
+     "profit_factor": 0.69
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 207,
+     "profit_factor": 3.19
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 103,
+     "profit_factor": 3.66
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 123,
+     "profit_factor": 0.59
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 461,
+    "profit_factor": 1.326287670468749,
+    "win_rate": 0.5227765726681128
+   },
+   "second_half": {
+    "trades": 433,
+    "profit_factor": 2.451530648538799,
+    "win_rate": 0.6581986143187067
+   },
+   "counters": {
+    "candidates": 20200,
+    "gate_rsi": 836,
+    "gate_bb": 1835,
+    "gate_sector": 617,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1570,
+    "gate_volatile": 0,
+    "days_market_weak": 346,
+    "engine_buy": 1322,
+    "engine_hold": 5519,
+    "orders": 1244,
+    "fills": 896,
+    "unfilled_no_cash": 348,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 421,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": false,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 9,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 5,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 103,
+      "profit_factor": 3.66
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 123,
+      "profit_factor": 0.59
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.506,
+    "drawdown_change": 0.0158
+   }
+  },
+  {
+   "name": "p_cap97_tight",
+   "why": "bias-free sensitivity: cap 97",
+   "change": {
+    "max_rs_rank": 97,
+    "tight_boost": 0.5
+   },
+   "trades": 851,
+   "win_rate": 0.5663924794359577,
+   "profit_factor": 1.841228705496624,
+   "avg_win_pct": 12.231771784232365,
+   "avg_loss_pct": -8.958081300813008,
+   "cagr": 0.2233,
+   "max_drawdown": -0.1624,
+   "worst_month": -0.0887,
+   "avg_month": 0.0177,
+   "recent_return": -0.0194,
+   "last_30d_return": -0.0092,
+   "pf_without_best_5": 1.47,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 141,
+     "profit_factor": 3.12
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 206,
+     "profit_factor": 1.19
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 89,
+     "profit_factor": 0.8
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 201,
+     "profit_factor": 2.51
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 98,
+     "profit_factor": 3.82
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 116,
+     "profit_factor": 0.46
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 436,
+    "profit_factor": 1.4713380919385062,
+    "win_rate": 0.5206422018348624
+   },
+   "second_half": {
+    "trades": 415,
+    "profit_factor": 2.0928345570240694,
+    "win_rate": 0.6144578313253012
+   },
+   "counters": {
+    "candidates": 20200,
+    "gate_rsi": 720,
+    "gate_bb": 1835,
+    "gate_sector": 552,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1725,
+    "gate_volatile": 0,
+    "days_market_weak": 346,
+    "engine_buy": 1462,
+    "engine_hold": 5379,
+    "orders": 1332,
+    "fills": 854,
+    "unfilled_no_cash": 478,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 447,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": true,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": false,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": true,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 9,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 5,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 98,
+      "profit_factor": 3.82
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 116,
+      "profit_factor": 0.46
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.434,
+    "drawdown_change": 0.0053
+   }
+  },
+  {
+   "name": "hd_base",
+   "why": "has-data universe, live picker (the fair baseline)",
+   "change": {
+    "min_sue": -100.0
+   },
+   "trades": 839,
+   "win_rate": 0.600715137067938,
+   "profit_factor": 1.4792440851799757,
+   "avg_win_pct": 13.130494047619049,
+   "avg_loss_pct": -11.523731343283583,
+   "cagr": 0.1924,
+   "max_drawdown": -0.1729,
+   "worst_month": -0.1073,
+   "avg_month": 0.0159,
+   "recent_return": -0.1021,
+   "last_30d_return": -0.0121,
+   "pf_without_best_5": 1.21,
+   "folds": [
+    {
+     "from": "2023-11-17",
+     "trades": 156,
+     "profit_factor": 2.13
+    },
+    {
+     "from": "2024-05-17",
+     "trades": 177,
+     "profit_factor": 1.6
+    },
+    {
+     "from": "2024-11-17",
+     "trades": 81,
+     "profit_factor": 0.77
+    },
+    {
+     "from": "2025-05-17",
+     "trades": 203,
+     "profit_factor": 2.17
+    },
+    {
+     "from": "2025-11-17",
+     "trades": 103,
+     "profit_factor": 1.14
+    },
+    {
+     "from": "2026-05-17",
+     "trades": 119,
+     "profit_factor": 0.46
+    },
+    {
+     "from": "2026-11-17",
+     "trades": 0,
+     "profit_factor": null
+    }
+   ],
+   "first_half": {
+    "trades": 414,
+    "profit_factor": 1.5558708128707157,
+    "win_rate": 0.5531400966183575
+   },
+   "second_half": {
+    "trades": 425,
+    "profit_factor": 1.422891185022107,
+    "win_rate": 0.6470588235294118
+   },
+   "counters": {
+    "candidates": 20190,
+    "gate_rsi": 1188,
+    "gate_bb": 2178,
+    "gate_sector": 1166,
+    "gate_trigger": 0,
+    "gate_adx": 0,
+    "gate_50ma_room": 1516,
+    "gate_volatile": 0,
+    "days_market_weak": 346,
+    "engine_buy": 947,
+    "engine_hold": 4728,
+    "orders": 886,
+    "fills": 840,
+    "unfilled_no_cash": 46,
+    "unfilled_at_cap": 0,
+    "gate_earnings": 397,
+    "earnings_exits": 0,
+    "earnings_held": 0,
+    "pullback_entries": 0,
+    "exits_in_grace": 0,
+    "gate_adr": 0,
+    "gate_extended": 0,
+    "days_qqq_weak": 0,
+    "days_vix_high": 0,
+    "days_breadth_weak": 0,
+    "market_data_missing": 0,
+    "partial_exits": 0,
+    "days_momentum_weak": 0
+   },
+   "verdict": {
+    "gates": {
+     "enough_trades": true,
+     "profit_factor": false,
+     "annual_return": true,
+     "drawdown": true,
+     "win_rate": true,
+     "recent": true,
+     "pf_first_half": true,
+     "pf_second_half": false,
+     "walk_forward": true,
+     "not_concentrated": true
+    },
+    "gates_passed": 8,
+    "gates_total": 10,
+    "folds_won": {
+     "counted": 6,
+     "won": 4,
+     "ok": true
+    },
+    "recent_folds": [
+     {
+      "from": "2025-11-17",
+      "trades": 103,
+      "profit_factor": 1.14
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 119,
+      "profit_factor": 0.46
+     }
+    ],
+    "recent_folds_champion": [
+     {
+      "from": "2025-11-17",
+      "trades": 92,
+      "profit_factor": 1.01
+     },
+     {
+      "from": "2026-05-17",
+      "trades": 129,
+      "profit_factor": 0.39
+     }
+    ],
+    "recent_regime_better": true,
+    "pf_gain": 0.072,
+    "drawdown_change": -0.0052
+   }
+  }
+ ]
+}

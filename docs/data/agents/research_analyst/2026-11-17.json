@@ -182,6 +182,48 @@
     "Screener health: universe_size 1375 (expected ~518 \u2014 check whether the universe was widened on purpose), price_source alpaca, data_coverage 99.7%, 50 final candidates.",
     "Stale files: options_sentiment.json and big_movers.json from 2026-11-16 close (expected); ops_status.json from 2026-11-16 22:30Z; theses.json from 2026-11-14.",
     "Options evidence so far shows no edge (unusual_calls d1 edge -0.43%, t -1.27); treated as context only.",
-    "Ops red: contracts and scope \u2014 postmarket_2026-11-16.json written by an unknown writer with no contract; daily_eval.yml failed (amber); 5 failure issues open >2 days."
+    "Ops red: contracts and scope \u2014 postmarket_2026-11-16.json written by an unknown writer with no contract; daily_eval.yml failed (amber); 5 failure issues open >2 days.",
+    "FOR MANAGER \u2014 recommendations for Alex (follow-up review of the ACN entry, requested by Alex 2026-11-17). Research only: nothing changed in code or rules.",
+    "REC 1 (test a thesis-grade gate): thesis_grade is logged but never blocks a buy (run_daily_analysis.py records it only). Closed trades (trades.json, n=92): grade B n=19 avg +1.2% win 21%; C n=42 avg -2.8% win 19%; D n=18 avg -5.5% win 11%. Recommend backtesting a block on D-grade entries (and C as a second variant) before any live change. Open D-grade holdings: ACN, FDS, MAR. Caveat: small samples, low win rates in every grade.",
+    "REC 2 (test a later break-even stop): stops move to break-even at +5% and are never lowered; ACN reached +5% then gave it back and now sits 0.3% above a break-even stop. Recommend comparing --breakeven-at 5 vs 8 vs 10 in backtest.py to see whether +5% shakes out trends too early. Keep ACN's current stop meanwhile (Alex confirmed).",
+    "REC 3 (watch the news-veto A/B): ACN had news_veto=true (news_score -0.2) but was in the control arm, so it was bought anyway by design (signal_log.json 2026-10-27). Control trades bought despite a veto: n=2, avg -7.8%. Too small to act on; worth reporting when the experiment is next scored.",
+    "CORRECTION: this morning's brief used ACN's bullish options read (+3) as context for holding. Options data started in mid-November, after the 2026-10-27 buy, and has shown no edge so far (unusual_calls d1 edge -0.43%, t -1.27). It should not be read as support for the position."
+  ],
+  "recommendations": [
+    {
+      "id": "REC-research_analyst-20261117-1",
+      "title": "Thesis-grade entry gate",
+      "change": "Block new buys with thesis_grade D (variant 2: C and D). thesis_grade is logged but never gates a buy today.",
+      "evidence": [
+        "trades.json:thesis_grade,pnl_pct (closed)"
+      ],
+      "sample": "92 closed trades: B n=19 avg +1.2% win 21%; C n=42 avg -2.8% win 19%; D n=18 avg -5.5% win 11%",
+      "test": "Backtest with a min thesis grade (or raise w_thesis as a challenger) before any live change",
+      "priority": "high"
+    },
+    {
+      "id": "REC-research_analyst-20261117-2",
+      "title": "Later break-even stop",
+      "change": "Compare moving the stop to break-even at +5% (live) vs +8% and +10%.",
+      "evidence": [
+        "latest.json:positions.ACN.stop_loss",
+        "run_daily_analysis.py:BREAKEVEN_AT_PCT"
+      ],
+      "sample": "1 case (ACN); needs the backtest",
+      "test": "backtest.py --breakeven-at 5 / 8 / 10, or a breakeven_at challenger",
+      "priority": "medium"
+    },
+    {
+      "id": "REC-research_analyst-20261117-3",
+      "title": "Report the news-veto A/B",
+      "change": "Score the news_veto experiment when it has enough trades; control-arm buys taken despite a veto have lost so far.",
+      "evidence": [
+        "signal_log.json:news_veto,news_arm",
+        "trades.json"
+      ],
+      "sample": "control arm with veto n=2 avg -7.8% (too small)",
+      "test": "experiments.py scoring once both arms have 10+ closed trades",
+      "priority": "low"
+    }
   ]
 }

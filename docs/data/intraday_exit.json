@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-16T20:45:43.437058",
-  "positions_checked": 15,
+  "generated_at": "2026-11-17T14:45:49.865354",
+  "positions_checked": 14,
   "exits_triggered": [],
   "stops_updated": [],
   "stops_placed": [],
@@ -12,7 +12,15 @@
       "qty": 281.0
     }
   ],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "ACN",
+      "trigger": "BROKER_STOP",
+      "price": 243.68,
+      "pnl_pct": -0.4,
+      "exit_date": "2026-11-17"
+    }
+  ],
   "sleeve_positions": [
     "KVYO",
     "REAL",

@@ -145,3 +145,15 @@ EPS and revenue growth, revenue acceleration, days since the report.
   closeness, steady climb, earnings reaction (alone and with surprise), gross
   margin trend; VCP and earnings-gap entries; buying at the close;
   volatility-scaled sizing. Each alone and on top of cap98_tight.
+- 2026-11-17 — Round 5 results (champion PF 1.41, CAGR +16.2%, DD -16.8%,
+  folds 1.01 / 0.39). On a fair footing (has-data twins), EPS growth helps
+  alone (1.86 vs 1.48) but adds little once the price fixes are in:
+  cap98+tight 2.14 vs +EPS 1.91; with SPY 3%: 2.18 vs +EPS 2.23 (latest fold
+  1.00 vs 0.70); a stricter surprise floor reached 2.44 but the floor is
+  fragile (round 4). The earnings filter and cap98+tight largely pick the
+  same winners. Bias-free: cap98+tight+SPY 3% PF 1.90, CAGR +18.0%, DD -12.0%,
+  folds 2.18 / 0.55, 10/10 gates (three settings, so not a tournament
+  challenger as is; spy3 and cap98_tight are each already in it).
+  Sensitivity holds: tight 0.3 gives PF 1.91 / CAGR +24.8%, cap 97 gives 1.84.
+  Next: remove the data bias at the source (map delisted companies' SEC data
+  to their old tickers) before any earnings rule goes near the tournament.

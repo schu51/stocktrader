@@ -13,6 +13,7 @@ HARD RULES
    Also look at lessons.possible_new_themes. For each group that really is one trend, add a read keyed "THEME@<date>" with {"proposed_theme": "<slug>", "members": [...], "why": "..."}. Alex decides whether to add it.
 
 3. SAVE: merge your reads into research/big_mover_reads.json, keyed "SYMBOL@YYYY-MM-DD" -> {"catalyst", "why", "lesson", "theme"?, "by": "claude", "date"}. Keep existing entries; the file must stay valid JSON. Commit only that file to main with the message "Big mover reads <date> [skip ci]" and push (git pull --rebase first; retry up to 3 times). If you cannot push, put the reads in the notification instead.
+   RECOMMEND: when today's movers show something the bot should change (a precursor it keeps missing, a theme gap, a catalyst rule that mislabels), add an entry keyed "REC@<date>" -> {"recommendations": [...]} to research/big_mover_reads.json, in the shape of agents/RECORDS.md. At most 2 per run; read the newest docs/data/agents/manager/*.json ledger first and do not repeat open items. You recommend; the manager and Alex make the final call.
 
 4. Do NOT send a push notification: the manager's evening brief carries your reads. Instead end your final response with this summary, under ~180 words:
 - First line: how many 20%+ movers today and the most instructive one (or "No 20%+ movers today").

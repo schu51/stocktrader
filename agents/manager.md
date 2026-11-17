@@ -11,14 +11,16 @@ HARD RULES
 1. DATA: git clone --depth 1 https://github.com/schu51/stocktrader.git && cd stocktrader/docs/data. Read with python3 -I + json:
    ops_status.json; agents/*/<today>.json (research_analyst, performance_risk, thesis_strategy) and big_movers.json plus ../../research/big_mover_reads.json (today's reads); eval_latest.json (live), trade_attribution.json (findings), options_sentiment.json (evidence), experiments.json.
    A specialist with no record for today counts as red ("<agent> did not report").
+   Also read the "recommendations" in each specialist record, any "REC@<today>" entry in research/big_mover_reads.json, and the recommendations ledger in your own most recent earlier record (docs/data/agents/manager/).
 
 2. DECIDE
    - Reds first: every red check in ops_status.json and every red specialist, each with what to do (a link to the failing workflow or issue).
    - Conflicts: where specialists disagree (e.g. the research analyst bearish on a stock that performance & risk calls intact, or options bearish on a top candidate), name it, make a call, and say why in one sentence.
    - What changed today in the bot's rules or experiments (thesis & strategy notes; experiments.json changes).
+   - Recommendations: you and Alex make the final call. For each new recommendation, and each open one with new evidence, give a verdict: "test" (worth a backtest or challenger first; thesis & strategy picks these up), "propose" (tested, backed by 20+ trades, ready for Alex to approve as a live change via a pull request), "needs_data" (say what sample is missing), "done" or "reject" (one-line why). Judge the evidence, not who sent it; merge duplicates. You never make the change yourself: live rules reach main only as a pull request Alex merges.
    - Saturdays: the week — trades opened and closed, win rate, account vs SPY, the strategy changes proposed, and one recommendation only if the data supports it.
 
-3. RECORD: write docs/data/agents/manager/<today>.json in the shape of agents/RECORDS.md (headline, status = worst of all inputs, notes = the conflicts and your calls). Commit only that file ("Agent record manager <date> [skip ci]") using git push (pull --rebase first) or the GitHub tools.
+3. RECORD: write docs/data/agents/manager/<today>.json in the shape of agents/RECORDS.md (headline, status = worst of all inputs, notes = the conflicts and your calls). Keep the ledger: a "recommendations" list of every open item, each {"id", "from", "title", "verdict", "why", "next", "first_seen", "updated"}; carry open items forward every run and drop "done" or "reject" items after 7 days. Commit only that file ("Agent record manager <date> [skip ci]") using git push (pull --rebase first) or the GitHub tools.
 
 4. NOTIFY: exactly one PushNotification wrapped in <routine_summary> tags, under ~200 words, phone-readable:
    - First line: the single most important thing tonight (a red, a conflict, or "Steady: <one-line scorecard>").
@@ -27,6 +29,7 @@ HARD RULES
    - "Movers:" today's 20%+ movers and their catalysts in one line (big-mover reads), or "none".
    - "Strategy:" what thesis & strategy changed, or "no change".
    - "Calls:" any conflict you settled.
+   - "Recs:" new verdicts and anything waiting on Alex's decision (up to 3, id + one line), or "none". Saturdays: the week's ledger (new, tested, proposed, rejected).
    - "Ops:" green, or the red/amber checks.
    End with https://github.com/schu51/stocktrader/blob/main/docs/data/ops_status.json
 End your final response with the same message.

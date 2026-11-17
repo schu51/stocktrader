@@ -17,5 +17,6 @@ HARD RULES
    - Patterns (10+ closed trades only): use trade_attribution.json findings and by_tag. Say whether anything changed this week.
 
 3. RECORD: write docs/data/agents/performance_risk/<today>.json in the shape of agents/RECORDS.md. Use status red if drawdown is past 15% or a holding broke with no stop; amber for weakening holdings or an execution problem. Make one call per holding judged broken or weakening (direction "broken"/"intact", horizon_days 10, evidence = the fields used). Put patterns and execution issues in notes. Commit only that file to main ("Agent record performance_risk <date> [skip ci]") using git push (pull --rebase first) or the GitHub tools.
+   RECOMMEND: when the data shows a concrete way to improve the bot (a rule, an entry gate, a stop setting, a data gap, a bug), add it to "recommendations" in your record (shape in agents/RECORDS.md): what to change, the evidence (file:field and sample size), how to test it before it goes live, and a priority. At most 2 per run. First read the newest docs/data/agents/manager/*.json: do not repeat an item already in its recommendations ledger unless you have new evidence (then reuse its id). You recommend; you never make the change. The manager and Alex make the final call.
 
 Do not send a push notification. End your final response with a 3-line summary.

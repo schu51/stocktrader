@@ -1,10 +1,7 @@
 {
-  "generated_at": "2026-11-16T22:30:50+00:00",
-  "status": "red",
-  "red": [
-    "contracts",
-    "scope"
-  ],
+  "generated_at": "2026-11-17T15:45:49+00:00",
+  "status": "amber",
+  "red": [],
   "amber": [
     "jobs",
     "issues"
@@ -13,9 +10,10 @@
     {
       "name": "jobs",
       "status": "amber",
-      "detail": "1 job(s) failed or missed",
+      "detail": "2 job(s) failed or missed",
       "items": [
-        "daily_eval.yml: failed"
+        "daily_eval.yml: failed",
+        "ops_monitor.yml: failed"
       ]
     },
     {
@@ -30,30 +28,25 @@
     },
     {
       "name": "contracts",
-      "status": "red",
-      "detail": "1 shared file(s) off contract",
-      "items": [
-        "postmarket_2026-11-16.json: no contract: add one to contracts.CONTRACTS"
-      ]
+      "status": "green",
+      "detail": "every shared file matches its contract"
     },
     {
       "name": "scope",
-      "status": "red",
-      "detail": "1 write(s) outside a job's lane",
-      "items": [
-        "breach: 0892a3e3 [unknown writer] Post-market 2026-11-16: 17 intact, 2 weakening (WK/KVYO), 1  -> docs/data/postmarket_2026-11-16.json"
-      ]
+      "status": "green",
+      "detail": "every commit stayed in its lane"
     },
     {
       "name": "issues",
       "status": "amber",
-      "detail": "5 failure issue(s) open more than 2 days",
+      "detail": "6 failure issue(s) open more than 2 days",
       "items": [
+        "#51 \ud83d\udea8 Weekly Review run failed 2026-11-14 (3 days)",
         "#50 \ud83d\udea8 Ops monitor red 2026-11-13 (3 days)",
         "#43 \ud83d\udea8 Ops monitor red 2026-11-12 (4 days)",
         "#34 \ud83d\udea8 Ops monitor red 2026-11-11 (5 days)",
-        "#15 \ud83d\udea8 Macro Research run failed 2026-11-07 (9 days)",
-        "#12 \ud83d\udea8 Macro Research run failed 2026-10-31 (16 days)"
+        "#15 \ud83d\udea8 Macro Research run failed 2026-11-07 (10 days)",
+        "#12 \ud83d\udea8 Macro Research run failed 2026-10-31 (17 days)"
       ]
     }
   ]

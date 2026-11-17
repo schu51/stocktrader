@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-16T22:30:49",
+  "generated_at": "2026-11-17T15:45:49",
   "findings": [
-    "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 21% of 92.",
-    "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 21% of 92.",
+    "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 20% of 93.",
+    "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 20% of 93.",
     "Most exits were trend break: 69 trades, 16% won, -5,244 USD.",
     "27 trades were closed within 3 days (0% won, -4,556 USD).",
     "Bought 15%+ above the 50-day average: 32% won (avg +3.6%) vs 15% (avg -3.6%) otherwise.",
@@ -10,10 +10,10 @@
   ],
   "summary": {
     "all": {
-      "trades": 92,
-      "win_rate": 0.207,
+      "trades": 93,
+      "win_rate": 0.204,
       "avg_pnl_pct": -1.21,
-      "total_pnl_usd": -4119.29
+      "total_pnl_usd": -4129.08
     },
     "by_tag": {
       "exit": {
@@ -42,10 +42,10 @@
           "total_pnl_usd": 167.31
         },
         "stop": {
-          "trades": 6,
-          "win_rate": 0.333,
-          "avg_pnl_pct": -4.76,
-          "total_pnl_usd": -718.25
+          "trades": 7,
+          "win_rate": 0.286,
+          "avg_pnl_pct": -4.14,
+          "total_pnl_usd": -728.04
         },
         "stop_gapped": {
           "trades": 7,
@@ -62,10 +62,10 @@
       },
       "quick_fail": {
         "False": {
-          "trades": 65,
-          "win_rate": 0.292,
-          "avg_pnl_pct": 0.5,
-          "total_pnl_usd": 436.86
+          "trades": 66,
+          "win_rate": 0.288,
+          "avg_pnl_pct": 0.49,
+          "total_pnl_usd": 427.07
         },
         "True": {
           "trades": 27,
@@ -76,10 +76,10 @@
       },
       "earnings": {
         "False": {
-          "trades": 73,
-          "win_rate": 0.164,
-          "avg_pnl_pct": -1.83,
-          "total_pnl_usd": -4582.12
+          "trades": 74,
+          "win_rate": 0.162,
+          "avg_pnl_pct": -1.81,
+          "total_pnl_usd": -4591.91
         },
         "True": {
           "trades": 19,
@@ -96,10 +96,10 @@
           "total_pnl_usd": -5047.17
         },
         "None": {
-          "trades": 26,
-          "win_rate": 0.231,
+          "trades": 27,
+          "win_rate": 0.222,
           "avg_pnl_pct": -0.48,
-          "total_pnl_usd": -1136.88
+          "total_pnl_usd": -1146.67
         },
         "True": {
           "trades": 19,
@@ -116,10 +116,10 @@
           "total_pnl_usd": -2106.72
         },
         "neutral": {
-          "trades": 15,
-          "win_rate": 0.267,
-          "avg_pnl_pct": -4.57,
-          "total_pnl_usd": -2012.57
+          "trades": 16,
+          "win_rate": 0.25,
+          "avg_pnl_pct": -4.31,
+          "total_pnl_usd": -2022.36
         }
       },
       "backtest": {
@@ -130,18 +130,18 @@
           "total_pnl_usd": -422.2
         },
         "unmatched": {
-          "trades": 74,
-          "win_rate": 0.189,
-          "avg_pnl_pct": -1.26,
-          "total_pnl_usd": -3697.09
+          "trades": 75,
+          "win_rate": 0.187,
+          "avg_pnl_pct": -1.25,
+          "total_pnl_usd": -3706.88
         }
       },
       "sleeve": {
         "False": {
-          "trades": 90,
-          "win_rate": 0.2,
+          "trades": 91,
+          "win_rate": 0.198,
           "avg_pnl_pct": -1.01,
-          "total_pnl_usd": -3692.25
+          "total_pnl_usd": -3702.04
         },
         "True": {
           "trades": 2,
@@ -179,7 +179,7 @@
     "losses_by_exit": {
       "trend_break": -7370.95,
       "stop_gapped": -3293.86,
-      "stop": -767.45,
+      "stop": -777.24,
       "hard_loss": -643.62
     },
     "worst": [
@@ -304,7 +304,7 @@
         }
       }
     ],
-    "total_pnl_usd": -4119.29
+    "total_pnl_usd": -4129.08
   },
   "trades": [
     {
@@ -2158,6 +2158,27 @@
         "regime": "neutral",
         "backtest": "unmatched",
         "sleeve": true
+      },
+      "context": {
+        "regime": "neutral"
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "ACN",
+      "entry_date": "2026-10-27",
+      "exit_date": "2026-11-17",
+      "pnl_pct": -0.4,
+      "pnl_usd": -9.79,
+      "hold_days": 21,
+      "tags": {
+        "exit": "stop",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": false
       },
       "context": {
         "regime": "neutral"

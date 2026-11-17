@@ -71,6 +71,8 @@ ALLOWED_KNOBS = {           # backtest.Backtest arguments a challenger may chang
     "qqq_above_ema20", "max_vix", "min_breadth",
     # picker & filter lab (2026-11-17, research/picker_lab/README.md)
     "max_rs_rank", "sector_boost", "min_thesis", "min_mom_spread", "rs_mode",
+    # round 6 (2026-11-17): price and earnings-date signals the tournament can replay
+    "min_high_ratio", "w_high", "min_smooth", "min_ear", "ear_window", "vol_target",
     # (w_fund, min_sue, min_rev_growth, pead_days need fundamentals data the tournament does not load yet)
 }
 # Promotion gates, challenger vs champion on the same three-year replay

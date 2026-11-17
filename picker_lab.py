@@ -36,7 +36,7 @@ logger = logging.getLogger("picker_lab")
 # Settings a lab variant must not touch: they are run plumbing, not rules
 NOT_RULES = {"self", "universe", "prices", "start", "end", "capital", "quiet", "earnings", "members",
              "fundamentals"}
-FUNDAMENTAL_KNOBS = {"w_fund", "min_sue", "min_rev_growth", "pead_days"}
+FUNDAMENTAL_KNOBS = {"w_fund", "min_sue", "min_rev_growth", "pead_days", "min_margin_chg"}
 
 
 def rule_knobs() -> set:

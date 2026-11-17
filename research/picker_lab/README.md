@@ -62,6 +62,30 @@ usable only from its earnings report date (or 60 days after quarter end), so
 the replay sees what was public that day. Signals: earnings surprise (SUE),
 EPS and revenue growth, revenue acceleration, days since the report.
 
+## Round 6 sources (momentum and swing-trading research, 2026-11-17)
+
+- Earnings surprise + the 3-day announcement return: long-short ~12.5%/yr
+  combined (Brandt et al., via Quantpedia "Post-Earnings Announcement Effect").
+- Price and earnings momentum each add; winners without earnings support
+  reverse more (Chan, Jegadeesh & Lakonishok 1996).
+- Nearness to the 52-week high beats past-return momentum and does not
+  reverse (George & Hwang 2004).
+- Momentum from many small moves persists more than from a few jumps
+  ("frog in the pan", Da, Gurun & Warachka).
+- Fundamental momentum (profitability trends) lasts 12-18 months vs ~4 for
+  price momentum; combined beats either ("Twin Momentum").
+- Momentum earns nearly all its premium overnight: 0.95%/month vs 0.11%
+  intraday (Lou, Polk & Skouras 2019).
+- Volatility-scaled momentum nearly eliminates crashes and roughly doubles
+  the Sharpe ratio (Barroso & Santa-Clara; Daniel & Moskowitz).
+- Practitioners: Minervini's VCP (shrinking pullbacks, volume dry-up, pivot
+  breakout, stop under the last contraction); Kullamägi's breakouts and
+  episodic pivots (gap on heavy volume after an earnings beat); a systematic
+  replication of his breakouts: CAGR 19%, max DD -21%, 2,382 trades since
+  2007, with tight stops and 3-day exits both underperforming.
+- CAN SLIM, point-in-time 1999-2023: 23.5%/yr vs 6.9% for the S&P 500,
+  before costs.
+
 ## Log
 
 - 2026-11-17 — Round 1 written: filter alternatives (none, SPY 3%, momentum
@@ -117,3 +141,7 @@ EPS and revenue growth, revenue acceleration, days since the report.
   settings, no data bias), replacing grace5, which replays identically to the
   champion and so measures nothing. Round 5 re-runs the earnings ideas on the
   has-data universe so each is judged against its fair twin.
+- 2026-11-17 — Round 6 written from the research above: 52-week-high
+  closeness, steady climb, earnings reaction (alone and with surprise), gross
+  margin trend; VCP and earnings-gap entries; buying at the close;
+  volatility-scaled sizing. Each alone and on top of cap98_tight.

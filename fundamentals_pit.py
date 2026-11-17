@@ -18,6 +18,7 @@ Signals as of a date (factor_asof), from the quarters known by then:
   eps_yoy      EPS growth on the same quarter a year ago
   rev_yoy      revenue growth on the same quarter a year ago
   rev_accel    rev_yoy now minus rev_yoy a quarter earlier
+  margin_chg   gross margin now minus the same quarter a year ago (None without gross profit)
   days_since   calendar days since the latest quarter became known
   score        0-100 blend for ranking (50 = no information)
 
@@ -46,7 +47,9 @@ FIGURES = {
     "eps": {"taxonomy": "us-gaap", "unit": "USD-per-shares", "tags": ["EarningsPerShareDiluted", "EarningsPerShareBasic"]},
     "revenue": {"taxonomy": "us-gaap", "unit": "USD",
                 "tags": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"]},
+    "gross_profit": {"taxonomy": "us-gaap", "unit": "USD", "tags": ["GrossProfit"]},
 }
+VERSION = 2                     # bump when the row layout changes: [end, known_from, eps, revenue, gross_profit]
 
 
 def _as_date(x) -> Optional[date]:
@@ -76,7 +79,7 @@ def periods(today: date) -> List[str]:
 
 
 def build(today: date, earnings: Dict[str, List], fetch=None, listings: Optional[Dict[int, Dict]] = None) -> Dict:
-    """{ticker: [[quarter_end, known_from, eps, revenue], ...]} oldest first."""
+    """{ticker: [[quarter_end, known_from, eps, revenue, gross_profit], ...]} oldest first."""
     import diamond_data as dd
     fetch = fetch or dd.fetch_frame
     if listings is None:
@@ -99,11 +102,13 @@ def build(today: date, earnings: Dict[str, List], fetch=None, listings: Optional
         ticker = listing["ticker"]
         eps = dd.quarterly_series(rows["eps"].get(cik, []))
         rev = dd.quarterly_series(rows["revenue"].get(cik, []))
+        gp = dd.quarterly_series(rows["gross_profit"].get(cik, []))
         ends = sorted(set(eps) | set(rev))
         if not ends:
             continue
         reports = sorted(d for d in (_as_date(x) for x in earnings.get(ticker, []) or []) if d)
-        out[ticker] = [[e.isoformat(), known_from(e, reports).isoformat(), eps.get(e), rev.get(e)] for e in ends]
+        out[ticker] = [[e.isoformat(), known_from(e, reports).isoformat(), eps.get(e), rev.get(e), gp.get(e)]
+                       for e in ends]
     return out
 
 
@@ -113,11 +118,11 @@ def load_or_build(today: date, earnings: Dict[str, List], max_age_days: int = 7)
         import contracts
         data = contracts.read(CACHE)
         built = _as_date(data.get("built"))
-        if built and (today - built).days <= max_age_days:
+        if built and (today - built).days <= max_age_days and data.get("version") == VERSION:
             return data["tickers"]
     tickers = build(today, earnings)
     CACHE.parent.mkdir(parents=True, exist_ok=True)
-    CACHE.write_text(json.dumps({"built": today.isoformat(), "tickers": tickers}))
+    CACHE.write_text(json.dumps({"built": today.isoformat(), "version": VERSION, "tickers": tickers}))
     logger.info(f"fundamentals: {len(tickers)} tickers built from SEC frames")
     return tickers
 
@@ -163,7 +168,10 @@ def factor_asof(history: List[list], asof: date) -> Optional[Dict]:
     prev_prior = year_ago(ends[-2])
     rev_yoy_prev = _yoy(prev[3], prev_prior[3]) if prev_prior else None
     accel = rev_yoy - rev_yoy_prev if rev_yoy is not None and rev_yoy_prev is not None else None
-    return {"sue": sue, "eps_yoy": _yoy(eps_now, eps_then), "rev_yoy": rev_yoy, "rev_accel": accel,
+    margin = lambda q: (q[4] / q[3]) if q and len(q) > 4 and q[4] is not None and q[3] else None
+    m_now, m_then = margin(latest), margin(prior)
+    margin_chg = m_now - m_then if m_now is not None and m_then is not None else None
+    return {"sue": sue, "margin_chg": margin_chg, "eps_yoy": _yoy(eps_now, eps_then), "rev_yoy": rev_yoy, "rev_accel": accel,
             "days_since": (asof - _as_date(latest[1])).days, "score": score(sue, rev_yoy, accel)}
 
 

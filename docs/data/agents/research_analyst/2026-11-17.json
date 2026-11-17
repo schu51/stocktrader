@@ -1,0 +1,187 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-17",
+  "generated_at": "2026-11-17T14:23:40+00:00",
+  "status": "amber",
+  "headline": "ACN sits 0.3% above its stop (246.50 vs 245.88) despite bullish OSINT/options; WK (-20.8%, RS 19, puts heavy) and KDP (dilution filing, 4.3% from stop) are the weak holdings; call SELECTIVE.",
+  "calls": [
+    {
+      "subject": "ACN",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.ACN.stop_loss",
+        "osint_latest.json:ACN.events(awards, loose name match)",
+        "options_sentiment.json:ACN.options_score=+3,unusual_calls"
+      ],
+      "why": "Bullish options and a federal-awards spike (loose match) argue up, but price is 0.3% above the stop so a small dip exits it."
+    },
+    {
+      "subject": "WK",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "latest.json:positions.WK.unrealized_pnl_pct=-20.77",
+        "screener.json:rs_ranks.WK=19",
+        "options_sentiment.json:WK.options_score=-2"
+      ],
+      "why": "Deep loser with RS 19, 5.3% above stop and put-heavy options (2,497 puts vs 200 calls)."
+    },
+    {
+      "subject": "KDP",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "osint_latest.json:KDP.events(424B5 securities offering)",
+        "latest.json:positions.KDP.stop_loss=33.95"
+      ],
+      "why": "424B5 offering signals possible dilution on a -3.3% position 4.3% above its stop; bullish options read is context only."
+    },
+    {
+      "subject": "REAL",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "osint_latest.json:REAL.detail.insiders_30d.discretionary_sell_value=6156837",
+        "osint_latest.json:REAL.score=-2"
+      ],
+      "why": "$6.2M discretionary insider selling (3 sellers, incl. accounting chief) on a -4% position with no RS rank; news surge is mostly loose name matches."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN=28",
+        "osint_latest.json:TTAN.score=-1"
+      ],
+      "why": "RS 28 well below the 50 line; negative-tone news surge is modest and 13G filings are passive."
+    },
+    {
+      "subject": "HUM",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.HUM.stop_loss=427.7",
+        "osint_latest.json:HUM.events(news surge tone +0.31, 8-K)"
+      ],
+      "why": "Strong RS 97 and positive news tone, but 4.2% above stop."
+    },
+    {
+      "subject": "KO",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.KO.stop_loss=94.22"
+      ],
+      "why": "4.5% above stop with no news signal."
+    },
+    {
+      "subject": "CTLP",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "high",
+      "evidence": [
+        "latest.json:positions.CTLP.untradable"
+      ],
+      "why": "Asset inactive on Alpaca (delisted or acquired); position cannot be managed by the bot."
+    },
+    {
+      "subject": "SJM",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:SJM.events(short volume collapsed z -3.1, news tone +0.40)"
+      ],
+      "why": "Sharp drop in short volume plus positive news tone."
+    },
+    {
+      "subject": "ELF",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.ELF rs_rank=96 thesis_grade=C"
+      ],
+      "why": "Top screener score, but grade C and 24% extended; an officer/director 8-K is unexplained."
+    },
+    {
+      "subject": "APA",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.APA rs_rank=94 thesis_grade=C"
+      ],
+      "why": "Energy sector leader with room in BB; grade C."
+    },
+    {
+      "subject": "CHRD",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:candidates.CHRD rs_rank=87 thesis_grade=B"
+      ],
+      "why": "Grade-B fresh setup 11% from base in a leading sector (energy thesis TH-2026-0001)."
+    },
+    {
+      "subject": "TRGP",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:candidates.TRGP rs_rank=87 thesis_grade=B",
+        "options_sentiment.json:TRGP.options_score=+2"
+      ],
+      "why": "Grade-B fresh midstream setup 10% from base; options mildly bullish."
+    },
+    {
+      "subject": "SEZL",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.SEZL rs_rank=99 thesis_grade=D"
+      ],
+      "why": "RS 99 but grade D and 51% extended: late-entry risk outweighs bullish options."
+    },
+    {
+      "subject": "ACM",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:catalyst_watch.ACM earnings 2026-11-17",
+        "options_sentiment.json:ACM.options_score=-3"
+      ],
+      "why": "Earnings today on the far-from-high pattern, but options are put-heavy with +32 vol pt skew. Watch-only."
+    },
+    {
+      "subject": "TGT",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:catalyst_watch.TGT earnings 2026-11-18 rs_rank=91",
+        "options_sentiment.json:TGT.options_score=+3,unusual_calls"
+      ],
+      "why": "Earnings-leader pattern with RS 91 and heavy opening call buying before tomorrow's report. Watch-only."
+    }
+  ],
+  "notes": [
+    "Day call SELECTIVE: regime neutral (SPY 739.95 below 50MA 763.52, above 200MA), drawdown 8.6% (CAUTION), premarket LIGHT DAY with no gap alerts; only A/B entries (CHRD, TRGP, TS, VRNS, PK, CPAY, FMX, TGTX, USFD).",
+    "Screener health: universe_size 1375 (expected ~518 \u2014 check whether the universe was widened on purpose), price_source alpaca, data_coverage 99.7%, 50 final candidates.",
+    "Stale files: options_sentiment.json and big_movers.json from 2026-11-16 close (expected); ops_status.json from 2026-11-16 22:30Z; theses.json from 2026-11-14.",
+    "Options evidence so far shows no edge (unusual_calls d1 edge -0.43%, t -1.27); treated as context only.",
+    "Ops red: contracts and scope \u2014 postmarket_2026-11-16.json written by an unknown writer with no contract; daily_eval.yml failed (amber); 5 failure issues open >2 days."
+  ]
+}

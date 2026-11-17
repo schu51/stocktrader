@@ -51,8 +51,27 @@ Guard rails: three-year survivorship-free replay, 10 bps slippage per side,
 judged on gates + walk-forward folds + recent folds + PF without the 5 best
 trades. Avoid fitting to the last five months alone.
 
+## Data the picker has (and lacks)
+
+Until round 3 the picker saw only price and volume: RS is past returns, and
+the backtest's thesis score is price/volume too (earnings are off in replays).
+The live thesis score does include an earnings check, which may be why it
+picked better live than in backtests. Round 3 adds point-in-time fundamentals
+(`fundamentals_pit.py`): quarterly EPS and revenue from SEC XBRL frames, each
+usable only from its earnings report date (or 60 days after quarter end), so
+the replay sees what was public that day. Signals: earnings surprise (SUE),
+EPS and revenue growth, revenue acceleration, days since the report.
+
 ## Log
 
 - 2026-11-17 — Round 1 written: filter alternatives (none, SPY 3%, momentum
   health, breadth) and picker fixes (weights, RS cap, no sector boost, thesis
   floor, extension cap), each alone, plus two combinations.
+- 2026-11-17 — Round 2 (price-only signal and entry): RS measured as of a
+  month ago and textbook 12-1 momentum; breakout, pullback, extension-capped
+  and tight-base entries; combinations. Motivation: the live RS formula puts
+  40% weight on the last quarter including last month, the window where
+  winners tend to reverse, and the bot buys the top of the list at the open
+  rather than at a defined entry (27 trades closed within 3 days, 0% won).
+- 2026-11-17 — Round 3 (fundamentals): SUE, revenue growth, post-earnings
+  drift window, and fundamentals in the rank, alone and with 12-1 momentum.

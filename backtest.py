@@ -37,7 +37,7 @@ import time
 from datetime import date, datetime
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -313,13 +313,23 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
                 spy_closes: np.ndarray, w_rs: float, w_thesis: float,
                 top_n: int = 50, min_price: float = 5.0,
                 min_avg_volume: int = 500_000, max_rs_rank: int = 100,
-                sector_boost: float = SECTOR_LEADER_BOOST, min_thesis: float = 0.0) -> List[Dict]:
+                sector_boost: float = SECTOR_LEADER_BOOST, min_thesis: float = 0.0,
+                rs_mode: str = "live", fund_fn: Optional[Callable] = None, w_fund: float = 0.0,
+                min_sue: Optional[float] = None, min_rev_growth: Optional[float] = None,
+                pead_days: int = 0) -> List[Dict]:
     """
     The candidate list run_screener would have produced with these bars.
     `closes` / `volumes` hold the trailing year ending on the as-of date.
     Picker lab knobs (defaults = the live screener): max_rs_rank drops names
     ranked above it (the most extended), sector_boost is the leader-sector
     multiplier (1.0 = none), min_thesis drops names scoring below it.
+    rs_mode: "live" (the screener's formula), "skip1m" (the same formula as of
+    21 sessions ago, so last month's run-up does not count) or "12_1" (one
+    return from 252 to 21 sessions ago, the textbook momentum measure).
+    Fundamentals (fund_fn(sym) -> fundamentals_pit signals or None): w_fund
+    adds w_fund x the 0-100 score to the rank; min_sue / min_rev_growth drop
+    names below them (or with no data); pead_days keeps only names whose
+    latest report, within that many days, was a positive surprise.
     """
     from forward_thesis import score_forward_thesis
     from screener import calculate_rs_scores, get_sector_leaders, percentile_rank
@@ -332,9 +342,20 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
     cols = [s for s in universe if s in closes.columns]
     arr = closes[cols].to_numpy(dtype=float) if cols else np.empty((0, 0))
     full = ~np.isnan(arr).any(axis=0) if cols else np.zeros(0, dtype=bool)
-    raw_scores = _rs_full_columns(arr[:, full], [c for c, f in zip(cols, full) if f]) if len(arr) >= 200 else {}
     gappy = [c for c, f in zip(cols, full) if not f]
-    raw_scores.update(calculate_rs_scores(gappy, {"Close": closes[gappy]}) if gappy else {})
+    if rs_mode == "12_1":
+        raw_scores = {}
+        if len(arr) >= 252:
+            with np.errstate(divide="ignore", invalid="ignore"):
+                r = arr[-22] / arr[-252] - 1
+            raw_scores = {c: round(float(v), 5) for c, v in zip(cols, r) if v == v and np.isfinite(v)}
+    else:
+        rank_closes = closes[cols].iloc[:-21] if rs_mode == "skip1m" else closes[cols]
+        ra = rank_closes.to_numpy(dtype=float) if cols else np.empty((0, 0))
+        rfull = ~np.isnan(ra).any(axis=0) if cols else np.zeros(0, dtype=bool)
+        raw_scores = _rs_full_columns(ra[:, rfull], [c for c, f in zip(cols, rfull) if f]) if len(ra) >= 200 else {}
+        rgappy = [c for c, f in zip(cols, rfull) if not f]
+        raw_scores.update(calculate_rs_scores(rgappy, {"Close": rank_closes[rgappy]}) if rgappy else {})
     raw_scores = {s: raw_scores[s] for s in cols if s in raw_scores}      # universe order, as before
     rs_ranks = percentile_rank(raw_scores)
     top_sectors = set(get_sector_leaders(rs_ranks, universe)[:3])
@@ -378,13 +399,24 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
             thesis_score = 0.0
         if min_thesis and thesis_score < min_thesis:
             continue
+        fund = fund_fn(sym) if fund_fn else None
+        if min_sue is not None and not (fund and fund["sue"] is not None and fund["sue"] >= min_sue):
+            continue
+        if min_rev_growth is not None and not (fund and fund["rev_yoy"] is not None
+                                               and fund["rev_yoy"] >= min_rev_growth):
+            continue
+        if pead_days and not (fund and fund["sue"] is not None and fund["sue"] > 0
+                              and fund["days_since"] <= pead_days):
+            continue
+        fund_score = fund["score"] if fund else 50.0
 
         sector = universe.get(sym, "other")
         boost = sector_boost if sector in top_sectors else 1.0
         candidates.append({
             "symbol": sym, "rs_rank": rs_rank, "thesis_score": thesis_score,
             "sector": sector, "sector_leader": sector in top_sectors, "price": price,
-            "effective_score": (w_rs * rs_rank + w_thesis * thesis_score) * boost,
+            **({"fund_score": fund_score} if fund_fn else {}),
+            "effective_score": (w_rs * rs_rank + w_thesis * thesis_score) * boost + w_fund * fund_score,
         })
 
     candidates.sort(key=lambda c: c["effective_score"], reverse=True)
@@ -441,6 +473,9 @@ class Backtest:
                  qqq_above_ema20: bool = False, max_vix: float = 0.0, min_breadth: float = 0.0,
                  max_rs_rank: int = 100, sector_boost: float = SECTOR_LEADER_BOOST,
                  min_thesis: float = 0.0, min_mom_spread: Optional[float] = None,
+                 rs_mode: str = "live", w_fund: float = 0.0, min_sue: Optional[float] = None,
+                 min_rev_growth: Optional[float] = None, pead_days: int = 0,
+                 fundamentals: Optional[Callable] = None,
                  members: Optional[pd.DataFrame] = None):
         self.universe = universe
         # Survivorship-free runs (market_history.py): who was in the universe on each day.
@@ -507,6 +542,16 @@ class Backtest:
         self.max_rs_rank, self.sector_boost = int(max_rs_rank), float(sector_boost)
         self.min_thesis = float(min_thesis)
         self.min_mom_spread = None if min_mom_spread is None else float(min_mom_spread)
+        # Signal and fundamentals lab (2026-11-17). fundamentals: fundamentals_pit.Lookup (plumbing).
+        if rs_mode not in ("live", "skip1m", "12_1"):
+            raise ValueError(f"rs_mode {rs_mode!r}")
+        self.rs_mode, self.w_fund, self.pead_days = rs_mode, float(w_fund), int(pead_days)
+        self.min_sue = None if min_sue is None else float(min_sue)
+        self.min_rev_growth = None if min_rev_growth is None else float(min_rev_growth)
+        self.fundamentals = fundamentals
+        if (self.w_fund or self.min_sue is not None or self.min_rev_growth is not None or self.pead_days) \
+                and fundamentals is None:
+            raise ValueError("fundamental settings need fundamentals data")
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -791,9 +836,13 @@ class Backtest:
             row = self.members.iloc[i]
             universe = {s: self.universe.get(s, "other") for s in row.index[row.values]}
             self.member_counts.append(len(universe))
+        asof = self.dates[i].date()
+        fund_fn = (lambda sym: self.fundamentals(sym, asof)) if self.fundamentals else None
         candidates = screen_asof(universe, closes, volumes, spy, self.w_rs, self.w_thesis,
                                  max_rs_rank=self.max_rs_rank, sector_boost=self.sector_boost,
-                                 min_thesis=self.min_thesis)
+                                 min_thesis=self.min_thesis, rs_mode=self.rs_mode, fund_fn=fund_fn,
+                                 w_fund=self.w_fund, min_sue=self.min_sue,
+                                 min_rev_growth=self.min_rev_growth, pead_days=self.pead_days)
         tight = {}
         if self.tight_boost:
             for cand in candidates:
@@ -882,6 +931,7 @@ class Backtest:
                                              total_value, self.risk_per_trade)
             d["tightness"] = tight.get(sym, 0.0)
             d["features"] = {"rs_rank": cand["rs_rank"], "thesis_score": cand["thesis_score"],
+                             "fund_score": cand.get("fund_score"),
                              "trend_score": d.get("trend_score"), "confidence": d.get("confidence"),
                              "sector": cand["sector"]}
             opportunities.append(d)
@@ -984,7 +1034,9 @@ class Backtest:
                         "partial_size": self.partial_size, "qqq_above_ema20": self.qqq_above_ema20,
                         "max_vix": self.max_vix, "min_breadth": self.min_breadth,
                         "max_rs_rank": self.max_rs_rank, "sector_boost": self.sector_boost,
-                        "min_thesis": self.min_thesis, "min_mom_spread": self.min_mom_spread},
+                        "min_thesis": self.min_thesis, "min_mom_spread": self.min_mom_spread,
+                        "rs_mode": self.rs_mode, "w_fund": self.w_fund, "min_sue": self.min_sue,
+                        "min_rev_growth": self.min_rev_growth, "pead_days": self.pead_days},
             "stop_exits": stop_slippage(trades),
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),

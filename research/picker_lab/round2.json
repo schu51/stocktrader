@@ -1,0 +1,16 @@
+{
+  "round": 2,
+  "question": "Round 2, price-only signal and entry fixes: does momentum measured the textbook way (skipping last month, whose winners tend to fall back) pick better, and does a real entry (breakout from a base, a pullback, or a cap on how stretched a name is) beat buying the top of the list at the open?",
+  "variants": [
+    {"name": "s_skip1m", "why": "the live RS formula, measured as of a month ago", "change": {"rs_mode": "skip1m"}},
+    {"name": "s_12_1", "why": "12-month return skipping the last month (textbook momentum)", "change": {"rs_mode": "12_1"}},
+    {"name": "e_breakout", "why": "buy only on a new closing high on above-average volume", "change": {"entry_trigger": "breakout"}},
+    {"name": "e_pullback", "why": "let names the 50-day room gate turns away enter on a 21-day EMA reclaim", "change": {"pullback_entry": true}},
+    {"name": "e_ext2", "why": "no entry more than 2 ATRs above the 20-day EMA", "change": {"max_ext_atr20": 2.0}},
+    {"name": "e_tight", "why": "rank tight bases higher", "change": {"tight_boost": 0.5}},
+    {"name": "c_12_1_breakout", "why": "textbook momentum + breakout entry", "change": {"rs_mode": "12_1", "entry_trigger": "breakout"}},
+    {"name": "c_12_1_ext2", "why": "textbook momentum + not stretched", "change": {"rs_mode": "12_1", "max_ext_atr20": 2.0}},
+    {"name": "c_12_1_breakout_spyoff", "why": "breakout entries may not need the SPY filter", "change": {"rs_mode": "12_1", "entry_trigger": "breakout", "min_spy_above_50ma": 0.0}},
+    {"name": "c_skip1m_ext2_cap98", "why": "skip-month ranking, not stretched, no RS 99", "change": {"rs_mode": "skip1m", "max_ext_atr20": 2.0, "max_rs_rank": 98}}
+  ]
+}

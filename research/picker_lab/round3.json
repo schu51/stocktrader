@@ -1,0 +1,16 @@
+{
+  "round": 3,
+  "question": "Round 3, fundamentals (point-in-time SEC data): do earnings surprises, revenue growth and acceleration, and buying soon after a positive report add the edge that price alone lacks?",
+  "variants": [
+    {"name": "u_wfund30", "why": "add 0.3 x the fundamentals score to the rank", "change": {"w_fund": 0.3}},
+    {"name": "u_wfund60", "why": "add 0.6 x the fundamentals score to the rank", "change": {"w_fund": 0.6}},
+    {"name": "u_sue0", "why": "only names whose latest quarter beat the same quarter a year ago", "change": {"min_sue": 0.0}},
+    {"name": "u_sue1", "why": "only clear positive surprises", "change": {"min_sue": 1.0}},
+    {"name": "u_rev10", "why": "only names growing revenue 10%+ a year", "change": {"min_rev_growth": 0.10}},
+    {"name": "u_pead45", "why": "only within 45 days of a positive surprise (post-earnings drift)", "change": {"pead_days": 45}},
+    {"name": "c_12_1_wfund50", "why": "textbook momentum + fundamentals in the rank", "change": {"rs_mode": "12_1", "w_fund": 0.5}},
+    {"name": "c_12_1_sue05", "why": "textbook momentum among names with a positive surprise", "change": {"rs_mode": "12_1", "min_sue": 0.5}},
+    {"name": "c_12_1_pead45_ext2", "why": "momentum + recent positive surprise + not stretched", "change": {"rs_mode": "12_1", "pead_days": 45, "max_ext_atr20": 2.0}},
+    {"name": "c_wfund50_spyoff", "why": "does a fundamentals-led picker still need the SPY filter?", "change": {"w_fund": 0.5, "min_spy_above_50ma": 0.0}}
+  ]
+}

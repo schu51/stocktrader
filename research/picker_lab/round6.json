@@ -1,0 +1,25 @@
+{
+  "round": 6,
+  "question": "Round 6, ideas from the momentum and swing-trading research (README: 'Round 6 sources'). Company evaluation: closeness to the 52-week high, a steady climb, the market's 3-day reaction to the last report (alone and with the earnings surprise), and gross-margin trend. Entries: a real tight-base pivot breakout (VCP), the earnings-gap entry (episodic pivot), and buying at the close instead of the open. Risk: scaling buys down when the market is volatile. Each alone against the live rules, then on top of cap98_tight (the tournament challenger). Fundamentals variants run against their has-data twin.",
+  "variants": [
+    {"name": "v_high90", "why": "only names within 10% of their 52-week high (George & Hwang)", "change": {"min_high_ratio": 0.9}},
+    {"name": "v_whigh30", "why": "add closeness to the 52-week high to the rank", "change": {"w_high": 0.3}},
+    {"name": "v_smooth05", "why": "only steady climbers: more up days than down over 12-1 months (frog in the pan)", "change": {"min_smooth": 0.05}},
+    {"name": "v_ear0", "why": "only names the market rewarded at their last report (3-day return over SPY >= 0)", "change": {"min_ear": 0.0}},
+    {"name": "v_ear3", "why": "only names that beat SPY by 3%+ around their last report", "change": {"min_ear": 0.03}},
+    {"name": "hd_base", "why": "has-data twin for the fundamentals variants below", "change": {"min_sue": -100.0}},
+    {"name": "hd_margin0", "why": "gross margin at least a year ago's", "change": {"min_sue": -100.0, "min_margin_chg": 0.0}},
+    {"name": "hd_sue0_ear0", "why": "earnings surprise AND a positive market reaction (Brandt et al.)", "change": {"min_sue": 0.0, "min_ear": 0.0}},
+    {"name": "e_vcp", "why": "buy only a close above the 10-day pivot out of a tight base on rising volume (Minervini VCP)", "change": {"entry_trigger": "vcp"}},
+    {"name": "e_ep", "why": "buy only within 5 sessions of an earnings gap of 4%+ on 2x volume that is holding (episodic pivot)", "change": {"entry_trigger": "ep"}},
+    {"name": "e_close", "why": "buy at the signal day's close instead of the next open (momentum returns accrue overnight)", "change": {"fill_mode": "prior_close"}},
+    {"name": "r_vol15", "why": "scale buys down when SPY's 20-day volatility is above 15%", "change": {"vol_target": 0.15}},
+    {"name": "r_vol20", "why": "scale buys down above 20% volatility", "change": {"vol_target": 0.20}},
+    {"name": "ct_base", "why": "cap98_tight, the tournament challenger, repeated in this run", "change": {"max_rs_rank": 98, "tight_boost": 0.5}},
+    {"name": "ct_high90", "why": "cap98_tight + near the 52-week high", "change": {"max_rs_rank": 98, "tight_boost": 0.5, "min_high_ratio": 0.9}},
+    {"name": "ct_smooth05", "why": "cap98_tight + steady climbers", "change": {"max_rs_rank": 98, "tight_boost": 0.5, "min_smooth": 0.05}},
+    {"name": "ct_ear0", "why": "cap98_tight + rewarded at the last report", "change": {"max_rs_rank": 98, "tight_boost": 0.5, "min_ear": 0.0}},
+    {"name": "ct_close", "why": "cap98_tight bought at the close", "change": {"max_rs_rank": 98, "tight_boost": 0.5, "fill_mode": "prior_close"}},
+    {"name": "ct_vol15", "why": "cap98_tight + volatility-scaled buys", "change": {"max_rs_rank": 98, "tight_boost": 0.5, "vol_target": 0.15}}
+  ]
+}

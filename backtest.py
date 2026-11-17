@@ -316,7 +316,8 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
                 sector_boost: float = SECTOR_LEADER_BOOST, min_thesis: float = 0.0,
                 rs_mode: str = "live", fund_fn: Optional[Callable] = None, w_fund: float = 0.0,
                 min_sue: Optional[float] = None, min_rev_growth: Optional[float] = None,
-                pead_days: int = 0) -> List[Dict]:
+                pead_days: int = 0, min_high_ratio: float = 0.0, w_high: float = 0.0,
+                min_smooth: Optional[float] = None, min_margin_chg: Optional[float] = None) -> List[Dict]:
     """
     The candidate list run_screener would have produced with these bars.
     `closes` / `volumes` hold the trailing year ending on the as-of date.
@@ -408,7 +409,15 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
         if pead_days and not (fund and fund["sue"] is not None and fund["sue"] > 0
                               and fund["days_since"] <= pead_days):
             continue
+        if min_margin_chg is not None and not (fund and fund.get("margin_chg") is not None
+                                               and fund["margin_chg"] >= min_margin_chg):
+            continue
         fund_score = fund["score"] if fund else 50.0
+        hr = high_ratio(price_arr) if (min_high_ratio or w_high) else 1.0
+        if min_high_ratio and not hr >= min_high_ratio:
+            continue
+        if min_smooth is not None and not smoothness(price_arr) >= min_smooth:
+            continue
 
         sector = universe.get(sym, "other")
         boost = sector_boost if sector in top_sectors else 1.0
@@ -416,11 +425,66 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
             "symbol": sym, "rs_rank": rs_rank, "thesis_score": thesis_score,
             "sector": sector, "sector_leader": sector in top_sectors, "price": price,
             **({"fund_score": fund_score} if fund_fn else {}),
-            "effective_score": (w_rs * rs_rank + w_thesis * thesis_score) * boost + w_fund * fund_score,
+            "effective_score": (w_rs * rs_rank + w_thesis * thesis_score) * boost + w_fund * fund_score
+                               + w_high * 100.0 * (hr if hr == hr else 0.0),
         })
 
     candidates.sort(key=lambda c: c["effective_score"], reverse=True)
     return candidates[:top_n]
+
+
+def high_ratio(c: np.ndarray, n: int = 252) -> float:
+    """Close over the highest close of the last `n` sessions (1.0 = at the 52-week high)."""
+    c = c[~np.isnan(c)][-n:]
+    return float(c[-1] / c.max()) if len(c) and c.max() > 0 else float("nan")
+
+
+def smoothness(c: np.ndarray, n: int = 252, skip: int = 21) -> float:
+    """
+    Share of up days minus share of down days from `n` to `skip` sessions ago.
+    High = a steady climb ("frog in the pan": momentum built from many small
+    gains persists longer than one built from a few jumps). NaN if too short.
+    """
+    c = c[~np.isnan(c)]
+    if len(c) < n:
+        return float("nan")
+    d = np.diff(c[-n:len(c) - skip])
+    return float((d > 0).mean() - (d < 0).mean()) if len(d) else float("nan")
+
+
+def report_reaction(c: np.ndarray, spy: np.ndarray, k: int) -> float:
+    """
+    The market's verdict on a report: the stock's return from the session before
+    the report session `k` to the session after it, minus SPY's over the same days
+    (a 3-day earnings announcement return). NaN if the days are not all there.
+    """
+    if k < 1 or k + 1 >= len(c) or k + 1 >= len(spy):
+        return float("nan")
+    a, b, sa, sb = c[k - 1], c[k + 1], spy[k - 1], spy[k + 1]
+    if not (a > 0 and b == b and sa > 0 and sb == sb):
+        return float("nan")
+    return float(b / a - sb / sa)
+
+
+def gap_entry_ok(o: np.ndarray, l: np.ndarray, c: np.ndarray, v: np.ndarray, k: int,
+                 min_gap: float = 0.04, min_volume: float = 2.0) -> bool:
+    """
+    Episodic pivot: report session `k` (an index into these arrays) opened at
+    least `min_gap` above the prior close on at least `min_volume` x its 50-day
+    average volume, and the stock still holds above that session's low.
+    """
+    if k < 50 or k >= len(c):
+        return False
+    avg = v[k - 50:k].mean()
+    return bool(c[k - 1] > 0 and o[k] / c[k - 1] - 1 >= min_gap and avg > 0 and v[k] >= min_volume * avg
+                and c[-1] > l[k])
+
+
+def vcp_ok(c: np.ndarray, v: np.ndarray, min_tight: float = 0.6, pivot: int = 10) -> bool:
+    """A tight base (tightness before today) and a close today above its `pivot`-day high on rising volume."""
+    if len(c) < 61:
+        return False
+    return bool(tightness(c[:-1], v[:-1]) >= min_tight and breakout(c, v, n=pivot))
 
 
 def momentum_spread(closes: pd.DataFrame, lookback: int = 126, window: int = 21,
@@ -476,6 +540,9 @@ class Backtest:
                  rs_mode: str = "live", w_fund: float = 0.0, min_sue: Optional[float] = None,
                  min_rev_growth: Optional[float] = None, pead_days: int = 0,
                  fundamentals: Optional[Callable] = None,
+                 min_high_ratio: float = 0.0, w_high: float = 0.0, min_smooth: Optional[float] = None,
+                 min_margin_chg: Optional[float] = None, min_ear: Optional[float] = None,
+                 ear_window: int = 63, vol_target: float = 0.0,
                  members: Optional[pd.DataFrame] = None):
         self.universe = universe
         # Survivorship-free runs (market_history.py): who was in the universe on each day.
@@ -549,6 +616,27 @@ class Backtest:
         self.min_sue = None if min_sue is None else float(min_sue)
         self.min_rev_growth = None if min_rev_growth is None else float(min_rev_growth)
         self.fundamentals = fundamentals
+        # Evaluation and entry lab (2026-11-17, round 6; research/picker_lab/README.md)
+        #   min_high_ratio / w_high   closeness to the 52-week high: filter / rank weight
+        #   min_smooth                steady climb (share of up minus down days, 12-1 months)
+        #   min_margin_chg            gross margin change on a year ago (fundamentals)
+        #   min_ear, ear_window       latest report within ear_window sessions, and its 3-day
+        #                             return over SPY at least min_ear
+        #   vol_target                scale buys down when SPY's 20-day volatility (annualised)
+        #                             is above this (0 = off)
+        #   entry_trigger "vcp"/"ep"  tight-base pivot breakout / earnings gap (episodic pivot)
+        #   fill_mode "prior_close"   buy at the signal day's close instead of the next open
+        self.min_high_ratio, self.w_high = float(min_high_ratio), float(w_high)
+        self.min_smooth = None if min_smooth is None else float(min_smooth)
+        self.min_margin_chg = None if min_margin_chg is None else float(min_margin_chg)
+        self.min_ear = None if min_ear is None else float(min_ear)
+        self.ear_window, self.vol_target = int(ear_window), float(vol_target)
+        if self.min_margin_chg is not None and fundamentals is None:
+            raise ValueError("min_margin_chg needs fundamentals data")
+        if entry_trigger not in ("none", "macd", "ema21", "breakout", "golden", "vcp", "ep"):
+            raise ValueError(f"entry_trigger {entry_trigger!r}")
+        if fill_mode not in ("open", "typical", "adverse", "prior_close"):
+            raise ValueError(f"fill_mode {fill_mode!r}")
         if (self.w_fund or self.min_sue is not None or self.min_rev_growth is not None or self.pead_days) \
                 and fundamentals is None:
             raise ValueError("fundamental settings need fundamentals data")
@@ -682,9 +770,13 @@ class Backtest:
         self.cash_short_today = False
         for order in self.pending:
             sym = order["symbol"]
-            px = entry_price({"open": self.open[sym].iloc[i], "high": self.high[sym].iloc[i],
-                              "low": self.low[sym].iloc[i], "close": self.close[sym].iloc[i]}, self.fill_mode)
-            if self.open_limit and opening_fill(float(px), float(self.close[sym].iloc[i - 1]), self.open_limit) is None:
+            if self.fill_mode == "prior_close":
+                # Bought at the signal day's close (a market-on-close order sent just before it)
+                px = float(self.close[sym].iloc[i - 1])
+            else:
+                px = entry_price({"open": self.open[sym].iloc[i], "high": self.high[sym].iloc[i],
+                                  "low": self.low[sym].iloc[i], "close": self.close[sym].iloc[i]}, self.fill_mode)
+            if self.open_limit and self.fill_mode != "prior_close" and opening_fill(float(px), float(self.close[sym].iloc[i - 1]), self.open_limit) is None:
                 self.counters["unfilled_gap"] = self.counters.get("unfilled_gap", 0) + 1
                 continue
             if sym in self.positions or np.isnan(px):
@@ -842,7 +934,9 @@ class Backtest:
                                  max_rs_rank=self.max_rs_rank, sector_boost=self.sector_boost,
                                  min_thesis=self.min_thesis, rs_mode=self.rs_mode, fund_fn=fund_fn,
                                  w_fund=self.w_fund, min_sue=self.min_sue,
-                                 min_rev_growth=self.min_rev_growth, pead_days=self.pead_days)
+                                 min_rev_growth=self.min_rev_growth, pead_days=self.pead_days,
+                                 min_high_ratio=self.min_high_ratio, w_high=self.w_high,
+                                 min_smooth=self.min_smooth, min_margin_chg=self.min_margin_chg)
         tight = {}
         if self.tight_boost:
             for cand in candidates:
@@ -885,10 +979,22 @@ class Backtest:
             # Experimental technical gates
             c = np.array([b.close for b in bars]); h = np.array([b.high for b in bars])
             l = np.array([b.low for b in bars]); v = np.array([b.volume for b in bars], dtype=float)
+            report_k = self._latest_report(sym, i) if (self.min_ear is not None or self.entry_trigger == "ep") else None
+            if self.min_ear is not None:
+                ear = report_reaction(self.close[sym].values, self.close[BENCHMARK].values, report_k) \
+                    if report_k is not None and i - report_k <= self.ear_window else float("nan")
+                if not ear >= self.min_ear:
+                    self.counters["gate_ear"] = self.counters.get("gate_ear", 0) + 1
+                    continue
             if self.entry_trigger != "none":
+                o = np.array([b.open for b in bars])
+                kb = None if report_k is None else len(c) - 1 - (i - report_k)   # report session in `bars`
                 fired = {"macd": lambda: macd_cross_up(c), "ema21": lambda: ema_reclaim(c),
                          "breakout": lambda: breakout(c, v),
-                         "golden": lambda: golden_cross_recent(c)}[self.entry_trigger]()
+                         "golden": lambda: golden_cross_recent(c),
+                         "vcp": lambda: vcp_ok(c, v),
+                         "ep": lambda: kb is not None and i - report_k <= 5 and gap_entry_ok(o, l, c, v, kb),
+                         }[self.entry_trigger]()
                 if not fired:
                     self.counters["gate_trigger"] += 1
                     continue
@@ -929,6 +1035,8 @@ class Backtest:
                                          self.max_stop_dist)
             d["shares"] = risk_capped_shares(d.get("shares") or 0, float(c[-1]), d["stop_dist"] or 0.08,
                                              total_value, self.risk_per_trade)
+            if self.vol_target:
+                d["shares"] = int((d["shares"] or 0) * self._vol_scale(spy))
             d["tightness"] = tight.get(sym, 0.0)
             d["features"] = {"rs_rank": cand["rs_rank"], "thesis_score": cand["thesis_score"],
                              "fund_score": cand.get("fund_score"),
@@ -945,6 +1053,24 @@ class Backtest:
             self.pending.append({"symbol": d["symbol"], "shares": int(d["shares"]),
                                  "features": d["features"], "stop_dist": d.get("stop_dist")})
             self.counters["orders"] += 1
+
+    def _latest_report(self, sym: str, i: int) -> Optional[int]:
+        """Index of the latest report session whose next session is on or before day i, or None."""
+        dates = self.earnings.get(sym) or []
+        best = None
+        for d in dates:
+            k = int(self.dates.searchsorted(pd.Timestamp(d)))
+            if k + 1 <= i:
+                best = k if best is None else max(best, k)
+        return best
+
+    def _vol_scale(self, spy: np.ndarray, n: int = 20) -> float:
+        """Buy size multiplier: 1 while SPY's realised volatility is at or below vol_target, less above it."""
+        if len(spy) < n + 1:
+            return 1.0
+        r = np.diff(np.log(spy[-(n + 1):]))
+        vol = float(np.std(r) * np.sqrt(252))
+        return 1.0 if vol <= self.vol_target or vol <= 0 else max(0.25, self.vol_target / vol)
 
     def _market_ok(self, closes: pd.DataFrame) -> bool:
         """The swing-post market gates (all off by default). Missing index data never blocks a buy."""
@@ -1036,7 +1162,10 @@ class Backtest:
                         "max_rs_rank": self.max_rs_rank, "sector_boost": self.sector_boost,
                         "min_thesis": self.min_thesis, "min_mom_spread": self.min_mom_spread,
                         "rs_mode": self.rs_mode, "w_fund": self.w_fund, "min_sue": self.min_sue,
-                        "min_rev_growth": self.min_rev_growth, "pead_days": self.pead_days},
+                        "min_rev_growth": self.min_rev_growth, "pead_days": self.pead_days,
+                        "min_high_ratio": self.min_high_ratio, "w_high": self.w_high,
+                        "min_smooth": self.min_smooth, "min_margin_chg": self.min_margin_chg,
+                        "min_ear": self.min_ear, "ear_window": self.ear_window, "vol_target": self.vol_target},
             "stop_exits": stop_slippage(trades),
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),
@@ -1212,7 +1341,7 @@ def main() -> int:
     parser.add_argument("--w-rs", type=float, default=0.60)
     parser.add_argument("--w-thesis", type=float, default=0.40)
     parser.add_argument("--slippage-bps", type=float, default=10.0, help="per side")
-    parser.add_argument("--entry-trigger", choices=["none", "macd", "ema21", "breakout", "golden"], default="none",
+    parser.add_argument("--entry-trigger", choices=["none", "macd", "ema21", "breakout", "golden", "vcp", "ep"], default="none",
                         help="experimental: only buy when this signal fired")
     parser.add_argument("--atr-stop", type=float, default=0.0,
                         help="experimental: entry stop at this multiple of 14-day ATR instead of a fixed 8%%")
@@ -1238,7 +1367,7 @@ def main() -> int:
                         help="experimental: cap what a stop-out can cost, as a share of the account (0.003 = 0.3%%)")
     parser.add_argument("--max-atr-pct", type=float, default=0.0,
                         help="experimental: skip candidates whose ATR(14) exceeds this share of price (0.04 = 4%%)")
-    parser.add_argument("--fill", choices=["open", "typical", "adverse"], default="open",
+    parser.add_argument("--fill", choices=["open", "typical", "adverse", "prior_close"], default="open",
                         help="entry fill price: the open, the day's typical price, or halfway from open to high")
     parser.add_argument("--max-stop-dist", type=float, default=0.0, help="experimental: cap the entry stop distance")
     parser.add_argument("--open-limit", type=float, default=0.0,

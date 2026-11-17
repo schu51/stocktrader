@@ -98,3 +98,22 @@ EPS and revenue growth, revenue acceleration, days since the report.
   to separate the earnings signal from that bias.
 - 2026-11-17 — Round 4 written: controls, combinations of the three winners,
   and sensitivity nudges on each setting.
+- 2026-11-17 — Round 4 results (champion PF 1.42, CAGR +16.5%, DD -16.8%,
+  folds 1.07 / 0.36). The data-coverage bias is real and sometimes large: the
+  has-data universe alone took the live picker from PF 1.42 to 1.48, but took
+  cap98+tight from 1.76 (all names) to 2.14. So earnings variants must be
+  compared with their has-data twins, not with the champion.
+  On that footing: EPS growth (u_sue0, 1.84) beats the has-data base (1.48),
+  a real signal; but added to cap98+tight it did not help (1.87 vs 2.14).
+  The surprise floor is a cliff: -0.25 gives 1.44, 0 gives 1.84, +0.25 1.78
+  (EPS not falling looks like the natural line, but noted as fragile).
+  Best risk profile: EPS growth + cap98 + tight + SPY 3% (PF 2.51, DD -10.9%,
+  the only variant with both recent folds above 1: 5.66 / 1.35), but it is
+  four settings and carries the bias. Bias-free price-only winner: cap98 +
+  tight (PF 1.76, CAGR +21.9%, DD -15.6%, folds 2.48 / 0.66, 9/10 gates;
+  failed only first-half PF). Sensitivity neighbours (tight 0.3/1.0, cap 97)
+  stay above the champion.
+- 2026-11-17 — Decision: cap98_tight goes to the daily tournament (two
+  settings, no data bias), replacing grace5, which replays identically to the
+  champion and so measures nothing. Round 5 re-runs the earnings ideas on the
+  has-data universe so each is judged against its fair twin.

@@ -1,0 +1,18 @@
+{
+  "round": 5,
+  "question": "Round 5, measure every earnings variant on the same footing. Round 4 showed the fundamentals data itself flatters results (it lacks delisted names): the has-data universe alone lifted cap98+tight from PF 1.76 to 2.14. So here every variant runs on the has-data universe (min_sue -100 = has data, no condition) and is compared with its has-data twin. Does requiring EPS growth add anything there, with and without the stricter SPY filter? And do the bias-free price-only winners hold with the SPY 3% filter?",
+  "variants": [
+    {"name": "hd_base", "why": "has-data universe, live picker (the fair baseline)", "change": {"min_sue": -100.0}},
+    {"name": "hd_sue0", "why": "has-data + EPS at least the year-ago quarter's", "change": {"min_sue": 0.0}},
+    {"name": "hd_cap98_tight", "why": "has-data + skip RS 99 + tight bases", "change": {"min_sue": -100.0, "max_rs_rank": 98, "tight_boost": 0.5}},
+    {"name": "hd_sue0_cap98_tight", "why": "+ EPS growth", "change": {"min_sue": 0.0, "max_rs_rank": 98, "tight_boost": 0.5}},
+    {"name": "hd_cap98_tight_spy3", "why": "has-data + skip RS 99 + tight + SPY 3%", "change": {"min_sue": -100.0, "max_rs_rank": 98, "tight_boost": 0.5, "min_spy_above_50ma": 0.03}},
+    {"name": "hd_sue0_cap98_tight_spy3", "why": "+ EPS growth (round 4's best risk profile, now against its twin)", "change": {"min_sue": 0.0, "max_rs_rank": 98, "tight_boost": 0.5, "min_spy_above_50ma": 0.03}},
+    {"name": "hd_sue025_cap98_tight_spy3", "why": "sensitivity: stricter surprise floor", "change": {"min_sue": 0.25, "max_rs_rank": 98, "tight_boost": 0.5, "min_spy_above_50ma": 0.03}},
+    {"name": "hd_sue0_cap97_tight_spy3", "why": "sensitivity: cap 97", "change": {"min_sue": 0.0, "max_rs_rank": 97, "tight_boost": 0.5, "min_spy_above_50ma": 0.03}},
+    {"name": "hd_sue0_cap98_tight_spy25", "why": "sensitivity: SPY 2.5%", "change": {"min_sue": 0.0, "max_rs_rank": 98, "tight_boost": 0.5, "min_spy_above_50ma": 0.025}},
+    {"name": "p_cap98_tight_spy3", "why": "bias-free: skip RS 99 + tight + SPY 3%, all names", "change": {"max_rs_rank": 98, "tight_boost": 0.5, "min_spy_above_50ma": 0.03}},
+    {"name": "p_cap97_tight", "why": "bias-free sensitivity: cap 97", "change": {"max_rs_rank": 97, "tight_boost": 0.5}},
+    {"name": "p_cap98_tight03", "why": "bias-free sensitivity: tight 0.3", "change": {"max_rs_rank": 98, "tight_boost": 0.3}}
+  ]
+}

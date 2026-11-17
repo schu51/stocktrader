@@ -72,14 +72,6 @@
       "added": "2026-11-10"
     },
     {
-      "name": "grace5",
-      "change": {
-        "exit_grace_days": 5
-      },
-      "why": "no 50-day exit in the first 5 sessions, stop and hard loss still apply (live: 10 of 15 post-Oct-6 50-day exits came within 3 days; TXN, ADI, HUM, IQV recovered)",
-      "added": "2026-11-10"
-    },
-    {
       "name": "death_cross_exit",
       "change": {
         "exit_line": "death_cross"
@@ -102,6 +94,15 @@
       },
       "why": "the old 50-day exit, kept running against the new 200-day rule so a reversal shows up",
       "added": "2026-11-11"
+    },
+    {
+      "name": "cap98_tight",
+      "change": {
+        "max_rs_rank": 98,
+        "tight_boost": 0.5
+      },
+      "why": "picker lab rounds 1-4: skip RS 99 (most extended) and rank tight bases higher; PF 1.76 vs 1.42, CAGR +21.9% vs +16.5%, latest fold 0.66 vs 0.36, no fundamentals bias",
+      "added": "2026-11-17"
     }
   ],
   "max_challengers": 11

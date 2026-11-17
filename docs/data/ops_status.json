@@ -1,20 +1,15 @@
 {
-  "generated_at": "2026-11-17T15:45:49+00:00",
+  "generated_at": "2026-11-17T22:30:48+00:00",
   "status": "amber",
   "red": [],
   "amber": [
-    "jobs",
     "issues"
   ],
   "checks": [
     {
       "name": "jobs",
-      "status": "amber",
-      "detail": "2 job(s) failed or missed",
-      "items": [
-        "daily_eval.yml: failed",
-        "ops_monitor.yml: failed"
-      ]
+      "status": "green",
+      "detail": "20 workflows ran in the last 24h, none failed"
     },
     {
       "name": "freshness",
@@ -42,9 +37,9 @@
       "detail": "6 failure issue(s) open more than 2 days",
       "items": [
         "#51 \ud83d\udea8 Weekly Review run failed 2026-11-14 (3 days)",
-        "#50 \ud83d\udea8 Ops monitor red 2026-11-13 (3 days)",
-        "#43 \ud83d\udea8 Ops monitor red 2026-11-12 (4 days)",
-        "#34 \ud83d\udea8 Ops monitor red 2026-11-11 (5 days)",
+        "#50 \ud83d\udea8 Ops monitor red 2026-11-13 (4 days)",
+        "#43 \ud83d\udea8 Ops monitor red 2026-11-12 (5 days)",
+        "#34 \ud83d\udea8 Ops monitor red 2026-11-11 (6 days)",
         "#15 \ud83d\udea8 Macro Research run failed 2026-11-07 (10 days)",
         "#12 \ud83d\udea8 Macro Research run failed 2026-10-31 (17 days)"
       ]

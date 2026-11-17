@@ -1,0 +1,19 @@
+{
+  "round": 4,
+  "question": "Round 4, combine the survivors and test them for bias and fragility. Is round 3's earnings filter (u_sue0) a real edge or just the effect of dropping stocks the SEC ticker list no longer has (delisted names, which skew to losers)? Do skipping RS 99 (p_cap98) and ranking tight bases (e_tight) add to it, and do the results hold when each setting is nudged?",
+  "variants": [
+    {"name": "ctrl_hasdata", "why": "CONTROL: only names with fundamentals data, no earnings condition. Whatever u_sue0 gains beyond this is the earnings signal; the rest is the data-coverage bias", "change": {"min_sue": -100.0}},
+    {"name": "u_sue0", "why": "round 3 winner, repeated in this run", "change": {"min_sue": 0.0}},
+    {"name": "u_sue_m025", "why": "sensitivity: a slightly looser surprise floor", "change": {"min_sue": -0.25}},
+    {"name": "u_sue_p025", "why": "sensitivity: a slightly stricter surprise floor", "change": {"min_sue": 0.25}},
+    {"name": "p_cap98_tight", "why": "the two price-only winners together", "change": {"max_rs_rank": 98, "tight_boost": 0.5}},
+    {"name": "ctrl_hasdata_cap98_tight", "why": "CONTROL for the full combination", "change": {"min_sue": -100.0, "max_rs_rank": 98, "tight_boost": 0.5}},
+    {"name": "c_sue0_cap98", "why": "earnings filter + skip RS 99", "change": {"min_sue": 0.0, "max_rs_rank": 98}},
+    {"name": "c_sue0_tight", "why": "earnings filter + tight bases", "change": {"min_sue": 0.0, "tight_boost": 0.5}},
+    {"name": "c_sue0_cap98_tight", "why": "all three", "change": {"min_sue": 0.0, "max_rs_rank": 98, "tight_boost": 0.5}},
+    {"name": "c_sue0_cap97_tight", "why": "sensitivity: cap at 97", "change": {"min_sue": 0.0, "max_rs_rank": 97, "tight_boost": 0.5}},
+    {"name": "c_sue0_cap98_tight03", "why": "sensitivity: weaker tight boost", "change": {"min_sue": 0.0, "max_rs_rank": 98, "tight_boost": 0.3}},
+    {"name": "c_sue0_cap98_tight10", "why": "sensitivity: stronger tight boost", "change": {"min_sue": 0.0, "max_rs_rank": 98, "tight_boost": 1.0}},
+    {"name": "c_sue0_cap98_tight_spy3", "why": "all three + the stricter SPY filter", "change": {"min_sue": 0.0, "max_rs_rank": 98, "tight_boost": 0.5, "min_spy_above_50ma": 0.03}}
+  ]
+}

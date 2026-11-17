@@ -75,3 +75,26 @@ EPS and revenue growth, revenue acceleration, days since the report.
   rather than at a defined entry (27 trades closed within 3 days, 0% won).
 - 2026-11-17 — Round 3 (fundamentals): SUE, revenue growth, post-earnings
   drift window, and fundamentals in the rank, alone and with 12-1 momentum.
+- 2026-11-17 — Round 1 results (champion PF 1.39, CAGR +15.1%, DD -16.9%,
+  last folds 1.05 / 0.35). The SPY filter is NOT the fault: turning it off was
+  the worst variant (PF 1.20, DD -23.0%) and momentum-health and breadth
+  replacements were all worse; SPY 3% raised PF to 1.65 but lost the latest
+  folds (0.40 / 0.52). Picker: skipping RS 99 (p_cap98) won, PF 1.64, CAGR
+  +19.2%, DD -15.3%, folds 2.29 / 0.66, 9/10 gates. Shifting weight to the
+  (price-only) thesis score lost (PF 1.28-1.38). Dropping the sector boost:
+  mixed (PF 1.45, DD -20.2%).
+- 2026-11-17 — Round 2 results. Tight-base boost (e_tight) passed 10/10
+  gates: PF 1.56, CAGR +19.2%, folds 2.02 / 0.50. Textbook 12-1 momentum and
+  skip-month RS lost (PF 1.18 / 1.28). Breakout entries: too few trades (97-152)
+  and the latest folds collapsed. Pullback and 2-ATR extension cap: no gain.
+- 2026-11-17 — Round 3 results (fundamentals). Requiring the latest quarter's
+  EPS to be at least the year-ago quarter's (u_sue0) is the best result so
+  far: PF 1.86, CAGR +28.2%, DD -13.7%, folds 3.09 / 0.68, 5/6 folds won,
+  10/10 gates, PF without the 5 best trades 1.47 (champion 1.17). Fundamentals
+  as a rank boost (w_fund) helped less; post-earnings window alone did not
+  clear the PF gate; dropping the SPY filter still hurt. CAVEAT: tickers come
+  from today's SEC list, so delisted names have no data and any fundamentals
+  filter also drops them. Round 4 adds a control (has data, no condition)
+  to separate the earnings signal from that bias.
+- 2026-11-17 — Round 4 written: controls, combinations of the three winners,
+  and sensitivity nudges on each setting.

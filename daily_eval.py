@@ -69,6 +69,8 @@ ALLOWED_KNOBS = {           # backtest.Backtest arguments a challenger may chang
     # swing-post variants (2026-11-12, research/swing_post_study.md)
     "tight_boost", "min_adr", "max_adr", "max_ext_atr20", "swing_exit", "partial_size",
     "qqq_above_ema20", "max_vix", "min_breadth",
+    # picker & filter lab (2026-11-17, research/picker_lab/README.md)
+    "max_rs_rank", "sector_boost", "min_thesis", "min_mom_spread",
 }
 # Promotion gates, challenger vs champion on the same three-year replay
 GATES = {

@@ -62,6 +62,7 @@ JOBS: List[Tuple] = [
     ("graph", r"^Knowledge graph update", (D + "graph.json",)),
     ("ops_monitor", r"^Ops monitor", (D + "ops_status.json", D + "trade_attribution.json")),
     ("weekly_review", r"^Weekly review data", (D + "weekly_review_*",)),
+    ("picker_lab", r"^Picker lab", ("research/picker_lab/results/*",)),
 ]
 
 

@@ -312,10 +312,14 @@ def _rs_full_columns(a: np.ndarray, syms: List[str]) -> Dict[str, float]:
 def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.DataFrame,
                 spy_closes: np.ndarray, w_rs: float, w_thesis: float,
                 top_n: int = 50, min_price: float = 5.0,
-                min_avg_volume: int = 500_000) -> List[Dict]:
+                min_avg_volume: int = 500_000, max_rs_rank: int = 100,
+                sector_boost: float = SECTOR_LEADER_BOOST, min_thesis: float = 0.0) -> List[Dict]:
     """
     The candidate list run_screener would have produced with these bars.
     `closes` / `volumes` hold the trailing year ending on the as-of date.
+    Picker lab knobs (defaults = the live screener): max_rs_rank drops names
+    ranked above it (the most extended), sector_boost is the leader-sector
+    multiplier (1.0 = none), min_thesis drops names scoring below it.
     """
     from forward_thesis import score_forward_thesis
     from screener import calculate_rs_scores, get_sector_leaders, percentile_rank
@@ -352,7 +356,7 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
         if len(price_arr) < 200:
             continue
         rs_rank = rs_ranks.get(sym, 0)
-        if rs_rank < threshold:
+        if rs_rank < threshold or rs_rank > max_rs_rank:
             continue
         price = float(price_arr[-1])
         if price < min_price:
@@ -372,9 +376,11 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
             thesis_score = thesis["thesis_score"]
         except Exception:
             thesis_score = 0.0
+        if min_thesis and thesis_score < min_thesis:
+            continue
 
         sector = universe.get(sym, "other")
-        boost = SECTOR_LEADER_BOOST if sector in top_sectors else 1.0
+        boost = sector_boost if sector in top_sectors else 1.0
         candidates.append({
             "symbol": sym, "rs_rank": rs_rank, "thesis_score": thesis_score,
             "sector": sector, "sector_leader": sector in top_sectors, "price": price,
@@ -383,6 +389,33 @@ def screen_asof(universe: Dict[str, str], closes: pd.DataFrame, volumes: pd.Data
 
     candidates.sort(key=lambda c: c["effective_score"], reverse=True)
     return candidates[:top_n]
+
+
+def momentum_spread(closes: pd.DataFrame, lookback: int = 126, window: int = 21,
+                    top: float = 0.10) -> float:
+    """
+    How last month's momentum leaders did against the rest of the market.
+
+    Formation: each name's return over `lookback` sessions ending `window`
+    sessions ago. Holding: its return over the last `window` sessions. The
+    result is the top `top` share's average holding return minus the median
+    holding return of all names. Negative = momentum is reversing (the leaders
+    are lagging), the condition a trend filter on SPY alone cannot see.
+    NaN when there is not enough history.
+    """
+    need = lookback + window + 1
+    if len(closes) < need or not len(closes.columns):
+        return float("nan")
+    a = closes.iloc[-need:].to_numpy(dtype=float)
+    ok = ~np.isnan(a[[0, -window - 1, -1]]).any(axis=0) & (a[0] > 0) & (a[-window - 1] > 0)
+    if ok.sum() < 20:
+        return float("nan")
+    a = a[:, ok]
+    formation = a[-window - 1] / a[0] - 1
+    holding = a[-1] / a[-window - 1] - 1
+    k = max(1, int(round(len(formation) * top)))
+    leaders = np.argsort(formation)[-k:]
+    return float(holding[leaders].mean() - np.median(holding))
 
 
 # ---------------------------------------------------------------------------
@@ -406,6 +439,8 @@ class Backtest:
                  tight_boost: float = 0.0, min_adr: float = 0.0, max_adr: float = 0.0,
                  max_ext_atr20: float = 0.0, swing_exit: bool = False, partial_size: float = 0.33,
                  qqq_above_ema20: bool = False, max_vix: float = 0.0, min_breadth: float = 0.0,
+                 max_rs_rank: int = 100, sector_boost: float = SECTOR_LEADER_BOOST,
+                 min_thesis: float = 0.0, min_mom_spread: Optional[float] = None,
                  members: Optional[pd.DataFrame] = None):
         self.universe = universe
         # Survivorship-free runs (market_history.py): who was in the universe on each day.
@@ -464,6 +499,14 @@ class Backtest:
         self.max_ext_atr20 = float(max_ext_atr20)
         self.swing_exit, self.partial_size = bool(swing_exit), float(partial_size)
         self.qqq_above_ema20, self.max_vix, self.min_breadth = bool(qqq_above_ema20), float(max_vix), float(min_breadth)
+        # Picker lab (experimental, 2026-11-17; research/picker_lab/README.md). Defaults = live rules.
+        #   max_rs_rank     skip candidates ranked above this (100 = keep all)
+        #   sector_boost    rank multiplier for the three leading sectors (live: SECTOR_LEADER_BOOST)
+        #   min_thesis      skip candidates with a forward-thesis score below this
+        #   min_mom_spread  no new buys unless momentum_spread() is at least this (None = off)
+        self.max_rs_rank, self.sector_boost = int(max_rs_rank), float(sector_boost)
+        self.min_thesis = float(min_thesis)
+        self.min_mom_spread = None if min_mom_spread is None else float(min_mom_spread)
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -482,7 +525,8 @@ class Backtest:
                          "earnings_exits": 0, "earnings_held": 0,
                          "pullback_entries": 0, "exits_in_grace": 0,
                          "gate_adr": 0, "gate_extended": 0, "days_qqq_weak": 0, "days_vix_high": 0,
-                         "days_breadth_weak": 0, "market_data_missing": 0, "partial_exits": 0}
+                         "days_breadth_weak": 0, "market_data_missing": 0, "partial_exits": 0,
+                         "days_momentum_weak": 0}
 
         if quiet:
             logging.disable(logging.WARNING)
@@ -747,7 +791,9 @@ class Backtest:
             row = self.members.iloc[i]
             universe = {s: self.universe.get(s, "other") for s in row.index[row.values]}
             self.member_counts.append(len(universe))
-        candidates = screen_asof(universe, closes, volumes, spy, self.w_rs, self.w_thesis)
+        candidates = screen_asof(universe, closes, volumes, spy, self.w_rs, self.w_thesis,
+                                 max_rs_rank=self.max_rs_rank, sector_boost=self.sector_boost,
+                                 min_thesis=self.min_thesis)
         tight = {}
         if self.tight_boost:
             for cand in candidates:
@@ -876,6 +922,16 @@ class Backtest:
             if b == b and b < self.min_breadth:
                 self.counters["days_breadth_weak"] += 1
                 return False
+        if self.min_mom_spread is not None:
+            pool = self.universe
+            if self.members is not None:
+                row = self.members.iloc[self.dates.get_loc(closes.index[-1])]
+                pool = row.index[row.values]
+            cols = [s for s in pool if s in closes.columns and s != BENCHMARK]
+            m = momentum_spread(closes[cols]) if cols else float("nan")
+            if m == m and m < self.min_mom_spread:
+                self.counters["days_momentum_weak"] += 1
+                return False
         return True
 
     def run(self, progress_every: int = 50) -> None:
@@ -926,7 +982,9 @@ class Backtest:
                         "tight_boost": self.tight_boost, "min_adr": self.min_adr, "max_adr": self.max_adr,
                         "max_ext_atr20": self.max_ext_atr20, "swing_exit": self.swing_exit,
                         "partial_size": self.partial_size, "qqq_above_ema20": self.qqq_above_ema20,
-                        "max_vix": self.max_vix, "min_breadth": self.min_breadth},
+                        "max_vix": self.max_vix, "min_breadth": self.min_breadth,
+                        "max_rs_rank": self.max_rs_rank, "sector_boost": self.sector_boost,
+                        "min_thesis": self.min_thesis, "min_mom_spread": self.min_mom_spread},
             "stop_exits": stop_slippage(trades),
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),
@@ -1161,6 +1219,12 @@ def main() -> int:
     parser.add_argument("--max-vix", type=float, default=0.0, help="swing post: no buys when the VIX closes at or above this")
     parser.add_argument("--min-breadth", type=float, default=0.0,
                         help="swing post: no buys unless this share of the universe is above its 50-day average")
+    parser.add_argument("--max-rs-rank", type=int, default=100, help="picker lab: skip candidates ranked above this")
+    parser.add_argument("--sector-boost", type=float, default=SECTOR_LEADER_BOOST,
+                        help="picker lab: rank multiplier for the leading sectors (1.0 = none)")
+    parser.add_argument("--min-thesis", type=float, default=0.0, help="picker lab: minimum forward-thesis score")
+    parser.add_argument("--min-mom-spread", type=float, default=None,
+                        help="filter lab: no buys unless last month's momentum leaders beat the median by this much")
     parser.add_argument("--max-universe", type=int, default=None, help="limit tickers (smoke tests)")
     parser.add_argument("--universe", choices=("market", "index"), default="market",
                         help="market: every US stock incl. delisted, day by day (default); "
@@ -1190,7 +1254,8 @@ def main() -> int:
                   tight_boost=args.tight_boost, min_adr=args.min_adr, max_adr=args.max_adr,
                   max_ext_atr20=args.max_ext_atr20, swing_exit=args.swing_exit, partial_size=args.partial_size,
                   qqq_above_ema20=args.qqq_above_ema20, max_vix=args.max_vix, min_breadth=args.min_breadth,
-                  members=members)
+                  max_rs_rank=args.max_rs_rank, sector_boost=args.sector_boost, min_thesis=args.min_thesis,
+                  min_mom_spread=args.min_mom_spread, members=members)
     bt.run()
     result = bt.results()
     trades = pd.DataFrame(bt.trades)

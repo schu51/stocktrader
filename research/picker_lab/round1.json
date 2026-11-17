@@ -1,0 +1,22 @@
+{
+  "round": 1,
+  "question": "Round 1, one fault at a time: does the SPY 50-day filter screen out the risk that actually hurt us (momentum reversing), and is the picker paying for over-weighting RS, the most extended names and the leading sectors?",
+  "variants": [
+    {"name": "f_spy_off", "why": "baseline: no market filter at all", "change": {"min_spy_above_50ma": 0.0}},
+    {"name": "f_spy3", "why": "stricter SPY filter, same-run comparison", "change": {"min_spy_above_50ma": 0.03}},
+    {"name": "f_mom_only", "why": "replace the SPY filter with a momentum-health filter: buy only while last month's leaders beat the median", "change": {"min_spy_above_50ma": 0.0, "min_mom_spread": 0.0}},
+    {"name": "f_spy2_mom", "why": "keep SPY 2% and add momentum health", "change": {"min_mom_spread": 0.0}},
+    {"name": "f_spy2_mom_loose", "why": "momentum health, block only a clear reversal (leaders 2 pts behind)", "change": {"min_mom_spread": -0.02}},
+    {"name": "f_breadth50", "why": "replace SPY with breadth: half the market above its 50-day", "change": {"min_spy_above_50ma": 0.0, "min_breadth": 0.5}},
+    {"name": "p_w60", "why": "less RS weight: 60/40", "change": {"w_rs": 0.6, "w_thesis": 0.4}},
+    {"name": "p_w40", "why": "thesis-led: 40/60", "change": {"w_rs": 0.4, "w_thesis": 0.6}},
+    {"name": "p_w20", "why": "thesis-heavy: 20/80", "change": {"w_rs": 0.2, "w_thesis": 0.8}},
+    {"name": "p_cap98", "why": "drop RS 99 (worst 20-day outcome in live candidate data)", "change": {"max_rs_rank": 98}},
+    {"name": "p_cap95", "why": "drop RS 96-99", "change": {"max_rs_rank": 95}},
+    {"name": "p_nosector", "why": "no leader-sector boost (leaders did worse in live candidate data)", "change": {"sector_boost": 1.0}},
+    {"name": "p_thesis50", "why": "require a forward-thesis score of 50+", "change": {"min_thesis": 50}},
+    {"name": "p_ext3", "why": "no entry more than 3 ATRs above the 20-day EMA", "change": {"max_ext_atr20": 3.0}},
+    {"name": "c_w40_cap98_nosector", "why": "the three picker fixes together", "change": {"w_rs": 0.4, "w_thesis": 0.6, "max_rs_rank": 98, "sector_boost": 1.0}},
+    {"name": "c_picker_plus_mom", "why": "picker fixes plus momentum health in place of SPY", "change": {"w_rs": 0.4, "w_thesis": 0.6, "max_rs_rank": 98, "sector_boost": 1.0, "min_spy_above_50ma": 0.0, "min_mom_spread": 0.0}}
+  ]
+}

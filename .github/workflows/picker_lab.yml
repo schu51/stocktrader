@@ -1,0 +1,79 @@
+name: Picker Lab
+# On demand: replay the live rules against a batch of stock-picker and
+# market-filter variants (picker_lab.py, research/picker_lab/README.md).
+# Places no orders and changes no rules; writes research/picker_lab/results/.
+
+on:
+  workflow_dispatch:
+    inputs:
+      variants:
+        description: "Variants file"
+        required: true
+        default: "research/picker_lab/round1.json"
+      tag:
+        description: "Results name"
+        required: true
+        default: "round1"
+
+concurrency:
+  group: picker-lab
+  cancel-in-progress: false
+
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - uses: actions/cache@v4
+        with:
+          path: trading_data/backtest_cache/earnings_dates.json
+          key: earnings-dates-${{ github.run_id }}
+          restore-keys: earnings-dates-
+
+      - name: Run lab
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+          VARIANTS: ${{ inputs.variants }}
+          TAG: ${{ inputs.tag }}
+        run: python picker_lab.py --variants "$VARIANTS" --tag "$TAG"
+
+      - name: Commit results
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add research/picker_lab/results/
+          git diff --staged --quiet && { echo "Nothing to commit"; exit 0; }
+          git commit -m "Picker lab ${TAG} [skip ci]"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create --title "🚨 Picker Lab failed $(date -u +%Y-%m-%d)" --body "Run log: ${RUN_URL}"

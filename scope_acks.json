@@ -6,6 +6,12 @@
       "by": "Alex",
       "date": "2026-11-13",
       "why": "Manual session added the ai_optical theme (LITE, COHR, CIEN, AXTI) to docs/data/themes.json; change reviewed and kept."
+    },
+    {
+      "sha": "0892a3e3",
+      "by": "Alex (added by Claude at Alex's request, 2026-11-17)",
+      "date": "2026-11-17",
+      "why": "Legacy scheduled task stocktrader-daily-model-review wrote docs/data/postmarket_2026-11-16.json directly to main. File removed in PR #55; the legacy task and stocktrader-premarket-prep are paused."
     }
   ]
 }

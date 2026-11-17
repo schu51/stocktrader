@@ -70,7 +70,8 @@ ALLOWED_KNOBS = {           # backtest.Backtest arguments a challenger may chang
     "tight_boost", "min_adr", "max_adr", "max_ext_atr20", "swing_exit", "partial_size",
     "qqq_above_ema20", "max_vix", "min_breadth",
     # picker & filter lab (2026-11-17, research/picker_lab/README.md)
-    "max_rs_rank", "sector_boost", "min_thesis", "min_mom_spread",
+    "max_rs_rank", "sector_boost", "min_thesis", "min_mom_spread", "rs_mode",
+    # (w_fund, min_sue, min_rev_growth, pead_days need fundamentals data the tournament does not load yet)
 }
 # Promotion gates, challenger vs champion on the same three-year replay
 GATES = {

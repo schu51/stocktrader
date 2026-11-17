@@ -43,11 +43,19 @@ jobs:
           key: earnings-dates-${{ github.run_id }}
           restore-keys: earnings-dates-
 
+      # Point-in-time fundamentals from SEC frames (fundamentals_pit.py): rebuilt weekly
+      - uses: actions/cache@v4
+        with:
+          path: trading_data/backtest_cache/fundamentals_pit.json
+          key: fundamentals-pit-${{ github.run_id }}
+          restore-keys: fundamentals-pit-
+
       - name: Run lab
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
           ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+          SEC_EDGAR_USER_AGENT: ${{ vars.SEC_EDGAR_USER_AGENT || 'stocktrader picker lab (contact@example.com)' }}
           VARIANTS: ${{ inputs.variants }}
           TAG: ${{ inputs.tag }}
         run: python picker_lab.py --variants "$VARIANTS" --tag "$TAG"

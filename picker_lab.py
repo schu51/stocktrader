@@ -34,7 +34,9 @@ OUT = ROOT / "research" / "picker_lab" / "results"
 logger = logging.getLogger("picker_lab")
 
 # Settings a lab variant must not touch: they are run plumbing, not rules
-NOT_RULES = {"self", "universe", "prices", "start", "end", "capital", "quiet", "earnings", "members"}
+NOT_RULES = {"self", "universe", "prices", "start", "end", "capital", "quiet", "earnings", "members",
+             "fundamentals"}
+FUNDAMENTAL_KNOBS = {"w_fund", "min_sue", "min_rev_growth", "pead_days"}
 
 
 def rule_knobs() -> set:
@@ -124,9 +126,14 @@ def run(variants_file: Path, tag: str, today: Optional[date] = None) -> Dict:
     universe, prices, members = bt.load_backtest_data(start, end, de.UNIVERSE_MODE)
     earnings = bt.load_earnings(list(universe))
     champ_args = de.live_rules()
+    lookup = None
+    if any(FUNDAMENTAL_KNOBS & set(v.get("change") or {}) for v in variants):
+        import fundamentals_pit
+        lookup = fundamentals_pit.Lookup(fundamentals_pit.load_or_build(today, earnings))
 
     def replay(args: Dict):
-        b = bt.Backtest(universe, prices, start, None, earnings=earnings, members=members, **args)
+        b = bt.Backtest(universe, prices, start, None, earnings=earnings, members=members,
+                        fundamentals=lookup, **args)
         b.run(progress_every=0)
         return pd.Series(b.equity), pd.DataFrame(b.trades), dict(b.counters)
 

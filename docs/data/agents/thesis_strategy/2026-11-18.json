@@ -25,7 +25,7 @@
         "docs/data/eval_history.json:challengers.spy1.profit_factor",
         "docs/data/eval_latest.json:tournament.challengers.spy1"
       ],
-      "why": "Fails the PF gate by 0.36 and has missed by 0.3+ for 3 straight comparable evals; expect it to hit the 10-eval retire rule around 2026-12-02."
+      "why": "Fails the PF gate by 0.36 and has missed by 0.3+ for 3 straight comparable evals; expect it to hit the 10-eval retire rule around 2026-11-30."
     }
   ],
   "notes": [
@@ -34,7 +34,7 @@
     "Tracking gap -4.1pt (live -4.9% vs backtest -0.8%), widening from -3.5pt; trade_attribution same-window/matched are still on the old universe, so period vs execution can't be split.",
     "Tournament: spy3 fails only forward; cap98_tight fails pf_first_half (1.19 vs 1.32) and forward; risk40 PF lead shrank to +0.02. Nothing ready to propose; no PR, issue or rollback opened.",
     "Crossovers vs champion (PF 1.44, DD -17.0%): death_cross_exit PF 1.39 / DD -17.2%; sma50_exit PF 1.33 / DD -17.5% / win 56%; golden20 PF 1.28 / DD -7.2% on 72 trades, PF 0.29 ex-best-5. Share closed within 3 days per challenger is still not reported by daily_eval.py.",
-    "Forward sample: original eight reach 10 trading days ~2026-11-24, crossovers ~2026-11-25, cap98_tight ~2026-12-01; all at 0 trades.",
+    "Forward sample: original eight reach 10 trading days ~2026-11-23, crossovers ~2026-11-24, cap98_tight ~2026-12-01; all at 0 trades.",
     "Stops: 10 fills, mean -3.7%, median -0.8%, worst VCYT -24.6%, 2 gapped >2%; 2 of 10 have a recorded stop.",
     "Theses: all 9 active, revalidated 2026-11-14; macro_brief no error."
   ]

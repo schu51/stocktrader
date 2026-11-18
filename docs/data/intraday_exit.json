@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-17T20:45:39.186343",
-  "positions_checked": 14,
+  "generated_at": "2026-11-18T14:45:48.119890",
+  "positions_checked": 13,
   "exits_triggered": [],
   "stops_updated": [],
   "stops_placed": [],
@@ -12,7 +12,15 @@
       "qty": 281.0
     }
   ],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "HUM",
+      "trigger": "BROKER_STOP",
+      "price": 426.53,
+      "pnl_pct": 0.23,
+      "exit_date": "2026-11-18"
+    }
+  ],
   "sleeve_positions": [
     "KVYO",
     "REAL",

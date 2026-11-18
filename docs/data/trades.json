@@ -3746,7 +3746,7 @@
   {
     "trade_id": "TRD-20261016140304-HUM",
     "symbol": "HUM",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-10-16",
     "entry_ts": "2026-10-16T14:03:04.553442",
     "entry_price": 425.57,
@@ -3778,14 +3778,16 @@
     "stop_arm": "atr",
     "stop_dist": 0.11505,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-18",
+    "exit_price": 426.53,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": 4.82,
+    "pnl_pct": 0.23,
+    "hold_days": 33,
     "entry_limit": 425.57,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-18T14:45:22.602656",
+    "exit_stop": 427.7
   },
   {
     "trade_id": "TRD-20261022131626-DDOG",

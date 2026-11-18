@@ -793,5 +793,144 @@
     "promotable_today": false
    }
   }
+ },
+ {
+  "date": "2026-11-18",
+  "rules": "sma200_exit",
+  "live_last20": {
+   "trades": 20,
+   "win_rate": 0.1,
+   "profit_factor": 0.15,
+   "avg_win_pct": 11.59,
+   "avg_loss_pct": -8.26,
+   "expectancy_pct": -6.27,
+   "pnl_usd": -3656.27
+  },
+  "live_current_rules": {
+   "trades": 0
+  },
+  "account": {
+   "value": 105763.89,
+   "as_of": "2026-11-18",
+   "drawdown_from_peak": -0.113,
+   "return": -0.0492,
+   "spy_return": -0.0433
+  },
+  "stop_fills": {
+   "n": 10,
+   "mean_slip_pct": -3.66,
+   "median_slip_pct": -0.84,
+   "worst_slip_pct": -24.6,
+   "gapped_over_2pct": 2,
+   "recorded": 2,
+   "worst": "VCYT"
+  },
+  "tracking": {
+   "live_return": -0.0492,
+   "backtest_return": -0.008,
+   "gap": -0.0412
+  },
+  "alerts": [
+   "Account is 11.3% below its peak",
+   "Stop exits filled 3.7% below their stop on average (last 10)"
+  ],
+  "champion": {
+   "trades": 861,
+   "win_rate": 0.5923344947735192,
+   "profit_factor": 1.4370133631583237,
+   "cagr": 0.17,
+   "max_drawdown": -0.1702,
+   "recent_return": -0.1034
+  },
+  "challengers": {
+   "be3": {
+    "win_rate": 0.6417910447761194,
+    "profit_factor": 1.3313608869804112,
+    "cagr": 0.1224,
+    "max_drawdown": -0.1963,
+    "recent_return": -0.0718,
+    "promotable_today": false
+   },
+   "trail20": {
+    "win_rate": 0.5949098621420997,
+    "profit_factor": 1.388895197125846,
+    "cagr": 0.1459,
+    "max_drawdown": -0.186,
+    "recent_return": -0.0909,
+    "promotable_today": false
+   },
+   "spy3": {
+    "win_rate": 0.6196513470681458,
+    "profit_factor": 1.674181560355816,
+    "cagr": 0.1832,
+    "max_drawdown": -0.1705,
+    "recent_return": -0.0642,
+    "promotable_today": false
+   },
+   "spy1": {
+    "win_rate": 0.5700179533213644,
+    "profit_factor": 1.1771408811686808,
+    "cagr": 0.076,
+    "max_drawdown": -0.2244,
+    "recent_return": -0.113,
+    "promotable_today": false
+   },
+   "earn_exit15": {
+    "win_rate": 0.597860962566845,
+    "profit_factor": 1.3143836667024442,
+    "cagr": 0.1254,
+    "max_drawdown": -0.172,
+    "recent_return": -0.0785,
+    "promotable_today": false
+   },
+   "risk40": {
+    "win_rate": 0.5899772209567198,
+    "profit_factor": 1.4603209631083345,
+    "cagr": 0.1658,
+    "max_drawdown": -0.168,
+    "recent_return": -0.0909,
+    "promotable_today": false
+   },
+   "pullback": {
+    "win_rate": 0.5908618899273105,
+    "profit_factor": 1.2732294131352362,
+    "cagr": 0.1031,
+    "max_drawdown": -0.1858,
+    "recent_return": -0.0909,
+    "promotable_today": false
+   },
+   "death_cross_exit": {
+    "win_rate": 0.5921205098493627,
+    "profit_factor": 1.3850269729397644,
+    "cagr": 0.1527,
+    "max_drawdown": -0.1723,
+    "recent_return": -0.107,
+    "promotable_today": false
+   },
+   "golden20": {
+    "win_rate": 0.5833333333333334,
+    "profit_factor": 1.2828998149838005,
+    "cagr": 0.0112,
+    "max_drawdown": -0.0724,
+    "recent_return": -0.0209,
+    "promotable_today": false
+   },
+   "sma50_exit": {
+    "win_rate": 0.5613259668508287,
+    "profit_factor": 1.3296408843465302,
+    "cagr": 0.1298,
+    "max_drawdown": -0.1746,
+    "recent_return": -0.0955,
+    "promotable_today": false
+   },
+   "cap98_tight": {
+    "win_rate": 0.5738068812430632,
+    "profit_factor": 1.633384150337671,
+    "cagr": 0.1807,
+    "max_drawdown": -0.1598,
+    "recent_return": -0.0567,
+    "promotable_today": false
+   }
+  }
  }
 ]

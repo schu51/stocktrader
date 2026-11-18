@@ -1,0 +1,103 @@
+{
+  "agent": "manager",
+  "date": "2026-11-18",
+  "generated_at": "2026-11-18T23:15:00+00:00",
+  "status": "amber",
+  "headline": "No reds; amber on 6 stale failure issues. Losing streak deepened again: last-20 PF 0.15 (10% win), account 11.3% below peak, 30d -4.92% vs SPY -4.33%. Broken holdings down to two (WK, KDP), both about 3% above their stops; CTLP still has no stop. No new recs; three open items carried, none picked up yet.",
+  "calls": [
+    {
+      "subject": "KDP",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "agents/performance_risk/2026-11-18.json:calls[KDP]=broken low",
+        "agents/research_analyst/2026-11-18.json:calls[KDP]=bearish medium",
+        "options_sentiment.json:reads[KDP].options_score=3"
+      ],
+      "why": "Both specialists agree on the dilutive $2.25B offering with the stop near; the bullish options read carries no weight (options_bullish d1 edge 0.0038, t 0.51)."
+    },
+    {
+      "subject": "WK",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "medium",
+      "evidence": [
+        "agents/performance_risk/2026-11-18.json:calls[WK]=broken medium",
+        "agents/research_analyst/2026-11-18.json:calls[WK]=bearish medium",
+        "options_sentiment.json:reads[WK].options_score=-2"
+      ],
+      "why": "No conflict: RS 18, -22.84% loss, bearish options; the broker stop at 64.57 governs the exit."
+    },
+    {
+      "subject": "MAR",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "agents/performance_risk/2026-11-18.json:notes (MAR weakening -> intact, repo options +3)",
+        "agents/research_analyst/2026-11-18.json:calls[MAR]=bearish low",
+        "osint_latest.json:MAR.detail.insiders_30d.discretionary_sell_value=38.7M"
+      ],
+      "why": "Research's bearish call rested on an options score of -2 that the 21:17 refresh replaced with +3; insider selling alone does not break a holding, so intact but on watch."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "agents/performance_risk/2026-11-18.json:calls[TTAN]=intact (broken -> weakening)",
+        "agents/research_analyst/2026-11-18.json:calls[TTAN]=bearish low"
+      ],
+      "why": "Weakening, not broken: the negative news surge aged out and the -1.27% position has a stop 24.0% below; RS 27 keeps it on watch."
+    }
+  ],
+  "notes": [
+    "Reds: none. ops_status.json (2026-11-18T22:30:58Z) amber only on issues: 6 failure issues open more than 2 days (#51 Weekly Review 11-14, #50/#43/#34 Ops monitor red 11-13/11-12/11-11, #15/#12 Macro Research 11-07/10-31). Action: close the ones already fixed at https://github.com/schu51/stocktrader/issues . jobs (18 workflows, none failed), freshness, model, contracts and scope green.",
+    "Specialists: research_analyst amber, performance_risk amber, thesis_strategy amber; all three reported today.",
+    "CONFLICT (numbers): research_analyst reports drawdown 9.6% (risk_assessment, from the 2026-10-06 peak) and performance_risk 11.4% with last-20 PF 0.16 from the 11-17 eval. Call: eval_latest.json (2026-11-18T21:59:53) governs: drawdown_from_peak -0.113, last-20 PF 0.15 (win 0.1, -$3,656.27), 30d return -0.0492 vs SPY -0.0433, tracking gap -0.0412. thesis_strategy matches it.",
+    "CONFLICT (MAR): research bearish low (insider selling $38.7M, options -2) vs performance_risk intact (options now +3). Call intact on watch; see calls.",
+    "CONFLICT (TTAN): research bearish low vs performance_risk weakening. Call weakening; see calls.",
+    "CONFLICT (KDP vs options +3): specialists lead; options evidence still shows no edge.",
+    "Options vs top candidates: ZETA +3, HNGE +3, U +3, BRZE +1, TXN +1, VRNS +1, TRGP 0; none options_bearish. No conflict. DG newly options_bearish (-2) but live full-chain 0.86 does not confirm (performance_risk); weakening.",
+    "HUM closed at its broker stop 14:45 UTC, filled 426.53 vs stop 427.70, +$4.82 / +0.2%. Research had it neutral 3.1% above stop.",
+    "OPEN QUESTION (no entries), day seven: candidates_screened=0 while daily_opening_buys ranks names and universe_size is 1375 (research expected ~518). thesis_strategy: every rule set, champion included, opened 0 backtest trades since 2026-11-10, consistent with the SPY-below-50MA filter. Call unchanged: the regime gate is the likelier cause, but Alex should confirm in the 15:00 run log that the live buy path is gated, not disconnected, and that the 1375-name universe is intended.",
+    "Holdings (performance_risk): 9 intact, 6 weakening (DG, FDS, KO, KVYO, REAL, TTAN), 2 broken (WK, KDP), 1 not assessable (CTLP). WK 2.8% and KDP 3.0% above stops; CBOE 3.1% above a stop above cost; KO 3.9%. CTLP 281 shares still has no stop ('asset CTLP is not active'); needs manual broker handling.",
+    "Execution: stop fills last 10 mean -3.64%, median -0.84%, worst VCYT -24.6%; eval alert 'Stop exits filled 3.7% below their stop on average (last 10)'.",
+    "Movers: big_movers.json today is empty (threshold 0.2). Big-mover review proposed adding NTSK, SAIL, AKAM, FSLY, FROG to the existing cybersecurity theme (research/big_mover_reads.json THEME@2026-11-18); a data proposal, not a rule change; no REC@2026-11-18 entry.",
+    "Strategy: no live rule change; research/challengers.json unchanged; experiments.json unchanged since 2026-11-14. spy3 passes every gate but forward (0 trades); ready_to_propose empty. sma200_exit rollback watch: lag -0.0271, 5 trading days, not triggered. Forward sample reaches 10 trading days ~2026-11-23 (original eight), ~2026-11-24 (crossovers), ~2026-12-01 (cap98_tight). Experiments review due 2026-12-05."
+  ],
+  "recommendations": [
+    {
+      "id": "REC-research_analyst-20261117-1",
+      "from": "research_analyst",
+      "title": "Thesis-grade entry gate (block D; variant C+D)",
+      "verdict": "test",
+      "why": "92 closed trades show a consistent B > C > D ordering (avg +1.2% / -2.8% / -5.5%), but win rates are low in every grade and D is only n=18; needs a backtest before any live change.",
+      "next": "thesis_strategy: backtest a min thesis_grade filter (or a raised w_thesis challenger) against the champion. Not picked up as of 11-18 (challengers.json unchanged, list full at 11); retiring spy1 (~11-30) would free a slot.",
+      "first_seen": "2026-11-17",
+      "updated": "2026-11-18"
+    },
+    {
+      "id": "REC-research_analyst-20261117-2",
+      "from": "research_analyst",
+      "title": "Later break-even stop (+5% vs +8% vs +10%)",
+      "verdict": "test",
+      "why": "One live case (ACN, now HUM too at +0.2%) is not evidence, but the quick-failure pattern (27 trades closed within 3 days, 0% won, -$4,556) makes stop timing worth a cheap backtest.",
+      "next": "thesis_strategy: backtest.py --breakeven-at 5 / 8 / 10, or a breakeven_at challenger. Not picked up as of 11-18.",
+      "first_seen": "2026-11-17",
+      "updated": "2026-11-18"
+    },
+    {
+      "id": "REC-research_analyst-20261117-3",
+      "from": "research_analyst",
+      "title": "Score the news-veto A/B",
+      "verdict": "needs_data",
+      "why": "Control-arm buys despite a veto: n=2, avg -7.8%; far too small.",
+      "next": "Score in experiments.py once both arms have 10+ closed trades.",
+      "first_seen": "2026-11-17",
+      "updated": "2026-11-17"
+    }
+  ]
+}

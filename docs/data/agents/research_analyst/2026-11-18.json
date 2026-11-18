@@ -1,0 +1,153 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-18",
+  "generated_at": "2026-11-18T14:24:05+00:00",
+  "status": "amber",
+  "headline": "KDP is 1.8% above its stop after a $2.25B share offering and WK is 2.7% above its stop with RS 18 and heavy puts; regime neutral (SPY below 50MA), drawdown 9.6%: call SELECTIVE.",
+  "calls": [
+    {
+      "subject": "KDP",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "osint_latest.json:KDP.events(424B5 2026-11-16, score -1)",
+        "latest.json:positions.KDP.stop_loss=33.95 vs 34.56",
+        "screener.json:rs_ranks.KDP=75"
+      ],
+      "why": "$2.25B equity offering (dilution, to cut debt ahead of split) with price 1.8% above stop; bullish options read (+3, 11-17) is the only offset."
+    },
+    {
+      "subject": "WK",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "latest.json:positions.WK.unrealized_pnl_pct=-22.94",
+        "latest.json:positions.WK.stop_loss=64.57 vs 66.34",
+        "screener.json:rs_ranks.WK=18",
+        "options_sentiment.json:WK.options_score=-3"
+      ],
+      "why": "Deep loser, RS 18, 2.7% above stop, puts 2,516 vs 187 calls."
+    },
+    {
+      "subject": "MAR",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:MAR.detail.insiders_30d.discretionary_sell_value=38.7M (6 sellers)",
+        "options_sentiment.json:MAR.options_score=-2"
+      ],
+      "why": "Heavy discretionary insider selling plus put-skewed options; the +1 news surge is mostly loose 'Mar' matches."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN=27",
+        "osint_latest.json:TTAN.headlines(securities-fraud probe after 30% drop)"
+      ],
+      "why": "RS 27 after a 30% plunge with law-firm investigations; bullish options (+2) noted but probes are routine after drops."
+    },
+    {
+      "subject": "HUM",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.HUM.stop_loss=427.7 vs 441.0",
+        "osint_latest.json:HUM.events(8-K other)",
+        "screener.json:rs_ranks.HUM=96"
+      ],
+      "why": "Strong RS but 3.1% above stop after a 3.9% down day; routine 8-K."
+    },
+    {
+      "subject": "CBOE",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.CBOE.stop_loss=348.75 vs 360.02",
+        "screener.json:rs_ranks.CBOE=90"
+      ],
+      "why": "No news; 3.2% above stop so stop risk only."
+    },
+    {
+      "subject": "KVYO",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.KVYO=47",
+        "options_sentiment.json:KVYO.options_score=+3"
+      ],
+      "why": "RS below 50 but call-heavy options (2,154 calls vs 115 puts); far from stop."
+    },
+    {
+      "subject": "ZETA",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:candidates.ZETA(rs 96, thesis B 63, modest 16% extension)",
+        "options_sentiment.json:ZETA.options_score=+3"
+      ],
+      "why": "Top-ranked candidate with B thesis, sane extension and call-heavy flow."
+    },
+    {
+      "subject": "VRNS",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.VRNS(rs 90, thesis B 62, fresh 9% tight base)"
+      ],
+      "why": "Best-shaped B setup on the list (fresh, tight base)."
+    },
+    {
+      "subject": "HNGE",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.HNGE(rs 99, thesis C 44, extended 30%)",
+        "options_sentiment.json:HNGE.options_score=+2"
+      ],
+      "why": "Leader with bullish options, but C thesis and 30% extension rule it out under SELECTIVE."
+    },
+    {
+      "subject": "TRGP",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.TRGP(rs 87, thesis B 55, fresh 10%)",
+        "osint_latest.json:TRGP.events(short volume 37% vs 59%, z -3.2)"
+      ],
+      "why": "B-grade fresh setup in the energy thesis with a sharp drop in short volume and a raised Stifel target."
+    },
+    {
+      "subject": "INTU",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:catalyst_watch.INTU(earnings 2026-11-19, rs 6)",
+        "options_sentiment.json:INTU.options_score=-3"
+      ],
+      "why": "Earnings tomorrow, far from highs, bearish options; watch-only."
+    }
+  ],
+  "notes": [
+    "Stale files: options_sentiment.json and big_movers.json from 2026-11-17 (evening jobs), theses.json from 2026-11-14, ops_status.json from 2026-11-17 22:30Z. Screener, OSINT, premarket and latest are from today.",
+    "Screener universe_size is 1375, not the ~518 expected; price_source alpaca, data_coverage 0.997. Check whether the universe change was intended.",
+    "CTLP is marked untradable (inactive on Alpaca, delisted or acquired) and has no stop.",
+    "Drawdown 9.58% from the 2026-10-06 peak (CAUTION, limit 15%).",
+    "Near stops besides KDP/WK: KO 4.0%, EBAY 5.0% (EBAY has $9.2M discretionary insider sells).",
+    "Catalyst watch (watch-only): DY earnings today; INTU 11-19; BMNR, IESC, BJ 11-20; SMTC, SYM, A 11-23; DELL (RS 98), BOX, KSS, BBY, AMBA, CLSK, DKS 11-24.",
+    "Ops amber, not red: 6 failure issues open more than 2 days (#12, #15, #34, #43, #50, #51)."
+  ]
+}

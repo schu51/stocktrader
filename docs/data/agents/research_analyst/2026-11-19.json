@@ -1,0 +1,171 @@
+{
+ "agent": "research_analyst",
+ "date": "2026-11-19",
+ "generated_at": "2026-11-19T14:23:24+00:00",
+ "status": "amber",
+ "headline": "WK (-22.6%, RS 17, bearish options) sits 3.1% above its stop; KDP, KO and CBOE are also within 3% of stops in a neutral regime with the account in a 9.5% drawdown.",
+ "calls": [
+  {
+   "subject": "WK",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "medium",
+   "evidence": [
+    "latest.json:positions[WK].stop_loss",
+    "screener.json:rs_ranks.WK",
+    "options_sentiment.json:reads[WK].options_score"
+   ],
+   "why": "Down 22.6%, RS rank 17, 3.1% above stop and puts dominate (2,455 vs 187 calls); weakest holding."
+  },
+  {
+   "subject": "KDP",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "medium",
+   "evidence": [
+    "osint_latest.json:companies[KDP].events(424B5 2026-11-16)",
+    "latest.json:positions[KDP].stop_loss"
+   ],
+   "why": "424B5 securities offering (possible dilution) with price 2.4% above stop; bullish options (+3) is the only offset."
+  },
+  {
+   "subject": "KO",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "osint_latest.json:companies[KO].events(insider 2026-11-17)",
+    "latest.json:positions[KO].stop_loss",
+    "options_sentiment.json:reads[KO]"
+   ],
+   "why": "$16.5M discretionary insider selling by 4 sellers outside 10b5-1, 2.8% from stop, options mildly bearish (-1)."
+  },
+  {
+   "subject": "DG",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "options_sentiment.json:reads[DG].options_score"
+   ],
+   "why": "Options read -2 (puts > calls, 39% premium on calls); price still 9.3% above stop, so context only."
+  },
+  {
+   "subject": "CBOE",
+   "direction": "neutral",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "latest.json:positions[CBOE].stop_loss",
+    "options_sentiment.json:reads[CBOE]"
+   ],
+   "why": "Only 2.4% above stop; no OSINT events and options +2, so a stop-proximity watch, not a negative read."
+  },
+  {
+   "subject": "TTAN",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "screener.json:rs_ranks.TTAN"
+   ],
+   "why": "RS rank 30 (below 50); only routine 13G/A filings in OSINT."
+  },
+  {
+   "subject": "KVYO",
+   "direction": "neutral",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "screener.json:rs_ranks.KVYO",
+    "options_sentiment.json:reads[KVYO]"
+   ],
+   "why": "RS rank 47 (below 50) offset by unusual opening call buying (+3)."
+  },
+  {
+   "subject": "MAR",
+   "direction": "bullish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "options_sentiment.json:reads[MAR]",
+    "osint_latest.json:companies[MAR].events"
+   ],
+   "why": "Unusual calls (83% opening, +3) against $38.7M discretionary insider selling and a neutral-tone news surge; mixed."
+  },
+  {
+   "subject": "HLT",
+   "direction": "neutral",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "osint_latest.json:companies[HLT]"
+   ],
+   "why": "News surge (+0.29 tone) is offset by $59.6M discretionary insider selling over 30 days."
+  },
+  {
+   "subject": "MO",
+   "direction": "neutral",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "osint_latest.json:companies[MO]",
+    "latest.json:positions[MO].stop_loss"
+   ],
+   "why": "News-volume surge with mild positive tone is low-information; 4.7% above stop."
+  },
+  {
+   "subject": "ZETA",
+   "direction": "bullish",
+   "horizon_days": 5,
+   "confidence": "medium",
+   "evidence": [
+    "screener.json:candidates[ZETA]",
+    "options_sentiment.json:reads[ZETA].options_score"
+   ],
+   "why": "Only B-grade among top screener names: RS 95, modest 17% extension, options +3."
+  },
+  {
+   "subject": "HNGE",
+   "direction": "bullish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "screener.json:candidates[HNGE]",
+    "options_sentiment.json:reads[HNGE].options_score"
+   ],
+   "why": "Top RS (99) and options +3 but thesis grade C and extended 30% from base."
+  },
+  {
+   "subject": "FROG",
+   "direction": "neutral",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "screener.json:candidates[FROG]"
+   ],
+   "why": "RS 98 but highly extended 53% with C thesis; late-entry risk."
+  },
+  {
+   "subject": "U",
+   "direction": "bullish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "options_sentiment.json:reads[U]",
+    "screener.json:candidates[U]"
+   ],
+   "why": "RS 93, unusual call buying (+3, long-dated OI bullish); thesis C, extended 30%."
+  }
+ ],
+ "notes": [
+  "Stale files: options_sentiment.json and big_movers.json are 2026-11-18 (post-close), ops_status.json 2026-11-18 22:30Z, theses.json 2026-11-14. Screener, premarket, OSINT and latest are from today.",
+  "Screener health: universe_size 1375 (expected ~518 - investigate whether universe definition changed), price_source alpaca, data_coverage 99.7%, 50 final candidates, regime neutral (SPY 730 above 200MA 730.0 but below 50MA 762; 3m -4.4%).",
+  "Drawdown 9.45% from 2026-10-06 peak (CAUTION, limit 15%); cash 11.7%.",
+  "CTLP is inactive on Alpaca (delisted or acquired), untradable with no stop - needs manual handling.",
+  "Premarket top candidates: AAPL (A, 76), V (B, 59), ANET (B, 57, gapping +3.4%). Cyber gap-ups: PANW +8.1%, CRWD +5.3%, S +3.9%, OKTA +3.5%.",
+  "Catalyst watch (watch-only, earnings_far_from_high, hit rate 2.7%): BMNR and IESC 11-20; AMBA, CLSK, DELL, DKS 11-24; DY 11-25. IESC options -2.",
+  "Ops amber: 6 failure issues open >2 days (#51, #50, #43, #34, #15, #12); no red checks.",
+  "Call for the day: SELECTIVE - neutral regime below the 50MA plus a 9.5% drawdown; only A/B thesis entries (AAPL, V, ANET, ZETA)."
+ ]
+}

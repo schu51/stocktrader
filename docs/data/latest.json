@@ -3,11 +3,11 @@
   "run_id": "20261119_150051",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 104253.13,
+    "portfolio_value": 104221.22,
     "cash": 42477.49,
     "buying_power": 40353.61549999999,
-    "long_market_value": 61775.64,
-    "unrealized_pnl": 317.43
+    "long_market_value": 61743.73,
+    "unrealized_pnl": 285.52
   },
   "positions": [
     {
@@ -147,10 +147,10 @@
       "symbol": "GILD",
       "qty": 22,
       "avg_cost": 165.81,
-      "current_price": 166.6,
-      "market_value": 3665.2,
-      "unrealized_pnl": 17.48,
-      "unrealized_pnl_pct": 0.48,
+      "current_price": 165.18,
+      "market_value": 3633.9,
+      "unrealized_pnl": -13.82,
+      "unrealized_pnl_pct": -0.38,
       "stop_loss": 152.28,
       "side": "long",
       "asset_class": "us_equity",
@@ -191,10 +191,10 @@
       "symbol": "KDP",
       "qty": 103,
       "avg_cost": 36.66,
-      "current_price": 34.48,
-      "market_value": 3551.44,
-      "unrealized_pnl": -224.54,
-      "unrealized_pnl_pct": -5.95,
+      "current_price": 34.43,
+      "market_value": 3546.29,
+      "unrealized_pnl": -229.69,
+      "unrealized_pnl_pct": -6.08,
       "stop_loss": 33.95,
       "side": "long",
       "asset_class": "us_equity",
@@ -213,10 +213,10 @@
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 96.3,
-      "market_value": 3659.4,
-      "unrealized_pnl": 96.92,
-      "unrealized_pnl_pct": 2.72,
+      "current_price": 96.13,
+      "market_value": 3653.02,
+      "unrealized_pnl": 90.54,
+      "unrealized_pnl_pct": 2.54,
       "stop_loss": 94.22,
       "side": "long",
       "asset_class": "us_equity",
@@ -279,10 +279,10 @@
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 74.71,
-      "market_value": 3660.87,
-      "unrealized_pnl": -84.59,
-      "unrealized_pnl_pct": -2.26,
+      "current_price": 74.37,
+      "market_value": 3644.27,
+      "unrealized_pnl": -101.19,
+      "unrealized_pnl_pct": -2.7,
       "stop_loss": 71.93,
       "side": "long",
       "asset_class": "us_equity",
@@ -367,10 +367,10 @@
       "symbol": "VCEL",
       "qty": 64,
       "avg_cost": 43.23,
-      "current_price": 58.57,
-      "market_value": 3748.48,
-      "unrealized_pnl": 981.76,
-      "unrealized_pnl_pct": 35.48,
+      "current_price": 59.0,
+      "market_value": 3776.0,
+      "unrealized_pnl": 1009.28,
+      "unrealized_pnl_pct": 36.48,
       "stop_loss": 43.45,
       "side": "long",
       "asset_class": "us_equity",
@@ -610,7 +610,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-11-19T22:00:51.842471+00:00",
+  "sync_at": "2026-11-19T22:30:42.141194+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -679,6 +679,10 @@
       {
         "time": "22:00",
         "value": 104253.13
+      },
+      {
+        "time": "22:30",
+        "value": 104221.22
       }
     ]
   }

@@ -1,17 +1,25 @@
-# OSINT brief — 2026-11-18
+# OSINT brief — 2026-11-19
 
 **OSINT: 5 companies with new signals**
 
-KDP -1: securities offering (possible dilution) | MAR +1: News surge: 13 headlines in 24h vs 2.0/day, 10 outlets, tone +0.15 | CRL +0: passive 5%+ stake (13G) filed | EBAY +0: passive 5%+ stake (13G) filed | HUM +0: 8-K: other event
+KDP -1: securities offering (possible dilution) | KO -1: Heavy discretionary insider selling: $16,480,959 outside 10b5-1 plans, 4 seller(s) | HLT +1: News surge: 7 headlines in 24h vs 2.2/day, 4 outlets, tone +0.29 | MO +1: News surge: 9 headlines in 24h vs 2.7/day, 8 outlets, tone +0.22 | RXO +1: News surge: 6 headlines in 24h vs 0.7/day, 5 outlets, tone +0.33
+
+## HLT · score +1 · holding
+
+- 2026-11-19 **news** News surge: 7 headlines in 24h vs 2.2/day, 4 outlets, tone +0.29
 
 ## KDP · score -1 · holding
 
 - 2026-11-16 **sec** securities offering (possible dilution) ([link](https://www.sec.gov/Archives/edgar/data/1418135/000119312526461405/d111532d424b5.htm))
 - 2026-11-16 **sec** 8-K: other event ([link](https://www.sec.gov/Archives/edgar/data/1418135/000119312526463583/d473035d8k.htm))
 
-## MAR · score +1 · holding
+## KO · score -1 · holding
 
-- 2026-11-18 **news** News surge: 13 headlines in 24h vs 2.0/day, 10 outlets, tone +0.15
+- 2026-11-17 **sec** Heavy discretionary insider selling: $16,480,959 outside 10b5-1 plans, 4 seller(s)
+
+## MO · score +1 · holding
+
+- 2026-11-19 **news** News surge: 9 headlines in 24h vs 2.7/day, 8 outlets, tone +0.22
 
 ## CRL · score +0 · holding
 
@@ -21,13 +29,9 @@ KDP -1: securities offering (possible dilution) | MAR +1: News surge: 13 headlin
 
 - 2026-11-16 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1065088/000094726326000093/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-## HUM · score +0 · holding
+## MAR · score +0 · holding
 
-- 2026-11-17 **sec** 8-K: other event ([link](https://www.sec.gov/Archives/edgar/data/49071/000004907126000070/hum-20261116.htm))
-
-## REAL · score +0 · holding
-
-- 2026-11-18 **news** News surge: 14 headlines in 24h vs 2.0/day, 8 outlets, tone -0.07
+- 2026-11-19 **news** News surge: 11 headlines in 24h vs 3.2/day, 9 outlets, tone -0.09
 
 ## TTAN · score +0 · holding
 
@@ -38,13 +42,22 @@ KDP -1: securities offering (possible dilution) | MAR +1: News surge: 13 headlin
 
 - 2026-11-16 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1445305/000117266126005351/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-## APA · score +0 · candidate
+## RXO · score +1 · candidate
 
-- 2026-11-18 **finra** Short volume collapsed: 30% vs 43% average (z -2.0)
+- 2026-11-19 **news** News surge: 6 headlines in 24h vs 0.7/day, 5 outlets, tone +0.33
 
-## BB · score +0 · candidate
+## SEZL · score +1 · candidate
 
-- 2026-11-16 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1070235/000149511526000067/xslSCHEDULE_13G_X02/primary_doc.xml))
+- 2026-11-19 **news** News surge: 6 headlines in 24h vs 2.0/day, 5 outlets, tone +0.17
+
+## ASO · score +0 · candidate
+
+- 2026-11-19 **news** News surge: 7 headlines in 24h vs 1.8/day, 6 outlets, tone +0.00
+
+## CAKE · score +0 · candidate
+
+- 2026-11-19 **news** News surge: 8 headlines in 24h vs 2.7/day, 8 outlets, tone +0.50
+- 2026-11-19 **finra** Short-volume spike: 83% of volume vs 63% 20-day average (z +2.8)
 
 ## ELF · score +0 · candidate
 
@@ -54,9 +67,16 @@ KDP -1: securities offering (possible dilution) | MAR +1: News surge: 13 headlin
 
 - 2026-11-16 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1673743/000089914026001347/xslSCHEDULE_13G_X02/primary_doc.xml))
 
-## TRGP · score +0 · candidate
+## SYNA · score +0 · candidate
 
-- 2026-11-18 **finra** Short volume collapsed: 37% vs 59% average (z -3.2)
-- 2026-11-16 **sec** passive 5%+ stake (13G) filed ([link](https://www.sec.gov/Archives/edgar/data/1389170/000090221926000361/xslSCHEDULE_13G_X02/primary_doc.xml))
+- 2026-11-17 **sec** 8-K: shareholder vote ([link](https://www.sec.gov/Archives/edgar/data/817720/000081772026000111/syna-20261117.htm))
 
-_No new signals: CBOE, CTLP, DG, FDS, GILD, HLT, KO, KVYO, MO, SJM, VCEL, ASO, CAKE, CHRD, CROX, FIGS, RXO, SEZL, VSXY, XMTR, ZETA_
+## U · score +0 · candidate
+
+- 2026-11-19 **news** News surge: 31 headlines in 24h vs 6.3/day, 4 outlets, tone -0.13
+
+## VRNS · score +0 · candidate
+
+- 2026-11-16 **sec** merger document ([link](https://www.sec.gov/Archives/edgar/data/1361113/000121390026120640/ea0310652-03.htm))
+
+_No new signals: CBOE, CTLP, DG, FDS, GILD, KVYO, REAL, SJM, VCEL, APA, BRZE, FROG, TXN, XMTR, ZETA_

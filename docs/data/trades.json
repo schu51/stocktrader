@@ -3921,7 +3921,7 @@
   {
     "trade_id": "DMD-20261026143049-WK",
     "symbol": "WK",
-    "status": "OPEN",
+    "status": "CLOSED",
     "sleeve": "diamond",
     "entry_date": "2026-10-26",
     "entry_ts": "2026-10-26T14:30:49.293141",
@@ -3933,15 +3933,17 @@
     "order_id": "8f0a84d6-69a2-4e76-b8d0-554cf6ba4390",
     "judgment": 12.0,
     "judgment_rank": 1,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-19",
+    "exit_price": 64.5,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": -604.52,
+    "pnl_pct": -25.08,
+    "hold_days": 24,
     "entry_limit": 98.04,
     "entry_filled": true,
-    "peak_price": 68.97
+    "peak_price": 68.97,
+    "exit_ts": "2026-11-19T20:33:48.215288",
+    "exit_stop": 64.57
   },
   {
     "trade_id": "DMD-20261026143049-PCOR",

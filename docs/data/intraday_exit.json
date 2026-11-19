@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19T20:15:40.046840",
+  "generated_at": "2026-11-19T20:45:40.259151",
   "positions_checked": 13,
   "exits_triggered": [],
   "stops_updated": [],
@@ -12,13 +12,20 @@
       "qty": 281.0
     }
   ],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "WK",
+      "trigger": "BROKER_STOP",
+      "price": 64.5,
+      "pnl_pct": -25.08,
+      "exit_date": "2026-11-19"
+    }
+  ],
   "sleeve_positions": [
     "KVYO",
     "REAL",
     "TTAN",
-    "VCEL",
-    "WK"
+    "VCEL"
   ],
   "mode": "EXECUTE"
 }

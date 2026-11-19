@@ -1,26 +1,24 @@
 {
-  "generated_at": "2026-11-19T14:17:06.534611",
-  "run_id": "20261119_141701",
+  "generated_at": "2026-11-19T15:00:57.517662",
+  "run_id": "20261119_150051",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 105633.01,
-    "cash": 40671.49,
-    "buying_power": 38637.915499999996,
-    "long_market_value": 64961.52,
-    "unrealized_pnl": 1092.79
+    "portfolio_value": 105110.92,
+    "cash": 12553.150399999995,
+    "buying_power": 11925.492879999994,
+    "long_market_value": 64439.43,
+    "unrealized_pnl": 570.7
   },
   "positions": [
     {
       "symbol": "CBOE",
       "qty": 16,
       "avg_cost": 347.02,
-      "current_price": 357.0,
-      "market_value": 5712.0,
-      "unrealized_pnl": 159.72,
-      "unrealized_pnl_pct": 2.88,
+      "current_price": 358.55,
+      "market_value": 5736.72,
+      "unrealized_pnl": 184.44,
+      "unrealized_pnl_pct": 3.32,
       "stop_loss": 348.75,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Cboe Global Markets, Inc.",
         "sector": "Financial Services",
@@ -29,20 +27,18 @@
         "market_cap": "$35.7B",
         "week_52_high": 379.76,
         "week_52_low": 227.15,
-        "pct_from_high": 5.9
+        "pct_from_high": 5.6
       }
     },
     {
       "symbol": "CRL",
       "qty": 20,
       "avg_cost": 307.22,
-      "current_price": 342.8,
-      "market_value": 6856.0,
-      "unrealized_pnl": 711.6,
-      "unrealized_pnl_pct": 11.58,
+      "current_price": 334.18,
+      "market_value": 6683.6,
+      "unrealized_pnl": 539.2,
+      "unrealized_pnl_pct": 8.77,
       "stop_loss": 308.76,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Charles River Laboratories International, Inc.",
         "sector": "Healthcare",
@@ -51,7 +47,7 @@
         "market_cap": "$14.7B",
         "week_52_high": 379.63,
         "week_52_low": 146.2,
-        "pct_from_high": 12.2
+        "pct_from_high": 12.0
       }
     },
     {
@@ -63,8 +59,6 @@
       "unrealized_pnl": 157.36,
       "unrealized_pnl_pct": 5.26,
       "stop_loss": null,
-      "side": "long",
-      "asset_class": "us_equity",
       "untradable": "asset is inactive on Alpaca (delisted or acquired)",
       "company": {
         "name": "Cantaloupe Inc",
@@ -81,13 +75,11 @@
       "symbol": "DG",
       "qty": 40,
       "avg_cost": 135.26,
-      "current_price": 132.4,
-      "market_value": 5295.8,
-      "unrealized_pnl": -114.8,
-      "unrealized_pnl_pct": -2.12,
+      "current_price": 134.1,
+      "market_value": 5364.0,
+      "unrealized_pnl": -46.6,
+      "unrealized_pnl_pct": -0.86,
       "stop_loss": 121.8,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Dollar General Corporation",
         "sector": "Consumer Defensive",
@@ -96,20 +88,18 @@
         "market_cap": "$30.2B",
         "week_52_high": 158.23,
         "week_52_low": 99.57,
-        "pct_from_high": 15.1
+        "pct_from_high": 15.2
       }
     },
     {
       "symbol": "EBAY",
       "qty": 19,
       "avg_cost": 121.77,
-      "current_price": 121.51,
-      "market_value": 2308.69,
-      "unrealized_pnl": -4.99,
-      "unrealized_pnl_pct": -0.22,
+      "current_price": 120.89,
+      "market_value": 2296.82,
+      "unrealized_pnl": -16.87,
+      "unrealized_pnl_pct": -0.73,
       "stop_loss": 112.31,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "eBay Inc.",
         "sector": "Consumer Cyclical",
@@ -118,20 +108,18 @@
         "market_cap": "$54.1B",
         "week_52_high": 127.74,
         "week_52_low": 78.03,
-        "pct_from_high": 4.9
+        "pct_from_high": 5.4
       }
     },
     {
       "symbol": "FDS",
       "qty": 11,
       "avg_cost": 332.53,
-      "current_price": 314.25,
-      "market_value": 3456.7,
-      "unrealized_pnl": -201.15,
-      "unrealized_pnl_pct": -5.5,
+      "current_price": 313.43,
+      "market_value": 3447.73,
+      "unrealized_pnl": -210.12,
+      "unrealized_pnl_pct": -5.74,
       "stop_loss": 300.83,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "FactSet Research Systems Inc.",
         "sector": "Financial Services",
@@ -140,20 +128,18 @@
         "market_cap": "$11.5B",
         "week_52_high": 348.0,
         "week_52_low": 185.0,
-        "pct_from_high": 9.3
+        "pct_from_high": 9.9
       }
     },
     {
       "symbol": "GILD",
       "qty": 22,
       "avg_cost": 165.81,
-      "current_price": 168.69,
-      "market_value": 3711.18,
-      "unrealized_pnl": 63.46,
-      "unrealized_pnl_pct": 1.74,
+      "current_price": 166.9,
+      "market_value": 3671.69,
+      "unrealized_pnl": 23.97,
+      "unrealized_pnl_pct": 0.66,
       "stop_loss": 152.28,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Gilead Sciences, Inc.",
         "sector": "Healthcare",
@@ -162,20 +148,18 @@
         "market_cap": "$207.9B",
         "week_52_high": 176.58,
         "week_52_low": 116.88,
-        "pct_from_high": 3.9
+        "pct_from_high": 5.5
       }
     },
     {
       "symbol": "HLT",
       "qty": 10,
       "avg_cost": 367.44,
-      "current_price": 370.15,
-      "market_value": 3701.5,
-      "unrealized_pnl": 27.1,
-      "unrealized_pnl_pct": 0.74,
+      "current_price": 365.61,
+      "market_value": 3656.05,
+      "unrealized_pnl": -18.35,
+      "unrealized_pnl_pct": -0.5,
       "stop_loss": 342.76,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Hilton Worldwide Holdings Inc. Common Stock",
         "sector": "Consumer Cyclical",
@@ -184,20 +168,18 @@
         "market_cap": "$82.1B",
         "week_52_high": 381.34,
         "week_52_low": 263.95,
-        "pct_from_high": 2.1
+        "pct_from_high": 4.1
       }
     },
     {
       "symbol": "KDP",
       "qty": 103,
       "avg_cost": 36.66,
-      "current_price": 34.7,
-      "market_value": 3573.59,
-      "unrealized_pnl": -202.4,
-      "unrealized_pnl_pct": -5.36,
+      "current_price": 34.18,
+      "market_value": 3520.54,
+      "unrealized_pnl": -255.44,
+      "unrealized_pnl_pct": -6.77,
       "stop_loss": 33.95,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Keurig Dr Pepper Inc.",
         "sector": "Consumer Defensive",
@@ -206,20 +188,18 @@
         "market_cap": "$49.8B",
         "week_52_high": 38.29,
         "week_52_low": 24.88,
-        "pct_from_high": 9.1
+        "pct_from_high": 10.7
       }
     },
     {
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 96.32,
-      "market_value": 3660.16,
-      "unrealized_pnl": 97.68,
-      "unrealized_pnl_pct": 2.74,
+      "current_price": 95.05,
+      "market_value": 3611.9,
+      "unrealized_pnl": 49.42,
+      "unrealized_pnl_pct": 1.39,
       "stop_loss": 94.22,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "The Coca-Cola Company",
         "sector": "Consumer Defensive",
@@ -228,20 +208,18 @@
         "market_cap": "$407.9B",
         "week_52_high": 100.56,
         "week_52_low": 67.27,
-        "pct_from_high": 3.6
+        "pct_from_high": 5.5
       }
     },
     {
       "symbol": "KVYO",
       "qty": 133,
       "avg_cost": 20.95,
-      "current_price": 22.59,
-      "market_value": 3003.8,
-      "unrealized_pnl": 217.46,
-      "unrealized_pnl_pct": 7.8,
+      "current_price": 22.2,
+      "market_value": 2951.93,
+      "unrealized_pnl": 165.59,
+      "unrealized_pnl_pct": 5.94,
       "stop_loss": 15.71,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Klaviyo, Inc.",
         "sector": "Technology",
@@ -250,20 +228,18 @@
         "market_cap": "$6.1B",
         "week_52_high": 33.35,
         "week_52_low": 12.53,
-        "pct_from_high": 33.7
+        "pct_from_high": 33.4
       }
     },
     {
       "symbol": "MAR",
       "qty": 5,
       "avg_cost": 425.06,
-      "current_price": 424.23,
-      "market_value": 2121.12,
-      "unrealized_pnl": -4.17,
-      "unrealized_pnl_pct": -0.2,
+      "current_price": 418.15,
+      "market_value": 2090.75,
+      "unrealized_pnl": -34.54,
+      "unrealized_pnl_pct": -1.62,
       "stop_loss": 396.26,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Marriott International, Inc.",
         "sector": "Consumer Cyclical",
@@ -272,20 +248,18 @@
         "market_cap": "$108.4B",
         "week_52_high": 433.3,
         "week_52_low": 281.72,
-        "pct_from_high": 1.8
+        "pct_from_high": 3.5
       }
     },
     {
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 75.07,
-      "market_value": 3678.43,
-      "unrealized_pnl": -67.03,
-      "unrealized_pnl_pct": -1.79,
+      "current_price": 73.94,
+      "market_value": 3623.3,
+      "unrealized_pnl": -122.15,
+      "unrealized_pnl_pct": -3.26,
       "stop_loss": 71.93,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Altria Group, Inc.",
         "sector": "Consumer Defensive",
@@ -294,20 +268,18 @@
         "market_cap": "$127.5B",
         "week_52_high": 79.97,
         "week_52_low": 54.7,
-        "pct_from_high": 5.6
+        "pct_from_high": 7.5
       }
     },
     {
       "symbol": "REAL",
       "qty": 202,
       "avg_cost": 14.02,
-      "current_price": 12.77,
-      "market_value": 2579.54,
-      "unrealized_pnl": -252.5,
-      "unrealized_pnl_pct": -8.92,
+      "current_price": 12.63,
+      "market_value": 2551.26,
+      "unrealized_pnl": -280.78,
+      "unrealized_pnl_pct": -9.91,
       "stop_loss": 10.52,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "The RealReal, Inc.",
         "sector": "Consumer Cyclical",
@@ -316,20 +288,18 @@
         "market_cap": "$1.8B",
         "week_52_high": 17.39,
         "week_52_low": 8.05,
-        "pct_from_high": 26.4
+        "pct_from_high": 27.4
       }
     },
     {
       "symbol": "SJM",
       "qty": 28,
       "avg_cost": 130.91,
-      "current_price": 131.64,
-      "market_value": 3685.78,
-      "unrealized_pnl": 20.38,
-      "unrealized_pnl_pct": 0.56,
+      "current_price": 130.82,
+      "market_value": 3663.1,
+      "unrealized_pnl": -2.3,
+      "unrealized_pnl_pct": -0.06,
       "stop_loss": 121.83,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "The J. M. Smucker Company",
         "sector": "Consumer Defensive",
@@ -338,20 +308,18 @@
         "market_cap": "$14.0B",
         "week_52_high": 136.3,
         "week_52_low": 88.25,
-        "pct_from_high": 2.0
+        "pct_from_high": 4.0
       }
     },
     {
       "symbol": "TTAN",
       "qty": 34,
       "avg_cost": 82.58,
-      "current_price": 83.97,
-      "market_value": 2855.15,
-      "unrealized_pnl": 47.43,
-      "unrealized_pnl_pct": 1.69,
+      "current_price": 83.32,
+      "market_value": 2832.71,
+      "unrealized_pnl": 24.99,
+      "unrealized_pnl_pct": 0.89,
       "stop_loss": 61.94,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "ServiceTitan, Inc.",
         "sector": "Technology",
@@ -360,20 +328,18 @@
         "market_cap": "$8.2B",
         "week_52_high": 111.36,
         "week_52_low": 53.0,
-        "pct_from_high": 26.8
+        "pct_from_high": 25.2
       }
     },
     {
       "symbol": "VCEL",
       "qty": 64,
       "avg_cost": 43.23,
-      "current_price": 58.45,
-      "market_value": 3741.12,
-      "unrealized_pnl": 974.4,
-      "unrealized_pnl_pct": 35.22,
+      "current_price": 58.51,
+      "market_value": 3744.64,
+      "unrealized_pnl": 977.92,
+      "unrealized_pnl_pct": 35.35,
       "stop_loss": 43.45,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Vericel Corporation",
         "sector": "Healthcare",
@@ -382,20 +348,18 @@
         "market_cap": "$2.2B",
         "week_52_high": 59.75,
         "week_52_low": 28.95,
-        "pct_from_high": 1.8
+        "pct_from_high": 2.1
       }
     },
     {
       "symbol": "WK",
       "qty": 28,
       "avg_cost": 86.09,
-      "current_price": 66.92,
-      "market_value": 1873.76,
-      "unrealized_pnl": -536.76,
-      "unrealized_pnl_pct": -22.27,
+      "current_price": 65.91,
+      "market_value": 1845.48,
+      "unrealized_pnl": -565.04,
+      "unrealized_pnl_pct": -23.44,
       "stop_loss": 64.57,
-      "side": "long",
-      "asset_class": "us_equity",
       "company": {
         "name": "Workiva Inc.",
         "sector": "Technology",
@@ -404,7 +368,7 @@
         "market_cap": "$4.5B",
         "week_52_high": 93.71,
         "week_52_low": 43.34,
-        "pct_from_high": 28.9
+        "pct_from_high": 29.7
       }
     }
   ],
@@ -420,27 +384,48 @@
   "persistent_performers": [],
   "exits": {
     "exits_triggered": [],
-    "stops_updated": [],
-    "positions_checked": 0,
+    "stops_updated": [
+      {
+        "symbol": "CRL",
+        "trigger": "TRAILING_STOP_UPDATE",
+        "new_stop": 308.76,
+        "pnl_pct": 8.77,
+        "current": 334.18,
+        "tier": "5%+ gain \u2192 break-even+0.5%",
+        "executed": false,
+        "skipped": "existing stop $308.76 is already higher"
+      }
+    ],
+    "positions_checked": 13,
     "mode": "EXECUTE",
-    "skipped": "opening run: exits are left to the 10:00 run and the intraday checks"
+    "unmanaged": [],
+    "sleeve": [
+      "KVYO",
+      "REAL",
+      "TTAN",
+      "VCEL",
+      "WK"
+    ],
+    "unchecked": [
+      "CTLP"
+    ]
   },
   "risk_assessment": {
-    "timestamp": "2026-11-19T14:17:03.210904",
-    "portfolio_value": 105572.04,
+    "timestamp": "2026-11-19T15:00:56.280298",
+    "portfolio_value": 105110.92,
     "risk_metrics": {
       "drawdown": {
-        "current_value": 105572.04,
+        "current_value": 105110.92,
         "peak_value": 116590.55,
         "peak_date": "2026-10-06",
-        "drawdown_amount": 11018.51,
-        "drawdown_pct": 9.45,
+        "drawdown_amount": 11479.63,
+        "drawdown_pct": 9.85,
         "max_allowed_pct": 15.0,
         "status": "CAUTION",
         "action_required": false
       },
       "cash_allocation": {
-        "current_pct": 11.71,
+        "current_pct": 11.94,
         "min_required_pct": 5.0,
         "target_pct": 10.0,
         "status": "OK"
@@ -448,32 +433,32 @@
     },
     "concentration_risk": {
       "largest_position": "CRL",
-      "largest_allocation_pct": 6.31,
-      "top_5_allocation_pct": 23.92,
+      "largest_allocation_pct": 6.36,
+      "top_5_allocation_pct": 23.98,
       "max_allowed_top_5_pct": 40.0,
       "num_positions": 18,
-      "herfindahl_index": 0.023358336306624202
+      "herfindahl_index": 0.023288745720690833
     },
     "position_risks": [
       {
         "symbol": "CBOE",
-        "allocation_pct": 5.42,
-        "unrealized_pnl_pct": 3.0,
+        "allocation_pct": 5.46,
+        "unrealized_pnl_pct": 3.32,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CRL",
-        "allocation_pct": 6.31,
-        "unrealized_pnl_pct": 8.47,
+        "allocation_pct": 6.36,
+        "unrealized_pnl_pct": 8.77,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "CTLP",
-        "allocation_pct": 2.98,
+        "allocation_pct": 2.99,
         "unrealized_pnl_pct": 5.26,
         "has_stop_loss": false,
         "has_trailing_stop": false,
@@ -483,8 +468,8 @@
       },
       {
         "symbol": "DG",
-        "allocation_pct": 5.09,
-        "unrealized_pnl_pct": -0.72,
+        "allocation_pct": 5.1,
+        "unrealized_pnl_pct": -0.86,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -492,95 +477,95 @@
       {
         "symbol": "EBAY",
         "allocation_pct": 2.19,
-        "unrealized_pnl_pct": -0.25,
+        "unrealized_pnl_pct": -0.73,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "FDS",
-        "allocation_pct": 3.29,
-        "unrealized_pnl_pct": -5.07,
+        "allocation_pct": 3.28,
+        "unrealized_pnl_pct": -5.74,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "GILD",
-        "allocation_pct": 3.54,
-        "unrealized_pnl_pct": 2.35,
+        "allocation_pct": 3.49,
+        "unrealized_pnl_pct": 0.66,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "HLT",
-        "allocation_pct": 3.54,
-        "unrealized_pnl_pct": 1.62,
+        "allocation_pct": 3.48,
+        "unrealized_pnl_pct": -0.5,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "KDP",
-        "allocation_pct": 3.4,
-        "unrealized_pnl_pct": -5.07,
+        "allocation_pct": 3.35,
+        "unrealized_pnl_pct": -6.77,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "KO",
-        "allocation_pct": 3.49,
-        "unrealized_pnl_pct": 3.36,
+        "allocation_pct": 3.44,
+        "unrealized_pnl_pct": 1.39,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "KVYO",
-        "allocation_pct": 2.78,
-        "unrealized_pnl_pct": 5.49,
+        "allocation_pct": 2.81,
+        "unrealized_pnl_pct": 5.94,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "MAR",
-        "allocation_pct": 2.02,
-        "unrealized_pnl_pct": 0.1,
+        "allocation_pct": 1.99,
+        "unrealized_pnl_pct": -1.62,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "MO",
-        "allocation_pct": 3.5,
-        "unrealized_pnl_pct": -1.23,
+        "allocation_pct": 3.45,
+        "unrealized_pnl_pct": -3.26,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "REAL",
-        "allocation_pct": 2.45,
-        "unrealized_pnl_pct": -8.73,
+        "allocation_pct": 2.43,
+        "unrealized_pnl_pct": -9.91,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "SJM",
-        "allocation_pct": 3.54,
-        "unrealized_pnl_pct": 2.06,
+        "allocation_pct": 3.48,
+        "unrealized_pnl_pct": -0.06,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "TTAN",
-        "allocation_pct": 2.63,
-        "unrealized_pnl_pct": -1.3,
+        "allocation_pct": 2.69,
+        "unrealized_pnl_pct": 0.89,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
@@ -588,15 +573,15 @@
       {
         "symbol": "VCEL",
         "allocation_pct": 3.56,
-        "unrealized_pnl_pct": 35.67,
+        "unrealized_pnl_pct": 35.35,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": []
       },
       {
         "symbol": "WK",
-        "allocation_pct": 1.77,
-        "unrealized_pnl_pct": -22.56,
+        "allocation_pct": 1.76,
+        "unrealized_pnl_pct": -23.44,
         "has_stop_loss": true,
         "has_trailing_stop": false,
         "risk_flags": [
@@ -604,23 +589,11 @@
         ]
       }
     ],
-    "overall_risk_score": 26.2,
+    "overall_risk_score": 27.0,
     "recommendations": [
-      "WK: Review thesis - down 22.6%",
+      "WK: Review thesis - down 23.4%",
       "CTLP: Untradable \u2014 ask the broker to close it"
     ],
     "risk_level": "LOW"
-  },
-  "sync_at": "2026-11-19T14:30:49.356025+00:00",
-  "sync_error": null,
-  "market_open": true,
-  "intraday_today": {
-    "date": "2026-11-19",
-    "points": [
-      {
-        "time": "14:30",
-        "value": 105633.01
-      }
-    ]
   }
 }

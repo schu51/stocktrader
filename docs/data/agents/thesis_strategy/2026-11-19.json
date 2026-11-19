@@ -1,0 +1,41 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-19",
+  "generated_at": "2026-11-19T22:45:00+00:00",
+  "status": "amber",
+  "headline": "cap98_tight overtook spy3 as the best backtest (PF 1.70 vs 1.67, champion 1.44) but still fails first-half PF, and every rule set, champion included, has opened 0 backtest trades in the 8 trading days since 2026-11-10, so the forward gate holds all promotions while live PF over the last 20 trades sits at 0.14.",
+  "calls": [
+    {
+      "subject": "challenger:cap98_tight",
+      "direction": "neutral",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.cap98_tight.gates",
+        "docs/data/eval_latest.json:tournament.challengers.cap98_tight.forward"
+      ],
+      "why": "Best PF, DD and recent return on the board, but its first half (1.27 vs 1.32) has failed 3 straight evals and its forward window only reaches 10 trading days ~2026-12-01, so it should not reach ready_to_propose within 20 days."
+    },
+    {
+      "subject": "challenger:spy1",
+      "direction": "bearish",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_history.json:challengers.spy1.profit_factor",
+        "docs/data/eval_latest.json:tournament.challengers.spy1"
+      ],
+      "why": "Misses the PF gate by 0.35 with 3 straight comparable evals at 0.3+ (2026-11-17/18/19); expect the 10-eval retire rule to trigger ~2026-12-01."
+    }
+  ],
+  "notes": [
+    "No change to research/challengers.json: 5 comparable eval rows since the PR #48 baseline break; no retire criterion met (spy1 3 of 10 — corrected, 2026-11-16 missed by 0.297), no errors, list full at 11, no new 10+-trade weakness not already tested (neutral-regime losses 18 trades = spy3; gapped stops 7; sleeve 3). Journal entry appended.",
+    "Live: 1 closed today, WK -25.1% (-$605, stop exit, sleeve trade held through earnings); last 20 trades 10% win, PF 0.14; 30d 24 trades PF 0.23 but account -5.4% vs SPY -6.6%; -11.0% from peak. 0 closed trades under sma200_exit; account -1.8% vs SPY -5.8% since 2026-11-12; rollback_watch not triggered (6 days, 4.0pt ahead).",
+    "Tracking gap -4.6pt (live -5.4% vs backtest -0.9%). Same-window backtest of the Jun-Nov live rules won 24% of 126 vs live 21% of 95; matched 18 trades live -1.0% vs backtest -2.1%: gap looks like period/rules more than execution.",
+    "Tournament: cap98_tight PF 1.70 / DD -16.2% / 19.4%/yr fails pf_first_half (1.27 vs 1.32) and forward; spy3 PF 1.67 fails only forward; risk40 +0.05 PF vs +0.10 gate. Nothing ready to propose; no PR, issue or rollback opened.",
+    "Crossovers vs champion (PF 1.44, DD -17.3%): death_cross_exit PF 1.39 / DD -16.9%; sma50_exit PF 1.33 / DD -17.5% / win 56%; golden20 PF 1.28 / DD -7.2% on 72 trades, PF 0.29 ex-best-5. Share closed within 3 days per challenger is still not reported by daily_eval.py.",
+    "Forward sample: all at 0 trades; original eight reach 10 trading days 2026-11-23, crossovers 2026-11-24, cap98_tight ~2026-12-01.",
+    "Stops: 10 fills, mean -3.6%, median -0.6%, worst VCYT -24.6%, 2 gapped >2%; 3 of 10 have a recorded stop.",
+    "Theses: all 9 active, revalidated 2026-11-14; macro_brief no error."
+  ]
+}

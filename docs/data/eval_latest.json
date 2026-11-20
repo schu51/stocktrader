@@ -1,6 +1,6 @@
 {
- "date": "2026-11-19",
- "generated_at": "2026-11-19T22:06:35",
+ "date": "2026-11-20",
+ "generated_at": "2026-11-20T22:00:54",
  "rules_version": {
   "since": "2026-11-12",
   "name": "sma200_exit",
@@ -9,13 +9,7 @@
  "live": {
   "open_positions": 16,
   "closed_today": {
-   "trades": 1,
-   "win_rate": 0.0,
-   "profit_factor": 0.0,
-   "avg_win_pct": null,
-   "avg_loss_pct": -25.08,
-   "expectancy_pct": -25.08,
-   "pnl_usd": -604.52
+   "trades": 0
   },
   "last_20_trades": {
    "trades": 20,
@@ -57,27 +51,27 @@
    "worst": "VCYT"
   },
   "account_30d": {
-   "value": 105110.92,
-   "as_of": "2026-11-19",
-   "drawdown_from_peak": -0.1099,
-   "return": -0.0542,
-   "spy_return": -0.066
+   "value": 105084.87,
+   "as_of": "2026-11-20",
+   "drawdown_from_peak": -0.1079,
+   "return": -0.0549,
+   "spy_return": -0.103
   },
   "account_current_rules": {
-   "value": 105110.92,
-   "as_of": "2026-11-19",
-   "drawdown_from_peak": -0.1099,
-   "return": -0.018,
-   "spy_return": -0.0578
+   "value": 105084.87,
+   "as_of": "2026-11-20",
+   "drawdown_from_peak": -0.1079,
+   "return": -0.0182,
+   "spy_return": -0.0921
   }
  },
  "tracking": {
-  "live_return": -0.0542,
-  "backtest_return": -0.0085,
-  "gap": -0.0457
+  "live_return": -0.0549,
+  "backtest_return": -0.0089,
+  "gap": -0.046
  },
  "tournament": {
-  "start": "2023-11-19",
+  "start": "2023-11-20",
   "champion": {
    "rules": {
     "exit_line": "sma200",
@@ -90,18 +84,18 @@
     "min_spy_above_50ma": 0.02,
     "earnings_blackout": 5
    },
-   "trades": 860,
-   "win_rate": 0.5930232558139535,
-   "profit_factor": 1.438899408315828,
-   "avg_win_pct": 12.583907843137256,
-   "avg_loss_pct": -11.507668571428573,
-   "cagr": 0.1714,
-   "max_drawdown": -0.1726,
-   "worst_month": -0.0856,
-   "avg_month": 0.0146,
-   "recent_return": -0.0725,
-   "last_30d_return": -0.0085,
-   "pf_without_best_5": 1.22,
+   "trades": 864,
+   "win_rate": 0.59375,
+   "profit_factor": 1.4072034145575445,
+   "avg_win_pct": 12.680120857699805,
+   "avg_loss_pct": -11.558162393162394,
+   "cagr": 0.1615,
+   "max_drawdown": -0.1689,
+   "worst_month": -0.0855,
+   "avg_month": 0.0138,
+   "recent_return": -0.0552,
+   "last_30d_return": -0.0089,
+   "pf_without_best_5": 1.2,
    "folds": [
     {
      "from": "2023-11-20",
@@ -110,39 +104,44 @@
     },
     {
      "from": "2024-05-20",
-     "trades": 183,
-     "profit_factor": 1.83
+     "trades": 180,
+     "profit_factor": 1.87
     },
     {
      "from": "2024-11-20",
      "trades": 79,
-     "profit_factor": 0.45
+     "profit_factor": 0.46
     },
     {
      "from": "2025-05-20",
-     "trades": 207,
-     "profit_factor": 2.55
+     "trades": 213,
+     "profit_factor": 2.33
     },
     {
      "from": "2025-11-20",
-     "trades": 90,
-     "profit_factor": 1.06
+     "trades": 91,
+     "profit_factor": 1.0
     },
     {
      "from": "2026-05-20",
      "trades": 129,
-     "profit_factor": 0.39
+     "profit_factor": 0.48
+    },
+    {
+     "from": "2026-11-20",
+     "trades": 0,
+     "profit_factor": null
     }
    ],
    "first_half": {
-    "trades": 434,
-    "profit_factor": 1.3221308441218593,
-    "win_rate": 0.532258064516129
+    "trades": 432,
+    "profit_factor": 1.3265917892739,
+    "win_rate": 0.5324074074074074
    },
    "second_half": {
-    "trades": 426,
-    "profit_factor": 1.544981533636257,
-    "win_rate": 0.6549295774647887
+    "trades": 432,
+    "profit_factor": 1.479208859713644,
+    "win_rate": 0.6550925925925926
    }
   },
   "challengers": {
@@ -153,16 +152,16 @@
     "why": "earlier break-even: round 2 backtest 66% win rate, lower return",
     "trades": 1005,
     "win_rate": 0.6417910447761194,
-    "profit_factor": 1.3208721654136393,
-    "avg_win_pct": 9.106854263565891,
-    "avg_loss_pct": -11.095766666666666,
+    "profit_factor": 1.321499744654209,
+    "avg_win_pct": 9.106827906976745,
+    "avg_loss_pct": -11.095775000000001,
     "cagr": 0.1183,
-    "max_drawdown": -0.1948,
+    "max_drawdown": -0.1944,
     "worst_month": -0.0821,
     "avg_month": 0.0104,
-    "recent_return": -0.058,
-    "last_30d_return": -0.0054,
-    "pf_without_best_5": 1.12,
+    "recent_return": -0.0499,
+    "last_30d_return": -0.0057,
+    "pf_without_best_5": 1.13,
     "folds": [
      {
       "from": "2023-11-20",
@@ -193,17 +192,22 @@
       "from": "2026-05-20",
       "trades": 153,
       "profit_factor": 0.36
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 482,
-     "profit_factor": 1.3919897005488813,
-     "win_rate": 0.6058091286307054
+     "trades": 483,
+     "profit_factor": 1.3873174446508085,
+     "win_rate": 0.6045548654244306
     },
     "second_half": {
-     "trades": 523,
-     "profit_factor": 1.2515829943542296,
-     "win_rate": 0.6749521988527725
+     "trades": 522,
+     "profit_factor": 1.2568926526949322,
+     "win_rate": 0.6762452107279694
     },
     "gates": {
      "enough_trades": true,
@@ -231,7 +235,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 8
+     "trading_days": 9
     },
     "sensitivity": null,
     "promotable_today": false
@@ -244,15 +248,15 @@
     "why": "trail 12% once +20%: best Jun-Nov 2026 result in round 2",
     "trades": 943,
     "win_rate": 0.5949098621420997,
-    "profit_factor": 1.388708072652709,
-    "avg_win_pct": 11.367889483065955,
-    "avg_loss_pct": -11.468437172774868,
-    "cagr": 0.1456,
+    "profit_factor": 1.3895099547181395,
+    "avg_win_pct": 11.367912655971478,
+    "avg_loss_pct": -11.468434554973822,
+    "cagr": 0.1457,
     "max_drawdown": -0.186,
     "worst_month": -0.0899,
-    "avg_month": 0.0121,
-    "recent_return": -0.0486,
-    "last_30d_return": -0.0026,
+    "avg_month": 0.0122,
+    "recent_return": -0.0385,
+    "last_30d_return": -0.0028,
     "pf_without_best_5": 1.19,
     "folds": [
      {
@@ -278,33 +282,38 @@
      {
       "from": "2025-11-20",
       "trades": 105,
-      "profit_factor": 1.31
+      "profit_factor": 1.32
      },
      {
       "from": "2026-05-20",
       "trades": 134,
       "profit_factor": 0.49
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 488,
-     "profit_factor": 1.2145313680157692,
-     "win_rate": 0.5389344262295082
+     "trades": 489,
+     "profit_factor": 1.206137743921647,
+     "win_rate": 0.5378323108384458
     },
     "second_half": {
-     "trades": 455,
-     "profit_factor": 1.5071436009009649,
-     "win_rate": 0.654945054945055
+     "trades": 454,
+     "profit_factor": 1.5156014086319458,
+     "win_rate": 0.6563876651982379
     },
     "gates": {
      "enough_trades": true,
      "profit_factor": false,
-     "annual_return": false,
+     "annual_return": true,
      "drawdown": false,
      "win_rate": true,
      "recent": true,
      "pf_first_half": false,
-     "pf_second_half": false,
+     "pf_second_half": true,
      "walk_forward": false,
      "not_concentrated": false,
      "forward": false
@@ -322,7 +331,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 8
+     "trading_days": 9
     },
     "sensitivity": null,
     "promotable_today": false
@@ -334,15 +343,15 @@
     "why": "stricter market filter: profit factor 2.74, fewer trades",
     "trades": 631,
     "win_rate": 0.6196513470681458,
-    "profit_factor": 1.6742337782237915,
-    "avg_win_pct": 12.734700767263428,
-    "avg_loss_pct": -11.290683333333334,
+    "profit_factor": 1.6742137177942686,
+    "avg_win_pct": 12.734680306905371,
+    "avg_loss_pct": -11.2907125,
     "cagr": 0.183,
-    "max_drawdown": -0.1705,
+    "max_drawdown": -0.17,
     "worst_month": -0.0592,
     "avg_month": 0.0146,
-    "recent_return": -0.0329,
-    "last_30d_return": -0.0015,
+    "recent_return": -0.0257,
+    "last_30d_return": -0.0016,
     "pf_without_best_5": 1.38,
     "folds": [
      {
@@ -368,23 +377,28 @@
      {
       "from": "2025-11-20",
       "trades": 54,
-      "profit_factor": 0.4
+      "profit_factor": 0.41
      },
      {
       "from": "2026-05-20",
       "trades": 86,
-      "profit_factor": 0.52
+      "profit_factor": 0.53
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 325,
-     "profit_factor": 1.8140910087918847,
-     "win_rate": 0.6061538461538462
+     "trades": 326,
+     "profit_factor": 1.7949892964567544,
+     "win_rate": 0.6042944785276073
     },
     "second_half": {
-     "trades": 306,
-     "profit_factor": 1.5687614693644043,
-     "win_rate": 0.6339869281045751
+     "trades": 305,
+     "profit_factor": 1.5816815210868138,
+     "win_rate": 0.6360655737704918
     },
     "gates": {
      "enough_trades": true,
@@ -412,7 +426,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 8
+     "trading_days": 9
     },
     "sensitivity": null,
     "promotable_today": false
@@ -423,17 +437,17 @@
     },
     "why": "looser market filter: more trades",
     "trades": 1119,
-    "win_rate": 0.5719392314566577,
-    "profit_factor": 1.1884500874083312,
-    "avg_win_pct": 11.413810937500001,
-    "avg_loss_pct": -11.82126096033403,
-    "cagr": 0.081,
-    "max_drawdown": -0.2244,
+    "win_rate": 0.5728328865058088,
+    "profit_factor": 1.1908816306347738,
+    "avg_win_pct": 11.400973478939157,
+    "avg_loss_pct": -11.81444979079498,
+    "cagr": 0.0816,
+    "max_drawdown": -0.2232,
     "worst_month": -0.08,
     "avg_month": 0.0074,
-    "recent_return": -0.0905,
-    "last_30d_return": -0.0071,
-    "pf_without_best_5": 0.99,
+    "recent_return": -0.0844,
+    "last_30d_return": -0.0098,
+    "pf_without_best_5": 1.0,
     "folds": [
      {
       "from": "2023-11-20",
@@ -447,7 +461,7 @@
      },
      {
       "from": "2024-11-20",
-      "trades": 123,
+      "trades": 124,
       "profit_factor": 0.46
      },
      {
@@ -457,24 +471,29 @@
      },
      {
       "from": "2025-11-20",
-      "trades": 177,
-      "profit_factor": 0.92
+      "trades": 176,
+      "profit_factor": 0.91
      },
      {
       "from": "2026-05-20",
       "trades": 208,
-      "profit_factor": 0.23
+      "profit_factor": 0.24
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 494,
-     "profit_factor": 1.2524597922559282,
-     "win_rate": 0.5404858299595142
+     "trades": 496,
+     "profit_factor": 1.251201538666669,
+     "win_rate": 0.5403225806451613
     },
     "second_half": {
-     "trades": 625,
-     "profit_factor": 1.1249110469797554,
-     "win_rate": 0.5968
+     "trades": 623,
+     "profit_factor": 1.130545457503967,
+     "win_rate": 0.5987158908507223
     },
     "gates": {
      "enough_trades": true,
@@ -502,7 +521,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 8
+     "trading_days": 9
     },
     "sensitivity": null,
     "promotable_today": false
@@ -513,18 +532,18 @@
      "earnings_keep_gain": 15.0
     },
     "why": "sell before earnings unless up 15%: fewer gaps through stops",
-    "trades": 933,
-    "win_rate": 0.5991425509110396,
-    "profit_factor": 1.3000092204088254,
-    "avg_win_pct": 11.453084078711985,
-    "avg_loss_pct": -10.831770053475935,
-    "cagr": 0.1194,
-    "max_drawdown": -0.1727,
-    "worst_month": -0.0848,
-    "avg_month": 0.0108,
-    "recent_return": -0.0276,
-    "last_30d_return": -0.0045,
-    "pf_without_best_5": 1.09,
+    "trades": 934,
+    "win_rate": 0.5995717344753747,
+    "profit_factor": 1.2962644688872984,
+    "avg_win_pct": 11.506719642857142,
+    "avg_loss_pct": -10.831767379679144,
+    "cagr": 0.1183,
+    "max_drawdown": -0.1754,
+    "worst_month": -0.0847,
+    "avg_month": 0.0107,
+    "recent_return": -0.024,
+    "last_30d_return": -0.0048,
+    "pf_without_best_5": 1.08,
     "folds": [
      {
       "from": "2023-11-20",
@@ -543,7 +562,7 @@
      },
      {
       "from": "2025-05-20",
-      "trades": 230,
+      "trades": 231,
       "profit_factor": 2.07
      },
      {
@@ -554,18 +573,23 @@
      {
       "from": "2026-05-20",
       "trades": 129,
-      "profit_factor": 0.41
+      "profit_factor": 0.39
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 468,
-     "profit_factor": 1.249305306371827,
-     "win_rate": 0.5598290598290598
+     "trades": 469,
+     "profit_factor": 1.2457310412692548,
+     "win_rate": 0.55863539445629
     },
     "second_half": {
      "trades": 465,
-     "profit_factor": 1.3446640665301903,
-     "win_rate": 0.6387096774193548
+     "profit_factor": 1.3407529085749872,
+     "win_rate": 0.6408602150537634
     },
     "gates": {
      "enough_trades": true,
@@ -593,7 +617,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 8
+     "trading_days": 9
     },
     "sensitivity": null,
     "promotable_today": false
@@ -603,17 +627,17 @@
      "risk_per_trade": 0.004
     },
     "why": "cap what one stop-out can cost at 0.4% of the account",
-    "trades": 880,
-    "win_rate": 0.5897727272727272,
-    "profit_factor": 1.48413175054913,
-    "avg_win_pct": 12.732183044315994,
-    "avg_loss_pct": -11.467185595567868,
-    "cagr": 0.1753,
-    "max_drawdown": -0.1668,
+    "trades": 879,
+    "win_rate": 0.5893060295790671,
+    "profit_factor": 1.4827848177817295,
+    "avg_win_pct": 12.756011583011583,
+    "avg_loss_pct": -11.463966759002771,
+    "cagr": 0.1738,
+    "max_drawdown": -0.1644,
     "worst_month": -0.0809,
-    "avg_month": 0.0147,
-    "recent_return": -0.0531,
-    "last_30d_return": -0.0113,
+    "avg_month": 0.0146,
+    "recent_return": -0.0449,
+    "last_30d_return": -0.012,
     "pf_without_best_5": 1.32,
     "folds": [
      {
@@ -623,7 +647,7 @@
      },
      {
       "from": "2024-05-20",
-      "trades": 185,
+      "trades": 184,
       "profit_factor": 1.84
      },
      {
@@ -645,17 +669,22 @@
       "from": "2026-05-20",
       "trades": 124,
       "profit_factor": 0.47
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
      "trades": 444,
-     "profit_factor": 1.4211534916364006,
-     "win_rate": 0.536036036036036
+     "profit_factor": 1.4130789100070118,
+     "win_rate": 0.5337837837837838
     },
     "second_half": {
-     "trades": 436,
-     "profit_factor": 1.5370171770891339,
-     "win_rate": 0.6444954128440367
+     "trades": 435,
+     "profit_factor": 1.54121563715282,
+     "win_rate": 0.6459770114942529
     },
     "gates": {
      "enough_trades": true,
@@ -665,7 +694,7 @@
      "win_rate": true,
      "recent": true,
      "pf_first_half": true,
-     "pf_second_half": false,
+     "pf_second_half": true,
      "walk_forward": true,
      "not_concentrated": true,
      "forward": false
@@ -683,7 +712,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 8
+     "trading_days": 9
     },
     "sensitivity": null,
     "promotable_today": false
@@ -695,15 +724,15 @@
     "why": "short-horizon entry: names within 6% of a rising 50-day average may buy on a 21-day EMA reclaim (live: stretched names lagged closer ones, -4.4% over 10 sessions, t -0.7)",
     "trades": 963,
     "win_rate": 0.5908618899273105,
-    "profit_factor": 1.2707479906384183,
-    "avg_win_pct": 12.127330404217926,
-    "avg_loss_pct": -11.574710659898477,
-    "cagr": 0.1027,
-    "max_drawdown": -0.1871,
+    "profit_factor": 1.2705252436473604,
+    "avg_win_pct": 12.127347978910368,
+    "avg_loss_pct": -11.574708121827411,
+    "cagr": 0.1025,
+    "max_drawdown": -0.1874,
     "worst_month": -0.0817,
-    "avg_month": 0.0092,
-    "recent_return": -0.0427,
-    "last_30d_return": -0.0055,
+    "avg_month": 0.0091,
+    "recent_return": -0.0348,
+    "last_30d_return": -0.0058,
     "pf_without_best_5": 1.09,
     "folds": [
      {
@@ -734,18 +763,23 @@
      {
       "from": "2026-05-20",
       "trades": 131,
-      "profit_factor": 0.38
+      "profit_factor": 0.39
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 476,
-     "profit_factor": 1.2435990378638757,
-     "win_rate": 0.5504201680672269
+     "trades": 477,
+     "profit_factor": 1.2416195628602622,
+     "win_rate": 0.549266247379455
     },
     "second_half": {
-     "trades": 487,
-     "profit_factor": 1.2983676712055592,
-     "win_rate": 0.6303901437371663
+     "trades": 486,
+     "profit_factor": 1.30007606069495,
+     "win_rate": 0.6316872427983539
     },
     "gates": {
      "enough_trades": true,
@@ -773,7 +807,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 8
+     "trading_days": 9
     },
     "sensitivity": null,
     "promotable_today": false
@@ -783,18 +817,18 @@
      "exit_line": "death_cross"
     },
     "why": "sell only when the 50-day crosses below the 200-day: tests whether a slower exit cuts the 3-day whipsaws (27 trades, -$4,556) without giving back too much",
-    "trades": 861,
-    "win_rate": 0.5923344947735192,
-    "profit_factor": 1.3882937054845041,
-    "avg_win_pct": 12.577013725490197,
-    "avg_loss_pct": -11.502270655270657,
-    "cagr": 0.1543,
-    "max_drawdown": -0.1691,
-    "worst_month": -0.0856,
-    "avg_month": 0.0132,
-    "recent_return": -0.0731,
-    "last_30d_return": -0.0081,
-    "pf_without_best_5": 1.18,
+    "trades": 863,
+    "win_rate": 0.5944380069524913,
+    "profit_factor": 1.4049301004013928,
+    "avg_win_pct": 12.585844054580896,
+    "avg_loss_pct": -11.516060000000001,
+    "cagr": 0.1603,
+    "max_drawdown": -0.1698,
+    "worst_month": -0.086,
+    "avg_month": 0.0137,
+    "recent_return": -0.056,
+    "last_30d_return": -0.009,
+    "pf_without_best_5": 1.19,
     "folds": [
      {
       "from": "2023-11-20",
@@ -803,7 +837,7 @@
      },
      {
       "from": "2024-05-20",
-      "trades": 180,
+      "trades": 181,
       "profit_factor": 1.87
      },
      {
@@ -813,29 +847,34 @@
      },
      {
       "from": "2025-05-20",
-      "trades": 211,
+      "trades": 212,
       "profit_factor": 2.36
      },
      {
       "from": "2025-11-20",
       "trades": 91,
-      "profit_factor": 0.96
+      "profit_factor": 1.0
      },
      {
       "from": "2026-05-20",
       "trades": 128,
-      "profit_factor": 0.39
+      "profit_factor": 0.48
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 431,
-     "profit_factor": 1.3209722614898418,
-     "win_rate": 0.531322505800464
+     "trades": 433,
+     "profit_factor": 1.3153605269345516,
+     "win_rate": 0.5334872979214781
     },
     "second_half": {
      "trades": 430,
-     "profit_factor": 1.4488325603346408,
-     "win_rate": 0.6534883720930232
+     "profit_factor": 1.485579045352145,
+     "win_rate": 0.6558139534883721
     },
     "gates": {
      "enough_trades": true,
@@ -845,8 +884,8 @@
      "win_rate": true,
      "recent": false,
      "pf_first_half": false,
-     "pf_second_half": false,
-     "walk_forward": false,
+     "pf_second_half": true,
+     "walk_forward": true,
      "not_concentrated": false,
      "forward": false
     },
@@ -863,7 +902,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 7
+     "trading_days": 8
     },
     "sensitivity": null,
     "promotable_today": false
@@ -915,6 +954,11 @@
       "from": "2026-05-20",
       "trades": 9,
       "profit_factor": 0.04
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
@@ -953,7 +997,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 7
+     "trading_days": 8
     },
     "sensitivity": null,
     "promotable_today": false
@@ -965,15 +1009,15 @@
     "why": "the old 50-day exit, kept running against the new 200-day rule so a reversal shows up",
     "trades": 905,
     "win_rate": 0.5613259668508287,
-    "profit_factor": 1.3293018488020134,
-    "avg_win_pct": 12.210423228346457,
-    "avg_loss_pct": -10.27045088161209,
+    "profit_factor": 1.329657186341434,
+    "avg_win_pct": 12.210442913385826,
+    "avg_loss_pct": -10.270448362720405,
     "cagr": 0.1295,
     "max_drawdown": -0.1747,
-    "worst_month": -0.079,
+    "worst_month": -0.0795,
     "avg_month": 0.0111,
-    "recent_return": -0.0657,
-    "last_30d_return": -0.0029,
+    "recent_return": -0.0586,
+    "last_30d_return": -0.0035,
     "pf_without_best_5": 1.1,
     "folds": [
      {
@@ -1005,17 +1049,22 @@
       "from": "2026-05-20",
       "trades": 131,
       "profit_factor": 0.39
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 458,
-     "profit_factor": 1.225013029589087,
-     "win_rate": 0.5087336244541485
+     "trades": 459,
+     "profit_factor": 1.2212779007466426,
+     "win_rate": 0.5076252723311547
     },
     "second_half": {
-     "trades": 447,
-     "profit_factor": 1.4167071207834765,
-     "win_rate": 0.6152125279642058
+     "trades": 446,
+     "profit_factor": 1.4210197315605757,
+     "win_rate": 0.6165919282511211
     },
     "gates": {
      "enough_trades": true,
@@ -1023,7 +1072,7 @@
      "annual_return": false,
      "drawdown": true,
      "win_rate": false,
-     "recent": true,
+     "recent": false,
      "pf_first_half": false,
      "pf_second_half": false,
      "walk_forward": false,
@@ -1043,7 +1092,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 7
+     "trading_days": 8
     },
     "sensitivity": null,
     "promotable_today": false
@@ -1054,18 +1103,18 @@
      "tight_boost": 0.5
     },
     "why": "picker lab rounds 1-4: skip RS 99 (most extended) and rank tight bases higher; PF 1.76 vs 1.42, CAGR +21.9% vs +16.5%, latest fold 0.66 vs 0.36, no fundamentals bias",
-    "trades": 896,
-    "win_rate": 0.5848214285714286,
-    "profit_factor": 1.7030275434602913,
-    "avg_win_pct": 11.708395038167938,
-    "avg_loss_pct": -9.266784946236559,
-    "cagr": 0.1935,
-    "max_drawdown": -0.1623,
-    "worst_month": -0.088,
-    "avg_month": 0.0158,
-    "recent_return": 0.0037,
-    "last_30d_return": -0.0087,
-    "pf_without_best_5": 1.47,
+    "trades": 902,
+    "win_rate": 0.582039911308204,
+    "profit_factor": 1.626452900807404,
+    "avg_win_pct": 11.588514285714286,
+    "avg_loss_pct": -9.371474801061007,
+    "cagr": 0.1752,
+    "max_drawdown": -0.1705,
+    "worst_month": -0.0814,
+    "avg_month": 0.0145,
+    "recent_return": -0.014,
+    "last_30d_return": -0.0101,
+    "pf_without_best_5": 1.39,
     "folds": [
      {
       "from": "2023-11-20",
@@ -1074,39 +1123,44 @@
      },
      {
       "from": "2024-05-20",
-      "trades": 209,
-      "profit_factor": 1.17
+      "trades": 212,
+      "profit_factor": 1.08
      },
      {
       "from": "2024-11-20",
       "trades": 90,
-      "profit_factor": 0.66
+      "profit_factor": 0.65
      },
      {
       "from": "2025-05-20",
       "trades": 203,
-      "profit_factor": 2.89
+      "profit_factor": 2.9
      },
      {
       "from": "2025-11-20",
-      "trades": 103,
-      "profit_factor": 2.24
+      "trades": 105,
+      "profit_factor": 2.26
      },
      {
       "from": "2026-05-20",
-      "trades": 131,
-      "profit_factor": 0.76
+      "trades": 132,
+      "profit_factor": 0.54
+     },
+     {
+      "from": "2026-11-20",
+      "trades": 0,
+      "profit_factor": null
      }
     ],
     "first_half": {
-     "trades": 459,
-     "profit_factor": 1.2675682734224027,
-     "win_rate": 0.5228758169934641
+     "trades": 466,
+     "profit_factor": 1.2222418130880588,
+     "win_rate": 0.5236051502145923
     },
     "second_half": {
-     "trades": 437,
-     "profit_factor": 2.0830224086564963,
-     "win_rate": 0.6498855835240275
+     "trades": 436,
+     "profit_factor": 1.9727864229507017,
+     "win_rate": 0.6444954128440367
     },
     "gates": {
      "enough_trades": true,
@@ -1134,7 +1188,7 @@
      },
      "ok": false,
      "status": "insufficient sample",
-     "trading_days": 3
+     "trading_days": 4
     },
     "sensitivity": null,
     "promotable_today": false
@@ -1166,13 +1220,13 @@
  "rollback_watch": {
   "rules": "sma200_exit",
   "revert_to": "breakeven5_spy2",
-  "trading_days": 6,
+  "trading_days": 7,
   "watching": true,
-  "lag": -0.0398,
+  "lag": -0.0739,
   "triggered": false
  },
  "alerts": [
-  "Account is 11.0% below its peak",
+  "Account is 10.8% below its peak",
   "Stop exits filled 3.6% below their stop on average (last 10)"
  ]
 }

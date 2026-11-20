@@ -1,0 +1,40 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-20",
+  "generated_at": "2026-11-20T22:45:00+00:00",
+  "status": "amber",
+  "headline": "SPY fell 10.3% in 30 days while the account lost 5.5% (7.4pt ahead of SPY since the 200-day exit went live), but no rule set, champion included, has opened a backtest trade since 2026-11-10, so the forward gate blocks every promotion; cap98_tight's first-half PF gap widened to 0.11.",
+  "calls": [
+    {
+      "subject": "challenger:spy3",
+      "direction": "neutral",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.spy3.gates",
+        "docs/data/eval_latest.json:tournament.challengers.spy3.forward"
+      ],
+      "why": "Passes every backtest gate (PF 1.67 vs 1.41) but, as the strictest SPY filter, it needs 15 forward trades that cannot accrue while SPY is far below its 50-day, so it should not reach ready_to_propose within 20 days."
+    },
+    {
+      "subject": "challenger:spy1",
+      "direction": "bearish",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_history.json:challengers.spy1.profit_factor"
+      ],
+      "why": "Misses the PF gate by 0.32 with 4 straight comparable evals at 0.3+ (2026-11-17 to 20); expect the 10-eval retire rule to trigger ~2026-12-03."
+    }
+  ],
+  "notes": [
+    "No change to research/challengers.json: no retire criterion met (spy1 4 of 10), no errors, list full at 11, no new 10+-trade weakness not already tested. Journal entry appended.",
+    "Live: 0 closed today; last 20 trades 10% win, PF 0.14; 30d 24 trades PF 0.23; -10.8% from peak. Account -5.5% vs SPY -10.3% (30d), -1.8% vs SPY -9.2% since 2026-11-12; rollback_watch not triggered (7 days, +7.4pt).",
+    "Tracking gap -4.6pt (live -5.5% vs backtest -0.9%); same-window and matched-trade comparisons point to period/rules, not execution.",
+    "Tournament: spy3 fails only forward; cap98_tight PF 1.63 fails pf_first_half (1.22 vs 1.33) and forward; risk40 +0.07 PF vs +0.10 gate. Nothing ready to propose; no PR, issue or rollback opened.",
+    "Crossovers vs champion (PF 1.41, DD -16.9%): death_cross_exit PF 1.40 / DD -17.0%; sma50_exit PF 1.33 / DD -17.5% / win 56%; golden20 PF 1.28 / DD -7.2% on 72 trades, PF 0.29 ex-best-5. Share closed within 3 days per challenger is still not reported by daily_eval.py.",
+    "Forward sample: all at 0 trades; original eight reach 10 trading days 2026-11-23, crossovers 2026-11-24, cap98_tight ~2026-12-01.",
+    "Stops: 10 fills, mean -3.6%, median -0.6%, worst VCYT -24.6%, 2 gapped >2%, 3 recorded.",
+    "Theses: all 9 revalidated 2026-11-14 (6 days); macro_brief no error."
+  ]
+}

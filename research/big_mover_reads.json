@@ -1,118 +1,234 @@
 {
- "CRWV@2026-11-11": {
-  "catalyst": "earnings",
-  "why": "CoreWeave reported a Q3 revenue beat and raised its full-year outlook, easing financing fears and reviving the AI-compute trade.",
-  "lesson": "An earnings date was known, but the stock was 65% below its 52-week high, down 39% in a month, rs_rank 3 and failed the momentum gate, so only an earnings-far-from-high watch would have flagged it.",
-  "by": "claude",
-  "date": "2026-11-11"
- },
- "NBIL@2026-11-11": {
-  "catalyst": "theme_move",
-  "why": "NBIL is a 2x leveraged Nebius (NBIS) ETF; NBIS jumped as CoreWeave's beat lifted AI-cloud names ahead of Nebius's own results due Thursday.",
-  "lesson": "Leveraged single-stock ETF, not a company: the move is 2x the underlying NBIS, whose earnings were due the next day; the bot should exclude these from mover stats.",
-  "by": "claude",
-  "date": "2026-11-11"
- },
- "NEBX@2026-11-11": {
-  "catalyst": "theme_move",
-  "why": "NEBX is a 2x leveraged Nebius (NBIS) ETF; NBIS rallied on CoreWeave's beat-and-raise ahead of Nebius's Thursday earnings.",
-  "lesson": "Leveraged single-stock ETF duplicating NBIL; exclude from mover stats and track the underlying NBIS instead.",
-  "by": "claude",
-  "date": "2026-11-11"
- },
- "AXTX@2026-11-11": {
-  "catalyst": "sector_move",
-  "why": "AXTX is a 2x leveraged AXT Inc (AXTI) ETF; AXTI jumped about 23% in a broad tech rally with no company-specific news found (the evidence headlines about Austria's ATX index are a false match).",
-  "lesson": "Nothing visible beforehand; the ETF was down 69% in a month and the headline matcher confused AXTX with the ATX index.",
-  "by": "claude",
-  "date": "2026-11-11"
- },
- "THEME@2026-11-11": {
-  "proposed_theme": "ai_optical",
-  "members": [
-   "LITE",
-   "COHR",
-   "CIEN"
-  ],
-  "why": "Optical networking and transceiver suppliers for AI data centers moved together today on the AI-hardware rally; MPWR and TER in the flagged group are power/test names and don't belong.",
-  "by": "claude",
-  "date": "2026-11-11"
- },
- "NBIZ@2026-11-12": {
-  "catalyst": "earnings",
-  "why": "NBIZ is a 2x short Nebius (NBIS) ETF; NBIS fell roughly 18% after its Q3 report, when it trimmed its 2026 outlook to the low end of the range despite beating revenue estimates.",
-  "lesson": "The underlying NBIS had earnings due today (flagged in yesterday's NBIL/NEBX reads), but this is an inverse leveraged single-stock ETF, not a company; exclude these from mover stats.",
-  "by": "claude",
-  "date": "2026-11-12"
- },
- "SMCZ@2026-11-12": {
-  "catalyst": "regulatory",
-  "why": "SMCZ is a 2x short Super Micro (SMCI) ETF; SMCI fell about 11% on reports that the DOJ probe extends beyond its indicted co-founder.",
-  "lesson": "Nothing visible beforehand (no headlines in the prior week); inverse leveraged ETF whose -95% distance from the 52-week high is decay, not a setup, so exclude it.",
-  "by": "claude",
-  "date": "2026-11-12"
- },
- "LFTO@2026-11-13": {
-  "catalyst": "earnings",
-  "why": "Liftoff Mobile gapped up 27% after its Q3 results (8-K filed Nov 12) beat estimates, and BTIG raised its price target to $31.",
-  "lesson": "The results were filed the evening before with volume already 1.8x normal, but LFTO sits outside the bot's universe (no rs_rank) and was 13% down over 3 months, so the bot could not have traded it.",
-  "by": "claude",
-  "date": "2026-11-13"
- },
- "MOD@2026-11-13": {
-  "catalyst": "mna",
-  "why": "Modine gapped up 34% on reports that Samsung Electronics is in talks to buy the data-center cooling maker.",
-  "lesson": "Nothing visible beforehand: MOD was rs_rank 10, down 33% in a month, 64% below its 52-week high and failed the momentum gate; takeover talk can't be anticipated.",
-  "by": "claude",
-  "date": "2026-11-13"
- },
- "NBIZ@2026-11-13": {
-  "catalyst": "theme_move",
-  "why": "NBIZ is a 2x short Nebius (NBIS) ETF; NBIS slid again as AI-compute stocks sold off on reports that Nvidia CEO Jensen Huang is resigning, on top of Nebius's trimmed outlook from Thursday's results.",
-  "lesson": "Inverse leveraged single-stock ETF (a -99% distance from the 52-week high is decay, not a setup) and a second straight day on the list; exclude these from mover stats.",
-  "by": "claude",
-  "date": "2026-11-13"
- },
- "OFRM@2026-11-16": {
-  "catalyst": "unknown",
-  "why": "Once Upon a Farm rebounded about 21% intraday (flat open) after a roughly 44% one-month slide on its choking-hazard recall and cut Q3 outlook; no fresh company news found, only a Barclays target cut to $11 and law-firm investor notices, so this reads as an oversold relief bounce.",
-  "lesson": "nothing visible beforehand beyond a deeply beaten-down recent IPO (down 44% in a month, momentum gate failed, volume 1.7x normal); not a setup the momentum bot targets.",
-  "by": "claude",
-  "date": "2026-11-16"
- },
- "SLS@2026-11-17": {
-  "catalyst": "news",
-  "why": "SELLAS gapped up about 220% after reporting positive Phase 3 REGAL results for its AML cancer vaccine galinpepimut-S, which cut the risk of death by about 41%.",
-  "lesson": "Only a known pending Phase 3 readout was visible; the stock was down 25% in a month, 53% below its high and failed the momentum gate, so price data gave no signal.",
-  "theme": "biotech",
-  "by": "claude",
-  "date": "2026-11-17"
- },
- "THEME@2026-11-18": {
-  "proposed_theme": "cybersecurity",
-  "members": [
-   "NTSK",
-   "SAIL",
-   "AKAM",
-   "FSLY",
-   "FROG"
-  ],
-  "why": "Security and edge/delivery-infrastructure software names moved together with the cybersecurity theme (the only theme up this week); they look like missing members of the existing cybersecurity theme rather than a new trend. The healthcare group (WGS, WRBY, SYRE) spans genomics, eyewear and biotech and is not one trend.",
-  "by": "claude",
-  "date": "2026-11-18"
- },
- "INSM@2026-11-19": {
-  "catalyst": "mna",
-  "why": "Insmed jumped about 21% after Bloomberg reported Sanofi is weighing a takeover bid for the respiratory drugmaker and its Brinsupri franchise to offset Dupixent's patent cliff.",
-  "lesson": "Nothing visible beforehand: RS rank 10, failed the momentum gate, 44% below its 52-week high; a deal-rumor jump the momentum bot cannot target (M&A jumps here have faded on average over 5-20 days).",
-  "by": "claude",
-  "date": "2026-11-19"
- },
- "UVIX@2026-11-19": {
-  "catalyst": "market_move",
-  "why": "UVIX is a 2x long VIX-futures ETF; it rose about 24% as the VIX jumped roughly 16% to the high 20s in a tech-led selloff with the S&P 500 down about 2%. The captured headlines (TVS family dispute) are unrelated noise.",
-  "lesson": "Leveraged volatility ETF (an -83% distance from the high is decay, not a setup); exclude these from mover stats like the inverse single-stock ETFs.",
-  "by": "claude",
-  "date": "2026-11-19"
- }
+  "CRWV@2026-11-11": {
+    "catalyst": "earnings",
+    "why": "CoreWeave reported a Q3 revenue beat and raised its full-year outlook, easing financing fears and reviving the AI-compute trade.",
+    "lesson": "An earnings date was known, but the stock was 65% below its 52-week high, down 39% in a month, rs_rank 3 and failed the momentum gate, so only an earnings-far-from-high watch would have flagged it.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "NBIL@2026-11-11": {
+    "catalyst": "theme_move",
+    "why": "NBIL is a 2x leveraged Nebius (NBIS) ETF; NBIS jumped as CoreWeave's beat lifted AI-cloud names ahead of Nebius's own results due Thursday.",
+    "lesson": "Leveraged single-stock ETF, not a company: the move is 2x the underlying NBIS, whose earnings were due the next day; the bot should exclude these from mover stats.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "NEBX@2026-11-11": {
+    "catalyst": "theme_move",
+    "why": "NEBX is a 2x leveraged Nebius (NBIS) ETF; NBIS rallied on CoreWeave's beat-and-raise ahead of Nebius's Thursday earnings.",
+    "lesson": "Leveraged single-stock ETF duplicating NBIL; exclude from mover stats and track the underlying NBIS instead.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "AXTX@2026-11-11": {
+    "catalyst": "sector_move",
+    "why": "AXTX is a 2x leveraged AXT Inc (AXTI) ETF; AXTI jumped about 23% in a broad tech rally with no company-specific news found (the evidence headlines about Austria's ATX index are a false match).",
+    "lesson": "Nothing visible beforehand; the ETF was down 69% in a month and the headline matcher confused AXTX with the ATX index.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "THEME@2026-11-11": {
+    "proposed_theme": "ai_optical",
+    "members": [
+      "LITE",
+      "COHR",
+      "CIEN"
+    ],
+    "why": "Optical networking and transceiver suppliers for AI data centers moved together today on the AI-hardware rally; MPWR and TER in the flagged group are power/test names and don't belong.",
+    "by": "claude",
+    "date": "2026-11-11"
+  },
+  "NBIZ@2026-11-12": {
+    "catalyst": "earnings",
+    "why": "NBIZ is a 2x short Nebius (NBIS) ETF; NBIS fell roughly 18% after its Q3 report, when it trimmed its 2026 outlook to the low end of the range despite beating revenue estimates.",
+    "lesson": "The underlying NBIS had earnings due today (flagged in yesterday's NBIL/NEBX reads), but this is an inverse leveraged single-stock ETF, not a company; exclude these from mover stats.",
+    "by": "claude",
+    "date": "2026-11-12"
+  },
+  "SMCZ@2026-11-12": {
+    "catalyst": "regulatory",
+    "why": "SMCZ is a 2x short Super Micro (SMCI) ETF; SMCI fell about 11% on reports that the DOJ probe extends beyond its indicted co-founder.",
+    "lesson": "Nothing visible beforehand (no headlines in the prior week); inverse leveraged ETF whose -95% distance from the 52-week high is decay, not a setup, so exclude it.",
+    "by": "claude",
+    "date": "2026-11-12"
+  },
+  "LFTO@2026-11-13": {
+    "catalyst": "earnings",
+    "why": "Liftoff Mobile gapped up 27% after its Q3 results (8-K filed Nov 12) beat estimates, and BTIG raised its price target to $31.",
+    "lesson": "The results were filed the evening before with volume already 1.8x normal, but LFTO sits outside the bot's universe (no rs_rank) and was 13% down over 3 months, so the bot could not have traded it.",
+    "by": "claude",
+    "date": "2026-11-13"
+  },
+  "MOD@2026-11-13": {
+    "catalyst": "mna",
+    "why": "Modine gapped up 34% on reports that Samsung Electronics is in talks to buy the data-center cooling maker.",
+    "lesson": "Nothing visible beforehand: MOD was rs_rank 10, down 33% in a month, 64% below its 52-week high and failed the momentum gate; takeover talk can't be anticipated.",
+    "by": "claude",
+    "date": "2026-11-13"
+  },
+  "NBIZ@2026-11-13": {
+    "catalyst": "theme_move",
+    "why": "NBIZ is a 2x short Nebius (NBIS) ETF; NBIS slid again as AI-compute stocks sold off on reports that Nvidia CEO Jensen Huang is resigning, on top of Nebius's trimmed outlook from Thursday's results.",
+    "lesson": "Inverse leveraged single-stock ETF (a -99% distance from the 52-week high is decay, not a setup) and a second straight day on the list; exclude these from mover stats.",
+    "by": "claude",
+    "date": "2026-11-13"
+  },
+  "OFRM@2026-11-16": {
+    "catalyst": "unknown",
+    "why": "Once Upon a Farm rebounded about 21% intraday (flat open) after a roughly 44% one-month slide on its choking-hazard recall and cut Q3 outlook; no fresh company news found, only a Barclays target cut to $11 and law-firm investor notices, so this reads as an oversold relief bounce.",
+    "lesson": "nothing visible beforehand beyond a deeply beaten-down recent IPO (down 44% in a month, momentum gate failed, volume 1.7x normal); not a setup the momentum bot targets.",
+    "by": "claude",
+    "date": "2026-11-16"
+  },
+  "SLS@2026-11-17": {
+    "catalyst": "news",
+    "why": "SELLAS gapped up about 220% after reporting positive Phase 3 REGAL results for its AML cancer vaccine galinpepimut-S, which cut the risk of death by about 41%.",
+    "lesson": "Only a known pending Phase 3 readout was visible; the stock was down 25% in a month, 53% below its high and failed the momentum gate, so price data gave no signal.",
+    "theme": "biotech",
+    "by": "claude",
+    "date": "2026-11-17"
+  },
+  "THEME@2026-11-18": {
+    "proposed_theme": "cybersecurity",
+    "members": [
+      "NTSK",
+      "SAIL",
+      "AKAM",
+      "FSLY",
+      "FROG"
+    ],
+    "why": "Security and edge/delivery-infrastructure software names moved together with the cybersecurity theme (the only theme up this week); they look like missing members of the existing cybersecurity theme rather than a new trend. The healthcare group (WGS, WRBY, SYRE) spans genomics, eyewear and biotech and is not one trend.",
+    "by": "claude",
+    "date": "2026-11-18"
+  },
+  "INSM@2026-11-19": {
+    "catalyst": "mna",
+    "why": "Insmed jumped about 21% after Bloomberg reported Sanofi is weighing a takeover bid for the respiratory drugmaker and its Brinsupri franchise to offset Dupixent's patent cliff.",
+    "lesson": "Nothing visible beforehand: RS rank 10, failed the momentum gate, 44% below its 52-week high; a deal-rumor jump the momentum bot cannot target (M&A jumps here have faded on average over 5-20 days).",
+    "by": "claude",
+    "date": "2026-11-19"
+  },
+  "UVIX@2026-11-19": {
+    "catalyst": "market_move",
+    "why": "UVIX is a 2x long VIX-futures ETF; it rose about 24% as the VIX jumped roughly 16% to the high 20s in a tech-led selloff with the S&P 500 down about 2%. The captured headlines (TVS family dispute) are unrelated noise.",
+    "lesson": "Leveraged volatility ETF (an -83% distance from the high is decay, not a setup); exclude these from mover stats like the inverse single-stock ETFs.",
+    "by": "claude",
+    "date": "2026-11-19"
+  },
+  "AAOZ@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "AAOZ is a 2x short Applied Optoelectronics (AAOI) ETF; AAOI fell as AI-hardware and optical names sold off with the Nasdaq down about 5%.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_optical",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "BEZ@2026-11-20": {
+    "catalyst": "mna",
+    "why": "Berentzen-Gruppe rose 30% after Sazerac raised its takeover offer to EUR 6.65 per share and dropped the minimum acceptance threshold.",
+    "lesson": "A prior takeover offer was already public (5 headlines in the week), so a bump was possible but not predictable; BEZ is outside the bot's universe.",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "BMNZ@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "BMNZ is a 2x short BitMine Immersion (BMNR) ETF; BMNR fell about 14% as crypto-linked stocks joined the broad risk-off selloff.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "crypto",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "DAMD@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "DAMD is a 2x short AMD ETF; AMD fell with the AI-chip rout as Nvidia's SEC accounting probe deepened the selloff.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "IREZ@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "IREZ is a 2x short IREN ETF; the AI neocloud miner fell with the AI-compute selloff.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "LITZ@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "LITZ is a 2x short Lumentum (LITE) ETF; LITE fell as optical suppliers for AI data centers sold off.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_optical",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "MUZ@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "MUZ is a 2x short Micron (MU) ETF; memory-chip stocks crashed as part of the AI-hardware rout.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "memory_storage",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "NBIZ@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "NBIZ is a 2x short Nebius (NBIS) ETF; NBIS slid for another day as AI-compute stocks sold off.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "NVD@2026-11-20": {
+    "catalyst": "regulatory",
+    "why": "NVD is a 2x short Nvidia ETF; NVDA fell about 13-14% after an SEC accounting probe was reported, deepening the AI selloff that took the Nasdaq down about 5%. The rule's 'earnings' label came from stale results headlines.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "NVDQ@2026-11-20": {
+    "catalyst": "regulatory",
+    "why": "NVDQ is a 2x inverse Nvidia ETF; NVDA fell about 13-14% on the reported SEC accounting probe amid the AI selloff.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "SKDD@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "SKDD is a 2x short SK Hynix ETF; SK Hynix fell as memory-chip stocks crashed in the AI-hardware rout.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "memory_storage",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "SNDQ@2026-11-20": {
+    "catalyst": "theme_move",
+    "why": "SNDQ is a 2x short SanDisk (SNDK) ETF; SNDK fell as memory and storage stocks crashed.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "memory_storage",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "SOXS@2026-11-20": {
+    "catalyst": "sector_move",
+    "why": "SOXS is a 3x bear semiconductor ETF; chip stocks plunged with Nvidia's drop and the Nasdaq's roughly 5% fall. The rule's 'index' label came from a market-commentary headline, not an index change.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "UVIX@2026-11-20": {
+    "catalyst": "market_move",
+    "why": "UVIX is a 2x long VIX-futures ETF; it rose about 28% as volatility spiked in a second day of the tech-led selloff. The captured TVS-family headline is unrelated noise.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "by": "claude",
+    "date": "2026-11-20"
+  },
+  "THEME@2026-11-20": {
+    "proposed_theme": "none",
+    "members": [],
+    "why": "The flagged 'other' group (IREZ, NBIZ, AAOZ, SOXS, SNDQ, LITZ, BMNZ, MUZ, UVIX, NVD, NVDQ, DAMD, SKDD, SMCZ) is not a new trend: it is inverse/volatility ETFs rising in the AI-hardware selloff (Nasdaq about -5%, NVDA about -14% on an SEC accounting probe). BEZ is an unrelated takeover. Suggest auto-excluding inverse and leveraged ETFs from the mover list.",
+    "by": "claude",
+    "date": "2026-11-20"
+  }
 }

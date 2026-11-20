@@ -1,0 +1,111 @@
+{
+ "agent": "manager",
+ "date": "2026-11-20",
+ "generated_at": "2026-11-20T23:20:00+00:00",
+ "status": "amber",
+ "headline": "No reds; amber on 8 stale failure issues. Account 10.8% below peak per eval (performance_risk measures 12.9% from the 07-16 peak, 2.1 points from the 15% line), last-20 PF 0.14, 5 of 17 holdings broken (FDS, KDP, MAR, REAL, TTAN), all with broker stops. No entries for the ninth day; CTLP still has no stop. One new rec ready for Alex: exclude inverse/leveraged ETFs from the mover list.",
+ "calls": [
+  {
+   "subject": "MAR",
+   "direction": "broken",
+   "horizon_days": 10,
+   "confidence": "low",
+   "evidence": [
+    "agents/performance_risk/2026-11-20.json:calls[MAR]=broken low",
+    "options_sentiment.json:reads[MAR].options_score=1",
+    "alphavantage:REALTIME_PUT_CALL_RATIO (MAR full chain 1.03, via performance_risk)"
+   ],
+   "why": "Stop 396.26 sits 2.7% away and below cost 425.06; the live put/call 1.03 outweighs the +1 repo read, and the broker stop governs the exit."
+  },
+  {
+   "subject": "KO",
+   "direction": "intact",
+   "horizon_days": 10,
+   "confidence": "low",
+   "evidence": [
+    "agents/performance_risk/2026-11-20.json:calls[KO]=intact low (weakening)",
+    "agents/research_analyst/2026-11-20.json:calls[KO]=bearish low",
+    "latest.json:positions[KO].stop_loss=94.22 above cost 93.75"
+   ],
+   "why": "Weakening, not bearish: $16.5M discretionary insider selling is real, but the stop is above cost so the worst case is a small gain."
+  },
+  {
+   "subject": "KDP",
+   "direction": "broken",
+   "horizon_days": 10,
+   "confidence": "low",
+   "evidence": [
+    "agents/performance_risk/2026-11-20.json:calls[KDP]=broken low",
+    "agents/research_analyst/2026-11-20.json:calls[KDP]=bearish medium",
+    "options_sentiment.json:evidence.flags.options_bullish.d1 edge 0.0022 t 0.05"
+   ],
+   "why": "Both specialists agree on the 424B5 dilution with the stop 2.8% away; the +3 options read carries no weight (options_bullish d1 edge 0.0022, t 0.05)."
+  },
+  {
+   "subject": "OKTA",
+   "direction": "bearish",
+   "horizon_days": 5,
+   "confidence": "low",
+   "evidence": [
+    "agents/research_analyst/2026-11-20.json:calls[OKTA]=bearish low",
+    "options_sentiment.json:reads[OKTA].options_score=-1"
+   ],
+   "why": "Top candidate gapped -3.7% through its 50MA premarket and options lean -1; research and options agree, no conflict."
+  }
+ ],
+ "notes": [
+  "Reds: none. ops_status.json (2026-11-20T22:30:49) amber only on issues: 8 failure issues open more than 2 days (#54 Ops monitor red 11-16 is new; #53 Daily Eval 11-16; #51 Weekly Review 11-14; #50/#43/#34 Ops monitor red 11-13/11-12/11-11; #15/#12 Macro Research 11-07/10-31). jobs (18 workflows, none failed), freshness, model, contracts, scope green. Action: close the fixed ones at https://github.com/schu51/stocktrader/issues (#53 looks resolved: eval ran 2026-11-20T22:00:54).",
+  "Specialists: research_analyst amber, performance_risk amber, thesis_strategy amber; all reported. Big-mover reads present for today (14 movers + THEME).",
+  "CONFLICT (drawdown): performance_risk 12.9% ($103,836.99 post-market vs $119,241.21 on 07-16) vs eval_latest/thesis_strategy 10.8% (account_30d.drawdown_from_peak -0.1079, value 105084.87). Call: eval_latest.json (2026-11-20T22:00:54) governs the scorecard, but performance_risk's 07-16 peak is the stricter measure and puts the 15% red line 2.1 points away; treat it as the watch number.",
+  "CONFLICT (KO): research bearish low vs performance_risk intact/weakening. Call: weakening; the stop is above cost. Note: research cites unusual call buying as an offset on KO, but options evidence shows unusual_calls is a negative signal (d5 edge -0.0248, t -2.19), so it should not count as support.",
+  "CONFLICT (MAR): repo options +1 vs live put/call 1.03 (performance_risk). Call: broken low; the live read is fresher and the stop is below cost.",
+  "CONFLICT (ops count/staleness): research_analyst ran 14:25 UTC on the 11-19 ops/options files (7 issues); today's ops_status lists 8. ops_status governs. eval_latest reports open_positions 16 vs performance_risk's 17 holdings (CTLP inactive on Alpaca).",
+  "Holdings (performance_risk): 9 intact, 2 weakening (KO, KVYO), 5 broken (FDS, KDP, MAR, REAL, TTAN), 1 not assessable (CTLP). Stops: KDP 2.8%, MAR 2.7%, REAL 3.0%, FDS 3.7%, TTAN 23.1% away; ~$640 more realized loss likely if FDS/KDP/MAR/REAL trigger. Also watch EBAY (stop 4.5%, $9.2M insider selling), CBOE, CRL. CTLP 281 shares still has no stop (13 failed attempts today, 'asset CTLP is not active'); needs manual broker handling.",
+  "OPEN QUESTION (no entries), day nine: candidates_screened=0 while daily_opening_buys ranks names (top OKTA, VRNS, HNGE, BRZE, TXN); universe_size 1375 vs ~518 expected. thesis_strategy: no rule set, champion included, has opened a backtest trade since 2026-11-10, consistent with the bear-regime gate. Call unchanged: regime gate likelier, but Alex should confirm the buy path is gated, not disconnected, and that 1375 is intended.",
+  "Execution: no stops filled today. Last 10 fills mean -3.56%, median -0.57%, worst VCYT -24.6%, 2 gapped >2%. Tracking gap -0.046 (live -0.0549 vs backtest -0.0089). Rollback watch sma200_exit: 7 trading days, lag -0.0739, not triggered; account_current_rules return -0.0182 vs SPY -0.0921.",
+  "Movers: 14 at 20%+; 13 are inverse/leveraged/volatility ETFs mirroring the AI-hardware selloff (NVDA about -14% on a reported SEC accounting probe, Nasdaq about -5%): AAOZ, BMNZ, DAMD, IREZ, LITZ, MUZ, NBIZ, NVD, NVDQ, SKDD, SNDQ, SOXS, UVIX. BEZ +30.27% on Sazerac's raised takeover offer (EUR 6.65). None targetable.",
+  "Strategy: no live rule change; research/challengers.json unchanged (spy1 4 of 10 toward retirement, ~2026-12-03); experiments.json unchanged since 2026-11-14. spy3 passes all backtest gates (PF 1.67 vs 1.41) but fails forward; cap98_tight first-half PF gap widened to 0.11 (1.22 vs 1.33). ready_to_propose empty. Forward samples reach 10 trading days 11-23 / 11-24 / ~12-01."
+ ],
+ "recommendations": [
+  {
+   "id": "REC-big_mover_review-20261120-1",
+   "from": "big_mover_review",
+   "title": "Auto-exclude inverse/leveraged/volatility ETFs from the big-mover list and mover stats",
+   "verdict": "propose",
+   "why": "Reporting hygiene, not a trading rule, so the 20-trade bar does not apply: 13 of today's 14 movers were inverse/vol ETFs, and every such read since 11-11 says to exclude them.",
+   "next": "Alex: approve a PR that filters these symbols in the big-movers job (no change to live trading rules).",
+   "first_seen": "2026-11-20",
+   "updated": "2026-11-20"
+  },
+  {
+   "id": "REC-research_analyst-20261117-1",
+   "from": "research_analyst",
+   "title": "Thesis-grade entry gate (block D; variant C+D)",
+   "verdict": "test",
+   "why": "92 closed trades show a consistent B > C > D ordering (avg +1.2% / -2.8% / -5.5%), but win rates are low in every grade and D is only n=18; needs a backtest before any live change.",
+   "next": "thesis_strategy: backtest a min thesis_grade filter (or a raised w_thesis challenger). Not picked up as of 11-20 (challengers.json unchanged, list full at 11); spy1 retirement (~12-03) would free a slot.",
+   "first_seen": "2026-11-17",
+   "updated": "2026-11-20"
+  },
+  {
+   "id": "REC-research_analyst-20261117-2",
+   "from": "research_analyst",
+   "title": "Later break-even stop (+5% vs +8% vs +10%)",
+   "verdict": "test",
+   "why": "Quick-failure pattern persists (27 trades closed within 3 days, 0% won, -$4,556); performance_risk repeats it as the main loss concentration, merged here.",
+   "next": "thesis_strategy: backtest.py --breakeven-at 5 / 8 / 10, or a breakeven_at challenger; daily_eval.py should report share closed within 3 days per challenger (thesis_strategy 11-20). Not picked up as of 11-20.",
+   "first_seen": "2026-11-17",
+   "updated": "2026-11-20"
+  },
+  {
+   "id": "REC-research_analyst-20261117-3",
+   "from": "research_analyst",
+   "title": "Score the news-veto A/B",
+   "verdict": "needs_data",
+   "why": "Control-arm buys despite a veto: n=2, avg -7.8%; far too small (news_ab gain_from_news -0.0003, t -0.01).",
+   "next": "Score in experiments.py once both arms have 10+ closed trades.",
+   "first_seen": "2026-11-17",
+   "updated": "2026-11-17"
+  }
+ ]
+}

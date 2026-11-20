@@ -1,10 +1,10 @@
 {
-  "date": "2026-11-19",
-  "generated_at": "2026-11-19T21:15:41.300046",
+  "date": "2026-11-20",
+  "generated_at": "2026-11-20T21:15:38.413352",
   "portfolio": {
-    "value": 104297.79,
-    "cash": 42477.49,
-    "total_unrealized": 362.0899999999999,
+    "value": 103836.99,
+    "cash": 42477.44,
+    "total_unrealized": -98.6600000000001,
     "positions": 17,
     "winners": 8,
     "losers": 9,
@@ -23,61 +23,33 @@
     "stops_updated": 1,
     "detail": []
   },
-  "closed_today": [
-    {
-      "trade_id": "DMD-20261026143049-WK",
-      "symbol": "WK",
-      "status": "CLOSED",
-      "sleeve": "diamond",
-      "entry_date": "2026-10-26",
-      "entry_ts": "2026-10-26T14:30:49.293141",
-      "entry_price": 86.09,
-      "shares": 28,
-      "stop_loss": 64.57,
-      "stop_arm": "sleeve",
-      "stop_dist": 0.25,
-      "order_id": "8f0a84d6-69a2-4e76-b8d0-554cf6ba4390",
-      "judgment": 12.0,
-      "judgment_rank": 1,
-      "exit_date": "2026-11-19",
-      "exit_price": 64.5,
-      "exit_reason": "BROKER_STOP",
-      "pnl_usd": -604.52,
-      "pnl_pct": -25.08,
-      "hold_days": 24,
-      "entry_limit": 98.04,
-      "entry_filled": true,
-      "peak_price": 68.97,
-      "exit_ts": "2026-11-19T20:33:48.215288",
-      "exit_stop": 64.57
-    }
-  ],
+  "closed_today": [],
   "positions_at_risk": [
     {
       "symbol": "REAL",
-      "pnl_pct": -15.62,
-      "value": 2389.66,
+      "pnl_pct": -23.11,
+      "value": 2177.56,
       "has_stop": true,
       "risk": "deep_loss"
     },
     {
-      "symbol": "FDS",
-      "pnl_pct": -7.38,
-      "value": 3388.0,
-      "has_stop": true,
-      "risk": "approaching"
-    },
-    {
-      "symbol": "KDP",
-      "pnl_pct": -6.93,
-      "value": 3514.36,
-      "has_stop": true,
-      "risk": "approaching"
-    },
-    {
       "symbol": "TTAN",
-      "pnl_pct": -6.83,
-      "value": 2615.96,
+      "pnl_pct": -7.69,
+      "value": 2591.82,
+      "has_stop": true,
+      "risk": "approaching"
+    },
+    {
+      "symbol": "FDS",
+      "pnl_pct": -6.19,
+      "value": 3431.23,
+      "has_stop": true,
+      "risk": "approaching"
+    },
+    {
+      "symbol": "EBAY",
+      "pnl_pct": -5.08,
+      "value": 2196.21,
       "has_stop": true,
       "risk": "approaching"
     },

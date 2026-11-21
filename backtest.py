@@ -514,6 +514,63 @@ def momentum_spread(closes: pd.DataFrame, lookback: int = 126, window: int = 21,
     return float(holding[leaders].mean() - np.median(holding))
 
 
+MOM_VOL_FLOOR = 0.25          # volatility scaling never cuts a buy below this share of its size
+MOM_VOL_KINDS = ("wml", "winners")
+
+
+def momentum_factor_returns(closes: pd.DataFrame, lookback: int = 126, top: float = 0.10,
+                            kind: str = "wml", members: Optional[pd.DataFrame] = None,
+                            min_names: int = 20, clip: Tuple[float, float] = (-0.5, 1.0)) -> pd.Series:
+    """
+    Daily return of a momentum portfolio, the series whose volatility predicts
+    momentum crashes (Barroso & Santa-Clara 2015; Daniel & Moskowitz 2016).
+
+    Each session t the names are ranked on their return over the `lookback`
+    sessions ending at t-1 (known at t-1's close, so no look-ahead), and the
+    portfolio earns their equal-weighted return from t-1 to t:
+      "wml"      top `top` share minus bottom `top` share (winners minus losers,
+                 the factor in the papers)
+      "winners"  top share alone (closer to what a long-only bot holds)
+    Daily returns are clipped to `clip` so a bad print or unadjusted split
+    cannot dominate the volatility. With `members` (point-in-time universe),
+    only that day's members are ranked. NaN until there is enough history or
+    when fewer than `min_names` names have prices.
+    """
+    if kind not in MOM_VOL_KINDS:
+        raise ValueError(f"momentum factor kind {kind!r}")
+    a = closes.to_numpy(dtype=float)
+    mask = None
+    if members is not None:
+        mask = members.reindex(index=closes.index, columns=closes.columns).fillna(False).to_numpy(dtype=bool)
+    out = np.full(len(a), np.nan)
+    for t in range(lookback + 1, len(a)):
+        past, prev, now = a[t - 1 - lookback], a[t - 1], a[t]
+        ok = (past > 0) & (prev > 0) & (now > 0)            # NaN compares False
+        if mask is not None:
+            ok &= mask[t - 1]
+        n = int(ok.sum())
+        if n < min_names:
+            continue
+        formation = prev[ok] / past[ok] - 1
+        holding = np.clip(now[ok] / prev[ok] - 1, *clip)
+        k = max(1, int(round(n * top)))
+        order = np.argsort(formation, kind="stable")
+        winners = float(holding[order[-k:]].mean())
+        out[t] = winners - float(holding[order[:k]].mean()) if kind == "wml" else winners
+    return pd.Series(out, index=closes.index)
+
+
+def vol_scaled_size(vol: float, target: float, floor: float = MOM_VOL_FLOOR) -> float:
+    """
+    Buy size multiplier: 1 while `vol` is at or below `target`, target / vol
+    above it, never below `floor`. Missing or non-positive inputs give 1
+    (unknown volatility never blocks a buy, as with the other market gates).
+    """
+    if not (vol == vol and target == target) or vol <= 0 or target <= 0 or vol <= target:
+        return 1.0
+    return max(floor, target / vol)
+
+
 # ---------------------------------------------------------------------------
 # Simulation
 # ---------------------------------------------------------------------------
@@ -543,6 +600,8 @@ class Backtest:
                  min_high_ratio: float = 0.0, w_high: float = 0.0, min_smooth: Optional[float] = None,
                  min_margin_chg: Optional[float] = None, min_ear: Optional[float] = None,
                  ear_window: int = 63, vol_target: float = 0.0,
+                 mom_vol_target: float = 0.0, mom_vol_relative: bool = True, mom_vol_kind: str = "wml",
+                 mom_vol_window: int = 126, mom_vol_cap: bool = False,
                  members: Optional[pd.DataFrame] = None):
         self.universe = universe
         # Survivorship-free runs (market_history.py): who was in the universe on each day.
@@ -640,6 +699,26 @@ class Backtest:
         if (self.w_fund or self.min_sue is not None or self.min_rev_growth is not None or self.pead_days) \
                 and fundamentals is None:
             raise ValueError("fundamental settings need fundamentals data")
+        # Momentum-volatility scaling (round 7, 2026-11-21; research/picker_lab/README.md).
+        # vol_target above scales by the MARKET's volatility; this scales by the
+        # momentum factor's own, the series that predicts momentum crashes.
+        #   mom_vol_target    0 = off. With mom_vol_relative, a multiple of the factor's
+        #                     own one-year median volatility (1.0 = scale down whenever it is
+        #                     above its usual level); otherwise an annualised volatility.
+        #   mom_vol_kind      "wml" winners minus losers, or "winners" alone
+        #   mom_vol_window    sessions of factor returns behind the volatility estimate
+        #   mom_vol_cap       also no new buys while the invested share is at or above the scale
+        self.mom_vol_target, self.mom_vol_relative = float(mom_vol_target), bool(mom_vol_relative)
+        self.mom_vol_kind, self.mom_vol_window = mom_vol_kind, int(mom_vol_window)
+        self.mom_vol_cap = bool(mom_vol_cap)
+        if mom_vol_kind not in MOM_VOL_KINDS:
+            raise ValueError(f"mom_vol_kind {mom_vol_kind!r}")
+        if self.mom_vol_window < 10:
+            raise ValueError("mom_vol_window must be at least 10 sessions")
+        self.mom_vol_scales: List[float] = []
+        self._mom_vol = self._mom_vol_tgt = None
+        if self.mom_vol_target:
+            self._prepare_mom_vol()
 
         first = int(self.dates.searchsorted(pd.Timestamp(start)))
         self.first = max(first, LOOKBACK)
@@ -923,6 +1002,17 @@ class Backtest:
             return
         if not self._market_ok(closes):
             return
+        mom_scale = 1.0
+        if self.mom_vol_target:
+            mom_scale = self._mom_vol_scale(i)
+            self.mom_vol_scales.append(mom_scale)
+            if mom_scale < 1.0:
+                self.counters["days_mom_vol_scaled"] = self.counters.get("days_mom_vol_scaled", 0) + 1
+            invested = 1 - self.cash / total_value if total_value > 0 else 0.0
+            if self.mom_vol_cap and mom_scale < 1.0 and invested >= mom_scale:
+                # Exposure cap: momentum is turbulent and the book is already as big as the scale allows
+                self.counters["days_mom_vol_capped"] = self.counters.get("days_mom_vol_capped", 0) + 1
+                return
         universe = self.universe
         if self.members is not None:
             row = self.members.iloc[i]
@@ -1037,6 +1127,8 @@ class Backtest:
                                              total_value, self.risk_per_trade)
             if self.vol_target:
                 d["shares"] = int((d["shares"] or 0) * self._vol_scale(spy))
+            if mom_scale < 1.0:
+                d["shares"] = int((d["shares"] or 0) * mom_scale)
             d["tightness"] = tight.get(sym, 0.0)
             d["features"] = {"rs_rank": cand["rs_rank"], "thesis_score": cand["thesis_score"],
                              "fund_score": cand.get("fund_score"),
@@ -1071,6 +1163,30 @@ class Backtest:
         r = np.diff(np.log(spy[-(n + 1):]))
         vol = float(np.std(r) * np.sqrt(252))
         return 1.0 if vol <= self.vol_target or vol <= 0 else max(0.25, self.vol_target / vol)
+
+    def _prepare_mom_vol(self) -> None:
+        """
+        Precompute, for every session, the momentum factor's annualised
+        volatility over the trailing mom_vol_window sessions and the target it
+        is held to. Both use data through that session's close only.
+        """
+        skip = {BENCHMARK, *MARKET_TICKERS}
+        cols = [s for s in self.close.columns if s not in skip
+                and (self.members is not None or s in self.universe)]
+        factor = momentum_factor_returns(self.close[cols], kind=self.mom_vol_kind, members=self.members)
+        w = self.mom_vol_window
+        vol = factor.rolling(w, min_periods=max(10, w // 2)).std() * np.sqrt(252)
+        if self.mom_vol_relative:
+            target = self.mom_vol_target * vol.rolling(252, min_periods=126).median()
+        else:
+            target = pd.Series(self.mom_vol_target, index=vol.index)
+        self._mom_vol, self._mom_vol_tgt = vol.to_numpy(), target.to_numpy()
+
+    def _mom_vol_scale(self, i: int) -> float:
+        """Buy size multiplier on session i from the momentum factor's volatility (1 when off or unknown)."""
+        if self._mom_vol is None:
+            return 1.0
+        return vol_scaled_size(float(self._mom_vol[i]), float(self._mom_vol_tgt[i]))
 
     def _market_ok(self, closes: pd.DataFrame) -> bool:
         """The swing-post market gates (all off by default). Missing index data never blocks a buy."""
@@ -1165,7 +1281,11 @@ class Backtest:
                         "min_rev_growth": self.min_rev_growth, "pead_days": self.pead_days,
                         "min_high_ratio": self.min_high_ratio, "w_high": self.w_high,
                         "min_smooth": self.min_smooth, "min_margin_chg": self.min_margin_chg,
-                        "min_ear": self.min_ear, "ear_window": self.ear_window, "vol_target": self.vol_target},
+                        "min_ear": self.min_ear, "ear_window": self.ear_window, "vol_target": self.vol_target,
+                        "mom_vol_target": self.mom_vol_target, "mom_vol_relative": self.mom_vol_relative,
+                        "mom_vol_kind": self.mom_vol_kind, "mom_vol_window": self.mom_vol_window,
+                        "mom_vol_cap": self.mom_vol_cap},
+            "average_mom_vol_scale": round(float(np.mean(self.mom_vol_scales)), 4) if self.mom_vol_scales else None,
             "stop_exits": stop_slippage(trades),
             "strategy": {"final_equity": float(equity.iloc[-1]),
                          "total_return": float(equity.iloc[-1] / self.capital - 1),

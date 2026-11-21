@@ -180,3 +180,103 @@ def test_stats_two_factor_alpha_matches_construction():
     assert s["alpha"] == pytest.approx(0.072, abs=0.015)
     assert s["loadings"]["spy"] == pytest.approx(0.5, abs=0.1)
     assert s["loadings"]["universe"] == pytest.approx(0.6, abs=0.1)
+
+
+# ── earnings drift ───────────────────────────────────────────────────────────
+
+def test_report_positions_use_first_session_on_or_after_the_report():
+    idx = pd.bdate_range("2021-01-04", periods=20)            # Mon 4 Jan ...
+    pos = el.report_positions(idx, {"A": ["2021-01-09", "2021-01-05"], "B": ["2030-01-01"]})
+    assert list(pos["A"]) == [1, 5]                           # Tue 5th; Sat 9th -> Mon 11th
+    assert "B" not in pos
+
+
+def test_ear_scorer_is_market_adjusted_fresh_and_has_no_lookahead():
+    idx = pd.bdate_range("2021-01-04", periods=120)
+    c = pd.DataFrame({"SPY": np.linspace(100, 110, 120), "A": 50.0}, index=idx)
+    c.loc[idx[31]:, "A"] = 60.0                               # jump the day after a report on idx[30]
+    pos = el.report_positions(idx, {"A": [idx[30].date()]})
+    score = el.ear_scorer(c, pos, fresh_days=60)
+    assert score("A", 30) is None                             # day after the report not yet known
+    spy_move = c["SPY"].iloc[31] / c["SPY"].iloc[28] - 1
+    assert score("A", 31) == pytest.approx(0.2 - spy_move)
+    assert score("A", 110) is None                            # report older than 60 days
+    assert score("B", 31) is None
+
+
+def test_sue_scorer_needs_a_fresh_surprise():
+    idx = pd.bdate_range("2021-01-04", periods=10)
+    facts = {"A": {"sue": 2.5, "days_since": 10}, "B": {"sue": 3.0, "days_since": 90}, "C": {"sue": None, "days_since": 5}}
+    score = el.sue_scorer(lambda sym, asof: facts.get(sym), idx, fresh_days=60)
+    assert score("A", 3) == 2.5
+    assert score("B", 3) is None and score("C", 3) is None and score("Z", 3) is None
+
+
+def test_drift_targets_pick_top_scores_from_covered_members_only():
+    idx = pd.bdate_range("2021-01-04", periods=60)
+    syms = [f"S{i}" for i in range(30)]
+    c = pd.DataFrame(100.0, index=idx, columns=syms + ["SPY"])
+    members = pd.DataFrame(True, index=idx, columns=c.columns)
+    covered = set(syms[:20])
+    score = lambda sym, i: float(sym[1:])                     # S19 best among covered
+    t = el.drift_targets(c, members, idx[0], score, covered, top_frac=0.10)
+    d = max(t)
+    assert set(t[d]) == {"S19", "S18"}
+    combo = el.combined_scorer(lambda s, i: float(s[1:]), lambda s, i: -float(s[1:]) if s != "S5" else 100.0)
+    t2 = el.drift_targets(c, members, idx[0], combo, covered, top_frac=0.05)
+    assert set(t2[max(t2)]) == {"S5"}
+
+
+def _drift_market(n=2000, k=300, drift=0.004, seed=11):
+    """Stocks report quarterly; the announcement jump keeps drifting the same way for 40 sessions."""
+    rng = np.random.default_rng(seed)
+    idx = pd.bdate_range("2015-01-01", periods=n)
+    mkt = rng.normal(0.0004, 0.01, n)
+    r = mkt[:, None] + rng.normal(0, 0.015, (n, k))
+    reports = {}
+    for j in range(k):
+        first = int(rng.integers(5, 63))
+        days = list(range(first, n - 45, 63))
+        reports[f"S{j}"] = [idx[d].date() for d in days]
+        for d in days:
+            jump = rng.normal(0, 0.05)
+            r[d, j] += jump
+            r[d + 2:d + 42, j] += np.sign(jump) * drift
+    c = pd.DataFrame(100 * np.cumprod(1 + r, axis=0), index=idx, columns=[f"S{j}" for j in range(k)])
+    c["SPY"] = 100 * np.cumprod(1 + mkt)
+    return c, reports
+
+
+def test_drift_ear_finds_a_planted_drift_and_is_judged_on_covered_names():
+    c, reports = _drift_market()
+    members = pd.DataFrame(True, index=c.index, columns=c.columns)
+    out = el.evaluate(c, members, c.index[300], events={"report_dates": reports, "sue": None})
+    assert {"ew_covered", "drift_ear"} <= set(out) and "drift_sue" not in out
+    assert "verdict" not in out["ew_covered"]
+    ear = out["drift_ear"]
+    assert set(ear["loadings"]) == {"spy", "universe"}
+    assert ear["alpha"] > 0.04 and ear["alpha_t"] > 3
+
+
+def test_drift_ear_finds_nothing_without_drift():
+    c, reports = _drift_market(drift=0.0)
+    members = pd.DataFrame(True, index=c.index, columns=c.columns)
+    out = el.evaluate(c, members, c.index[300], events={"report_dates": reports, "sue": None})
+    assert out["drift_ear"]["verdict"]["edge"] is False
+    assert abs(out["drift_ear"]["alpha"]) < 0.04
+
+
+def test_drift_sue_runs_with_a_lookup_and_limits_coverage_to_it():
+    c, reports = _drift_market(n=900, k=60)
+    members = pd.DataFrame(True, index=c.index, columns=c.columns)
+
+    class FakeLookup:
+        table = {f"S{j}": [] for j in range(40)}              # fundamentals for 40 of 60
+        def __call__(self, sym, asof):
+            return {"sue": float(sym[1:]), "days_since": 5} if sym in self.table else None
+
+    out = el.evaluate(c, members, c.index[300], events={"report_dates": reports, "sue": FakeLookup()})
+    assert {"drift_sue", "drift_sue_ear", "drift_ear", "ew_covered"} <= set(out)
+    t = el.drift_targets(c, members, c.index[300], el.sue_scorer(FakeLookup(), c.index),
+                         set(FakeLookup.table), top_frac=0.1)
+    assert all(int(s[1:]) < 40 for d in t for s in t[d])

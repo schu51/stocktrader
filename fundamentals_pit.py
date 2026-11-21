@@ -69,16 +69,17 @@ def known_from(quarter_end: date, report_dates: List[date]) -> date:
     return quarter_end + timedelta(days=KNOWN_AFTER_DAYS)
 
 
-def periods(today: date) -> List[str]:
-    """Calendar-quarter and calendar-year frame names from FIRST_YEAR to today."""
+def periods(today: date, first_year: int = FIRST_YEAR) -> List[str]:
+    """Calendar-quarter and calendar-year frame names from first_year to today."""
     out = []
-    for y in range(FIRST_YEAR, today.year + 1):
+    for y in range(first_year, today.year + 1):
         out += [f"CY{y}Q{q}" for q in range(1, 5) if date(y, 3 * q, 1) <= today]
         out.append(f"CY{y}")
     return out
 
 
-def build(today: date, earnings: Dict[str, List], fetch=None, listings: Optional[Dict[int, Dict]] = None) -> Dict:
+def build(today: date, earnings: Dict[str, List], fetch=None, listings: Optional[Dict[int, Dict]] = None,
+          first_year: int = FIRST_YEAR) -> Dict:
     """{ticker: [[quarter_end, known_from, eps, revenue, gross_profit], ...]} oldest first."""
     import diamond_data as dd
     fetch = fetch or dd.fetch_frame
@@ -90,7 +91,7 @@ def build(today: date, earnings: Dict[str, List], fetch=None, listings: Optional
         by_tag: List[Dict[int, List[dict]]] = []
         for tag in spec["tags"]:
             per_cik: Dict[int, List[dict]] = {}
-            for period in periods(today):
+            for period in periods(today, first_year):
                 for r in fetch(spec["taxonomy"], tag, spec["unit"], period):
                     if isinstance(r.get("cik"), int):
                         per_cik.setdefault(r["cik"], []).append({k: r[k] for k in ("start", "end", "val") if k in r})
@@ -112,17 +113,21 @@ def build(today: date, earnings: Dict[str, List], fetch=None, listings: Optional
     return out
 
 
-def load_or_build(today: date, earnings: Dict[str, List], max_age_days: int = 7) -> Dict:
-    """The cached table if it is recent enough, else a fresh build (SEC access needed)."""
-    if CACHE.exists():
+def load_or_build(today: date, earnings: Dict[str, List], max_age_days: int = 7,
+                  first_year: int = FIRST_YEAR, cache: Optional[Path] = None) -> Dict:
+    """The cached table if it is recent enough, else a fresh build (SEC access needed).
+    A longer history (earlier first_year, e.g. the edge lab's) goes to its own cache file."""
+    cache = cache or (CACHE if first_year == FIRST_YEAR else CACHE.with_name(f"fundamentals_pit_{first_year}.json"))
+    if cache.exists():
         import contracts
-        data = contracts.read(CACHE)
+        data = contracts.read(cache)
         built = _as_date(data.get("built"))
         if built and (today - built).days <= max_age_days and data.get("version") == VERSION:
             return data["tickers"]
-    tickers = build(today, earnings)
-    CACHE.parent.mkdir(parents=True, exist_ok=True)
-    CACHE.write_text(json.dumps({"built": today.isoformat(), "version": VERSION, "tickers": tickers}))
+    tickers = build(today, earnings, first_year=first_year)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps({"built": today.isoformat(), "version": VERSION, "first_year": first_year,
+                                 "tickers": tickers}))
     logger.info(f"fundamentals: {len(tickers)} tickers built from SEC frames")
     return tickers
 

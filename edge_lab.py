@@ -18,6 +18,20 @@ Strategies (all long-only, rebalanced at month-end closes, costs on turnover):
   mom_decile_trend  mom_decile while SPY is above its 200-day, else defensive
   champion          the live rules (daily_eval.live_rules) replayed by backtest.py
 
+Earnings drift (post-earnings-announcement drift: prices keep moving for weeks
+in the direction of an earnings surprise). Each month-end, among covered stocks
+whose latest quarterly report is at most DRIFT_FRESH_DAYS old, the top 10% by
+  drift_sue         standardized unexpected earnings: the quarter's EPS change on
+                    a year earlier, over the spread of earlier such changes
+                    (fundamentals_pit.py, SEC XBRL, dated when it became public)
+  drift_ear         the earnings announcement return: the stock's move from two
+                    days before the report to the day after, minus SPY's
+  drift_sue_ear     both: SUE rank + announcement-return rank
+Coverage: SEC fundamentals and report dates exist only for companies still
+listed today, so these three are drawn from SURVIVORS. They are judged against
+ew_covered (the same survivors, equal weight) instead of ew_universe, which
+cancels most of that bias; what remains favours them a little.
+
 "Real edge" is not "beat SPY by a bit". A strategy that beats SPY by holding
 more market risk (beta), or by holding smaller stocks than SPY does, has no
 edge; and with several strategies tested at once, one will look good by luck.
@@ -59,7 +73,9 @@ OUT_DIR = ROOT / "research" / "edge_lab"
 BENCHMARK = "SPY"
 DEFENSIVE = "IEF"                      # 7-10y Treasuries; cash (0%) when Alpaca has no bars
 NOT_STOCKS = {"SPY", "QQQ", "^VIX", "IEF", "BIL"}
-BENCHMARKS = ("spy", "ew_universe")    # reported, never judged
+BENCHMARKS = ("spy", "ew_universe", "ew_covered")    # reported, never judged
+DRIFT_FRESH_DAYS = 60                  # a report older than this carries no drift signal
+FUNDAMENTALS_FIRST_YEAR = 2014         # SUE needs ~3 years of quarters before 2017
 
 MOM_LOOKBACK = 252                     # 12 months
 MOM_SKIP = 21                          # skip the latest month (short-term reversal)
@@ -164,19 +180,113 @@ def momentum_targets(closes: pd.DataFrame, members: Optional[pd.DataFrame], star
     return targets
 
 
-def equal_weight_targets(closes: pd.DataFrame, members: Optional[pd.DataFrame], start: pd.Timestamp) -> Dict:
-    """Every stock in the day's universe, equal weight: the same stocks with no picking."""
+def equal_weight_targets(closes: pd.DataFrame, members: Optional[pd.DataFrame], start: pd.Timestamp,
+                         covered: Optional[set] = None) -> Dict:
+    """Every stock in the day's universe (or its covered part), equal weight: the same stocks, no picking."""
     targets = {}
     for d in month_end_dates(closes.index):
         if d < start:
             continue
-        live = closes.loc[d].dropna().index
-        if members is not None:
-            m = members.loc[d].reindex(live).fillna(False).astype(bool)
-            live = live[m.values]
-        live = [x for x in live if x not in NOT_STOCKS]
+        live = covered_members(closes, members, d, covered)
         targets[d] = {x: 1.0 / len(live) for x in live} if live else {}
     return targets
+
+
+def report_positions(index: pd.DatetimeIndex, report_dates: Dict[str, List]) -> Dict[str, np.ndarray]:
+    """{ticker: sorted row positions of the first trading day on or after each report date}."""
+    out = {}
+    for sym, dates in (report_dates or {}).items():
+        ts = pd.DatetimeIndex(sorted({pd.Timestamp(d) for d in dates or []}))
+        pos = index.searchsorted(ts)
+        pos = pos[pos < len(index)]
+        if len(pos):
+            out[sym] = np.unique(pos)
+    return out
+
+
+def ear_scorer(closes: pd.DataFrame, positions: Dict[str, np.ndarray],
+               fresh_days: int = DRIFT_FRESH_DAYS) -> Callable[[str, int], Optional[float]]:
+    """
+    score(sym, i): the latest report's announcement return (close two sessions
+    before the report day to the close after it, minus SPY's), using only
+    closes through row i, or None if no report is fresh or the window is incomplete.
+    """
+    idx = closes.index
+    c = closes.to_numpy(dtype=float)
+    col = {s: k for k, s in enumerate(closes.columns)}
+    spy = c[:, col[BENCHMARK]]
+
+    def score(sym: str, i: int) -> Optional[float]:
+        pos, k = positions.get(sym), col.get(sym)
+        if pos is None or k is None:
+            return None
+        usable = pos[pos + 1 <= i]                    # the day after the report must be known by i
+        if not len(usable):
+            return None
+        t = int(usable[-1])
+        if t < 2 or (idx[i] - idx[t]).days > fresh_days:
+            return None
+        a, b = c[t - 2, k], c[t + 1, k]
+        if not (np.isfinite(a) and np.isfinite(b)) or a <= 0:
+            return None
+        return float(b / a - 1.0 - (spy[t + 1] / spy[t - 2] - 1.0))
+    return score
+
+
+def sue_scorer(lookup: Callable, index: pd.DatetimeIndex,
+               fresh_days: int = DRIFT_FRESH_DAYS) -> Callable[[str, int], Optional[float]]:
+    """score(sym, i): SUE of the latest quarter public by row i's date, if at most fresh_days old."""
+    def score(sym: str, i: int) -> Optional[float]:
+        f = lookup(sym, index[i].date())
+        if not f or f.get("sue") is None or f.get("days_since") is None or f["days_since"] > fresh_days:
+            return None
+        return float(f["sue"])
+    return score
+
+
+def combined_scorer(*scorers: Callable) -> Callable[[str, int], Optional[float]]:
+    """Marker for drift_targets: rank each scorer separately and add the ranks (all must score)."""
+    def score(sym: str, i: int):
+        vals = [f(sym, i) for f in scorers]
+        return None if any(v is None for v in vals) else vals
+    score.n_parts = len(scorers)
+    return score
+
+
+def drift_targets(closes: pd.DataFrame, members: Optional[pd.DataFrame], start: pd.Timestamp,
+                  scorer: Callable, covered: set, top_frac: float = 0.10, min_names: int = 10) -> Dict:
+    """Each month-end: covered members with a fresh score, top `top_frac` equal weight (cash if under min_names)."""
+    targets = {}
+    pos = {d: k for k, d in enumerate(closes.index)}
+    for d in month_end_dates(closes.index):
+        if d < start:
+            continue
+        i = pos[d]
+        names = [x for x in covered_members(closes, members, d, covered)]
+        scored = {x: scorer(x, i) for x in names}
+        scored = {x: v for x, v in scored.items() if v is not None}
+        if len(scored) < min_names:
+            targets[d] = {}
+            continue
+        if getattr(scorer, "n_parts", 0):
+            parts = pd.DataFrame(scored, index=range(scorer.n_parts)).T
+            ranking = parts.rank(pct=True).sum(axis=1)
+        else:
+            ranking = pd.Series(scored)
+        k = max(1, int(round(len(ranking) * top_frac)))
+        picks = ranking.nlargest(k).index
+        targets[d] = {x: 1.0 / len(picks) for x in picks}
+    return targets
+
+
+def covered_members(closes: pd.DataFrame, members: Optional[pd.DataFrame], d: pd.Timestamp,
+                    covered: Optional[set]) -> List[str]:
+    """The day's universe (priced, member), limited to `covered` when given."""
+    live = closes.loc[d].dropna().index
+    if members is not None:
+        m = members.loc[d].reindex(live).fillna(False).astype(bool)
+        live = live[m.values]
+    return [x for x in live if x not in NOT_STOCKS and (covered is None or x in covered)]
 
 
 def trend_targets(closes: pd.DataFrame, start: pd.Timestamp, defensive: Optional[str]) -> Dict:
@@ -273,8 +383,8 @@ def verdict(s: Dict, stress: Optional[Dict], spy: Dict, bar: Dict = EDGE_BAR) ->
 # ── running it ───────────────────────────────────────────────────────────────
 
 def strategies(closes: pd.DataFrame, members: Optional[pd.DataFrame], start: pd.Timestamp,
-               defensive: Optional[str]) -> Dict[str, Callable[[], Dict]]:
-    return {
+               defensive: Optional[str], events: Optional[Dict] = None) -> Dict[str, Callable[[], Dict]]:
+    out = {
         "spy": lambda: {d: {BENCHMARK: 1.0} for d in month_end_dates(closes.index) if d >= start},
         "ew_universe": lambda: equal_weight_targets(closes, members, start),
         "trend_spy": lambda: trend_targets(closes, start, defensive),
@@ -283,16 +393,44 @@ def strategies(closes: pd.DataFrame, members: Optional[pd.DataFrame], start: pd.
         "mom_decile_trend": lambda: momentum_targets(closes, members, start, top_frac=0.10,
                                                      trend=True, defensive=defensive),
     }
+    out.update(drift_strategies(closes, members, start, events))
+    return out
+
+
+def drift_strategies(closes: pd.DataFrame, members: Optional[pd.DataFrame], start: pd.Timestamp,
+                     events: Optional[Dict]) -> Dict[str, Callable[[], Dict]]:
+    """
+    events: {"report_dates": {ticker: [dates]}, "sue": fundamentals_pit.Lookup or None}.
+    Covered = tickers with report dates (and fundamentals, when SUE is available).
+    """
+    if not events or not events.get("report_dates"):
+        return {}
+    positions = report_positions(closes.index, events["report_dates"])
+    covered = set(positions)
+    lookup = events.get("sue")
+    if lookup is not None:
+        covered &= set(getattr(lookup, "table", {}) or {})
+    if not covered:
+        return {}
+    ear = ear_scorer(closes, positions)
+    out = {"ew_covered": lambda: equal_weight_targets(closes, members, start, covered),
+           "drift_ear": lambda: drift_targets(closes, members, start, ear, covered)}
+    if lookup is not None:
+        sue = sue_scorer(lookup, closes.index)
+        out["drift_sue"] = lambda: drift_targets(closes, members, start, sue, covered)
+        out["drift_sue_ear"] = lambda: drift_targets(closes, members, start, combined_scorer(sue, ear), covered)
+    return out
 
 
 def evaluate(closes: pd.DataFrame, members: Optional[pd.DataFrame], start: pd.Timestamp,
              defensive: Optional[str] = None, extra: Optional[Dict[str, pd.Series]] = None,
-             cost_bps: float = COST_BPS, extra_stress: Optional[Dict[str, pd.Series]] = None) -> Dict:
+             cost_bps: float = COST_BPS, extra_stress: Optional[Dict[str, pd.Series]] = None,
+             events: Optional[Dict] = None) -> Dict:
     """Run every strategy at cost_bps and 2x, compute stats and verdicts.
     `extra` adds precomputed equity curves (the champion); `extra_stress` their 2x-cost runs."""
     rets = daily_returns(closes)
     curves, stress_curves = {}, {}
-    for name, make in strategies(closes, members, start, defensive).items():
+    for name, make in strategies(closes, members, start, defensive, events).items():
         t = make()
         curves[name] = simulate(rets, t, start, cost_bps)
         stress_curves[name] = simulate(rets, t, start, cost_bps * 2)
@@ -305,8 +443,12 @@ def evaluate(closes: pd.DataFrame, members: Optional[pd.DataFrame], start: pd.Ti
 
     def run_stats(eq: pd.Series, name: str) -> Dict:
         on = lambda bench: bench.reindex(eq.index).ffill()
-        # A benchmark is not regressed on itself and the other benchmark
-        return stats(eq, on(spy_eq), None if name in BENCHMARKS else on(ew_eq))
+        # A benchmark is not regressed on itself and the other benchmark. Drift strategies
+        # pick from survivors only, so their no-picking benchmark is the same survivors.
+        if name in BENCHMARKS:
+            return stats(eq, on(spy_eq))
+        picking_bench = curves["ew_covered"] if name.startswith("drift_") else ew_eq
+        return stats(eq, on(spy_eq), on(picking_bench))
 
     results = {}
     for name, eq in curves.items():
@@ -336,6 +478,20 @@ def champion_equity(start: str, universe, prices, members, slippage_bps: float =
     return pd.Series(b.equity, dtype=float)
 
 
+def drift_events(earnings: Dict[str, List]) -> Dict:
+    """Report dates plus point-in-time SUE (fundamentals_pit, built from SEC frames since
+    FUNDAMENTALS_FIRST_YEAR). Without the SEC build, only the announcement-return strategy runs."""
+    report_dates = {s: v for s, v in (earnings or {}).items() if v}
+    lookup = None
+    try:
+        import fundamentals_pit
+        table = fundamentals_pit.load_or_build(date.today(), earnings, first_year=FUNDAMENTALS_FIRST_YEAR)
+        lookup = fundamentals_pit.Lookup(table)
+    except Exception as e:
+        logger.warning(f"Fundamentals build failed ({e}); drift_sue and drift_sue_ear are skipped")
+    return {"report_dates": report_dates, "sue": lookup}
+
+
 def add_defensive(prices: Dict[str, pd.DataFrame], fetch_from: str) -> Optional[str]:
     """Add the defensive ETF's closes from Alpaca. None (cash) if that fails."""
     try:
@@ -358,6 +514,9 @@ def report(results: Dict, meta: Dict) -> str:
              f"Defensive asset: {meta['defensive'] or 'cash at 0%'}.", "",
              "Alpha is what is left after BOTH passive alternatives: SPY and the equal-weight universe "
              "(the same stocks, no picking). CAPM alpha is against SPY alone, for reference.", "",
+             "drift_* strategies pick from companies still listed today (SEC data covers no delisted "
+             "companies), so their no-picking benchmark is ew_covered, the same survivors equal weight. "
+             "A little survivorship bias remains in their favour.", "",
              "A real edge needs ALL of: alpha >= 4%/yr, alpha t >= 3.0, alpha positive in >= 70% of years, "
              "alpha >= 2%/yr with t >= 2 at 2x costs, drawdown within 5 pts of SPY, Sharpe >= SPY + 0.2.", "",
              "| strategy | CAGR | Sharpe | max DD | beta (SPY) | CAPM alpha | alpha/yr | alpha t | years + | 2x-cost alpha | edge? |",
@@ -384,6 +543,7 @@ def main(argv=None) -> int:
     p.add_argument("--end", default=None)
     p.add_argument("--cost-bps", type=float, default=COST_BPS)
     p.add_argument("--skip-champion", action="store_true")
+    p.add_argument("--skip-drift", action="store_true", help="skip the earnings-drift strategies (no SEC build)")
     args = p.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
@@ -392,18 +552,23 @@ def main(argv=None) -> int:
     universe, prices, members = bt.load_backtest_data(args.start, args.end, "market")
     fetch_from = (pd.Timestamp(args.start) - pd.Timedelta(days=market_history.LOOKBACK_EXTRA_DAYS)).strftime("%Y-%m-%d")
     champ = champ_stress = None
+    earnings = bt.load_earnings(list(universe)) if not (args.skip_champion and args.skip_drift) else {}
     if not args.skip_champion:
-        earnings = bt.load_earnings(list(universe))
         champ = champion_equity(args.start, universe, prices, members, args.cost_bps, earnings)
         champ_stress = champion_equity(args.start, universe, prices, members, args.cost_bps * 2, earnings)
     defensive = add_defensive(prices, fetch_from)
     closes = prices["Close"]
     start = closes.index[closes.index >= pd.Timestamp(args.start)][0]
+    events = None if args.skip_drift else drift_events(earnings)
     results = evaluate(closes, members, start, defensive, {"champion": champ} if champ is not None else None,
-                       args.cost_bps, {"champion": champ_stress} if champ_stress is not None else None)
+                       args.cost_bps, {"champion": champ_stress} if champ_stress is not None else None, events)
     meta = {"date": date.today().isoformat(), "generated_at": datetime.now().isoformat(),
             "start": str(start.date()), "end": str(closes.index[-1].date()), "cost_bps": args.cost_bps,
-            "defensive": defensive, "edge_bar": EDGE_BAR}
+            "defensive": defensive, "edge_bar": EDGE_BAR,
+            "drift_coverage": None if not events else {
+                "tickers_with_report_dates": len(events.get("report_dates") or {}),
+                "tickers_with_fundamentals": len(getattr(events.get("sue"), "table", {}) or {}),
+                "sue": events.get("sue") is not None}}
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / "results.json").write_text(json.dumps({**meta, "results": results}, indent=2, default=float))
     (OUT_DIR / "report.md").write_text(report(results, meta))

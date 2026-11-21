@@ -191,6 +191,13 @@ REQUESTS_FILE = ROOT / "research" / "requests" / "macro_research.json"
 REPLIES_FILE = ROOT / "research" / "replies" / "macro_research.json"
 
 
+def _cap_note() -> str:
+    from macro_thesis import MAX_LIVE_THESES
+    return (f"\n\nAt most {MAX_LIVE_THESES} theses stay live: a new one displaces the "
+            "lowest-conviction live thesis, so propose one only if it is stronger than the "
+            "weakest of them. Zero new theses is a valid answer.")
+
+
 def _generate_request(context: str, existing: List[str] = None) -> Dict:
     today = date.today().isoformat()
     already = ""
@@ -199,7 +206,7 @@ def _generate_request(context: str, existing: List[str] = None) -> Dict:
                    "in other words:\n"
                    + _as_data("\n".join(f"- {clean_text(t, TEXT_LIMITS['theme'])}" for t in existing)))
     user = (f"Today is {today}. Using current macro/economic/policy conditions and the "
-            f"supplementary signal below, produce 1-4 high-quality theses per the rules.{already}\n\n"
+            f"supplementary signal below, produce 1-4 high-quality theses per the rules.{already}{_cap_note()}\n\n"
             f"Supplementary signal:\n{_as_data(context)}\n\nReturn ONLY the JSON array.")
     return {"system": SYSTEM_PROMPT + UNTRUSTED_RULE, "user": user}
 
@@ -262,7 +269,7 @@ def _generate(context: str, existing: List[str] = None, ask=None) -> List[Dict]:
                    "in other words:\n"
                    + _as_data("\n".join(f"- {clean_text(t, TEXT_LIMITS['theme'])}" for t in existing)))
     user = (f"Today is {today}. Using current macro/economic/policy conditions and the "
-            f"supplementary signal below, produce 1-4 high-quality theses per the rules.{already}\n\n"
+            f"supplementary signal below, produce 1-4 high-quality theses per the rules.{already}{_cap_note()}\n\n"
             f"Supplementary signal:\n{_as_data(context)}\n\nReturn ONLY the JSON array.")
     theses = _parse_theses((ask or _ask)(SYSTEM_PROMPT + UNTRUSTED_RULE, user))
     if not theses:
@@ -316,7 +323,7 @@ def _next_id(reg: Dict) -> int:
 
 def run(ask=None) -> Dict:
     from macro_thesis import (validate_thesis, retire_expired, compute_conviction,
-                              find_duplicate, is_thesis_live)
+                              find_duplicate, is_thesis_live, enforce_cap)
 
     reg = _load_register()
     today = date.today().isoformat()
@@ -392,12 +399,15 @@ def run(ask=None) -> Dict:
         admitted.append(c)
 
     reg["theses"] = reg.get("theses", []) + admitted
+    # 5. Cap the live register: the weakest beyond MAX_LIVE_THESES are displaced
+    displaced = enforce_cap(reg["theses"])
     reg["generated_at"] = datetime.now().isoformat()
     _save_register(reg)
 
     live = [t for t in reg["theses"] if is_thesis_live(t)]
     detail = {
         "admitted": len(admitted), "rejected": rejected,
+        "displaced": [{"id": t["id"], "conviction": t.get("conviction")} for t in displaced],
         "revalidation": revalidation,
         "active_total": len(live),
         "active": [{"id": t["id"], "theme": t["theme"], "conviction": t["conviction"],

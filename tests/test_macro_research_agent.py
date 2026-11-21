@@ -253,3 +253,37 @@ def test_candidate_with_a_far_off_horizon_is_rejected(tmp_path, monkeypatch):
     assert mra.main() == 0
     assert [t["theme"] for t in read()] == ["Six month bet"]
     assert "horizon" in _json.loads((tmp_path / "macro_brief.json").read_text())["rejected"][0]["reason"]
+
+
+def test_run_caps_the_live_register_and_reports_displaced(tmp_path, monkeypatch):
+    import json as _json
+    from datetime import date
+    import macro_research_agent as mra
+    from macro_thesis import MAX_LIVE_THESES
+    today = date.today().isoformat()
+    sectors = ["energy", "financials", "utilities", "healthcare", "technology", "real_estate"]
+    existing = [_thesis(id=f"TH-2026-{i:04d}", theme=f"Theme {s}", beneficiary_sectors=[s],
+                        consensus_names_excluded=[f"X{i}"], conviction=0.5 + i / 100)
+                for i, s in enumerate(sectors[:MAX_LIVE_THESES], start=1)]
+    verdicts = {t["id"]: {"invalidated": False, "evidence": "holds"} for t in existing}
+    new = _thesis(theme="Brand new idea about rail freight", beneficiary_sectors=["industrials"],
+                  consensus_names_excluded=["UNP"],
+                  conviction_breakdown={"source_corroboration": 0.9, "causal_directness": 0.9,
+                                        "non_consensus": 0.9, "invalidation_clarity": 0.9})
+    new.pop("id")
+    read = _setup(mra, tmp_path, monkeypatch, existing, verdicts=verdicts, candidates=[new])
+    assert mra.main() == 0
+    theses = read()
+    assert sum(t["status"] == "active" for t in theses) == MAX_LIVE_THESES
+    weakest = next(t for t in theses if t["id"] == "TH-2026-0001")
+    assert weakest["status"] == "retired" and weakest["retired_reason"] == "displaced"
+    assert weakest["retired_at"] == today
+    brief = _json.loads((tmp_path / "macro_brief.json").read_text())
+    assert [d["id"] for d in brief["displaced"]] == ["TH-2026-0001"]
+
+
+def test_generation_prompt_states_the_cap(monkeypatch):
+    import macro_research_agent as mra
+    from macro_thesis import MAX_LIVE_THESES
+    req = mra._generate_request("", ["Some theme"])
+    assert f"At most {MAX_LIVE_THESES} theses stay live" in req["user"]

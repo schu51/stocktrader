@@ -1,0 +1,17 @@
+{
+  "round": 7,
+  "question": "Round 7, crash management for the momentum book (README: 'Round 7 sources'). Momentum is crowded and crash-prone: July 2026 was its worst month on record in several regions. Scaling momentum exposure by the momentum factor's OWN recent volatility roughly doubled its Sharpe ratio and removed most crashes in the papers (Barroso & Santa-Clara 2015; Daniel & Moskowitz 2016). Round 6 scales by SPY's volatility, a proxy; this round scales buys by the volatility of a daily winners-minus-losers portfolio built from the replay's own universe, relative to its one-year median. Tests the level, the factor (WML vs winners alone), a faster estimate, an exposure cap, using it IN PLACE of the SPY filter, the market-volatility version head to head, and on top of cap98_tight.",
+  "variants": [
+    {"name": "m_rel10", "why": "scale buys down whenever momentum volatility is above its one-year median", "change": {"mom_vol_target": 1.0}},
+    {"name": "m_rel125", "why": "scale down only when momentum volatility is 25%+ above its median", "change": {"mom_vol_target": 1.25}},
+    {"name": "m_rel15", "why": "scale down only when it is 50%+ above its median (extreme turbulence only)", "change": {"mom_vol_target": 1.5}},
+    {"name": "m_abs20", "why": "the papers' form: a fixed annualised target (20%) instead of a relative one", "change": {"mom_vol_target": 0.2, "mom_vol_relative": false}},
+    {"name": "m_win125", "why": "volatility of the winners leg alone, closer to what a long-only book holds", "change": {"mom_vol_target": 1.25, "mom_vol_kind": "winners"}},
+    {"name": "m_fast125", "why": "a two-month estimate instead of six, to react before a crash is half over", "change": {"mom_vol_target": 1.25, "mom_vol_window": 42}},
+    {"name": "m_cap125", "why": "also no new buys while the invested share is above the scale (closer to scaling the whole book)", "change": {"mom_vol_target": 1.25, "mom_vol_cap": true}},
+    {"name": "m_nospy125", "why": "momentum-volatility scaling INSTEAD of the SPY 2% filter: does continuous scaling replace the on/off switch?", "change": {"mom_vol_target": 1.25, "min_spy_above_50ma": 0.0}},
+    {"name": "r_vol15", "why": "round 6's market-volatility scaling, repeated head to head", "change": {"vol_target": 0.15}},
+    {"name": "ct_base", "why": "cap98_tight, the tournament challenger, repeated in this run", "change": {"max_rs_rank": 98, "tight_boost": 0.5}},
+    {"name": "ct_m125", "why": "cap98_tight + momentum-volatility scaling", "change": {"max_rs_rank": 98, "tight_boost": 0.5, "mom_vol_target": 1.25}}
+  ]
+}

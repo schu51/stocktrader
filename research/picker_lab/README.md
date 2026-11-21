@@ -86,6 +86,25 @@ EPS and revenue growth, revenue acceleration, days since the report.
 - CAN SLIM, point-in-time 1999-2023: 23.5%/yr vs 6.9% for the S&P 500,
   before costs.
 
+## Round 7 sources (crowding and momentum crashes, 2026-11-21)
+
+- Momentum crashes are partly forecastable: they strike in high-volatility
+  rebounds after declines, and scaling exposure to forecast volatility
+  roughly doubles momentum's alpha and Sharpe ratio (Daniel & Moskowitz,
+  JFE 2016; Barroso & Santa-Clara, JFE 2015). Both scale by the momentum
+  factor's own volatility, not the market's.
+- July 2026 was momentum's worst month on record in Europe, emerging markets
+  and Asia ex-Japan, its second-worst quarter globally; JPMorgan's advice is
+  to trim momentum overweights without abandoning the factor (JPMorgan AM
+  factor views, Nov 2026).
+- Crowding keeps unwinding systematic books: summer 2025 (quants -4.2% while
+  the market rose ~8%, MSCI), October 2025, January 2026, July 2026 (quants
+  gave back a quarter of the year's gains). The losses concentrate in
+  momentum and crowded longs (Hedgeweek, MSCI).
+- After forced de-risking, crowded factors tend to bounce within days to
+  weeks (momentum +2% the Monday after the July 2026 unwind), which argues
+  for scaling back in as volatility falls rather than an on/off switch.
+
 ## Log
 
 - 2026-11-17 — Round 1 written: filter alternatives (none, SPY 3%, momentum
@@ -157,3 +176,13 @@ EPS and revenue growth, revenue acceleration, days since the report.
   Sensitivity holds: tight 0.3 gives PF 1.91 / CAGR +24.8%, cap 97 gives 1.84.
   Next: remove the data bias at the source (map delisted companies' SEC data
   to their old tickers) before any earnings rule goes near the tournament.
+- 2026-11-21 — Round 7 written (crash management). New backtest settings
+  `mom_vol_*` scale buys by the volatility of a daily winners-minus-losers
+  portfolio built from the replay's own point-in-time universe (top vs bottom
+  10% on 126-session returns, daily returns clipped to -50%/+100%), held to a
+  multiple of its own one-year median (or a fixed annualised level), never
+  below a quarter of normal size. Off by default; the live rules are
+  unchanged. Judge it mainly on max drawdown, the July 2026 fold and PF
+  without the 5 best trades: the papers' gain is fewer crashes, so a lower
+  CAGR in calm folds is the expected price. Note on m_rel10: by construction
+  it scales down on about half of all days.

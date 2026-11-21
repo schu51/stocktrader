@@ -73,6 +73,8 @@ ALLOWED_KNOBS = {           # backtest.Backtest arguments a challenger may chang
     "max_rs_rank", "sector_boost", "min_thesis", "min_mom_spread", "rs_mode",
     # round 6 (2026-11-17): price and earnings-date signals the tournament can replay
     "min_high_ratio", "w_high", "min_smooth", "min_ear", "ear_window", "vol_target",
+    # round 7 (2026-11-21): buys scaled by the momentum factor's own volatility
+    "mom_vol_target", "mom_vol_relative", "mom_vol_kind", "mom_vol_window", "mom_vol_cap",
     # (w_fund, min_sue, min_rev_growth, pead_days need fundamentals data the tournament does not load yet)
 }
 # Promotion gates, challenger vs champion on the same three-year replay

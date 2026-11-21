@@ -119,3 +119,20 @@ def test_backtest_refuses_fundamental_settings_without_data():
     prices = {"Close": c, "Open": c, "High": c, "Low": c, "Volume": v}
     with pytest.raises(ValueError):
         bt.Backtest({s: "x" for s in c.columns}, prices, "2024-02-01", w_fund=0.5)
+
+
+def test_periods_can_start_earlier_for_a_longer_history():
+    from datetime import date
+    assert fp.periods(date(2026, 11, 21))[0] == f"CY{fp.FIRST_YEAR}Q1"
+    assert fp.periods(date(2026, 11, 21), first_year=2014)[0] == "CY2014Q1"
+
+
+def test_longer_history_gets_its_own_cache(tmp_path, monkeypatch):
+    from datetime import date
+    monkeypatch.setattr(fp, "CACHE", tmp_path / "fundamentals_pit.json")
+    seen = {}
+    monkeypatch.setattr(fp, "build", lambda today, earnings, first_year=fp.FIRST_YEAR: seen.update(fy=first_year) or {"A": []})
+    assert fp.load_or_build(date(2026, 11, 21), {}, first_year=2014) == {"A": []}
+    assert seen["fy"] == 2014
+    assert (tmp_path / "fundamentals_pit_2014.json").exists()
+    assert not (tmp_path / "fundamentals_pit.json").exists()

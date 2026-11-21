@@ -63,6 +63,7 @@ JOBS: List[Tuple] = [
     ("ops_monitor", r"^Ops monitor", (D + "ops_status.json", D + "trade_attribution.json")),
     ("weekly_review", r"^Weekly review data", (D + "weekly_review_*",)),
     ("picker_lab", r"^Picker lab", ("research/picker_lab/results/*",)),
+    ("edge_lab", r"^Edge lab", ("research/edge_lab/*",)),
 ]
 
 

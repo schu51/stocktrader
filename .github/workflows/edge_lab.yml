@@ -1,0 +1,96 @@
+name: Edge Lab
+# On demand: hold simple strategies (SPY, equal-weight universe, SPY 200-day
+# trend switch, 12-1 momentum, post-earnings drift) and the live rules to a strict edge bar over
+# survivorship-free history (edge_lab.py). Places no orders and changes no
+# rules; writes research/edge_lab/.
+
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "First session (YYYY-MM-DD); Alpaca history starts in 2016"
+        required: true
+        default: "2017-01-01"
+      skip_champion:
+        description: "Skip replaying the live rules (much faster)"
+        type: boolean
+        default: false
+      skip_drift:
+        description: "Skip the earnings-drift strategies (no SEC fundamentals build)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: edge-lab
+  cancel-in-progress: false
+
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - uses: actions/cache@v4
+        with:
+          path: trading_data/backtest_cache/earnings_dates.json
+          key: earnings-dates-${{ github.run_id }}
+          restore-keys: earnings-dates-
+
+      # Point-in-time fundamentals since 2014 for the drift strategies (fundamentals_pit.py)
+      - uses: actions/cache@v4
+        with:
+          path: trading_data/backtest_cache/fundamentals_pit_2014.json
+          key: fundamentals-pit-2014-${{ github.run_id }}
+          restore-keys: fundamentals-pit-2014-
+
+      - name: Run lab
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_PAPER: ${{ secrets.ALPACA_PAPER }}
+          SEC_EDGAR_USER_AGENT: ${{ vars.SEC_EDGAR_USER_AGENT || 'stocktrader edge lab (contact@example.com)' }}
+          START: ${{ inputs.start }}
+          SKIP_CHAMPION: ${{ inputs.skip_champion }}
+          SKIP_DRIFT: ${{ inputs.skip_drift }}
+        run: |
+          flags=()
+          [ "$SKIP_CHAMPION" = "true" ] && flags+=(--skip-champion)
+          [ "$SKIP_DRIFT" = "true" ] && flags+=(--skip-drift)
+          python edge_lab.py --start "$START" "${flags[@]}"
+          cat research/edge_lab/report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit results
+        run: |
+          git config user.email "aschumacherdesign@gmail.com"
+          git config user.name "schu51"
+          git add research/edge_lab/
+          git diff --staged --quiet && { echo "Nothing to commit"; exit 0; }
+          git commit -m "Edge lab results [skip ci]"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase -X theirs origin main && git push; then pushed=1; break; fi
+            echo "push attempt $attempt failed, retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep $((RANDOM % 4 + 2))
+          done
+          [ "$pushed" = "1" ] || { echo "::error::push failed after 5 attempts"; exit 1; }
+
+      - name: Open issue on failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create --title "Edge lab failed" --body "Run: $RUN_URL" || true

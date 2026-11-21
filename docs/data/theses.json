@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T14:27:57.662677",
+  "generated_at": "2026-11-21T14:32:04.956356",
   "theses": [
     {
       "theme": "Oil-driven inflation forces the Fed to hike: sustained high crude favors oilfield services and midstream over the integrated majors",
@@ -30,7 +30,7 @@
       "conviction": 0.512,
       "status": "active",
       "created_at": "2026-10-03",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
     },
     {
       "theme": "Higher-for-longer policy rates: asset-sensitive regional and mid-cap banks and non-bank lenders over the money-center banks",
@@ -59,7 +59,7 @@
       "conviction": 0.475,
       "status": "active",
       "created_at": "2026-10-03",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
     },
     {
       "theme": "AI/capex-driven demand keeps inflation sticky, so grid equipment makers and merchant power generators benefit more than the AI chip and hyperscaler leaders",
@@ -94,7 +94,7 @@
       "conviction": 0.562,
       "status": "active",
       "created_at": "2026-10-10",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
     },
     {
       "theme": "Robust capex plus sticky 3.4% inflation supports the electrification metals supply chain (copper and electrical inputs) as an underpriced input to the investment cycle",
@@ -128,7 +128,7 @@
       "conviction": 0.5,
       "status": "active",
       "created_at": "2026-10-10",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
     },
     {
       "theme": "US gas-oil price dislocation: LNG export growth and unhedged gas producers over the integrated majors",
@@ -163,7 +163,7 @@
       "conviction": 0.6,
       "status": "active",
       "created_at": "2026-10-17",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
     },
     {
       "theme": "Munitions and missile-defense replenishment: the defense supply chain over the prime contractors",
@@ -199,7 +199,7 @@
       "conviction": 0.525,
       "status": "active",
       "created_at": "2026-10-17",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
     },
     {
       "theme": "Real-wage squeeze and stagnating payrolls drive trade-down: discount, dollar-channel and off-price retail over the big-box leaders",
@@ -235,7 +235,7 @@
       "conviction": 0.5,
       "status": "active",
       "created_at": "2026-10-17",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
     },
     {
       "theme": "Producer-price pass-through: PPI running well ahead of CPI favors pricing-power industrial distributors over the industrial conglomerate leaders",
@@ -266,7 +266,7 @@
       "conviction": 0.575,
       "status": "active",
       "created_at": "2026-10-24",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
     },
     {
       "theme": "Gulf petrochemical outage plus an oil-gas price gap: US ethane-advantaged polyolefin producers capture an export arbitrage that outlasts the conflict",
@@ -299,7 +299,70 @@
       "conviction": 0.6,
       "status": "active",
       "created_at": "2026-11-14",
-      "last_validated": "2026-11-14"
+      "last_validated": "2026-11-21"
+    },
+    {
+      "theme": "Diesel shock reprices freight: fuel-efficient railroads and intermodal take share from truckload carriers",
+      "causal_chain": "Gulf supply disruption lifted US diesel to ~$6.13/gal, up ~$2.29 y/y -> truck freight PPI jumped 3.9% in October alone as fuel costs pass through -> rail moves a ton-mile on roughly a third to a quarter of the fuel of a truck, so the truck-vs-rail cost gap widens -> shippers convert long-haul lanes to intermodal and rail carload, lifting rail volumes and pricing power while truckload carriers absorb fuel lag and lost volume",
+      "beneficiary_sectors": [
+        "industrials"
+      ],
+      "second_order": "The obvious diesel trade is refiners with record cracks; the less crowded second-order effect is modal shift in freight toward railroads and intermodal marketing companies, whose fuel surcharges recover cost while their relative cost advantage grows.",
+      "consensus_names_excluded": [
+        "VLO",
+        "MPC",
+        "PSX"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.6,
+        "causal_directness": 0.5,
+        "non_consensus": 0.6,
+        "invalidation_clarity": 0.8
+      },
+      "invalidation_condition": "EIA weekly US on-highway diesel average falls below $4.50/gal for 4 consecutive weekly readings, or AAR-reported US weekly intermodal volume is below the year-earlier week for 8 consecutive weeks, before the horizon date.",
+      "horizon": "2027-11-30",
+      "sources": [
+        "https://www.ajot.com/news/us-producer-prices-rise-0.3-in-october-as-freight-trucking-costs-climb",
+        "https://www.fleetowner.com/emissions-efficiency/news/55417900/us-diesel-prices-fall-nationwide-as-trucking-fuel-costs-remain-37-higher-year-over-year",
+        "https://www.eia.gov/petroleum/gasdiesel/",
+        "https://boereport.com/2026/10/22/valero-kicks-off-refiner-results-with-record-quarterly-profit-on-higher-margins/amp/"
+      ],
+      "id": "TH-2026-0010",
+      "conviction": 0.625,
+      "status": "active",
+      "created_at": "2026-11-21",
+      "last_validated": "2026-11-21"
+    },
+    {
+      "theme": "Mortgage-rate lock-in freezes home turnover: single-family rental and apartment landlords gain pricing power as would-be buyers keep renting",
+      "causal_chain": "Fed hiking bias and a ~5% 10-year keep 30-year mortgage rates above 7% (7.18% on Nov 5) -> existing-home sales fell to 3.75M SAAR in October, the slowest since 2010, as owners stay locked in and buyers are priced out -> households that would have bought stay in rentals longer -> lower tenant turnover and firmer occupancy and rent growth for single-family rental and apartment REITs",
+      "beneficiary_sectors": [
+        "real_estate"
+      ],
+      "second_order": "Rather than betting on home sales or builders, own the landlords that capture demand displaced from ownership by unaffordable mortgages.",
+      "consensus_names_excluded": [
+        "DHI",
+        "LEN",
+        "PHM"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.6,
+        "causal_directness": 0.5,
+        "non_consensus": 0.5,
+        "invalidation_clarity": 0.8
+      },
+      "invalidation_condition": "Freddie Mac's weekly 30-year fixed mortgage rate falls below 6.25% for 4 consecutive weekly readings, or NAR-reported existing-home sales exceed a 4.5 million SAAR in any monthly report, before the horizon date.",
+      "horizon": "2027-11-30",
+      "sources": [
+        "https://www.realestatenews.com/2026/11/12/existing-home-sales-havent-been-this-slow-since-2010",
+        "https://stockanalysis.com/news/existing-home-sales-16-year-low-october-2026/",
+        "https://www.stocktitan.net/articles/october-2026-cpi-inflation-report"
+      ],
+      "id": "TH-2026-0011",
+      "conviction": 0.6,
+      "status": "active",
+      "created_at": "2026-11-21",
+      "last_validated": "2026-11-21"
     }
   ]
 }

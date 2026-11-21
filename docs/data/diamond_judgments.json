@@ -20,41 +20,40 @@
     }
   },
   "KLIC": {
-    "basis": "0000056978-25-000081|0000056978-26-000032|3",
-    "judged_at": "2026-11-14",
+    "basis": "0000056978-26-000040|0000056978-26-000032|4",
+    "judged_at": "2026-11-21",
     "judgment": {
-      "edge": 3.0,
-      "demand": 6.0,
+      "edge": 5.0,
+      "demand": 5.0,
       "confidence": "medium",
-      "thesis": "A semiconductor assembly-equipment leader riding a sharp cyclical upturn: Q3 revenue $330M vs $148M and deferred revenue +214%. Equipment orders are cyclical and the prior year's loss came from impairments and an exited business, so this looks more like a cycle than a structural inflection.",
-      "breaks_if": "Orders and deferred revenue roll over as customers digest capacity.",
-      "customers": "IDMs, OSATs and foundries; concentration not disclosed",
+      "thesis": "K&S is a long-standing leader in semiconductor assembly equipment, and quarterly revenue more than doubled to $330M with an 18% operating margin, while accrued liabilities, payables and deferred revenue jumped, consistent with orders building. But this is a cyclical capital-equipment recovery from a weak 2025, not evidence of a new moat.",
+      "breaks_if": "Quarterly revenue rolls back below $250M or deferred revenue/customer deposits fall as the semiconductor capex cycle turns.",
+      "customers": "IDMs, OSATs, foundries and automotive electronics suppliers; concentration not disclosed in evidence.",
       "red_flags": [
-        "Cyclical capital-equipment recovery",
-        "Prior-year results distorted by EA business exit and impairment",
-        "Manufacturing in Israel and China (geopolitical risk)",
-        "Customer concentration not disclosed",
-        "No backlog reported"
+        "Cyclical equipment business; prior year depressed by EA wind-down and impairments",
+        "New CEO since Sept 2026 after long interim period",
+        "No backlog figure or named customer orders",
+        "Middle East operations exposure (Haifa)"
       ],
       "instructions_found": false
     }
   },
   "ETON": {
-    "basis": "0001437749-26-009059|0001710340-26-000009|11",
-    "judged_at": "2026-11-14",
+    "basis": "0001437749-26-009059|0001710340-26-000009|10",
+    "judged_at": "2026-11-21",
     "judgment": {
-      "edge": 5.0,
-      "demand": 5.0,
+      "edge": 6.0,
+      "demand": 6.0,
       "confidence": "medium",
-      "thesis": "A roll-up of acquired rare-disease products, several of them generics, now profitable with Q3 product sales of $57.9M vs $22.5M. Growth is bought through licenses (INCRELEX, GALZIN, IMPAVIDO, LIBERVANT, ASN-001) rather than proven organic demand.",
-      "breaks_if": "Organic sales of existing products stall, or generic competition hits carglumic acid, betaine or nitisinone.",
-      "customers": "Patients via specialty pharmacies; payer/pharmacy concentration not disclosed",
+      "thesis": "Eton sells FDA-approved rare-disease drugs (Alkindi patents to 2032-34, Khindivi the only approved oral hydrocortisone solution, Increlex biologic) into tiny patient pools where few rivals bother; Q3 revenue rose to $57.9M from $22.5M with operating income of $23.0M. More products keep arriving (Libervant license Oct 2026, ASN-001 license, ET-600 filed), but much of the growth is bought rather than organic.",
+      "breaks_if": "Quarterly product sales fall back toward the $30-40M range once acquired launches annualize, or generic competition hits Alkindi/Galzin/Increlex.",
+      "customers": "Patients via specialty pharmacies; payers include Medicaid (accrued Medicaid rebates $9.7M); no single customer disclosed.",
       "red_flags": [
-        "Growth largely acquisition-driven",
-        "Q3 net income boosted by $12.9M tax valuation-allowance release",
-        "Three products are generics with little protection",
-        "Accrued Medicaid rebates and specialty-pharmacy dependence",
-        "Share count +7%"
+        "Q3 net income boosted by $12.9M deferred tax valuation-allowance release",
+        "Growth largely from acquired/licensed products, not organic demand",
+        "Three of eight original products are generics",
+        "Share count +7%",
+        "No backlog or contract metrics; split of revenue by product not in evidence"
       ],
       "instructions_found": false
     }
@@ -259,20 +258,21 @@
     }
   },
   "VCEL": {
-    "basis": "0001628280-26-012013|0001628280-26-070657|3",
-    "judged_at": "2026-11-14",
+    "basis": "0001628280-26-012013|0001628280-26-070657|2",
+    "judged_at": "2026-11-21",
     "judgment": {
       "edge": 7.0,
-      "demand": 6.0,
+      "demand": 5.0,
       "confidence": "medium",
-      "thesis": "MACI is an FDA-approved autologous cartilage implant with few real alternatives, backed by the Epicel burn franchise. Revenue +26% and Q3 operating income of $12.2M show durable growth.",
-      "breaks_if": "MACI growth slows or a competing cartilage repair product wins approval.",
-      "customers": "Orthopedic surgeons and burn centers; concentration not disclosed",
+      "thesis": "MACI is an FDA-approved (BLA) autologous cartilage-repair cell therapy with an arthroscopic label expansion and an exclusive membrane supply deal to 2030, a hard-to-replicate manufacturing and regulatory moat. Revenue grows a steady 25% (Q3 $85.4M vs $67.5M), but this is continuation of a profitable business rather than a new inflection, and the evidence shows no named contracts or backlog.",
+      "breaks_if": "MACI growth slows below 15% year on year or operating margin slips back toward zero as the Burlington facility comes online.",
+      "customers": "Orthopedic surgeons and burn centers / hospitals in the U.S.; concentration not disclosed.",
       "red_flags": [
-        "Nine-month operating margin only 2%",
-        "Single-source membrane supplier (Matricel)",
-        "NexoBrid depends on MediWound",
-        "Federal award match by name is uncertain"
+        "Operating margin already +3% a year ago, so not a true loss-to-profit turn",
+        "Nine-month operating income only $4.6M; SG&A heavy",
+        "Heavy stock comp ($28M in nine months)",
+        "Federal award figure is a name match and may be unrelated",
+        "Single key supplier (Matricel) and NexoBrid made by MediWound in Israel"
       ],
       "instructions_found": false
     }
@@ -358,20 +358,20 @@
   },
   "TTAN": {
     "basis": "0001638826-26-000028|0001638826-26-000094|3",
-    "judged_at": "2026-10-17",
+    "judged_at": "2026-11-21",
     "judgment": {
       "edge": 6.0,
       "demand": 4.0,
       "confidence": "low",
-      "thesis": "ServiceTitan is a trades-specific system of record with a 71% gross margin, 21-23% steady growth and operating margin improving from -26% to -13%, so switching costs are plausible. However, the supplied evidence has no named customers, retention or net revenue retention figures, backlog, or signed contracts, and deferred revenue grew only 1%, so this looks like steady SaaS improvement rather than a visible inflection.",
-      "breaks_if": "Revenue growth falls below about 18%, or operating margin stops improving while stock-based compensation and share dilution (+5%) continue, or disclosed customer retention and net revenue retention fall.",
-      "customers": "Small and mid-sized trades businesses (HVAC, plumbing, roofing, landscaping) plus some PE-owned consolidators; concentration not disclosed in the supplied text.",
+      "thesis": "ServiceTitan is the system of record for trades businesses across CRM, dispatch, payroll and payments, which creates real switching costs. But growth is steady at 21% with deferred revenue flat (+1%), it still runs a -13% operating margin, and the evidence offers no backlog or named-customer wins.",
+      "breaks_if": "Revenue growth drops below 15% while operating losses persist.",
+      "customers": "Residential and commercial trades contractors (HVAC, plumbing, roofing etc.); concentration not disclosed.",
       "red_flags": [
-        "Deferred revenue up only 1% against 21-23% revenue growth, so there is no sign of building prepaid demand",
-        "Backlog not reported and no named customers or contracts in the evidence",
-        "Still loss-making at -13% operating margin with R&D at 33% of revenue",
-        "Share count up 5% in a year, so dilution is eroding shareholder value",
-        "Edge claims (largest data asset, only end-to-end platform) are management's own assertions with no retention data"
+        "Still loss-making (-13% operating margin)",
+        "Deferred revenue barely growing",
+        "Share count +5% dilution",
+        "Negative news tone",
+        "Evidence pack contains little business detail beyond boilerplate"
       ],
       "instructions_found": false
     }
@@ -458,20 +458,20 @@
   },
   "AMBA": {
     "basis": "0001193125-26-119321|0001193125-26-383365|3",
-    "judged_at": "2026-10-17",
+    "judged_at": "2026-11-21",
     "judgment": {
       "edge": 5.0,
       "demand": 5.0,
       "confidence": "low",
-      "thesis": "Ambarella has proprietary CVflow AI silicon and is moving into automotive and robotics, with backlog up 133% and revenue up 20% while operating losses narrow. But it is still loss-making (-15% operating margin) with R&D at 55% of revenue, no named customers or contracts in the evidence, and design-win cycles that favour larger rivals such as Nvidia, Qualcomm, Mobileye and Hisilicon, so this looks like an ordinary fabless chip company rather than a clear diamond.",
-      "breaks_if": "Revenue growth falls below about 10% or gross margin drops below 55% while operating margin stays negative, which would show the backlog is not turning into profitable automotive or edge-AI volume.",
-      "customers": "not disclosed; end markets are security cameras, automotive, robotics, drones and consumer cameras. Sales run through distributors such as WT Microelectronics, and the concentration level is not given.",
+      "thesis": "Ambarella's CVflow edge-AI SoCs for security cameras, automotive and robotics are differentiated, and backlog reportedly rose 133%. But it still loses money (-15% operating margin, R&D 55% of revenue), growth slowed to 13%, and sales run heavily through a distributor.",
+      "breaks_if": "Backlog growth fails to convert into revenue growth above 20% or operating losses do not narrow over the next two quarters.",
+      "customers": "Camera, automotive and robotics OEMs/ODMs, largely via distributor WT Microelectronics; concentration likely high but not quantified here.",
       "red_flags": [
-        "Still unprofitable at -15% operating margin; R&D is 55% of revenue",
-        "Backlog +133% but deferred/prepaid revenue only +7%, and the backlog's composition and timing are unknown",
-        "No named customers, design wins or signed agreements in the supplied text",
-        "Growth slowed from +20% to +13% in the latest quarter",
-        "Sales through a distributor; share count up 3%; strong competition in edge AI and automotive silicon"
+        "Still loss-making",
+        "Growth decelerating (20% to 13%)",
+        "Distributor concentration (WT Microelectronics)",
+        "Strong competition from larger SoC vendors",
+        "MD&A excerpt has no financial detail"
       ],
       "instructions_found": false
     }
@@ -557,21 +557,21 @@
     }
   },
   "MXL": {
-    "basis": "0001288469-26-000011|0001288469-26-000061|4",
-    "judged_at": "2026-10-24",
+    "basis": "0001288469-26-000011|0001288469-26-000061|3",
+    "judged_at": "2026-11-21",
     "judgment": {
       "edge": 4.0,
       "demand": 5.0,
       "confidence": "low",
-      "thesis": "Revenue is up 72% in the latest quarter and the company just turned operating-profitable (Q3 operating income of $30M versus a $41M loss a year ago), with data center optical DSP exposure and a jump in prepaid assets. But this looks like a cyclical rebound from a trough in a competitive fabless chip business, and the evidence for durable switching costs or named wins is missing.",
-      "breaks_if": "Gross margin stalls near 58% and the quarterly revenue run-rate of about $218M fades, with inventory and receivables still growing faster than sales, which would indicate a restocking bounce rather than durable demand.",
-      "customers": "Distributors, module makers, OEMs and ODMs; data center end customers (Meta, Amazon, Microsoft, Google) are named only as end markets, and customer concentration is not quantified in the supplied text.",
+      "thesis": "MaxLinear's quarterly revenue rose 72% to $218M and it reached a Q3 operating profit, with prepaid/deferred amounts up sharply, hinting at data-center optical DSP traction. But this is a rebound from a collapse, it is still loss-making over nine months, and it competes against much larger chip vendors.",
+      "breaks_if": "Revenue falls back below $180M a quarter or the Silicon Motion arbitration produces a large damages award.",
+      "customers": "Distributors, module makers, OEMs and ODMs; hyperscalers indirectly; concentration not disclosed.",
       "red_flags": [
-        "Recovery from a deep trough (revenue previously declined, 9-month operating loss a year ago of $112M), so this is not a clean inflection",
-        "No backlog, named design wins or contract figures supplied; the business section lists end markets and customers only generically",
-        "Inventory up 46% and receivables up 59% since December, which could signal channel stuffing or a restocking cycle; prepaid and other current assets also rose 14",
-        "Nine-month net loss of $14M after a $17M tax charge; debt rose to $164M with another credit amendment; share count up 4%",
-        "Terminated Silicon Motion merger, with arbitration and class action and potential damages; auditor change in June 2026"
+        "Recovery from prior revenue collapse, not a new inflection",
+        "Silicon Motion arbitration and class action",
+        "Nine-month net loss of $14.5M",
+        "Inventory up 46% since December",
+        "Debt increased via credit amendment"
       ],
       "instructions_found": false
     }
@@ -617,21 +617,21 @@
     }
   },
   "NMAX": {
-    "basis": "0002026478-26-000026|0002026478-26-000072|3",
-    "judged_at": "2026-11-14",
+    "basis": "0002026478-26-000026|0002026478-26-000072|2",
+    "judged_at": "2026-11-21",
     "judgment": {
-      "edge": 3.0,
-      "demand": 3.0,
-      "confidence": "medium",
-      "thesis": "A cable/streaming news broadcaster whose Q3 profit rests on a one-off $14M termination fee; excluding it, operating income was near zero. Carriage and brand give some position, but nothing points to structural demand growth.",
-      "breaks_if": "Service revenue growth slows without one-off fees, or settlement payments strain cash.",
-      "customers": "Advertisers, MVPD carriage partners and subscribers; concentration not disclosed",
+      "edge": 2.0,
+      "demand": 2.0,
+      "confidence": "high",
+      "thesis": "Newsmax's Q3 profit came from a one-off $14M service-revenue termination fee; excluding it, revenue grew 22% and operating income was roughly breakeven. Cable news distribution and advertising carry little pricing power.",
+      "breaks_if": "Thesis already weak; operating income without one-off fees stays near zero.",
+      "customers": "MVPDs (cable/satellite), advertisers and subscribers; concentration not disclosed.",
       "red_flags": [
-        "Q3 included a $14M one-off termination fee",
-        "$45M settlement liabilities outstanding",
-        "Deferred revenue down",
+        "$14M one-off termination fee drives Q3 profit",
+        "Large settlement liabilities ($45M)",
+        "Deferred revenue declining",
         "Dual-class control by CEO",
-        "Large prior-year corporate-matter charges"
+        "Prior-year loss driven by $79M legal matters"
       ],
       "instructions_found": false
     }
@@ -657,40 +657,40 @@
     }
   },
   "DK": {
-    "basis": "0001628280-26-012664|0001628280-26-071515|6",
-    "judged_at": "2026-11-14",
+    "basis": "0001628280-26-012664|0001628280-26-071515|7",
+    "judged_at": "2026-11-21",
     "judgment": {
       "edge": 1.0,
-      "demand": 1.0,
+      "demand": 2.0,
       "confidence": "high",
-      "thesis": "A refiner whose Q3 profit swing came from crack spreads, not anything durable. Margins follow commodity prices.",
-      "breaks_if": "Crack spreads normalize.",
-      "customers": "Wholesale fuel buyers and jobbers; concentration not disclosed",
+      "thesis": "Delek's swing to a $1.5B quarterly operating profit reflects refining crack spreads on a commodity product. Margins follow fuel prices, with no customer lock-in.",
+      "breaks_if": "Gulf Coast crack spreads normalize and quarterly operating income falls back toward prior-year levels.",
+      "customers": "Wholesale fuel buyers and jobbers; no concentration disclosed.",
       "red_flags": [
-        "Profit driven by refining margins",
-        "$3.4B long-term debt",
-        "New $460M convertible notes",
-        "Commodity business with no pricing power"
+        "Commodity refiner; margins track crack spreads",
+        "One exceptional quarter drives the numbers",
+        "$3.4B long-term debt plus new $460M convertible",
+        "Regulatory and RIN cost exposure"
       ],
       "instructions_found": false
     }
   },
   "BILL": {
-    "basis": "0001628280-26-058238|0001628280-26-071196|4",
-    "judged_at": "2026-11-14",
+    "basis": "0001628280-26-058238|0001628280-26-071196|5",
+    "judged_at": "2026-11-21",
     "judgment": {
       "edge": 5.0,
-      "demand": 2.0,
+      "demand": 3.0,
       "confidence": "medium",
-      "thesis": "BILL has SMB payment network effects, but growth slowed to 13% and backlog fell 24%. Interest on customer funds makes up 11% of revenue.",
-      "breaks_if": "Growth falls below 10% or interest income drops with rates.",
-      "customers": "479,000 SMBs and accounting firms; no concentration",
+      "thesis": "BILL has a sizable SMB payments network (479K businesses, 9.2M network members) but growth is 13% with backlog down 24% and deferred revenue flat. On Nov 19, 2026 it signed a merger agreement to be acquired, which caps any independent upside.",
+      "breaks_if": "Thesis already weak; the pending take-private sets the outcome regardless of operations.",
+      "customers": "Small and midsize businesses and accounting firms; no concentration.",
       "red_flags": [
-        "Backlog -24%",
+        "Merger agreement signed Nov 19, 2026 caps upside",
+        "Backlog down 24%",
         "Growth slowed to 13%",
-        "Interest float income sensitive to rates",
-        "$1.5B convertible notes",
-        "Operating margin around zero"
+        "Interest on customer funds is a rate-sensitive revenue line",
+        "Operating margin only around breakeven"
       ],
       "instructions_found": false
     }
@@ -711,6 +711,45 @@
         "Share count +10%",
         "Still -10% operating margin",
         "Deferred revenue -4%"
+      ],
+      "instructions_found": false
+    }
+  },
+  "ALB": {
+    "basis": "0000915913-26-000018|0000915913-26-000129|7",
+    "judged_at": "2026-11-21",
+    "judgment": {
+      "edge": 2.0,
+      "demand": 3.0,
+      "confidence": "high",
+      "thesis": "Albemarle's turn to profit is driven by a 39% rise in lithium pricing, and management states its contracts are index-referenced, so margins follow the commodity price. That is a cyclical recovery, not a durable edge.",
+      "breaks_if": "Lithium index prices fall back and Energy Storage margins compress.",
+      "customers": "About 1,900 customers in 70 countries including battery and cathode makers; no concentration disclosed.",
+      "red_flags": [
+        "Profit driven by commodity pricing",
+        "Index-linked contracts pass price swings through",
+        "Many aggressive competitors including Chinese producers",
+        "Portfolio shrinking via divestitures"
+      ],
+      "instructions_found": false
+    }
+  },
+  "HUBS": {
+    "basis": "0001193125-26-046646|0001193125-26-447363|6",
+    "judged_at": "2026-11-21",
+    "judgment": {
+      "edge": 5.0,
+      "demand": 5.0,
+      "confidence": "medium",
+      "thesis": "HubSpot has a large installed base ( 289K customers) and remaining performance obligations up 29% with deferred revenue up 17%, so contracted revenue is still building. Growth is decelerating (23% to 17%), management cites demand and pricing headwinds and a 2026 restructuring, and CRM switching costs for SMB/mid-market are moderate.",
+      "breaks_if": "Revenue growth falls below 12% or RPO growth decelerates to below revenue growth.",
+      "customers": "Mid-market B2B companies (2-2,000 employees); 49% of revenue via Solutions Partners; no single-customer concentration.",
+      "red_flags": [
+        "Revenue growth decelerating",
+        "Management cites demand and pricing headwinds from AI changes",
+        "2026 restructuring plan",
+        "Thin 5% operating margin",
+        "Intense competition including AI-native tools"
       ],
       "instructions_found": false
     }

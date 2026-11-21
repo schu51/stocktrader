@@ -18,6 +18,7 @@ CONVICTION_FLOOR = 0.35
 MULTIPLIER_SPAN  = 0.25     # conviction 1.0 -> +25%
 MULTIPLIER_FLOOR = 0.90     # crowded-leader dampening
 STALE_DAYS       = 14
+MAX_LIVE_THESES  = 5        # a new thesis displaces the weakest beyond this
 
 # Reddit / retail domains are supplementary only — never count as primary evidence
 _SUPPLEMENTARY_DOMAINS = ("reddit.com", "stocktwits.com")
@@ -192,12 +193,47 @@ def retire_expired(theses: List[Dict], today: Optional[date] = None) -> List[Dic
     return theses
 
 
+def enforce_cap(theses: List[Dict], today: Optional[date] = None,
+                cap: int = MAX_LIVE_THESES) -> List[Dict]:
+    """
+    Keep at most `cap` live theses. The weakest beyond the cap are retired (in
+    place) with retired_reason="displaced": lowest conviction first, ties going
+    to the one validated longest ago, then the oldest. Returns the displaced theses.
+
+    Without a cap the register only grows (no thesis had ever been invalidated
+    by 2026-11-21) and the sector tilt spreads over nearly every sector.
+    """
+    today = today or date.today()
+    live = [t for t in theses if is_thesis_live(t, today)]
+    if len(live) <= cap:
+        return []
+    ranked = sorted(live, key=lambda t: (float(t.get("conviction", 0.0)),
+                                         str(t.get("last_validated", "")),
+                                         str(t.get("created_at", ""))), reverse=True)
+    displaced = ranked[cap:]
+    for t in displaced:
+        t["status"] = "retired"
+        t["retired_reason"] = "displaced"
+        t["retired_at"] = today.isoformat()
+    return displaced
+
+
+def _sector_boost(sector: str, live_theses: List[Dict]) -> float:
+    """Strongest matching conviction * MULTIPLIER_SPAN, or 0 when no live thesis names the sector."""
+    convictions = [float(t.get("conviction", 0.0)) for t in live_theses
+                   if sector in (t.get("beneficiary_sectors") or [])]
+    return max(convictions) * MULTIPLIER_SPAN if convictions else 0.0
+
+
 def macro_multiplier(symbol: str, sector: str, live_theses: List[Dict]) -> float:
     """
-    Bounded ranking tilt for one candidate. See spec.
+    Bounded, RELATIVE ranking tilt for one candidate.
       1. symbol in any live thesis's consensus_names_excluded -> MULTIPLIER_FLOOR (0.90)
-      2. sector matches a live thesis -> 1 + strongest_conviction * MULTIPLIER_SPAN
-      3. otherwise -> 1.0
+      2. otherwise 1 + (this sector's boost - the mean boost over all sectors),
+         where a sector's boost is its strongest live conviction * MULTIPLIER_SPAN.
+    The tilts net to zero across sectors, so a register that names every sector
+    is neutral rather than a uniform +15% (it was: 9 of 11 sectors boosted on
+    2026-11-21). Sectors no thesis names now sit slightly below 1.0.
     Result is hard-capped to [MULTIPLIER_FLOOR, 1 + MULTIPLIER_SPAN].
     """
     symbol = symbol.strip().upper()
@@ -206,12 +242,10 @@ def macro_multiplier(symbol: str, sector: str, live_theses: List[Dict]) -> float
         if symbol in excluded:
             return MULTIPLIER_FLOOR
 
-    matches = [t for t in live_theses if sector in (t.get("beneficiary_sectors") or [])]
-    if not matches:
+    if not live_theses:
         return 1.0
-
-    best = max(matches, key=lambda t: float(t.get("conviction", 0.0)))
-    mult = 1.0 + float(best.get("conviction", 0.0)) * MULTIPLIER_SPAN
+    mean_boost = sum(_sector_boost(s, live_theses) for s in _VALID_SECTORS) / len(_VALID_SECTORS)
+    mult = 1.0 + _sector_boost(sector, live_theses) - mean_boost
     return max(MULTIPLIER_FLOOR, min(mult, 1.0 + MULTIPLIER_SPAN))
 
 

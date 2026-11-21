@@ -719,6 +719,7 @@ class DailyRunner:
                     decision_dict["thesis_score"] = candidate.get("thesis_score")
                     decision_dict["thesis_grade"] = candidate.get("thesis_grade")
                     decision_dict["sector"]       = candidate.get("sector", "")
+                    decision_dict["macro_mult"]   = candidate.get("macro_mult")
 
                     # Apply momentum score scaling to position size
                     decision_dict = self._scale_size_by_momentum(decision_dict)
@@ -1433,6 +1434,7 @@ class DailyRunner:
                    trade_id: str = None, rs_rank: int = None,
                    thesis_score: float = None, thesis_grade: str = None,
                    sector: str = None, weight_version: int = None,
+                   macro_mult: float = None,
                    realized_pnl_pct: float = None, order_id: str = None,
                    experiment: Dict = None):
         """
@@ -1475,6 +1477,7 @@ class DailyRunner:
                     "thesis_score":   thesis_score,
                     "thesis_grade":   thesis_grade,
                     "sector":         sector,
+                    "macro_mult":     macro_mult,
                     "weight_version": weight_version,
                     "order_id":       order_id,
                     # Experiment tags (experiments.py): signals at entry and which stop arm
@@ -2187,6 +2190,7 @@ class DailyRunner:
                         thesis_score=opp.get("thesis_score"),
                         thesis_grade=opp.get("thesis_grade"),
                         sector=opp.get("sector"),
+                        macro_mult=opp.get("macro_mult"),
                         weight_version=self._active_weight_version(),
                         order_id=result.get("order_id"),
                         experiment={"signals": opp.get("signals"), "stop_arm": opp.get("stop_arm"),

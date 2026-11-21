@@ -118,17 +118,23 @@ def test_retire_expired_marks_status():
     assert by_id["B"]["status"] == "active"
 
 
-def test_multiplier_no_match():
+def test_multiplier_no_theses_is_neutral():
+    from macro_thesis import macro_multiplier
+    assert macro_multiplier("AAPL", "technology", []) == 1.0
+
+
+def test_multiplier_no_match_sits_below_neutral():
+    # Relative tilt: one energy thesis at 0.8 -> energy +0.2, mean boost 0.2/11
     from macro_thesis import macro_multiplier
     live = [_good_thesis(beneficiary_sectors=["energy"], conviction=0.8)]
-    assert macro_multiplier("AAPL", "technology", live) == 1.0
+    assert abs(macro_multiplier("AAPL", "technology", live) - (1.0 - 0.2 / 11)) < 1e-9
 
 
 def test_multiplier_beneficiary():
     from macro_thesis import macro_multiplier
     live = [_good_thesis(beneficiary_sectors=["energy"], conviction=0.8,
                          consensus_names_excluded=["XOM"])]
-    assert abs(macro_multiplier("VST", "energy", live) - 1.20) < 1e-9
+    assert abs(macro_multiplier("VST", "energy", live) - (1.20 - 0.2 / 11)) < 1e-9
 
 
 def test_multiplier_excluded_name():
@@ -144,14 +150,14 @@ def test_multiplier_strongest_match_no_stacking():
                          consensus_names_excluded=["X"]),
             _good_thesis(id="B", beneficiary_sectors=["energy"], conviction=0.8,
                          consensus_names_excluded=["Y"])]
-    assert abs(macro_multiplier("VST", "energy", live) - 1.20) < 1e-9
+    assert abs(macro_multiplier("VST", "energy", live) - (1.20 - 0.2 / 11)) < 1e-9
 
 
 def test_multiplier_bounds_cap():
     from macro_thesis import macro_multiplier
     live = [_good_thesis(beneficiary_sectors=["energy"], conviction=1.0,
                          consensus_names_excluded=["X"])]
-    assert macro_multiplier("VST", "energy", live) == 1.25
+    assert abs(macro_multiplier("VST", "energy", live) - (1.25 - 0.25 / 11)) < 1e-9
 
 
 def test_load_live_theses_absent_file(tmp_path):
@@ -282,3 +288,52 @@ def test_clean_text_keeps_ordinary_prose_readable():
     from macro_thesis import clean_text
     assert clean_text("Fed \u2018higher-for-longer\u2019 \u2014 banks\u2026 +50bp (2s10s), 15% & up", 240) == \
         "Fed 'higher-for-longer' - banks... +50bp (2s10s), 15% & up"
+
+
+def test_multiplier_is_relative_and_hard_capped():
+    from macro_thesis import macro_multiplier, MULTIPLIER_FLOOR, MULTIPLIER_SPAN
+    live = [_good_thesis(beneficiary_sectors=["energy"], conviction=1.0, consensus_names_excluded=["X"])]
+    assert macro_multiplier("VST", "energy", live) <= 1.0 + MULTIPLIER_SPAN
+    # Every sector named at the same conviction -> no sector is favoured
+    every = [_good_thesis(beneficiary_sectors=[s], conviction=0.6, consensus_names_excluded=["X"])
+             for s in ["technology", "healthcare", "financials", "consumer_cyclical", "industrials",
+                       "communication_services", "consumer_defensive", "energy", "basic_materials",
+                       "real_estate", "utilities"]]
+    assert abs(macro_multiplier("VST", "energy", every) - 1.0) < 1e-9
+    assert macro_multiplier("AAPL", "technology", every) >= MULTIPLIER_FLOOR
+
+
+def test_multiplier_tilts_net_to_zero_across_sectors():
+    from macro_thesis import macro_multiplier, _VALID_SECTORS
+    live = [_good_thesis(id="A", beneficiary_sectors=["energy", "industrials"], conviction=0.6,
+                         consensus_names_excluded=["X"]),
+            _good_thesis(id="B", beneficiary_sectors=["utilities"], conviction=0.5,
+                         consensus_names_excluded=["Y"])]
+    total = sum(macro_multiplier("ZZZZ", s, live) - 1.0 for s in _VALID_SECTORS)
+    assert abs(total) < 1e-9
+
+
+def test_enforce_cap_displaces_weakest():
+    from macro_thesis import enforce_cap
+    theses = [_good_thesis(id=f"T{i}", conviction=c, last_validated="2099-01-01", horizon="2099-12-31")
+              for i, c in enumerate([0.5, 0.7, 0.4, 0.6, 0.55, 0.65, 0.45])]
+    displaced = enforce_cap(theses, today=date_(2099, 1, 5), cap=5)
+    assert sorted(t["id"] for t in displaced) == ["T2", "T6"]
+    assert all(t["status"] == "retired" and t["retired_reason"] == "displaced" for t in displaced)
+    assert sum(t["status"] == "active" for t in theses) == 5
+
+
+def test_enforce_cap_under_cap_is_noop():
+    from macro_thesis import enforce_cap
+    theses = [_good_thesis(id="A", last_validated="2099-01-01", horizon="2099-12-31")]
+    assert enforce_cap(theses, today=date_(2099, 1, 5), cap=5) == []
+    assert theses[0]["status"] == "active"
+
+
+def test_enforce_cap_ignores_dead_theses():
+    from macro_thesis import enforce_cap
+    theses = [_good_thesis(id=f"L{i}", conviction=0.5, last_validated="2099-01-01", horizon="2099-12-31")
+              for i in range(5)]
+    theses.append(_good_thesis(id="OLD", status="invalidated", conviction=0.9,
+                               last_validated="2099-01-01", horizon="2099-12-31"))
+    assert enforce_cap(theses, today=date_(2099, 1, 5), cap=5) == []

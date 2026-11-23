@@ -1,32 +1,101 @@
 {
-  "generated_at": "2026-11-20T15:30:52.631749",
+  "generated_at": "2026-11-23T15:30:51.708914",
   "mode": "EXECUTE",
   "holdings": [
     {
       "symbol": "KVYO",
-      "market_value": 2968.56,
-      "pnl_pct": 6.54
+      "market_value": 3068.31,
+      "pnl_pct": 10.12
     },
     {
       "symbol": "REAL",
-      "market_value": 2325.02,
-      "pnl_pct": -17.9
+      "market_value": 2358.35,
+      "pnl_pct": -16.73
     },
     {
       "symbol": "TTAN",
-      "market_value": 2698.75,
-      "pnl_pct": -3.88
+      "market_value": 2691.61,
+      "pnl_pct": -4.13
     },
     {
       "symbol": "VCEL",
-      "market_value": 3724.8,
-      "pnl_pct": 34.63
+      "market_value": 3753.6,
+      "pnl_pct": 35.67
     }
   ],
   "sells": [],
   "trims": [],
-  "buys": [],
+  "buys": [
+    {
+      "symbol": "WK",
+      "shares": 42,
+      "limit_price": 65.62,
+      "judgment": 13.0,
+      "judgment_rank": 2,
+      "name": "WORKIVA INC",
+      "setup": {
+        "setup": false,
+        "near_high": false,
+        "tight": true,
+        "breakout": false
+      },
+      "status": "submitted",
+      "order_id": "fee4eb8b-4e25-41ed-9be2-fa5f453bcc99"
+    },
+    {
+      "symbol": "ETON",
+      "shares": 39,
+      "limit_price": 71.6,
+      "judgment": 12.0,
+      "judgment_rank": 3,
+      "name": "Eton Pharmaceuticals, Inc.",
+      "setup": {
+        "setup": false,
+        "near_high": true,
+        "tight": false,
+        "breakout": false
+      },
+      "status": "submitted",
+      "order_id": "9322b60b-79e4-45e8-9d2a-f349209aafc2"
+    },
+    {
+      "symbol": "SLAB",
+      "shares": 11,
+      "limit_price": 253.19,
+      "judgment": 11.0,
+      "judgment_rank": 7,
+      "name": "SILICON LABORATORIES INC.",
+      "setup": {
+        "setup": false,
+        "near_high": true,
+        "tight": false,
+        "breakout": false
+      },
+      "status": "submitted",
+      "order_id": "f94c7631-0682-45ed-bacc-c66babbc5f20"
+    }
+  ],
   "skipped": [
+    {
+      "symbol": "URGN",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "VCYT",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "ALGM",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "KLIC",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "BLZE",
+      "reason": "below its 200-day average"
+    },
     {
       "symbol": "AMBA",
       "reason": "below its 200-day average"
@@ -35,8 +104,56 @@
   "failures": [],
   "alerts": [],
   "note": null,
-  "equity": 105002.15,
+  "equity": 105023.19,
   "setups": {
+    "URGN": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "WK": {
+      "setup": false,
+      "near_high": false,
+      "tight": true,
+      "breakout": false
+    },
+    "ETON": {
+      "setup": false,
+      "near_high": true,
+      "tight": false,
+      "breakout": false
+    },
+    "VCYT": {
+      "setup": false,
+      "near_high": false,
+      "tight": true,
+      "breakout": false
+    },
+    "SLAB": {
+      "setup": false,
+      "near_high": true,
+      "tight": false,
+      "breakout": false
+    },
+    "ALGM": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "KLIC": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "BLZE": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
     "AMBA": {
       "setup": false,
       "near_high": false,
@@ -44,8 +161,13 @@
       "breakout": false
     }
   },
-  "budget": 42000.86,
-  "slot": 2800.06,
-  "invested": 11717.13,
-  "list_date": "2026-11-14"
+  "budget": 42009.28,
+  "slot": 2800.62,
+  "invested": 11871.87,
+  "list_date": "2026-11-21",
+  "stops_placed": [
+    "ETON",
+    "SLAB",
+    "WK"
+  ]
 }

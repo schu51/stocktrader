@@ -1,0 +1,548 @@
+[
+ {
+  "at": "2026-11-23T15:30:56+00:00",
+  "job": "diamond_sleeve",
+  "kind": "buy",
+  "symbol": "WK",
+  "output": {
+   "request": {
+    "symbol": "WK",
+    "qty": "42",
+    "side": "buy",
+    "type": "limit",
+    "time_in_force": "day",
+    "limit_price": "65.62",
+    "client_order_id": "dmd-WK-20261123153055"
+   },
+   "order_id": "fee4eb8b-4e25-41ed-9be2-fa5f453bcc99",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "diamond list pick",
+   "rule": "sleeve_buy",
+   "facts": {
+    "shares": 42,
+    "limit_price": 65.62,
+    "judgment": 13.0,
+    "judgment_rank": 2,
+    "name": "WORKIVA INC",
+    "setup": {
+     "setup": false,
+     "near_high": false,
+     "tight": true,
+     "breakout": false
+    }
+   }
+  },
+  "rule_version": {
+   "code": "930affe",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-23T14:16:00.429550",
+    "sha": "5f28986447cb"
+   },
+   "latest.json": {
+    "at": "2026-11-23T15:01:09.146354",
+    "sha": "2a91d3ee711b"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "2bf3c6abdc2f"
+   },
+   "experiments.json": {
+    "at": "2026-11-21T13:16:01.519431",
+    "sha": "2a1045b9f3aa"
+   },
+   "theses.json": {
+    "at": "2026-11-21T14:32:04.956356",
+    "sha": "601950919f42"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-21T12:00:49+00:00",
+    "sha": "89f114275d08"
+   },
+   "premarket.json": {
+    "at": "2026-11-23T06:00:45.349120-08:00",
+    "sha": "052292e09949"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-23",
+    "sha": "b98edf77a9c1"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-23T13:02:12+00:00",
+    "sha": "c73591385d3f"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-20T21:17:31+00:00",
+    "sha": "3bdfa94441bb"
+   },
+   "big_movers.json": {
+    "at": "2026-11-20T21:32:28+00:00",
+    "sha": "c258c0964d8f"
+   }
+  }
+ },
+ {
+  "at": "2026-11-23T15:30:56+00:00",
+  "job": "diamond_sleeve",
+  "kind": "buy",
+  "symbol": "ETON",
+  "output": {
+   "request": {
+    "symbol": "ETON",
+    "qty": "39",
+    "side": "buy",
+    "type": "limit",
+    "time_in_force": "day",
+    "limit_price": "71.6",
+    "client_order_id": "dmd-ETON-20261123153056"
+   },
+   "order_id": "9322b60b-79e4-45e8-9d2a-f349209aafc2",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "diamond list pick",
+   "rule": "sleeve_buy",
+   "facts": {
+    "shares": 39,
+    "limit_price": 71.6,
+    "judgment": 12.0,
+    "judgment_rank": 3,
+    "name": "Eton Pharmaceuticals, Inc.",
+    "setup": {
+     "setup": false,
+     "near_high": true,
+     "tight": false,
+     "breakout": false
+    }
+   }
+  },
+  "rule_version": {
+   "code": "930affe",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-23T14:16:00.429550",
+    "sha": "5f28986447cb"
+   },
+   "latest.json": {
+    "at": "2026-11-23T15:01:09.146354",
+    "sha": "2a91d3ee711b"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "2bf3c6abdc2f"
+   },
+   "experiments.json": {
+    "at": "2026-11-21T13:16:01.519431",
+    "sha": "2a1045b9f3aa"
+   },
+   "theses.json": {
+    "at": "2026-11-21T14:32:04.956356",
+    "sha": "601950919f42"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-21T12:00:49+00:00",
+    "sha": "89f114275d08"
+   },
+   "premarket.json": {
+    "at": "2026-11-23T06:00:45.349120-08:00",
+    "sha": "052292e09949"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-23",
+    "sha": "b98edf77a9c1"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-23T13:02:12+00:00",
+    "sha": "c73591385d3f"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-20T21:17:31+00:00",
+    "sha": "3bdfa94441bb"
+   },
+   "big_movers.json": {
+    "at": "2026-11-20T21:32:28+00:00",
+    "sha": "c258c0964d8f"
+   }
+  }
+ },
+ {
+  "at": "2026-11-23T15:30:56+00:00",
+  "job": "diamond_sleeve",
+  "kind": "buy",
+  "symbol": "SLAB",
+  "output": {
+   "request": {
+    "symbol": "SLAB",
+    "qty": "11",
+    "side": "buy",
+    "type": "limit",
+    "time_in_force": "day",
+    "limit_price": "253.19",
+    "client_order_id": "dmd-SLAB-20261123153056"
+   },
+   "order_id": "f94c7631-0682-45ed-bacc-c66babbc5f20",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "diamond list pick",
+   "rule": "sleeve_buy",
+   "facts": {
+    "shares": 11,
+    "limit_price": 253.19,
+    "judgment": 11.0,
+    "judgment_rank": 7,
+    "name": "SILICON LABORATORIES INC.",
+    "setup": {
+     "setup": false,
+     "near_high": true,
+     "tight": false,
+     "breakout": false
+    }
+   }
+  },
+  "rule_version": {
+   "code": "930affe",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-23T14:16:00.429550",
+    "sha": "5f28986447cb"
+   },
+   "latest.json": {
+    "at": "2026-11-23T15:01:09.146354",
+    "sha": "2a91d3ee711b"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "2bf3c6abdc2f"
+   },
+   "experiments.json": {
+    "at": "2026-11-21T13:16:01.519431",
+    "sha": "2a1045b9f3aa"
+   },
+   "theses.json": {
+    "at": "2026-11-21T14:32:04.956356",
+    "sha": "601950919f42"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-21T12:00:49+00:00",
+    "sha": "89f114275d08"
+   },
+   "premarket.json": {
+    "at": "2026-11-23T06:00:45.349120-08:00",
+    "sha": "052292e09949"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-23",
+    "sha": "b98edf77a9c1"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-23T13:02:12+00:00",
+    "sha": "c73591385d3f"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-20T21:17:31+00:00",
+    "sha": "3bdfa94441bb"
+   },
+   "big_movers.json": {
+    "at": "2026-11-20T21:32:28+00:00",
+    "sha": "c258c0964d8f"
+   }
+  }
+ },
+ {
+  "at": "2026-11-23T15:31:03+00:00",
+  "job": "diamond_sleeve",
+  "kind": "stop",
+  "symbol": "ETON",
+  "output": {
+   "request": {
+    "symbol": "ETON",
+    "qty": "39",
+    "side": "sell",
+    "type": "stop",
+    "time_in_force": "gtc",
+    "stop_price": "46.65"
+   },
+   "order_id": "b8ffce0e-c9ea-4384-93df-b65bf28434e5",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "missing stop placed (sleeve disaster stop \u2192 25% below entry)",
+   "rule": "stop_placement",
+   "facts": {
+    "stop_price": 46.65,
+    "qty": 39
+   }
+  },
+  "rule_version": {
+   "code": "930affe",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-23T14:16:00.429550",
+    "sha": "5f28986447cb"
+   },
+   "latest.json": {
+    "at": "2026-11-23T15:01:09.146354",
+    "sha": "2a91d3ee711b"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "2bf3c6abdc2f"
+   },
+   "experiments.json": {
+    "at": "2026-11-21T13:16:01.519431",
+    "sha": "2a1045b9f3aa"
+   },
+   "theses.json": {
+    "at": "2026-11-21T14:32:04.956356",
+    "sha": "601950919f42"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-21T12:00:49+00:00",
+    "sha": "89f114275d08"
+   },
+   "premarket.json": {
+    "at": "2026-11-23T06:00:45.349120-08:00",
+    "sha": "052292e09949"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-23",
+    "sha": "b98edf77a9c1"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-23T13:02:12+00:00",
+    "sha": "c73591385d3f"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-20T21:17:31+00:00",
+    "sha": "3bdfa94441bb"
+   },
+   "big_movers.json": {
+    "at": "2026-11-20T21:32:28+00:00",
+    "sha": "c258c0964d8f"
+   }
+  }
+ },
+ {
+  "at": "2026-11-23T15:31:03+00:00",
+  "job": "diamond_sleeve",
+  "kind": "stop",
+  "symbol": "SLAB",
+  "output": {
+   "request": {
+    "symbol": "SLAB",
+    "qty": "11",
+    "side": "sell",
+    "type": "stop",
+    "time_in_force": "gtc",
+    "stop_price": "166.4"
+   },
+   "order_id": "ba7be534-ed0c-4378-adc7-ee09178c3a3c",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "missing stop placed (sleeve disaster stop \u2192 25% below entry)",
+   "rule": "stop_placement",
+   "facts": {
+    "stop_price": 166.4,
+    "qty": 11
+   }
+  },
+  "rule_version": {
+   "code": "930affe",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-23T14:16:00.429550",
+    "sha": "5f28986447cb"
+   },
+   "latest.json": {
+    "at": "2026-11-23T15:01:09.146354",
+    "sha": "2a91d3ee711b"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "2bf3c6abdc2f"
+   },
+   "experiments.json": {
+    "at": "2026-11-21T13:16:01.519431",
+    "sha": "2a1045b9f3aa"
+   },
+   "theses.json": {
+    "at": "2026-11-21T14:32:04.956356",
+    "sha": "601950919f42"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-21T12:00:49+00:00",
+    "sha": "89f114275d08"
+   },
+   "premarket.json": {
+    "at": "2026-11-23T06:00:45.349120-08:00",
+    "sha": "052292e09949"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-23",
+    "sha": "b98edf77a9c1"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-23T13:02:12+00:00",
+    "sha": "c73591385d3f"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-20T21:17:31+00:00",
+    "sha": "3bdfa94441bb"
+   },
+   "big_movers.json": {
+    "at": "2026-11-20T21:32:28+00:00",
+    "sha": "c258c0964d8f"
+   }
+  }
+ },
+ {
+  "at": "2026-11-23T15:31:03+00:00",
+  "job": "diamond_sleeve",
+  "kind": "stop",
+  "symbol": "WK",
+  "output": {
+   "request": {
+    "symbol": "WK",
+    "qty": "42",
+    "side": "sell",
+    "type": "stop",
+    "time_in_force": "gtc",
+    "stop_price": "49.16"
+   },
+   "order_id": "1c6a856f-f3d6-4b41-88bb-a0c5f8cfa91a",
+   "status": "pending_new",
+   "error": null
+  },
+  "why": {
+   "reason": "missing stop placed (sleeve disaster stop \u2192 25% below entry)",
+   "rule": "stop_placement",
+   "facts": {
+    "stop_price": 49.16,
+    "qty": 42
+   }
+  },
+  "rule_version": {
+   "code": "930affe",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-23T14:16:00.429550",
+    "sha": "5f28986447cb"
+   },
+   "latest.json": {
+    "at": "2026-11-23T15:01:09.146354",
+    "sha": "2a91d3ee711b"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "2bf3c6abdc2f"
+   },
+   "experiments.json": {
+    "at": "2026-11-21T13:16:01.519431",
+    "sha": "2a1045b9f3aa"
+   },
+   "theses.json": {
+    "at": "2026-11-21T14:32:04.956356",
+    "sha": "601950919f42"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-21T12:00:49+00:00",
+    "sha": "89f114275d08"
+   },
+   "premarket.json": {
+    "at": "2026-11-23T06:00:45.349120-08:00",
+    "sha": "052292e09949"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-23",
+    "sha": "b98edf77a9c1"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-23T13:02:12+00:00",
+    "sha": "c73591385d3f"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-20T21:17:31+00:00",
+    "sha": "3bdfa94441bb"
+   },
+   "big_movers.json": {
+    "at": "2026-11-20T21:32:28+00:00",
+    "sha": "c258c0964d8f"
+   }
+  }
+ }
+]

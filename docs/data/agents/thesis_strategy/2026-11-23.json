@@ -1,0 +1,30 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-23",
+  "generated_at": "2026-11-23T22:45:00+00:00",
+  "status": "amber",
+  "headline": "No rule set, champion included, has opened a backtest trade since 2026-11-10 (10 trading days), so the forward gate still blocks every promotion. Meanwhile the champion's backtest PF eased to 1.37 and spy3 again fails second-half PF by 0.01.",
+  "calls": [
+    {
+      "subject": "challenger:cap98_tight",
+      "direction": "neutral",
+      "horizon_days": 20,
+      "confidence": "medium",
+      "evidence": [
+        "docs/data/eval_latest.json:tournament.challengers.cap98_tight.first_half",
+        "docs/data/eval_latest.json:tournament.challengers.cap98_tight.forward"
+      ],
+      "why": "Best backtest (PF 1.65, DD -15.6%), but its first-half PF (1.20 vs 1.33) and an empty forward window keep it out of ready_to_propose for the next 20 days."
+    }
+  ],
+  "notes": [
+    "No change to research/challengers.json. No retire criterion was met: spy1 misses the PF gate by 0.23, which resets its 0.3+ run. There were no errors, the list is full at 11, and no new weakness with 10+ trades is untested. Journal entry appended.",
+    "Live: 0 closed today; last 20 trades 10% win, PF 0.14; 30d 23 trades PF 0.22; -10.3% from peak. Account -6.1% vs SPY -5.0% over 30 days; -2.2% vs SPY -4.9% since 2026-11-12. rollback_watch is not triggered (8 trading days, +2.7pt ahead of SPY).",
+    "Tracking gap -5.2pt (live -6.1% vs backtest -0.9%). The same-window and matched-trade comparisons (18 trades: live -1.0% vs backtest -2.1%) point to the period and the rules, not execution.",
+    "Tournament: spy3 PF 1.61 fails pf_second_half (1.39 vs 1.40) and forward. cap98_tight fails pf_first_half and forward. risk40 is +0.04 PF against a +0.10 gate. Nothing is ready to propose; no PR, issue or rollback was opened.",
+    "Crossovers vs champion (PF 1.37, DD -17.6%): death_cross_exit PF 1.34 / DD -17.4%. sma50_exit PF 1.40 / DD -16.5% / win 57% vs 59%. golden20 PF 1.89 / DD -5.4% on 72 trades, but only 0.59 without its 5 best trades (concentrated). daily_eval.py still does not report the share of each challenger's trades closed within 3 days.",
+    "Forward sample: every rule set is at 0 trades. The original eight hit 10 trading days today, the crossovers hit it 2026-11-24 and cap98_tight around 2026-12-01.",
+    "Stops: 10 fills, mean -3.6%, median -0.6%, worst VCYT -24.6%, 2 gapped >2%.",
+    "Theses: all 11 validated 2026-11-21 (9 revalidated, 2 admitted); macro_brief no error."
+  ]
+}

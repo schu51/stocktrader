@@ -230,5 +230,156 @@
     "why": "The flagged 'other' group (IREZ, NBIZ, AAOZ, SOXS, SNDQ, LITZ, BMNZ, MUZ, UVIX, NVD, NVDQ, DAMD, SKDD, SMCZ) is not a new trend: it is inverse/volatility ETFs rising in the AI-hardware selloff (Nasdaq about -5%, NVDA about -14% on an SEC accounting probe). BEZ is an unrelated takeover. Suggest auto-excluding inverse and leveraged ETFs from the mover list.",
     "by": "claude",
     "date": "2026-11-20"
+  },
+  "NVDA@2026-11-23": {
+    "catalyst": "news",
+    "why": "Nvidia jumped about 31%, its biggest one-day gain since 2003, after the board reinstated Jensen Huang as CEO, reversing last week's selloff and lifting the Nasdaq about 6%.",
+    "lesson": "Nothing visible beforehand: the reinstatement was a weekend surprise; NVDA was RS rank 8, 41% down in a month and failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "NVDL@2026-11-23": {
+    "catalyst": "news",
+    "why": "NVDL is a 2x long Nvidia ETF; it rose about 62% as NVDA jumped 31% on Jensen Huang's reinstatement as CEO.",
+    "lesson": "Nothing visible beforehand; it is a leveraged mirror of NVDA. Leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the inverse ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "NVDU@2026-11-23": {
+    "catalyst": "news",
+    "why": "NVDU is a 2x long Nvidia ETF; it rose about 61% as NVDA jumped 31% on Jensen Huang's reinstatement as CEO.",
+    "lesson": "Nothing visible beforehand; it is a leveraged mirror of NVDA. Leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the inverse ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "NVDX@2026-11-23": {
+    "catalyst": "news",
+    "why": "NVDX is a 2x long Nvidia ETF; it rose about 63% as NVDA jumped 31% on Jensen Huang's reinstatement as CEO. The rule's 'market_move' label only reflects SPY's rally.",
+    "lesson": "Nothing visible beforehand; it is a leveraged mirror of NVDA. Leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the inverse ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "CRWV@2026-11-23": {
+    "catalyst": "theme_move",
+    "why": "CoreWeave rose about 22% as AI-compute names rebounded on Nvidia's CEO reinstatement; the 'index' label came from a market-rally headline, not an index change.",
+    "lesson": "Nothing visible beforehand: RS rank 4, 54% down in three months, failed the momentum gate; a relief rally from a beaten-down theme.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "NBIS@2026-11-23": {
+    "catalyst": "theme_move",
+    "why": "Nebius rose about 20% in the AI-compute rebound after Nvidia reinstated Jensen Huang; the 'earnings' label came from a stale Q3 headline.",
+    "lesson": "Nothing visible beforehand: RS rank 35, 49% down in a month, failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "IREN@2026-11-23": {
+    "catalyst": "theme_move",
+    "why": "IREN rose about 24% in the AI-compute rebound after Nvidia reinstated Jensen Huang; the analyst price-target headline was incidental.",
+    "lesson": "Nothing visible beforehand: RS rank 1, 54% down in a month, failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "APLD@2026-11-23": {
+    "catalyst": "theme_move",
+    "why": "Applied Digital rose about 20% in the AI-compute rebound after Nvidia reinstated Jensen Huang; the hyperscaler-lease headline could not be confirmed as new today.",
+    "lesson": "Nothing visible beforehand: RS rank 7, 40% down in a month, failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "CRDO@2026-11-23": {
+    "catalyst": "theme_move",
+    "why": "Credo rose about 23% as AI networking chips rebounded with Nvidia; the 'analyst' label came from a generic forecast page, not a rating change.",
+    "lesson": "Nothing visible beforehand: RS rank 12, 39% down in a month, failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "ALAB@2026-11-23": {
+    "catalyst": "theme_move",
+    "why": "Astera Labs rose about 23% as AI connectivity chips rebounded with Nvidia; the 'earnings' label came from a stale Q3 headline.",
+    "lesson": "Nothing visible beforehand: RS rank 86 but 30% down in a month and failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "DELL@2026-11-23": {
+    "catalyst": "theme_move",
+    "why": "Dell rose about 20% in the AI-hardware rebound the day before its earnings report (due Nov 24), with AI-server demand in focus.",
+    "lesson": "Visible: DELL was on the watch list (earnings due, 40%+ below its 52-week high) and scored a hit, though the move came from the market-wide rebound rather than the report itself.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "AXTI@2026-11-23": {
+    "catalyst": "theme_move",
+    "why": "AXT rose about 24% as AI optical and compound-semiconductor names rebounded with Nvidia; the 'earnings' label came from a valuation article.",
+    "lesson": "Nothing visible beforehand: RS rank 99 but 41% down in a month and failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "AEHR@2026-11-23": {
+    "catalyst": "sector_move",
+    "why": "Aehr rose about 22% as semiconductor test and equipment stocks rebounded with Nvidia; the 'earnings' label came from an older results headline.",
+    "lesson": "Nothing visible beforehand: RS rank 98 but 28% down in a month, 73% below its high, failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "ASX@2026-11-23": {
+    "catalyst": "sector_move",
+    "why": "ASE Technology rose about 21% as chip packaging and semiconductor stocks rebounded with Nvidia; the 'earnings' label came from Australian Securities Exchange (ASX:) headlines about other companies, a ticker collision.",
+    "lesson": "Nothing visible beforehand: RS rank 90 but 30% down in a month, failed the momentum gate; the rule should ignore 'ASX:' exchange prefixes for this ticker.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "MXL@2026-11-23": {
+    "catalyst": "sector_move",
+    "why": "MaxLinear rose about 21% as semiconductor stocks rebounded broadly after Nvidia reinstated Jensen Huang.",
+    "lesson": "Nothing visible beforehand: RS rank 99 but 37% down in a month, failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "NVTS@2026-11-23": {
+    "catalyst": "sector_move",
+    "why": "Navitas rose about 21% as semiconductor stocks rebounded broadly after Nvidia reinstated Jensen Huang.",
+    "lesson": "Nothing visible beforehand: 28% down in a month, 82% below its high, failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "SITM@2026-11-23": {
+    "catalyst": "sector_move",
+    "why": "SiTime rose about 21% as semiconductor stocks rebounded with Nvidia; the Rosenblatt note only reiterated an existing Buy and target.",
+    "lesson": "Nothing visible beforehand: RS rank 76, 22% down in a month, failed the momentum gate.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "KYMR@2026-11-23": {
+    "catalyst": "news",
+    "why": "Kymera rose about 30% on upbeat KT-621 atopic dermatitis trial data, followed by price-target raises from Truist and Stifel; the analyst notes reacted to the data.",
+    "lesson": "Nothing visible in price (failed the momentum gate, RS rank 92); only a pending trial readout and 4 headlines in the prior week.",
+    "by": "claude",
+    "date": "2026-11-23"
+  },
+  "THEME@2026-11-23": {
+    "proposed_theme": "semi_equipment",
+    "members": [
+      "AMAT",
+      "LRCX",
+      "KLAC",
+      "ONTO",
+      "CAMT",
+      "FORM",
+      "COHU",
+      "KLIC",
+      "UCTT",
+      "MKSI",
+      "NVMI",
+      "TER",
+      "AEHR",
+      "AEIS"
+    ],
+    "why": "Wafer-fab, test and process-equipment makers form a recurring group with no theme yet; today they rose together in the broad chip rebound after Nvidia reinstated Jensen Huang, so the move itself was market-wide. The industrials group (PRIM, STRL, MTZ, MYRG, IESC, POWL, AGX, FIX, NVT) looks like missing ai_power data-center builders rather than a new theme; NVDX/NVDL/NVDU are 2x Nvidia ETFs, and the other sector groups are general rebound.",
+    "by": "claude",
+    "date": "2026-11-23"
   }
 }

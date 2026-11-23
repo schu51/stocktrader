@@ -1,0 +1,173 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-23",
+  "generated_at": "2026-11-23T14:26:07+00:00",
+  "status": "amber",
+  "headline": "Bear regime (SPY 689.81 below its 200MA 730.28) with the account in a 10.3% drawdown WARNING; KO sits 1.2% above its stop and five more holdings (KDP, MO, CBOE, EBAY, CRL) are within 5% of theirs.",
+  "calls": [
+    {
+      "subject": "KO",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "latest.json:positions[KO].stop_loss",
+        "screener.json:market_regime"
+      ],
+      "why": "Price 95.41 vs stop 94.22 (1.2% away) in a bear tape: the most likely stop-out today."
+    },
+    {
+      "subject": "KDP",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions[KDP].stop_loss",
+        "options_sentiment.json:reads[KDP]"
+      ],
+      "why": "2.6% above stop at -4.9%; options lean bullish (+3, 2026-11-20) but that is context only."
+    },
+    {
+      "subject": "MO",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions[MO].stop_loss"
+      ],
+      "why": "3.0% above stop, -2.95% unrealised, no offsetting signal."
+    },
+    {
+      "subject": "CBOE",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions[CBOE].stop_loss",
+        "options_sentiment.json:reads[CBOE]",
+        "screener.json:rs_ranks.CBOE"
+      ],
+      "why": "3.4% above a stop raised close to cost; RS 87 and options +2 keep it intact for now."
+    },
+    {
+      "subject": "EBAY",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[EBAY].detail.insiders_30d",
+        "latest.json:positions[EBAY].stop_loss"
+      ],
+      "why": "$9.2M of discretionary insider selling in 30d and 4.2% above stop; the Federal Register labour rule is a loose match and is discounted; options +3 with unusual calls argue the other way."
+    },
+    {
+      "subject": "CRL",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions[CRL].stop_loss",
+        "screener.json:rs_ranks.CRL",
+        "options_sentiment.json:reads[CRL]"
+      ],
+      "why": "4.9% above stop but RS 96 and bullish options with unusual calls (+3): watch, not worry."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN",
+        "latest.json:positions[TTAN]"
+      ],
+      "why": "RS rank 25 (below 50) and -7.1%: weakest relative-strength holding, a rotation candidate."
+    },
+    {
+      "subject": "REAL",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[REAL]",
+        "latest.json:positions[REAL]"
+      ],
+      "why": "-17.3% with $6.2M discretionary insider sales and no RS rank; the +1 news surge is a loose name match (generic 'real' market headlines) and is discounted."
+    },
+    {
+      "subject": "VRNS",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[VRNS]",
+        "options_sentiment.json:reads[VRNS]"
+      ],
+      "why": "Top candidate, RS 94, thesis grade B (62) \u2014 one of only two A/B names in the top 14; no OSINT, options neutral."
+    },
+    {
+      "subject": "PAYC",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[PAYC]"
+      ],
+      "why": "RS 91, thesis grade B (58); no options or OSINT read."
+    },
+    {
+      "subject": "BRZE",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "osint_latest.json:companies[BRZE].events (sec PREM14A)",
+        "screener.json:candidates[BRZE]"
+      ],
+      "why": "RS 98 but a PREM14A merger proxy is on file, so price is likely pinned to a deal; grade C \u2014 not a momentum entry."
+    },
+    {
+      "subject": "NTSK",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "options_sentiment.json:reads[NTSK]",
+        "screener.json:candidates[NTSK]"
+      ],
+      "why": "RS 98 with bullish options and unusual calls (+3), but thesis grade D."
+    },
+    {
+      "subject": "SEZL",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[SEZL].events (finra short_volume)"
+      ],
+      "why": "RS 98 candidate; short volume collapsed to 42% vs 61% average (z -2.7) \u2014 fewer shorts pressing; grade C."
+    },
+    {
+      "subject": "DELL",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "options_sentiment.json:reads[DELL]",
+        "screener.json:catalyst_watch"
+      ],
+      "why": "Options bearish (-3, skew +29) into earnings expected 2026-11-24; watch-only."
+    }
+  ],
+  "notes": [
+    "CALL: DEFENSIVE \u2014 SPY is below its 200MA (bear regime, RS threshold 90) and the drawdown is 10.3% against a 15% cap with action_required, so no new risk except at most an A/B thesis name (only VRNS and PAYC qualify), and let stops work.",
+    "Freshness: screener, latest, osint and premarket are from today. options_sentiment and big_movers are from 2026-11-20 (Friday close), theses from 2026-11-21, ops_status from 2026-11-20 \u2014 the ops monitor has not run today.",
+    "Ops: last ops_status amber (8 failure issues open >2 days, #12-#54); no red checks, so no notification sent.",
+    "Screener health: universe_size 1377 (expected ~518 \u2014 the universe has grown or changed; worth checking), price_source alpaca, coverage 99.7%, 50 final candidates from 149 RS-qualifying.",
+    "CTLP is marked untradable (inactive on Alpaca, delisted or acquired) with no stop: $3,147 needs a manual check on the cash-out.",
+    "No premarket gap alerts on holdings. CRWD gapped -6.9% (avoid list). NVDA shows prev_close 125.53 vs 50MA 207 and a +27.6% 'gap' \u2014 looks like a data error; do not act on it.",
+    "Options bearish (<= -2) on watch names: DELL -3, A, BMNR, INTU, NVDA, SMTC -2 (2026-11-20 data). Options signals are still being validated \u2014 context only.",
+    "Catalyst watch (earnings_far_from_high, lift 27.8, hit rate 2.7%; watch-only): AMBA (2026-11-24), CLSK (2026-11-24), DELL (2026-11-24), DKS (2026-11-24), DY (2026-11-25), INTU (2026-11-24), NVDA (2026-11-25), SMTC (2026-11-23), SYM (2026-11-23), BBY (2026-11-24), BOX (2026-11-24), DG (2026-11-26), DLTR (2026-11-26), KSS (2026-11-24), SJM (2026-11-24).",
+    "OSINT: NAVN StockTwits sour (-1, 10 posts \u2014 thin), U news surge with neutral tone (-0.03): both unclear, low weight."
+  ]
+}

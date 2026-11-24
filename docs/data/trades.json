@@ -4906,7 +4906,7 @@
   {
     "trade_id": "TRD-20261106143031-EBAY",
     "symbol": "EBAY",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-11-06",
     "entry_ts": "2026-11-06T14:30:31.656267",
     "entry_price": 121.77,
@@ -4941,14 +4941,16 @@
     "stop_arm": "atr",
     "stop_dist": 0.077675,
     "news_arm": "news",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-24",
+    "exit_price": 112.27,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": -180.55,
+    "pnl_pct": -7.8,
+    "hold_days": 18,
     "entry_limit": 129.09,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-24T17:21:03.952013",
+    "exit_stop": 112.31
   },
   {
     "trade_id": "TRD-20261109143030-KDP",

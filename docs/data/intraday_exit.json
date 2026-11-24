@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-24T17:15:45.366129",
-  "positions_checked": 13,
+  "generated_at": "2026-11-24T17:45:39.277523",
+  "positions_checked": 12,
   "exits_triggered": [],
   "stops_updated": [],
   "stops_placed": [],
@@ -12,7 +12,15 @@
       "qty": 281.0
     }
   ],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "EBAY",
+      "trigger": "BROKER_STOP",
+      "price": 112.27,
+      "pnl_pct": -7.8,
+      "exit_date": "2026-11-24"
+    }
+  ],
   "sleeve_positions": [
     "ETON",
     "KVYO",

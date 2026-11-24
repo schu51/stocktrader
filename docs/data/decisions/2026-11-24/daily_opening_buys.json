@@ -1,0 +1,440 @@
+[
+ {
+  "at": "2026-11-24T14:15:52+00:00",
+  "job": "daily_opening_buys",
+  "kind": "rank",
+  "symbol": "*",
+  "output": {
+   "regime": "bear",
+   "rs_threshold": 90,
+   "universe_size": 1377,
+   "price_source": "alpaca",
+   "weights": {
+    "w_rs": 0.8,
+    "w_thesis": 0.2
+   },
+   "theses_live": 11,
+   "ranked": [
+    {
+     "symbol": "OKTA",
+     "rs_rank": 99,
+     "thesis_score": 42.0,
+     "macro_mult": 1.017,
+     "effective_score": 93.5
+    },
+    {
+     "symbol": "HNGE",
+     "rs_rank": 98,
+     "thesis_score": 44.0,
+     "macro_mult": 1.017,
+     "effective_score": 93.1
+    },
+    {
+     "symbol": "ZETA",
+     "rs_rank": 93,
+     "thesis_score": 64.0,
+     "macro_mult": 1.017,
+     "effective_score": 93.1
+    },
+    {
+     "symbol": "BRZE",
+     "rs_rank": 98,
+     "thesis_score": 42.0,
+     "macro_mult": 1.017,
+     "effective_score": 92.7
+    },
+    {
+     "symbol": "NTSK",
+     "rs_rank": 99,
+     "thesis_score": 36.0,
+     "macro_mult": 1.017,
+     "effective_score": 92.3
+    },
+    {
+     "symbol": "MGNI",
+     "rs_rank": 95,
+     "thesis_score": 50.0,
+     "macro_mult": 1.017,
+     "effective_score": 91.8
+    },
+    {
+     "symbol": "TENB",
+     "rs_rank": 97,
+     "thesis_score": 38.0,
+     "macro_mult": 1.017,
+     "effective_score": 91.0
+    },
+    {
+     "symbol": "TXN",
+     "rs_rank": 94,
+     "thesis_score": 50.0,
+     "macro_mult": 1.017,
+     "effective_score": 91.0
+    },
+    {
+     "symbol": "XMTR",
+     "rs_rank": 98,
+     "thesis_score": 44.0,
+     "macro_mult": 1.042,
+     "effective_score": 90.9
+    },
+    {
+     "symbol": "VRNS",
+     "rs_rank": 92,
+     "thesis_score": 54.0,
+     "macro_mult": 1.017,
+     "effective_score": 90.1
+    },
+    {
+     "symbol": "SYNA",
+     "rs_rank": 97,
+     "thesis_score": 33.0,
+     "macro_mult": 1.017,
+     "effective_score": 89.9
+    },
+    {
+     "symbol": "FROG",
+     "rs_rank": 96,
+     "thesis_score": 36.0,
+     "macro_mult": 1.017,
+     "effective_score": 89.7
+    },
+    {
+     "symbol": "SEZL",
+     "rs_rank": 98,
+     "thesis_score": 38.0,
+     "macro_mult": 1.042,
+     "effective_score": 89.6
+    },
+    {
+     "symbol": "PAYC",
+     "rs_rank": 90,
+     "thesis_score": 58.0,
+     "macro_mult": 1.017,
+     "effective_score": 89.3
+    },
+    {
+     "symbol": "CAKE",
+     "rs_rank": 97,
+     "thesis_score": 50.0,
+     "macro_mult": 1.011,
+     "effective_score": 88.5
+    },
+    {
+     "symbol": "QLYS",
+     "rs_rank": 91,
+     "thesis_score": 50.0,
+     "macro_mult": 1.017,
+     "effective_score": 88.4
+    },
+    {
+     "symbol": "RXO",
+     "rs_rank": 98,
+     "thesis_score": 31.0,
+     "macro_mult": 1.042,
+     "effective_score": 88.2
+    },
+    {
+     "symbol": "NAVN",
+     "rs_rank": 95,
+     "thesis_score": 32.0,
+     "macro_mult": 1.017,
+     "effective_score": 88.0
+    },
+    {
+     "symbol": "S",
+     "rs_rank": 91,
+     "thesis_score": 48.0,
+     "macro_mult": 1.017,
+     "effective_score": 88.0
+    },
+    {
+     "symbol": "U",
+     "rs_rank": 90,
+     "thesis_score": 50.0,
+     "macro_mult": 1.017,
+     "effective_score": 87.6
+    },
+    {
+     "symbol": "ASO",
+     "rs_rank": 97,
+     "thesis_score": 42.0,
+     "macro_mult": 1.011,
+     "effective_score": 86.9
+    },
+    {
+     "symbol": "BOX",
+     "rs_rank": 94,
+     "thesis_score": 31.0,
+     "macro_mult": 1.017,
+     "effective_score": 86.9
+    },
+    {
+     "symbol": "CROX",
+     "rs_rank": 95,
+     "thesis_score": 38.0,
+     "macro_mult": 1.036,
+     "effective_score": 86.6
+    },
+    {
+     "symbol": "SN",
+     "rs_rank": 98,
+     "thesis_score": 36.0,
+     "macro_mult": 1.011,
+     "effective_score": 86.5
+    },
+    {
+     "symbol": "CBRL",
+     "rs_rank": 99,
+     "thesis_score": 31.0,
+     "macro_mult": 1.011,
+     "effective_score": 86.3
+    },
+    {
+     "symbol": "VSXY",
+     "rs_rank": 97,
+     "thesis_score": 39.0,
+     "macro_mult": 1.011,
+     "effective_score": 86.3
+    },
+    {
+     "symbol": "FIGS",
+     "rs_rank": 97,
+     "thesis_score": 38.0,
+     "macro_mult": 1.011,
+     "effective_score": 86.1
+    },
+    {
+     "symbol": "SWK",
+     "rs_rank": 91,
+     "thesis_score": 44.0,
+     "macro_mult": 1.042,
+     "effective_score": 85.0
+    },
+    {
+     "symbol": "TDC",
+     "rs_rank": 90,
+     "thesis_score": 34.0,
+     "macro_mult": 1.017,
+     "effective_score": 84.2
+    },
+    {
+     "symbol": "KOD",
+     "rs_rank": 99,
+     "thesis_score": 48.0,
+     "macro_mult": 0.9,
+     "effective_score": 83.9
+    },
+    {
+     "symbol": "GME",
+     "rs_rank": 95,
+     "thesis_score": 34.0,
+     "macro_mult": 1.011,
+     "effective_score": 83.7
+    },
+    {
+     "symbol": "VFC",
+     "rs_rank": 92,
+     "thesis_score": 44.0,
+     "macro_mult": 1.011,
+     "effective_score": 83.3
+    },
+    {
+     "symbol": "FTDR",
+     "rs_rank": 90,
+     "thesis_score": 39.0,
+     "macro_mult": 1.042,
+     "effective_score": 83.2
+    },
+    {
+     "symbol": "MANE",
+     "rs_rank": 99,
+     "thesis_score": 44.0,
+     "macro_mult": 0.9,
+     "effective_score": 83.2
+    },
+    {
+     "symbol": "SYRE",
+     "rs_rank": 99,
+     "thesis_score": 44.0,
+     "macro_mult": 0.9,
+     "effective_score": 83.2
+    },
+    {
+     "symbol": "SLS",
+     "rs_rank": 99,
+     "thesis_score": 43.0,
+     "macro_mult": 0.9,
+     "effective_score": 83.0
+    },
+    {
+     "symbol": "HOG",
+     "rs_rank": 90,
+     "thesis_score": 36.0,
+     "macro_mult": 1.042,
+     "effective_score": 82.5
+    },
+    {
+     "symbol": "GMAB",
+     "rs_rank": 98,
+     "thesis_score": 44.0,
+     "macro_mult": 0.9,
+     "effective_score": 82.4
+    },
+    {
+     "symbol": "LTH",
+     "rs_rank": 91,
+     "thesis_score": 42.0,
+     "macro_mult": 1.011,
+     "effective_score": 82.1
+    },
+    {
+     "symbol": "CDNA",
+     "rs_rank": 99,
+     "thesis_score": 38.0,
+     "macro_mult": 0.9,
+     "effective_score": 82.0
+    },
+    {
+     "symbol": "MRNA",
+     "rs_rank": 99,
+     "thesis_score": 38.0,
+     "macro_mult": 0.9,
+     "effective_score": 82.0
+    },
+    {
+     "symbol": "ORKA",
+     "rs_rank": 99,
+     "thesis_score": 38.0,
+     "macro_mult": 0.9,
+     "effective_score": 82.0
+    },
+    {
+     "symbol": "GKOS",
+     "rs_rank": 99,
+     "thesis_score": 36.0,
+     "macro_mult": 0.9,
+     "effective_score": 81.6
+    },
+    {
+     "symbol": "KYMR",
+     "rs_rank": 97,
+     "thesis_score": 44.0,
+     "macro_mult": 0.9,
+     "effective_score": 81.6
+    },
+    {
+     "symbol": "VTRS",
+     "rs_rank": 95,
+     "thesis_score": 50.0,
+     "macro_mult": 0.9,
+     "effective_score": 81.3
+    },
+    {
+     "symbol": "CHYM",
+     "rs_rank": 92,
+     "thesis_score": 36.0,
+     "macro_mult": 1.005,
+     "effective_score": 81.2
+    },
+    {
+     "symbol": "CRL",
+     "rs_rank": 96,
+     "thesis_score": 44.0,
+     "macro_mult": 0.9,
+     "effective_score": 80.9
+    },
+    {
+     "symbol": "TGTX",
+     "rs_rank": 95,
+     "thesis_score": 48.0,
+     "macro_mult": 0.9,
+     "effective_score": 80.9
+    },
+    {
+     "symbol": "BTSG",
+     "rs_rank": 92,
+     "thesis_score": 56.0,
+     "macro_mult": 0.9,
+     "effective_score": 80.1
+    },
+    {
+     "symbol": "AXGN",
+     "rs_rank": 95,
+     "thesis_score": 42.0,
+     "macro_mult": 0.9,
+     "effective_score": 79.8
+    }
+   ],
+   "rejected": {
+    "rs_rank": 1228,
+    "quality": 5,
+    "technical": 79
+   }
+  },
+  "why": {
+   "reason": "daily momentum screen",
+   "rule": "rank",
+   "facts": {}
+  },
+  "rule_version": {
+   "code": "aebd6c5",
+   "rules": "sma200_exit",
+   "gates": [
+    "atr_stop",
+    "ma50_room"
+   ],
+   "weights": 3
+  },
+  "inputs": {
+   "screener.json": {
+    "at": "2026-11-23T14:16:00.429550",
+    "sha": "5f28986447cb"
+   },
+   "latest.json": {
+    "at": "2026-11-23T15:01:09.146354",
+    "sha": "a1b45117deb6"
+   },
+   "trades.json": {
+    "at": null,
+    "sha": "5731bbd99f84"
+   },
+   "experiments.json": {
+    "at": "2026-11-21T13:16:01.519431",
+    "sha": "2a1045b9f3aa"
+   },
+   "theses.json": {
+    "at": "2026-11-21T14:32:04.956356",
+    "sha": "601950919f42"
+   },
+   "weights.json": {
+    "at": null,
+    "sha": "7b16bf1c6a04"
+   },
+   "universe.json": {
+    "at": "2026-11-21T12:00:49+00:00",
+    "sha": "89f114275d08"
+   },
+   "premarket.json": {
+    "at": "2026-11-24T06:00:56.421577-08:00",
+    "sha": "49c2e50d5b3c"
+   },
+   "sma50_cache.json": {
+    "at": "2026-11-24",
+    "sha": "d22fc6ae78cf"
+   },
+   "osint_latest.json": {
+    "at": "2026-11-24T13:01:56+00:00",
+    "sha": "1bc3c6614c41"
+   },
+   "options_sentiment.json": {
+    "at": "2026-11-23T21:17:19+00:00",
+    "sha": "195b7279146f"
+   },
+   "big_movers.json": {
+    "at": "2026-11-23T21:37:06+00:00",
+    "sha": "472965b2fe30"
+   }
+  }
+ }
+]

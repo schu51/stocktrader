@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-24T15:45:51",
+  "generated_at": "2026-11-24T22:30:46",
   "findings": [
-    "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 21% of 95.",
-    "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 21% of 95.",
+    "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 21% of 96.",
+    "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 21% of 96.",
     "Most exits were trend break: 69 trades, 16% won, -5,244 USD.",
     "27 trades were closed within 3 days (0% won, -4,556 USD).",
-    "Bought 15%+ above the 50-day average: 32% won (avg +3.6%) vs 17% (avg -3.5%) otherwise.",
+    "Bought 15%+ above the 50-day average: 32% won (avg +3.6%) vs 16% (avg -3.6%) otherwise.",
     "On the 18 trades the backtest also took, live averaged -1.0% vs the backtest's -2.1%."
   ],
   "summary": {
     "all": {
-      "trades": 95,
-      "win_rate": 0.211,
-      "avg_pnl_pct": -1.44,
-      "total_pnl_usd": -4728.78
+      "trades": 96,
+      "win_rate": 0.208,
+      "avg_pnl_pct": -1.51,
+      "total_pnl_usd": -4909.33
     },
     "by_tag": {
       "exit": {
@@ -48,10 +48,10 @@
           "total_pnl_usd": -1327.74
         },
         "stop_gapped": {
-          "trades": 7,
+          "trades": 8,
           "win_rate": 0.0,
-          "avg_pnl_pct": -15.19,
-          "total_pnl_usd": -3293.86
+          "avg_pnl_pct": -14.26,
+          "total_pnl_usd": -3474.41
         },
         "trend_break": {
           "trades": 69,
@@ -62,10 +62,10 @@
       },
       "quick_fail": {
         "False": {
-          "trades": 68,
-          "win_rate": 0.294,
-          "avg_pnl_pct": 0.11,
-          "total_pnl_usd": -172.63
+          "trades": 69,
+          "win_rate": 0.29,
+          "avg_pnl_pct": -0.01,
+          "total_pnl_usd": -353.18
         },
         "True": {
           "trades": 27,
@@ -76,10 +76,10 @@
       },
       "earnings": {
         "False": {
-          "trades": 74,
-          "win_rate": 0.162,
-          "avg_pnl_pct": -1.81,
-          "total_pnl_usd": -4591.91
+          "trades": 75,
+          "win_rate": 0.16,
+          "avg_pnl_pct": -1.89,
+          "total_pnl_usd": -4772.46
         },
         "True": {
           "trades": 21,
@@ -90,10 +90,10 @@
       },
       "extended": {
         "False": {
-          "trades": 48,
-          "win_rate": 0.167,
-          "avg_pnl_pct": -3.5,
-          "total_pnl_usd": -5042.35
+          "trades": 49,
+          "win_rate": 0.163,
+          "avg_pnl_pct": -3.59,
+          "total_pnl_usd": -5222.9
         },
         "None": {
           "trades": 28,
@@ -110,10 +110,10 @@
       },
       "regime": {
         "bull": {
-          "trades": 77,
-          "win_rate": 0.195,
-          "avg_pnl_pct": -0.56,
-          "total_pnl_usd": -2106.72
+          "trades": 78,
+          "win_rate": 0.192,
+          "avg_pnl_pct": -0.65,
+          "total_pnl_usd": -2287.27
         },
         "neutral": {
           "trades": 18,
@@ -130,18 +130,18 @@
           "total_pnl_usd": -422.2
         },
         "unmatched": {
-          "trades": 77,
-          "win_rate": 0.195,
-          "avg_pnl_pct": -1.54,
-          "total_pnl_usd": -4306.58
+          "trades": 78,
+          "win_rate": 0.192,
+          "avg_pnl_pct": -1.62,
+          "total_pnl_usd": -4487.13
         }
       },
       "sleeve": {
         "False": {
-          "trades": 92,
-          "win_rate": 0.207,
-          "avg_pnl_pct": -0.99,
-          "total_pnl_usd": -3697.22
+          "trades": 93,
+          "win_rate": 0.204,
+          "avg_pnl_pct": -1.07,
+          "total_pnl_usd": -3877.77
         },
         "True": {
           "trades": 3,
@@ -153,7 +153,7 @@
     },
     "window": {
       "from": "2026-06-04",
-      "to": "2026-11-05"
+      "to": "2026-11-06"
     },
     "same_window_backtest": {
       "rules live Jun-Nov (r11_live)": {
@@ -178,7 +178,7 @@
     },
     "losses_by_exit": {
       "trend_break": -7370.95,
-      "stop_gapped": -3293.86,
+      "stop_gapped": -3474.41,
       "stop": -1381.76,
       "hard_loss": -643.62
     },
@@ -304,7 +304,7 @@
         }
       }
     ],
-    "total_pnl_usd": -4728.78
+    "total_pnl_usd": -4909.33
   },
   "trades": [
     {
@@ -2435,6 +2435,29 @@
         "rs_rank_at_screen": 96
       },
       "backtest_pnl_pct": -8.818
+    },
+    {
+      "symbol": "EBAY",
+      "entry_date": "2026-11-06",
+      "exit_date": "2026-11-24",
+      "pnl_pct": -7.8,
+      "pnl_usd": -180.55,
+      "hold_days": 18,
+      "tags": {
+        "exit": "stop_gapped",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": false,
+        "regime": "bull",
+        "backtest": "unmatched",
+        "sleeve": false
+      },
+      "context": {
+        "regime": "bull",
+        "extension": 0.1198,
+        "rs_rank_at_screen": 89
+      },
+      "backtest_pnl_pct": null
     }
   ]
 }

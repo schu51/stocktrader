@@ -1,80 +1,46 @@
 {
-  "generated_at": "2026-11-23T15:30:51.708914",
+  "generated_at": "2026-11-24T15:30:52.719764",
   "mode": "EXECUTE",
   "holdings": [
     {
+      "symbol": "ETON",
+      "market_value": 2615.14,
+      "pnl_pct": 7.8
+    },
+    {
       "symbol": "KVYO",
-      "market_value": 3068.31,
-      "pnl_pct": 10.12
+      "market_value": 3113.53,
+      "pnl_pct": 11.74
     },
     {
       "symbol": "REAL",
-      "market_value": 2358.35,
-      "pnl_pct": -16.73
+      "market_value": 2232.1,
+      "pnl_pct": -21.18
+    },
+    {
+      "symbol": "SLAB",
+      "market_value": 2431.66,
+      "pnl_pct": -0.36
     },
     {
       "symbol": "TTAN",
-      "market_value": 2691.61,
-      "pnl_pct": -4.13
+      "market_value": 2666.62,
+      "pnl_pct": -5.03
     },
     {
       "symbol": "VCEL",
-      "market_value": 3753.6,
-      "pnl_pct": 35.67
+      "market_value": 3852.16,
+      "pnl_pct": 39.23
+    },
+    {
+      "symbol": "WK",
+      "market_value": 2895.06,
+      "pnl_pct": 5.17
     }
   ],
   "sells": [],
   "trims": [],
-  "buys": [
-    {
-      "symbol": "WK",
-      "shares": 42,
-      "limit_price": 65.62,
-      "judgment": 13.0,
-      "judgment_rank": 2,
-      "name": "WORKIVA INC",
-      "setup": {
-        "setup": false,
-        "near_high": false,
-        "tight": true,
-        "breakout": false
-      },
-      "status": "submitted",
-      "order_id": "fee4eb8b-4e25-41ed-9be2-fa5f453bcc99"
-    },
-    {
-      "symbol": "ETON",
-      "shares": 39,
-      "limit_price": 71.6,
-      "judgment": 12.0,
-      "judgment_rank": 3,
-      "name": "Eton Pharmaceuticals, Inc.",
-      "setup": {
-        "setup": false,
-        "near_high": true,
-        "tight": false,
-        "breakout": false
-      },
-      "status": "submitted",
-      "order_id": "9322b60b-79e4-45e8-9d2a-f349209aafc2"
-    },
-    {
-      "symbol": "SLAB",
-      "shares": 11,
-      "limit_price": 253.19,
-      "judgment": 11.0,
-      "judgment_rank": 7,
-      "name": "SILICON LABORATORIES INC.",
-      "setup": {
-        "setup": false,
-        "near_high": true,
-        "tight": false,
-        "breakout": false
-      },
-      "status": "submitted",
-      "order_id": "f94c7631-0682-45ed-bacc-c66babbc5f20"
-    }
-  ],
+  "buys": [],
   "skipped": [
     {
       "symbol": "URGN",
@@ -104,7 +70,7 @@
   "failures": [],
   "alerts": [],
   "note": null,
-  "equity": 105023.19,
+  "equity": 105920.08,
   "setups": {
     "URGN": {
       "setup": false,
@@ -112,28 +78,10 @@
       "tight": false,
       "breakout": false
     },
-    "WK": {
-      "setup": false,
-      "near_high": false,
-      "tight": true,
-      "breakout": false
-    },
-    "ETON": {
-      "setup": false,
-      "near_high": true,
-      "tight": false,
-      "breakout": false
-    },
     "VCYT": {
       "setup": false,
       "near_high": false,
       "tight": true,
-      "breakout": false
-    },
-    "SLAB": {
-      "setup": false,
-      "near_high": true,
-      "tight": false,
       "breakout": false
     },
     "ALGM": {
@@ -161,13 +109,8 @@
       "breakout": false
     }
   },
-  "budget": 42009.28,
-  "slot": 2800.62,
-  "invested": 11871.87,
-  "list_date": "2026-11-21",
-  "stops_placed": [
-    "ETON",
-    "SLAB",
-    "WK"
-  ]
+  "budget": 42368.03,
+  "slot": 2824.54,
+  "invested": 19806.28,
+  "list_date": "2026-11-21"
 }

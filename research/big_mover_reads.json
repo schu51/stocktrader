@@ -381,5 +381,59 @@
     "why": "Wafer-fab, test and process-equipment makers form a recurring group with no theme yet; today they rose together in the broad chip rebound after Nvidia reinstated Jensen Huang, so the move itself was market-wide. The industrials group (PRIM, STRL, MTZ, MYRG, IESC, POWL, AGX, FIX, NVT) looks like missing ai_power data-center builders rather than a new theme; NVDX/NVDL/NVDU are 2x Nvidia ETFs, and the other sector groups are general rebound.",
     "by": "claude",
     "date": "2026-11-23"
+  },
+  "AXTQ@2026-11-24": {
+    "catalyst": "theme_move",
+    "why": "AXTQ is a 2x short AXT Inc (AXTI) ETF; the optical-substrate maker fell about 16% as AI-hardware stocks gave back the prior day's Nvidia-led rebound.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_optical",
+    "by": "claude",
+    "date": "2026-11-24"
+  },
+  "IREZ@2026-11-24": {
+    "catalyst": "theme_move",
+    "why": "IREZ is a 2x short IREN ETF; IREN and other AI neocloud/miner names fell as the prior day's Nvidia rebound faded.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_compute",
+    "by": "claude",
+    "date": "2026-11-24"
+  },
+  "LITZ@2026-11-24": {
+    "catalyst": "theme_move",
+    "why": "LITZ is a 2x short Lumentum (LITE) ETF; LITE fell as AI optical suppliers sold off with the chip pullback (the gold-futures headline is unrelated).",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "ai_optical",
+    "by": "claude",
+    "date": "2026-11-24"
+  },
+  "MUZ@2026-11-24": {
+    "catalyst": "theme_move",
+    "why": "MUZ is a 2x short Micron (MU) ETF; memory stocks fell as the prior day's chip rebound reversed.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "memory_storage",
+    "by": "claude",
+    "date": "2026-11-24"
+  },
+  "SNDQ@2026-11-24": {
+    "catalyst": "theme_move",
+    "why": "SNDQ is a 2x short SanDisk (SNDK) ETF; SNDK fell about 10% as memory and storage stocks reversed the prior day's rally.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "theme": "memory_storage",
+    "by": "claude",
+    "date": "2026-11-24"
+  },
+  "SOXS@2026-11-24": {
+    "catalyst": "sector_move",
+    "why": "SOXS is a 3x bear semiconductor ETF; chip stocks fell as Nvidia's prior-day surge faded and traders piled into bearish chip bets. The rule's 'news' label just counted headlines about the ETF itself.",
+    "lesson": "Nothing visible beforehand; it is the mirror of a falling stock. Inverse/leveraged ETF (distance from the 52-week high is decay, not a setup); exclude it from mover stats like the earlier inverse single-stock ETF reads.",
+    "by": "claude",
+    "date": "2026-11-24"
+  },
+  "THEME@2026-11-24": {
+    "proposed_theme": "none",
+    "members": [],
+    "why": "The flagged 'other' group (AXTQ, SOXS, BEZ) is not a trend: AXTQ and SOXS are inverse ETFs that rose as chip stocks fell, and BEZ is unrelated. The consumer_cyclical (KSS, DKS, CPNG) and healthcare groups are earnings reactions and the existing biotech theme, not new themes. Again suggest auto-excluding inverse/leveraged ETFs from mover stats.",
+    "by": "claude",
+    "date": "2026-11-24"
   }
 }

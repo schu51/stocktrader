@@ -1,0 +1,197 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-24",
+  "generated_at": "2026-11-24T14:23:46+00:00",
+  "status": "amber",
+  "headline": "AI/semis are gapping down ~5% premarket (NVDA, AMD, AVGO, MRVL, AMAT, KLAC) in a bear regime, and the screener's top names are all tech; no holding gaps, but CBOE (2.1%) and KO (2.5%) sit closest to their stops and SJM reports results today 5.0% above its stop.",
+  "calls": [
+    {
+      "subject": "CBOE",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions[CBOE].stop_loss",
+        "osint_latest.json:companies[CBOE].events",
+        "options_sentiment.json:reads[CBOE]",
+        "screener.json:rs_ranks.CBOE"
+      ],
+      "why": "Price 356.25 vs stop 348.75 (2.1% away) is the tightest in the book; news surge (+1) and the SEC CAT funding proposal are relevant but not decisive, RS 85 and options +1 keep it intact."
+    },
+    {
+      "subject": "KO",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions[KO].stop_loss",
+        "osint_latest.json:companies[KO].detail.insiders_30d",
+        "osint_latest.json:companies[KO].events"
+      ],
+      "why": "2.5% above stop with $16.5M of discretionary insider selling (4 sellers) and an 8-K officer/director change; news surge tone +0.17, short volume collapsed and options +3 with new call opening argue the other way."
+    },
+    {
+      "subject": "SJM",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[SJM].events",
+        "latest.json:positions[SJM].stop_loss",
+        "options_sentiment.json:reads[SJM]"
+      ],
+      "why": "8-K results announced today with the stock 5.0% above its stop; news feed failed so the tone of the print is unknown; options +2 (2026-11-23) is pre-print context only."
+    },
+    {
+      "subject": "EBAY",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[EBAY].detail.insiders_30d",
+        "latest.json:positions[EBAY].stop_loss"
+      ],
+      "why": "$9.2M discretionary insider selling in 30d and 4.8% above stop; the Labour Dept contractor rule is a loose match and discounted."
+    },
+    {
+      "subject": "CRL",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[CRL].events",
+        "options_sentiment.json:reads[CRL]",
+        "screener.json:rs_ranks.CRL"
+      ],
+      "why": "Short-volume spike to 70% vs 49% avg (z +2.2) is a warning, but RS 96, options +2 and 8.7% to the stop make it watch-only."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN",
+        "options_sentiment.json:reads[TTAN]"
+      ],
+      "why": "RS rank 24 (below 50) with options -1 (skew +13); laggard in a momentum book, though 20.5% above stop."
+    },
+    {
+      "subject": "WK",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.WK",
+        "options_sentiment.json:reads[WK]"
+      ],
+      "why": "RS rank 21 with options -1 and put skew +26 vol pts; laggard, 26% above stop."
+    },
+    {
+      "subject": "MO",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions[MO].stop_loss",
+        "options_sentiment.json:reads[MO]"
+      ],
+      "why": "3.3% above stop; options +2 is the only signal."
+    },
+    {
+      "subject": "ZETA",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[ZETA]"
+      ],
+      "why": "Only B-grade thesis in the screener top 10 (RS 93, fresh setup 12% from base), but it is tech on a day the AI complex is gapping down."
+    },
+    {
+      "subject": "ZS",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "premarket.json:top_candidates[ZS]"
+      ],
+      "why": "Premarket top candidate with an A thesis (score 70), +20% in 5 days, above its 50MA; would qualify under SELECTIVE but is tech."
+    },
+    {
+      "subject": "BRZE",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "osint_latest.json:companies[BRZE].events",
+        "screener.json:candidates[BRZE]"
+      ],
+      "why": "PREM14A merger proxy filed 2026-11-20 points to a pending deal, which usually pins price; with a C grade and 100% extension it is not a momentum entry."
+    },
+    {
+      "subject": "NTSK",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[NTSK].events",
+        "screener.json:candidates[NTSK]"
+      ],
+      "why": "RS 99 but D grade, 50% extended and a short-volume spike to 71% (z +2.4)."
+    },
+    {
+      "subject": "PAYC",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[PAYC].events",
+        "osint_latest.json:companies[PAYC].detail.insiders_30d"
+      ],
+      "why": "Short-volume spike 76% vs 56% (z +2.2) plus $1.7M discretionary insider selling."
+    },
+    {
+      "subject": "SN",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:companies[SN].detail.insiders_30d"
+      ],
+      "why": "$33.9M of discretionary insider selling (2 sellers) alongside a neutral-tone news surge (21 headlines)."
+    },
+    {
+      "subject": "OKTA",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[OKTA]",
+        "premarket.json:avoids"
+      ],
+      "why": "Top-ranked candidate (RS 99) but C grade, 22% extended and on the premarket avoid list."
+    },
+    {
+      "subject": "RBRK",
+      "direction": "bullish",
+      "horizon_days": 7,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:catalyst_watch[RBRK]"
+      ],
+      "why": "Catalyst watch only: earnings ~2026-11-26 (estimate), RS 94, earnings_theme_hot pattern (lift 31x, hit rate 3.7%)."
+    }
+  ],
+  "notes": [
+    "CALL: DEFENSIVE \u2014 bear regime (SPY 722.29 below 200MA 730.47 and 50MA 759.30), broad AI/semis gap-downs of ~5% premarket and a screener list dominated by C/D-grade extended tech; take no new entries before the open settles, and only an A/B name (ZS, ZETA) if tech stabilises.",
+    "Account: $105,338, drawdown 9.65% (CAUTION, max 15%), cash 11.7%. Eight holdings within ~5% of stop: CBOE 2.1%, KO 2.5%, MO 3.3%, MAR 4.1%, FDS 4.2% (RS 67), KDP 4.4%, EBAY 4.8%, SJM 5.0%. No holding is on the premarket gap list.",
+    "CTLP has no stop_loss in latest.json; ETON, REAL, VCEL and CTLP have no rs_rank.",
+    "OSINT reads: CBOE +1 (news surge, SEC CAT proposal), DG +1 (news surge, tone +0.21; options -1), KO +1 news but heavy discretionary insider selling, CRL -1 (short spike), EBAY 0 (insider selling), SJM 0 (results today), NAVN -1 (StockTwits only, low weight), NTSK/PAYC -1 (short spikes), BRZE 0 (merger proxy; FTZ notice is a loose match), SN 0 (insider selling).",
+    "Options: no holding or top candidate is at <= -2 (only ARWR and HTHT are). Options data is from 2026-11-23 close and is context, not proof.",
+    "Screener health: generated today 14:15 UTC, price_source alpaca, coverage 99.7%, 149 RS-qualifying, 50 final. universe_size is 1,377, well above the ~518 expected; check whether the universe was widened on purpose.",
+    "Catalyst watch (watch-only): RBRK earnings ~11-26 (RS 94, theme hot); AMBA and CLSK earnings ~11-24 (far-from-high pattern, RS 9 and 6); DELL also listed.",
+    "File dates: osint_latest, premarket, screener, latest are today. options_sentiment and big_movers are from 2026-11-23 (prior close), ops_status 2026-11-23 22:30 UTC, theses 2026-11-21.",
+    "Ops amber (not red): 8 failure issues open more than 2 days (#54, #53, #51, #50, #43, #34, #15 ...). No notification sent."
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-25",
+  "generated_at": "2026-11-25T14:23:50+00:00",
+  "status": "amber",
+  "headline": "AI/semis are gapping down 5-9% premarket (NVDA -6.5%, AMD -7.5%, CRWV -9.2%) in a bear regime with SPY below its 200MA; our defensive book has no gap alerts, but CBOE sits 3.6% above its stop and DG reports earnings tomorrow.",
+  "calls": [
+    {
+      "subject": "CBOE",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.CBOE.stop_loss",
+        "osint_latest.json:CBOE.events federal_register"
+      ],
+      "why": "Price 361.65 is 3.6% above the 348.75 stop; the only OSINT item is a routine SEC proposed rule on CAT funding, options mildly bullish (+1)."
+    },
+    {
+      "subject": "KO",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.KO.stop_loss",
+        "osint_latest.json:KO.score=-1",
+        "options_sentiment.json:KO.options_score=+2"
+      ],
+      "why": "4.1% above stop with a sour StockTwits read (50% bullish of 8 posts, thin sample) and an 8-K officer/director change; options lean bullish (+2), so conviction is low."
+    },
+    {
+      "subject": "MAR",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.MAR.stop_loss"
+      ],
+      "why": "4.2% above stop, no OSINT events, options +1; watch for a stop hit if risk-off spreads beyond tech."
+    },
+    {
+      "subject": "MO",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.MO.stop_loss",
+        "options_sentiment.json:MO.options_score=+3"
+      ],
+      "why": "5.0% above stop but options are bullish (+3, 70% of calls opening)."
+    },
+    {
+      "subject": "CRL",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:CRL.events finra short_volume z+2.6",
+        "options_sentiment.json:CRL.options_score=+2"
+      ],
+      "why": "Largest position (6.35%) saw a short-volume spike to 77% vs 51% avg; options (+2, 836 calls vs 67 puts) disagree, so this is a watch, not an exit signal."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN=18",
+        "latest.json:positions.TTAN.unrealized_pnl_pct=-10.38"
+      ],
+      "why": "RS rank 18 and down 10.4%; a laggard 16% above its stop that the momentum rules would not buy today."
+    },
+    {
+      "subject": "WK",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.WK=24"
+      ],
+      "why": "RS rank 24, well below 50; momentum has faded even though the position is +3.7%."
+    },
+    {
+      "subject": "DG",
+      "direction": "neutral",
+      "horizon_days": 2,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:catalyst_watch.DG earnings 2026-11-26",
+        "options_sentiment.json:DG.options_score=+1"
+      ],
+      "why": "Holding with earnings expected tomorrow (earnings_leader pattern, RS 88); binary event risk, 13% cushion to stop."
+    },
+    {
+      "subject": "ETON",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:ETON.events news velocity"
+      ],
+      "why": "News surge (7 headlines vs 2/day, 4 outlets, tone +0.29) on a +7.3% holding with a wide 30% stop cushion."
+    },
+    {
+      "subject": "REAL",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:REAL.events news velocity",
+        "latest.json:positions.REAL.unrealized_pnl_pct=-20.33"
+      ],
+      "why": "11 headlines vs 2.3/day with flat tone on a position already -20%; 5.8% above stop, so the news could push it either way."
+    },
+    {
+      "subject": "VRNS",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:candidates.VRNS rs_rank=92 thesis_grade=B setup 'fresh setup (6% from base) tight base'"
+      ],
+      "why": "Best entry quality among top candidates: B thesis, fresh tight base; but it is tech on a day tech is gapping down, so wait for the open to settle."
+    },
+    {
+      "subject": "ANF",
+      "direction": "neutral",
+      "horizon_days": 2,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.ANF rs_rank=98 thesis_grade=B",
+        "screener.json:catalyst_watch.ANF earnings 2026-11-25"
+      ],
+      "why": "Top RS (98) with a B thesis, but 27% extended and reporting earnings today; do not front-run the print."
+    },
+    {
+      "subject": "SEZL",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:SEZL.events sec 8-K",
+        "screener.json:candidates.SEZL thesis_grade=D"
+      ],
+      "why": "8-K shows a material agreement, new debt and a shareholder vote (possible dilution path) on a D-grade, 36%-extended name; the OSINT +1 is not trustworthy."
+    },
+    {
+      "subject": "HNGE",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.HNGE rs_rank=97 thesis_grade=C"
+      ],
+      "why": "RS 97, C thesis, modest 19% extension; tech exposure on a risk-off morning."
+    },
+    {
+      "subject": "CAKE",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates.CAKE rs_rank=97 thesis_grade=C",
+        "options_sentiment.json:CAKE.options_score=-1"
+      ],
+      "why": "RS 97, C thesis, 14% from base; options lean slightly bearish (-1)."
+    }
+  ],
+  "notes": [
+    "CALL: DEFENSIVE \u2014 screener regime is bear (SPY 718.78 below 200MA 730.62, 3m -6.6%), the AI/semi/software complex is gapping 4-9% premarket, and drawdown is 9.19% (CAUTION, 15% cap); only A/B thesis entries outside tech, and let the open settle before any buy.",
+    "Data freshness: osint_latest, premarket, screener and latest are from today. options_sentiment.json and big_movers.json are from 2026-11-24 close (expected for overnight files). ops_status.json is from 2026-11-24 22:30 UTC. theses.json is from 2026-11-21.",
+    "Screener health: universe_size 1377 (not ~518, so the universe has been widened or the expected value is out of date; worth confirming), price_source alpaca, data_coverage 99.7%, 149 RS-qualifying, 50 final.",
+    "No holding has a premarket gap alert; all 48 gap alerts are AI/semis/software/crypto names on the avoid list. Premarket top picks: DXCM (B), V (B), AAPL (A).",
+    "Options: no holding or top candidate is clearly bearish (score <= -2). Bullish with unusual calls: GILD (+3) among holdings; ASO and NTSK among candidates (both highly extended, D/C grade). Options are measured context only.",
+    "Catalyst watch (watch-only): earnings today ANF, KSS, CRM, DY; 11-26 BBY, DG (held), DLTR, S, ULTA; 11-30 SAIC; 12-01 CRDO, DELL, AEO, BOX, ASAN. The watch list's record is weak: 2 hits in 135 names over 9 days, avg next day -0.8%.",
+    "Ops status amber, not red: 9 failure issues open more than 2 days (#12, #15 Macro Research; #51, #62 Weekly Review; #53 Daily Eval; #34/#43/#50/#54 Ops monitor). No notification sent.",
+    "Holdings with no RS rank in the screener: CTLP, ETON, REAL, VCEL (likely outside the universe)."
+  ]
+}

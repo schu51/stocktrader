@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T15:15:51.791845",
+  "generated_at": "2026-11-25T16:30:48.419097",
   "positions_checked": 12,
   "exits_triggered": [],
   "stops_updated": [],
@@ -12,11 +12,18 @@
       "qty": 281.0
     }
   ],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "REAL",
+      "trigger": "BROKER_STOP",
+      "price": 10.51,
+      "pnl_pct": -25.04,
+      "exit_date": "2026-11-25"
+    }
+  ],
   "sleeve_positions": [
     "ETON",
     "KVYO",
-    "REAL",
     "SLAB",
     "TTAN",
     "VCEL",

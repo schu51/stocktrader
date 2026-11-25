@@ -5049,7 +5049,7 @@
   {
     "trade_id": "DMD-20261113153104-REAL",
     "symbol": "REAL",
-    "status": "OPEN",
+    "status": "CLOSED",
     "sleeve": "diamond",
     "entry_date": "2026-11-13",
     "entry_ts": "2026-11-13T15:31:04.472947",
@@ -5061,15 +5061,17 @@
     "order_id": "ff5d4b7f-623b-4dc1-9f8a-a60215324421",
     "judgment": 10.0,
     "judgment_rank": 1,
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-25",
+    "exit_price": 10.51,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": -709.02,
+    "pnl_pct": -25.04,
+    "hold_days": 12,
     "entry_limit": 14.03,
     "entry_filled": true,
-    "peak_price": 14.06
+    "peak_price": 14.06,
+    "exit_ts": "2026-11-25T15:27:57.380785",
+    "exit_stop": 10.52
   },
   {
     "trade_id": "DMD-20261113153104-TTAN",

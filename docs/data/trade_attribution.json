@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-25T16:30:48",
+  "generated_at": "2026-11-25T22:31:10",
   "findings": [
-    "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 21% of 96.",
-    "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 21% of 96.",
+    "Over the same window (2026-06-04 to 2026-11-03), the backtest of the rules live Jun-Nov (r11_live) won 24% of 126 trades; live won 21% of 97.",
+    "Over the same window (2026-06-04 to 2026-09-22), the backtest of the rules live since Nov 10 (r11_newlive) won 57% of 74 trades; live won 21% of 97.",
     "Most exits were trend break: 69 trades, 16% won, -5,244 USD.",
     "27 trades were closed within 3 days (0% won, -4,556 USD).",
     "Bought 15%+ above the 50-day average: 32% won (avg +3.6%) vs 16% (avg -3.6%) otherwise.",
@@ -10,10 +10,10 @@
   ],
   "summary": {
     "all": {
-      "trades": 96,
-      "win_rate": 0.208,
-      "avg_pnl_pct": -1.51,
-      "total_pnl_usd": -4909.33
+      "trades": 97,
+      "win_rate": 0.206,
+      "avg_pnl_pct": -1.75,
+      "total_pnl_usd": -5618.35
     },
     "by_tag": {
       "exit": {
@@ -42,10 +42,10 @@
           "total_pnl_usd": 167.31
         },
         "stop": {
-          "trades": 9,
-          "win_rate": 0.333,
-          "avg_pnl_pct": -5.98,
-          "total_pnl_usd": -1327.74
+          "trades": 10,
+          "win_rate": 0.3,
+          "avg_pnl_pct": -7.89,
+          "total_pnl_usd": -2036.76
         },
         "stop_gapped": {
           "trades": 8,
@@ -62,10 +62,10 @@
       },
       "quick_fail": {
         "False": {
-          "trades": 69,
-          "win_rate": 0.29,
-          "avg_pnl_pct": -0.01,
-          "total_pnl_usd": -353.18
+          "trades": 70,
+          "win_rate": 0.286,
+          "avg_pnl_pct": -0.37,
+          "total_pnl_usd": -1062.2
         },
         "True": {
           "trades": 27,
@@ -76,10 +76,10 @@
       },
       "earnings": {
         "False": {
-          "trades": 75,
-          "win_rate": 0.16,
-          "avg_pnl_pct": -1.89,
-          "total_pnl_usd": -4772.46
+          "trades": 76,
+          "win_rate": 0.158,
+          "avg_pnl_pct": -2.2,
+          "total_pnl_usd": -5481.48
         },
         "True": {
           "trades": 21,
@@ -96,10 +96,10 @@
           "total_pnl_usd": -5222.9
         },
         "None": {
-          "trades": 28,
-          "win_rate": 0.214,
-          "avg_pnl_pct": -1.36,
-          "total_pnl_usd": -1751.19
+          "trades": 29,
+          "win_rate": 0.207,
+          "avg_pnl_pct": -2.17,
+          "total_pnl_usd": -2460.21
         },
         "True": {
           "trades": 19,
@@ -116,10 +116,10 @@
           "total_pnl_usd": -2287.27
         },
         "neutral": {
-          "trades": 18,
-          "win_rate": 0.278,
-          "avg_pnl_pct": -5.21,
-          "total_pnl_usd": -2622.06
+          "trades": 19,
+          "win_rate": 0.263,
+          "avg_pnl_pct": -6.26,
+          "total_pnl_usd": -3331.08
         }
       },
       "backtest": {
@@ -130,10 +130,10 @@
           "total_pnl_usd": -422.2
         },
         "unmatched": {
-          "trades": 78,
-          "win_rate": 0.192,
-          "avg_pnl_pct": -1.62,
-          "total_pnl_usd": -4487.13
+          "trades": 79,
+          "win_rate": 0.19,
+          "avg_pnl_pct": -1.91,
+          "total_pnl_usd": -5196.15
         }
       },
       "sleeve": {
@@ -144,16 +144,16 @@
           "total_pnl_usd": -3877.77
         },
         "True": {
-          "trades": 3,
-          "win_rate": 0.333,
-          "avg_pnl_pct": -15.19,
-          "total_pnl_usd": -1031.56
+          "trades": 4,
+          "win_rate": 0.25,
+          "avg_pnl_pct": -17.66,
+          "total_pnl_usd": -1740.58
         }
       }
     },
     "window": {
       "from": "2026-06-04",
-      "to": "2026-11-06"
+      "to": "2026-11-13"
     },
     "same_window_backtest": {
       "rules live Jun-Nov (r11_live)": {
@@ -179,7 +179,7 @@
     "losses_by_exit": {
       "trend_break": -7370.95,
       "stop_gapped": -3474.41,
-      "stop": -1381.76,
+      "stop": -2090.78,
       "hard_loss": -643.62
     },
     "worst": [
@@ -192,6 +192,21 @@
           "exit": "stop_gapped",
           "quick_fail": false,
           "earnings": true,
+          "extended": null,
+          "regime": "neutral",
+          "backtest": "unmatched",
+          "sleeve": true
+        }
+      },
+      {
+        "symbol": "REAL",
+        "entry_date": "2026-11-13",
+        "pnl_pct": -25.04,
+        "pnl_usd": -709.02,
+        "tags": {
+          "exit": "stop",
+          "quick_fail": false,
+          "earnings": false,
           "extended": null,
           "regime": "neutral",
           "backtest": "unmatched",
@@ -287,24 +302,9 @@
           "backtest": "matched",
           "sleeve": false
         }
-      },
-      {
-        "symbol": "MRVL",
-        "entry_date": "2026-08-20",
-        "pnl_pct": -4.96,
-        "pnl_usd": -296.36,
-        "tags": {
-          "exit": "trend_break",
-          "quick_fail": false,
-          "earnings": false,
-          "extended": null,
-          "regime": "bull",
-          "backtest": "unmatched",
-          "sleeve": false
-        }
       }
     ],
-    "total_pnl_usd": -4909.33
+    "total_pnl_usd": -5618.35
   },
   "trades": [
     {
@@ -2456,6 +2456,27 @@
         "regime": "bull",
         "extension": 0.1198,
         "rs_rank_at_screen": 89
+      },
+      "backtest_pnl_pct": null
+    },
+    {
+      "symbol": "REAL",
+      "entry_date": "2026-11-13",
+      "exit_date": "2026-11-25",
+      "pnl_pct": -25.04,
+      "pnl_usd": -709.02,
+      "hold_days": 12,
+      "tags": {
+        "exit": "stop",
+        "quick_fail": false,
+        "earnings": false,
+        "extended": null,
+        "regime": "neutral",
+        "backtest": "unmatched",
+        "sleeve": true
+      },
+      "context": {
+        "regime": "neutral"
       },
       "backtest_pnl_pct": null
     }

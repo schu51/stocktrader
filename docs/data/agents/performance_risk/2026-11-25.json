@@ -1,0 +1,101 @@
+{
+  "agent": "performance_risk",
+  "date": "2026-11-25",
+  "generated_at": "2026-11-25T21:50:00+00:00",
+  "status": "amber",
+  "headline": "The last-20-trades profit factor is still 0.15 (2 wins in 20) and the diamond sleeve took its second 25% stop-out in a week (REAL -$709), leaving the account at $105,675, 9.4% below its $116,591 peak; WK is newly broken again (RS 24, live put/call 0.95 -> 2.68) alongside TTAN, and CBOE is 0.9% from its stop.",
+  "calls": [
+    {
+      "subject": "TTAN",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN=18",
+        "latest.json:positions.TTAN.unrealized_pnl_pct=-7.1",
+        "latest.json:positions.TTAN.stop_loss=61.94",
+        "options_sentiment.json:TTAN.options_score=+3",
+        "alphavantage:REALTIME_PUT_CALL_RATIO"
+      ],
+      "why": "Still broken on two lags (RS 18, -7.1%); options are bullish (repo +3, live put/call 0.21) but the broker stop sits 23.8% below price, so more loss is possible before any exit."
+    },
+    {
+      "subject": "WK",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:rs_ranks.WK=24",
+        "alphavantage:REALTIME_PUT_CALL_RATIO",
+        "latest.json:positions.WK.stop_loss=49.16",
+        "trades.json:WK diamond entry 2026-11-23"
+      ],
+      "why": "Weakening -> broken: RS 24 lags and the live full-chain put/call jumped 0.95 -> 2.68 (Dec 1.54); the position is +6.8% but its diamond stop is 42% away."
+    },
+    {
+      "subject": "CBOE",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.CBOE.stop_loss=348.75",
+        "latest.json:positions.CBOE.current_price=351.8",
+        "screener.json:rs_ranks.CBOE=87",
+        "alphavantage:REALTIME_PUT_CALL_RATIO"
+      ],
+      "why": "Weakening: fell from 361.65 this morning to 351.8, now 0.9% above a stop that is above cost; RS 87 holds but live put/call 0.95 sits just under the bearish line."
+    },
+    {
+      "subject": "KO",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.KO.stop_loss=94.22",
+        "osint_latest.json:KO.score=-1",
+        "options_sentiment.json:KO.options_score=+3",
+        "alphavantage:REALTIME_PUT_CALL_RATIO"
+      ],
+      "why": "Weakening on a stop 3.7% away (above cost) and a mild OSINT -1; RS 81, repo options +3 and live put/call 0.52 keep the thesis intact."
+    },
+    {
+      "subject": "KDP",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.KDP.stop_loss=33.95",
+        "latest.json:positions.KDP.unrealized_pnl_pct=-2.8",
+        "screener.json:rs_ranks.KDP=82",
+        "alphavantage:REALTIME_PUT_CALL_RATIO"
+      ],
+      "why": "Weakening: -2.8% with a below-cost stop 4.9% away (cushion was 5.2% on 11-24); RS 82 and a very call-heavy live chain (put/call 0.08) are intact."
+    },
+    {
+      "subject": "MAR",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.MAR.stop_loss=396.26",
+        "latest.json:positions.MAR.unrealized_pnl_pct=-2.2",
+        "screener.json:rs_ranks.MAR=87",
+        "options_sentiment.json:MAR.options_score=+1"
+      ],
+      "why": "Unchanged weakening: small loss with a below-cost stop 4.9% away; RS 87 and options +1 intact (no live check, budget spent)."
+    }
+  ],
+  "notes": [
+    "BAD NEWS FIRST: last-20-trades profit factor 0.15 (eval_latest.json, 2026-11-24 22:06): 20 trades, win rate 10%, expectancy -6.67%/trade, -$3,601.24 (was 0.14 on 11-23). Last 30 days PF 0.21 over 24 trades; all-time PF 0.62 over 96 trades, -$4,909. Today's REAL loss is not yet in eval.",
+    "Drawdown: 9.4% below the bot's peak ($105,674.87 post-market vs $116,590.55 on 2026-10-06, the max in history.json), 5.6 points from the 15% red line (was 9.1% on 11-24). eval account_30d drawdown -8.95% as of 11-24.",
+    "Today: post-market $105,674.87 vs $105,992.41 post-market on 11-24 (-$317.54, -0.30%); vs history.json's 11-24 15:00 value $106,155.31 it is -$480.44 (-0.45%). 18 positions (10 winners / 8 losers), unrealized +$2,606.36, cash $39,136.97, risk LOW (27.2). Main bot: 0 signals, 0 orders, 0 skips (twelfth straight trading day without a main-bot buy); daily_opening_buys ranked a bear-regime list (rs_threshold 90; ANF, SEZL, HNGE, CAKE, VRNS top) with no order records after it. 3 stops updated.",
+    "Exit: REAL (diamond sleeve) BROKER_STOP at 10.51 vs stop 10.52 (slip -0.1%, clean fill), -25.04%, -$709.02, held 12 days, peak 14.06 vs entry 14.02 so it never worked. This is the sleeve's second 25% stop-out in 7 days (WK -25.08% on 11-19). Sleeve closed trades in attribution: 3, avg -15.19% (VCYT -43.5%, WK -25.1%); with REAL that is 4. Under 10 trades, so an observation only, not a pattern; the 25% stop width means each sleeve loss is about 3x a main-book loss.",
+    "Thesis health across 18 holdings: 11 intact (CRL, DG, ETON, FDS, GILD, HLT, KVYO, MO, SJM, SLAB, VCEL), 4 weakening (CBOE, KDP, KO, MAR), 2 broken (TTAN, WK; both have broker stops), 1 not assessable (CTLP). Changes since 11-24: WK weakening -> broken (live put/call 0.95 -> 2.68); FDS, MO, CRL weakening -> intact (FDS -2.4% with 7.9% cushion, MO cushion widened to 6.0%, CRL RS 96 with options +2 despite the short-volume spike); CBOE intact -> weakening (cushion 3.8% -> 0.9%); KO intact -> weakening (3.7% cushion, OSINT -1); REAL closed. DG reports earnings 11-26 with a 14.3% stop cushion. Lagging RS also on KVYO (52, borderline) only.",
+    "EXECUTION, CTLP: 281 shares (~$3,147, +5.3%) still have no stop; the intraday exit monitor failed 12 times today with 'asset CTLP is not active'. It is inactive on Alpaca and needs manual handling at the broker; flagged since the 2026-11-06 weekly review. No options or RS data either.",
+    "EXECUTION, stop fills: one today (REAL), clean. Last 10 (eval live.stop_fills, 11-24): mean slip -3.48%, median -0.31%, 2 gapped past 2%, worst VCYT -24.6%. Eval alert: 'Stop exits filled 3.5% below their stop on average (last 10)'.",
+    "EXECUTION, tracking gap past threshold: eval_latest (11-24) live -4.76% vs backtest -0.85% over 30 days, gap -3.91 pts (narrowed from -5.24 on 11-23). Rollback watch on sma200_exit: lag -4.58% (was -2.73%), 9 trading days, watching, not triggered (would revert to breakeven5_spy2).",
+    "Patterns (96 closed trades in trade_attribution.json, enough to recommend action): nothing materially changed this week; EBAY added (96 trades, stop_gapped now 8). (1) Quick failures: 27 trades closed within 3 days, 0% won, -$4,556; the other 69 net -$353. (2) Trend-break exits: 69 trades, 16% won, -$5,244. (3) stop_gapped exits: 8 trades, 0% won, -$3,474. (4) Entries 15%+ above the 50-day won 32% (avg +3.6%) vs 16% (avg -3.6%). (5) Live won 21% of 96 vs 24% (r11_live) and 57% (r11_newlive) backtests over overlapping windows. The recommendation stands: losses concentrate in quick-fail entries and trend-break exits.",
+    "Alpha Vantage: 5 REALTIME_PUT_CALL_RATIO calls (budget 5), one at a time, no rate-limit errors. Close reads (vs 11-24 close where available): TTAN 0.21 (first successful read; timed out 11-24), CBOE 0.95, KO 0.52, WK 0.95 -> 2.68, KDP 0.08. No morning -> close comparison possible: today's research_analyst record holds no live put/call ratios. MAR left unchecked live.",
+    "Stale or missing data: eval_latest.json is from 2026-11-24 evening (today's eval has not run yet); experiments.json last evaluated 2026-11-21; latest.json generated 15:01 UTC but synced 21:30 UTC; trade_attribution.json does not yet include REAL. ops_status (16:30 UTC) amber, no red, 9 failure issues open more than 2 days (#12, #15, #34, #43, #50, #51, #53, #54, #62). screener rs_ranks have no entry for CTLP, ETON, VCEL. options_sentiment.json refreshed 21:17 UTC today (close read); CTLP failed ('no price')."
+  ]
+}

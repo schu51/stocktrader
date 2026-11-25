@@ -3,21 +3,21 @@
   "run_id": "20261125_150056",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 105718.83,
+    "portfolio_value": 105670.08,
     "cash": 39136.97,
     "buying_power": 37180.1215,
-    "long_market_value": 66581.86,
-    "unrealized_pnl": 2650.32
+    "long_market_value": 66533.11,
+    "unrealized_pnl": 2601.57
   },
   "positions": [
     {
       "symbol": "CBOE",
       "qty": 16,
       "avg_cost": 347.02,
-      "current_price": 354.13,
-      "market_value": 5666.15,
-      "unrealized_pnl": 113.87,
-      "unrealized_pnl_pct": 2.05,
+      "current_price": 351.8,
+      "market_value": 5628.8,
+      "unrealized_pnl": 76.52,
+      "unrealized_pnl_pct": 1.38,
       "stop_loss": 348.75,
       "side": "long",
       "asset_class": "us_equity",
@@ -213,10 +213,10 @@
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 97.81,
-      "market_value": 3716.64,
-      "unrealized_pnl": 154.16,
-      "unrealized_pnl_pct": 4.33,
+      "current_price": 97.59,
+      "market_value": 3708.42,
+      "unrealized_pnl": 145.94,
+      "unrealized_pnl_pct": 4.1,
       "stop_loss": 94.22,
       "side": "long",
       "asset_class": "us_equity",
@@ -235,10 +235,10 @@
       "symbol": "KVYO",
       "qty": 133,
       "avg_cost": 20.95,
-      "current_price": 23.76,
-      "market_value": 3160.08,
-      "unrealized_pnl": 373.73,
-      "unrealized_pnl_pct": 13.41,
+      "current_price": 23.74,
+      "market_value": 3157.42,
+      "unrealized_pnl": 371.07,
+      "unrealized_pnl_pct": 13.32,
       "stop_loss": 15.71,
       "side": "long",
       "asset_class": "us_equity",
@@ -279,10 +279,10 @@
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 76.18,
-      "market_value": 3732.64,
-      "unrealized_pnl": -12.82,
-      "unrealized_pnl_pct": -0.34,
+      "current_price": 76.28,
+      "market_value": 3737.72,
+      "unrealized_pnl": -7.74,
+      "unrealized_pnl_pct": -0.21,
       "stop_loss": 71.93,
       "side": "long",
       "asset_class": "us_equity",
@@ -301,10 +301,10 @@
       "symbol": "SJM",
       "qty": 28,
       "avg_cost": 130.91,
-      "current_price": 130.26,
-      "market_value": 3647.28,
-      "unrealized_pnl": -18.12,
-      "unrealized_pnl_pct": -0.49,
+      "current_price": 130.06,
+      "market_value": 3641.68,
+      "unrealized_pnl": -23.72,
+      "unrealized_pnl_pct": -0.65,
       "stop_loss": 121.83,
       "side": "long",
       "asset_class": "us_equity",
@@ -662,7 +662,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-11-25T23:00:58.766850+00:00",
+  "sync_at": "2026-11-25T23:30:46.216746+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -727,6 +727,10 @@
       {
         "time": "23:00",
         "value": 105718.83
+      },
+      {
+        "time": "23:30",
+        "value": 105670.08
       }
     ]
   }

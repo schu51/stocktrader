@@ -1,0 +1,99 @@
+{
+  "agent": "performance_risk",
+  "date": "2026-11-26",
+  "generated_at": "2026-11-26T21:55:00+00:00",
+  "status": "amber",
+  "headline": "Market holiday (Thanksgiving), so nothing traded and the account is flat at $105,672, 9.4% below its $116,591 peak; the bad news stands: the last-20-trades profit factor fell to 0.13 (2 wins in 20) once REAL's stop-out was counted, TTAN and WK stay broken, and CBOE is 0.9% from its stop going into Friday's half-day.",
+  "calls": [
+    {
+      "subject": "TTAN",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN=14",
+        "latest.json:positions.TTAN.unrealized_pnl_pct=-7.01",
+        "latest.json:positions.TTAN.stop_loss=61.94",
+        "options_sentiment.json:TTAN.options_score=+3"
+      ],
+      "why": "Still broken on two lags (RS 18 -> 14, -7.0%); options stay bullish but the diamond stop is 19.3% below the 76.79 price, so more loss is possible before any exit."
+    },
+    {
+      "subject": "WK",
+      "direction": "broken",
+      "horizon_days": 10,
+      "confidence": "medium",
+      "evidence": [
+        "screener.json:rs_ranks.WK=20",
+        "latest.json:positions.WK.stop_loss=49.16",
+        "latest.json:positions.WK.unrealized_pnl_pct=6.84"
+      ],
+      "why": "Stays broken: RS 24 -> 20 and the 11-25 close put/call of 2.68 (no trading since); the position is +6.8% but its diamond stop is 29.8% below price."
+    },
+    {
+      "subject": "CBOE",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.CBOE.stop_loss=348.75",
+        "latest.json:positions.CBOE.current_price=351.8",
+        "screener.json:rs_ranks.CBOE=84",
+        "options_sentiment.json:CBOE.options_score=+2"
+      ],
+      "why": "Weakening: 0.9% above a stop that is above cost, so a small dip in Friday's thin half-day exits it at a small gain; RS 84 (was 87) and options +2 keep the thesis itself intact."
+    },
+    {
+      "subject": "MAR",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "alphavantage:REALTIME_PUT_CALL_RATIO",
+        "latest.json:positions.MAR.stop_loss=396.26",
+        "latest.json:positions.MAR.unrealized_pnl_pct=-2.19",
+        "screener.json:rs_ranks.MAR=86",
+        "options_sentiment.json:MAR.options_score=+1"
+      ],
+      "why": "Weakening, closer to broken: the first live read shows a bearish full-chain put/call of 1.51 (Dec 4 expiry 1.21), it is -2.2% with a below-cost stop 4.7% away, but RS 86 still leads."
+    },
+    {
+      "subject": "KO",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.KO.stop_loss=94.22",
+        "osint_latest.json:KO.score=-1",
+        "screener.json:rs_ranks.KO=80",
+        "options_sentiment.json:KO.options_score=+3"
+      ],
+      "why": "Weakening: stop 3.5% away (above cost), OSINT -1 ($16.5M discretionary insider selling, new CFO), RS 81 -> 80 at the leading line; options +3 keep it intact."
+    },
+    {
+      "subject": "KDP",
+      "direction": "intact",
+      "horizon_days": 10,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.KDP.stop_loss=33.95",
+        "latest.json:positions.KDP.unrealized_pnl_pct=-2.81",
+        "screener.json:rs_ranks.KDP=80"
+      ],
+      "why": "Unchanged weakening: -2.8% with a below-cost stop 4.7% away; RS 82 -> 80 and the 11-25 put/call of 0.08 keep it intact."
+    }
+  ],
+  "notes": [
+    "HOLIDAY: US markets were closed today (Thanksgiving). The 15:00 run ran in EXECUTE mode but saw 0 candidates, 0 signals, 0 orders, 0 skips, 0 exits; prices in latest.json are the 11-25 close. Friday 11-27 is a half-day with thin liquidity.",
+    "BAD NEWS FIRST: last-20-trades profit factor 0.13 (eval_latest.json, 2026-11-25 22:06, now including REAL): 20 trades, win rate 10%, expectancy -7.87%/trade, -$4,255.18 (was 0.15 on 11-24). Last 30 days PF 0.19 over 25 trades (-$4,715); all-time PF 0.59 over 97 trades, -$5,618.",
+    "Drawdown: 9.36% below peak ($105,671.92 vs $116,590.55 on 2026-10-06; latest.json risk_assessment status CAUTION), 5.6 points from the 15% red line. eval account_30d drawdown -9.85% and 30-day return -5.7% vs SPY -5.69% (11-25).",
+    "Today: post-market $105,671.92 vs $105,674.87 on 11-25 (-$2.95, flat; no trading). 18 positions (10 winners / 8 losers), unrealized +$2,603.47, cash $39,136.91, risk LOW (26.1). Stops: 2 trailing updates (CRL 308.76, GILD 166.63) were skipped because the existing stops are already there. daily_opening_buys ranked a bear-regime list (rs_threshold 90; ECO, OKTA, XMTR, DHT, HNGE top) with no orders on a holiday; thirteenth straight trading session without a main-bot buy.",
+    "Thesis health across 18 holdings: 11 intact (CRL, DG, ETON, FDS, GILD, HLT, KVYO, MO, SJM, SLAB, VCEL), 4 weakening (CBOE, KDP, KO, MAR), 2 broken (TTAN, WK; both have broker stops 19-30% away), 1 not assessable (CTLP). No category changes since 11-25. RS moves: TTAN 18->14, WK 24->20, CBOE 87->84, KVYO 50 (on the lagging line), FDS 68, SJM 73, HLT 78. DG's 11-26 earnings estimate falls on the holiday, so the date looks wrong.",
+    "EXECUTION, CTLP: 281 shares (~$3,147, +5.3%) still have no stop; Alpaca marks the asset inactive, it is listed as 'untradable' in postmarket and 'unchecked' by the exit monitor, and the options read failed ('no price'). Needs manual handling at the broker; open since the 2026-11-06 weekly review.",
+    "EXECUTION, stop fills: none today. Last 10 (eval live.stop_fills, 11-25): mean slip -3.49%, median -0.31%, 2 gapped past 2%, worst VCYT -24.6%. Eval alert: 'Stop exits filled 3.5% below their stop on average (last 10)'.",
+    "EXECUTION, tracking gap past threshold: eval_latest (11-25) live -5.7% vs backtest -0.85% over 30 days, gap -4.85 pts (widened from -3.91 on 11-24, REAL's loss now counted). Rollback watch on sma200_exit: lag -3.87% (was -4.58%), 10 trading days, watching, not triggered.",
+    "Patterns (97 closed trades in trade_attribution.json, enough to recommend action): REAL was added; nothing else changed this week. (1) Quick failures: 27 trades closed within 3 days, 0% won, -$4,556. (2) Trend-break exits: 69 trades, 16% won, -$5,244. (3) Entries 15%+ above the 50-day won 32% (avg +3.6%) vs 16% (avg -3.6%). (4) Live won 21% of 97 vs 24% (r11_live) and 57% (r11_newlive) backtests over overlapping windows. Recommendation stands: losses concentrate in quick-fail entries and trend-break exits. Diamond sleeve (by_tag.sleeve): 4 closed trades, 25% won, avg -17.66%, -$1,740.58 vs main book avg -1.07% over 93; under 10, still an observation only.",
+    "Alpha Vantage: 1 REALTIME_PUT_CALL_RATIO call (budget 5), no errors: MAR full chain 1.51 (first live read; Nov 27 expiry 0.2, Dec 4 1.21). Other calls skipped on purpose: with no trading today, live ratios for TTAN, WK, CBOE, KO and KDP would repeat their 11-25 close reads (0.21, 2.68, 0.95, 0.52, 0.08). No morning -> close comparison possible: today's research_analyst record holds no live put/call ratios.",
+    "Stale or missing data: eval_latest.json is from 2026-11-25 (no eval on the holiday so far); experiments.json last evaluated 2026-11-21 (review due 2026-12-05); options_sentiment.json is dated today but reflects the 11-25 session. ops_status (15:45 UTC) amber, no red, all jobs green, 9 failure issues open more than 2 days (#12, #15, #34, #43, #50, #51, #53, #54, #62). screener rs_ranks have no entry for CTLP, ETON, VCEL; screener universe_size is 1377 vs ~518 expected (flagged by research_analyst)."
+  ]
+}

@@ -1,0 +1,164 @@
+{
+ "agent": "manager",
+ "date": "2026-11-26",
+ "generated_at": "2026-11-26T23:20:00+00:00",
+ "status": "amber",
+ "headline": "Thanksgiving, no trading; no reds, amber on 9 stale failure issues. Eval: 9.36% below peak, last-20 PF 0.13, 30d -5.58% vs SPY -6.36%. Holdings 11 intact / 4 weakening / 2 broken (TTAN, WK) / 1 not assessable (CTLP); CBOE 0.9% from an above-cost stop into Friday's half-day.",
+ "calls": [
+  {
+   "subject": "CBOE",
+   "direction": "intact",
+   "horizon_days": 10,
+   "confidence": "low",
+   "evidence": [
+    "agents/research_analyst/2026-11-26.json:calls[CBOE]=bearish medium",
+    "agents/performance_risk/2026-11-26.json:calls[CBOE]=intact low (weakening)"
+   ],
+   "why": "Weakening, not broken: both agree a Friday half-day dip likely hits the 348.75 stop, but that stop is above cost so the exit closes at a gain; RS 84 keeps the thesis itself intact."
+  },
+  {
+   "subject": "KO",
+   "direction": "intact",
+   "horizon_days": 10,
+   "confidence": "low",
+   "evidence": [
+    "agents/research_analyst/2026-11-26.json:calls[KO]=neutral low",
+    "agents/performance_risk/2026-11-26.json:calls[KO]=intact low (weakening)",
+    "options_sentiment.json:evidence.flags.unusual_calls.d5 edge -0.0211 t -2.77 n 126"
+   ],
+   "why": "Intact-watch with the stop above cost; but the options +3 cited as the offset is an unusual_calls read, and options evidence shows unusual calls trailed by 2.1% over 5 days (t -2.77), so it is no bullish offset."
+  },
+  {
+   "subject": "TTAN",
+   "direction": "broken",
+   "horizon_days": 10,
+   "confidence": "medium",
+   "evidence": [
+    "agents/research_analyst/2026-11-26.json:calls[TTAN]=bearish low",
+    "agents/performance_risk/2026-11-26.json:calls[TTAN]=broken medium"
+   ],
+   "why": "Agreed: RS 14 and -7.0%; the broker stop sits 19.3% below price, so the sleeve's wide stop is the risk."
+  },
+  {
+   "subject": "WK",
+   "direction": "broken",
+   "horizon_days": 10,
+   "confidence": "medium",
+   "evidence": [
+    "agents/research_analyst/2026-11-26.json:calls[WK]=bearish low",
+    "agents/performance_risk/2026-11-26.json:calls[WK]=broken medium"
+   ],
+   "why": "Agreed: RS 20 and 11-25 put/call 2.68; position +6.8% but the diamond stop is 29.8% below price."
+  }
+ ],
+ "notes": [
+  "Reds: none. ops_status.json (2026-11-26T22:30:52) amber only on issues: 9 failure issues open more than 2 days (#62, #54, #53, #51, #50, #43, #34, #15, #12); jobs (18 workflows, none failed), freshness, model, contracts, scope green. Action: close the resolved ones at https://github.com/schu51/stocktrader/issues (Daily Eval ran 2026-11-26, so #53 looks resolved).",
+  "Specialists: research_analyst amber, performance_risk amber, thesis_strategy green; all reported. No big movers (big_movers.json dated 2026-11-25, today=[]; market closed), no reads expected. No specialist record carries a recommendations field and there is no REC@2026-11-26 read.",
+  "CONFLICT (stale eval in performance_risk, third day running): it quoted the 11-25 eval. Today's eval (date 2026-11-26) governs: drawdown_from_peak -0.0936, last-20 PF 0.13 (win 0.1, -$4,255.18), 30d -0.0558 vs SPY -0.0636 (now ahead of SPY), all-time PF 0.59 over 97 trades (-$5,618.35), tracking gap -0.0463.",
+  "CONFLICT (CBOE, KO): research bearish CBOE and neutral KO; performance_risk intact/weakening on both. Calls: CBOE weakening (above-cost stop, exit would be a gain), KO intact-watch. TTAN and WK broken: agreed.",
+  "Options evidence (options_sentiment.json, 12 days, 1198 rows): unusual_calls d5 mean -0.0222 vs rest -0.0011 (edge -0.0211, t -2.77, n 126); options_bullish d5 edge 0.013 (t 0.5). Specialists keep citing +3 unusual_calls (KO, TTAN, NTSK) as bullish; the data so far says otherwise. Context only.",
+  "Morning (research_analyst 14:23 UTC): CALL DEFENSIVE, market holiday; Friday 11-27 half-day, bear regime (SPY 716.7 below 200MA 730.77), only A/B thesis entries. Material flag still standing: CBOE 0.9% above its stop. Also: premarket says 'NORMAL RUN' while the screener says bear; screener governs.",
+  "OPEN QUESTION (no entries): thirteenth straight trading session without a main-bot buy. universe_size 1,377 vs ~518 expected; Alex should confirm 1,377 is intended.",
+  "CTLP: 281 shares (~$3,147, +5.3%) still have no stop; Alpaca marks the asset inactive. Needs manual handling at the broker (open since 2026-11-06).",
+  "Strategy: no live rule change; research/challengers.json unchanged (list full at 11); experiments.json last evaluated 2026-11-21 (review due 2026-12-05). Every rule set at 0 forward trades; spy3 and cap98_tight fail one half-period gate each. Account -1.3% vs SPY -5.7% since sma200_exit went live; rollback_watch not triggered.",
+  "Recommendations: no new items; all 9 carried forward unchanged (sleeve still 4 trades, stop_gapped still 8)."
+ ],
+ "recommendations": [
+  {
+   "id": "REC-thesis_strategy-20261125-1",
+   "from": "thesis_strategy",
+   "title": "Review the diamond sleeve: 4 trades, 1 win, avg -17.7%, -$1,741 (WK and REAL both -25% within a week)",
+   "verdict": "needs_data",
+   "why": "Under the 10-trade bar and outside the backtest, so no rule change can be tested yet; each sleeve loss is about 3x a main-book loss (25% stop).",
+   "next": "performance_risk: track sleeve P&L to 10 closed trades; Alex may still decide to pause or shrink the sleeve as a discretionary risk call (via PR).",
+   "first_seen": "2026-11-25",
+   "updated": "2026-11-25"
+  },
+  {
+   "id": "REC-big_mover_review-20261120-1",
+   "from": "big_mover_review",
+   "title": "Auto-exclude inverse/leveraged/volatility ETFs from the big-mover list and mover stats",
+   "verdict": "propose",
+   "why": "Reporting hygiene, not a trading rule: today all 6 of 6 movers were inverse/leveraged ETFs and the THEME read asks again.",
+   "next": "Alex: approve a PR that filters inverse and leveraged (long and short) ETFs in the big-movers job (no change to live trading rules).",
+   "first_seen": "2026-11-20",
+   "updated": "2026-11-24"
+  },
+  {
+   "id": "REC-performance_risk-20261123-1",
+   "from": "performance_risk",
+   "title": "Diamond sleeve: cooldown before re-buying a name it just stopped out of",
+   "verdict": "test",
+   "why": "Still one WK re-entry after a -25.08% stop-out; REAL (-25.04% today) was not a re-entry, but it makes two -25% sleeve stops in 7 days, so sleeve design deserves the test.",
+   "next": "thesis_strategy: count sleeve re-entries after stop-outs in trades.json and backtest a cooldown (e.g. 20 trading days). Not picked up as of 11-26.",
+   "first_seen": "2026-11-23",
+   "updated": "2026-11-25"
+  },
+  {
+   "id": "REC-research_analyst-20261117-1",
+   "from": "research_analyst",
+   "title": "Thesis-grade entry gate (block D; variant C+D)",
+   "verdict": "test",
+   "why": "B > C > D in closed trades but D is only n=18; EBAY (grade C, -7.8%) adds one more C loss.",
+   "next": "thesis_strategy: backtest a min thesis_grade filter or raised w_thesis challenger. Not picked up as of 11-26 (challengers.json full at 11; death_cross_exit is an effective champion copy, PF 1.36 vs 1.37, and could free a slot).",
+   "first_seen": "2026-11-17",
+   "updated": "2026-11-25"
+  },
+  {
+   "id": "REC-research_analyst-20261117-2",
+   "from": "research_analyst",
+   "title": "Later break-even stop (+5% vs +8% vs +10%)",
+   "verdict": "test",
+   "why": "Quick failures persist: 27 trades closed within 3 days, 0% won, -$4,556 (trade_attribution, unchanged 11-25).",
+   "next": "thesis_strategy: backtest.py --breakeven-at 5 / 8 / 10 or a breakeven_at challenger; daily_eval.py still does not report each challenger's share closed within 3 days. Not picked up as of 11-26.",
+   "first_seen": "2026-11-17",
+   "updated": "2026-11-25"
+  },
+  {
+   "id": "REC-big_mover_review-20261123-1",
+   "from": "big_mover_review",
+   "title": "Catalyst labeler: ignore stale headlines and exchange-prefix ticker collisions",
+   "verdict": "test",
+   "why": "3 of 6 rule labels corrected today (SOXS 'news' only counted headlines about the ETF itself), after 14 of 18 on 11-23.",
+   "next": "big_mover_review: measure rule-vs-read label agreement across big_movers_log and name the fix (headline age cutoff, prefix filter, ETF self-headlines); then propose as a PR.",
+   "first_seen": "2026-11-23",
+   "updated": "2026-11-24"
+  },
+  {
+   "id": "REC-thesis_strategy-20261124-1",
+   "from": "thesis_strategy",
+   "title": "Challenger aimed at stop-gap exits (8 trades, 0% won, -$3,474.41)",
+   "verdict": "needs_data",
+   "why": "Still 8 stop_gapped trades (thesis_strategy 11-25), under its own 10-trade bar.",
+   "next": "thesis_strategy: at 10 stop_gapped trades, design the challenger (free the death_cross_exit slot, an exact champion copy).",
+   "first_seen": "2026-11-24",
+   "updated": "2026-11-25"
+  },
+  {
+   "id": "REC-big_mover_review-20261123-2",
+   "from": "big_mover_review",
+   "title": "New theme semi_equipment (AMAT, LRCX, KLAC, ONTO, CAMT, FORM, COHU, KLIC, UCTT, MKSI, NVMI, TER, AEHR, AEIS)",
+   "verdict": "needs_data",
+   "why": "Today's chip move was again market-wide (the reversal of the Nvidia rebound), so it still does not separate a theme from the tape.",
+   "next": "Revisit when the group moves together on a non-market day.",
+   "first_seen": "2026-11-23",
+   "updated": "2026-11-24"
+  },
+  {
+   "id": "REC-research_analyst-20261117-3",
+   "from": "research_analyst",
+   "title": "Score the news-veto A/B",
+   "verdict": "needs_data",
+   "why": "Control-arm buys despite a veto: n=2, avg -7.8%; far too small.",
+   "next": "Score in experiments.py once both arms have 10+ closed trades.",
+   "first_seen": "2026-11-17",
+   "updated": "2026-11-17"
+  }
+ ],
+ "status_inputs": {
+  "ops": "amber",
+  "research_analyst": "amber",
+  "performance_risk": "amber",
+  "thesis_strategy": "green"
+ }
+}

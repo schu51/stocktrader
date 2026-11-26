@@ -1,0 +1,15 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-26",
+  "generated_at": "2026-11-26T17:45:00-05:00",
+  "status": "green",
+  "headline": "Holiday, no change: spy3 and cap98_tight each pass every backtest gate but one half-period and the forward window, which still has 0 trades for every rule set because SPY's filter keeps entries shut.",
+  "calls": [],
+  "notes": [
+    "Thanksgiving: market closed, trade figures carry over from 2026-11-25. Account -1.3% vs SPY -5.7% since sma200_exit went live (11 trading days, rollback_watch not triggered).",
+    "No change to research/challengers.json: no retire rule met (spy1 misses PF gate by 0.20, be3 by 0.24; no 0.3+ run), no errors, list full at 11, no untested 10+-trade weakness.",
+    "Crossovers: death_cross_exit is an effective copy of the champion (PF 1.36 vs 1.37); sma50_exit PF 1.34, shallower DD but lower win rate; golden20 PF 1.89 on only 72 trades, PF 0.59 without its best 5.",
+    "Watch items under the 10-trade bar: sleeve trades (4, avg -17.7%, -$1,741) and gapped stops (8, -$3,474). Tracking gap -4.6pt is attributed to period/rules, not execution.",
+    "Theses all validated 2026-11-21; macro_brief clean. Nothing ready to propose; no rollback."
+  ]
+}

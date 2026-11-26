@@ -1,0 +1,143 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-26",
+  "generated_at": "2026-11-26T14:23:37+00:00",
+  "status": "amber",
+  "headline": "US markets are closed today (Thanksgiving, Thu 2026-11-26), so there is no 09:30 open; the screener is in bear regime (SPY 716.7 below its 200MA 730.77) and CBOE sits only 0.9% above its stop going into Friday's half-day.",
+  "calls": [
+    {
+      "subject": "CBOE",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "latest.json:positions.CBOE.stop_loss=348.75 vs current_price=351.8",
+        "osint_latest.json:CBOE.score=0",
+        "options_sentiment.json:CBOE.options_score=+2 (2026-11-25)"
+      ],
+      "why": "Price is 0.9% above the stop, so a small dip on Friday's thin half-day session would trigger an exit; the SEC proposal on how the Consolidated Audit Trail is funded is routine and the bullish options read is context only."
+    },
+    {
+      "subject": "KO",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:KO.score=-1, insiders_30d.discretionary_sell_value=16480959 (4 sellers)",
+        "osint_latest.json:KO.events 8-K officer change (new CFO)",
+        "latest.json:KO 3.5% above stop 94.22",
+        "options_sentiment.json:KO.options_score=+3 unusual_calls (2026-11-25)"
+      ],
+      "why": "Insiders sold $16.5M at their own discretion, a new CFO is coming in and the stock is 3.5% above its stop, but options show unusual call buying; the two signals point opposite ways, so watch the stop."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN=14",
+        "options_sentiment.json:TTAN.options_score=+3 unusual_calls (2026-11-25)"
+      ],
+      "why": "RS rank 14 is a weak-momentum holding in a bear regime; the bullish options read does not change the momentum picture."
+    },
+    {
+      "subject": "WK",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.WK=20"
+      ],
+      "why": "RS rank 20 is far below the regime's RS threshold of 90; it is a laggard holding, although the stop is 30% away."
+    },
+    {
+      "subject": "KDP",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:KDP 4.7% above stop 33.95"
+      ],
+      "why": "Within 5% of the stop and there is no OSINT news; the stop sets the risk."
+    },
+    {
+      "subject": "MAR",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:MAR 4.7% above stop 396.26"
+      ],
+      "why": "Within 5% of the stop and there is no OSINT news; the stop sets the risk."
+    },
+    {
+      "subject": "ETON",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:ETON.events velocity (8 headlines/24h, tone 0.00)",
+        "osint_latest.json:ETON.insiders_30d.discretionary_sell_value=5581009"
+      ],
+      "why": "A news surge with neutral tone plus $5.6M of discretionary insider selling; it is worth a look, but the stop is 28% away."
+    },
+    {
+      "subject": "DG",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:DG.events short_volume collapsed 27% vs 45% (z -2.1)",
+        "screener.json:rs_ranks.DG=88",
+        "screener.json:catalyst_watch DG earnings_expected 2026-11-26 (estimate)"
+      ],
+      "why": "Short volume has collapsed while RS stays strong. The earnings date is only an estimate and falls on a market holiday, so check it before relying on it."
+    },
+    {
+      "subject": "ECO",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[0] rs_rank=99 thesis_grade=C setup 'modest extension 15%'",
+        "options_sentiment.json:ECO.options_score=-1"
+      ],
+      "why": "Top-ranked candidate, but its C grade fails the A/B rule for a defensive day and the options read leans slightly bearish."
+    },
+    {
+      "subject": "OKTA",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[1] rs_rank=98 thesis_grade=B",
+        "screener.json:catalyst_watch OKTA earnings_leader 2026-12-01 (estimate)"
+      ],
+      "why": "The only B-grade name in the screener's top five. It matches the earnings-leader big-mover pattern with earnings around Dec 1, so entering ahead of the report carries event risk."
+    },
+    {
+      "subject": "SEZL",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:SEZL.events 8-K material agreement, new debt, item 5.05, shareholder vote",
+        "screener.json:candidates SEZL rs_rank=98 thesis_grade=D extended 36%"
+      ],
+      "why": "An 8-K with new debt and a shareholder vote; the deal terms are unclear and the stock is 36% extended with a D grade, so it should not be chased."
+    }
+  ],
+  "notes": [
+    "CALL: DEFENSIVE — today is a market holiday (Thanksgiving), and Friday 2026-11-27 is a half-day session with thin liquidity. The screener regime is bear (SPY 716.7 below its 200MA 730.77 and 50MA 757.85, 3-month return -6.6%, RS threshold 90). On Friday, consider only A/B-thesis entries, and only with care.",
+    "Conflict: premarket.json says 'NORMAL RUN — healthy trend environment', but screener.json says bear/defensive, and the trend buckets are strong 15 / mixed 9 / weak 50. Gap basis is unavailable and there were 0 premarket quotes (expected on a holiday).",
+    "Screener health: price_source=alpaca, data_coverage=99.7%, final_count=50, but universe_size=1377 against the expected ~518. The universe has grown or changed; worth checking that this is intended.",
+    "File dates: osint, premarket, screener and latest are from today. options_sentiment.json and big_movers.json are from 2026-11-25 (no new data on a holiday), ops_status.json is from 2026-11-25 22:31Z, and theses.json is from 2026-11-21.",
+    "Ops is amber, not red: 9 failure issues have been open for more than 2 days (#12, #15, #34, #43, #50, #51, #53, #54, #62), so no notification was sent.",
+    "CTLP: Alpaca marks the asset inactive (delisted or acquired), it has no stop, and its options read failed. The $3.1k position needs manual handling.",
+    "Other top candidates: XMTR (RS 98, C, 21% extended), DHT (RS 96, C), HNGE (RS 98, C, options neutral). Premarket A-grade names: ZS (A, thesis 70, +16.7% over 5 days) and AAPL (A, but RS 77, below the threshold of 90). GME is B with RS 95.",
+    "OSINT discounted: SJM and DLTR (routine 10-Q / results 8-Ks), BRZE (FTZ notice, loose match), CBRL (thin StockTwits sample of 10 posts), ANF (officer change, results, and a short-volume drop with z -2.6).",
+    "Catalyst watch (watch-only): earnings-leader pattern: NTSK (RS 98, unusual calls +3), BOX (RS 95), OKTA (RS 98), SAIC (RS 92) on Nov 30 to Dec 2; AEO and PVH (RS 89). Far-from-high pattern: DELL (RS 98), FCEL (RS 92, options -2). Four names (BBY, DG, DLTR, S) and ULTA have estimated dates of 11-26, which is a holiday, so those estimates look wrong; DLTR already filed results on 11-24.",
+    "Options strongly bearish (score ≤ -2) only on control or watch names (AXTI, FN, FCEL, IQV, NVST, RRX, TCOM), not on any holding or top candidate. Options are context only."
+  ]
+}

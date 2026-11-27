@@ -1,12 +1,137 @@
 {
-  "generated_at": "2026-11-26T15:30:50.972618",
+  "generated_at": "2026-11-27T15:30:55.256495",
   "mode": "EXECUTE",
-  "holdings": [],
+  "holdings": [
+    {
+      "symbol": "ETON",
+      "market_value": 2566.2,
+      "pnl_pct": 5.79
+    },
+    {
+      "symbol": "KVYO",
+      "market_value": 3241.21,
+      "pnl_pct": 16.32
+    },
+    {
+      "symbol": "SLAB",
+      "market_value": 2433.2,
+      "pnl_pct": -0.3
+    },
+    {
+      "symbol": "TTAN",
+      "market_value": 2718.47,
+      "pnl_pct": -3.18
+    },
+    {
+      "symbol": "VCEL",
+      "market_value": 3948.8,
+      "pnl_pct": 42.73
+    },
+    {
+      "symbol": "WK",
+      "market_value": 2959.32,
+      "pnl_pct": 7.51
+    }
+  ],
   "sells": [],
   "trims": [],
-  "buys": [],
-  "skipped": [],
+  "buys": [
+    {
+      "symbol": "REAL",
+      "shares": 240,
+      "limit_price": 11.74,
+      "judgment": 10.0,
+      "judgment_rank": 10,
+      "name": "TheRealReal, Inc.",
+      "setup": {
+        "setup": false,
+        "near_high": false,
+        "tight": false,
+        "breakout": false
+      },
+      "status": "submitted",
+      "order_id": "335d6c01-9efd-4350-8472-75b6c3d54d64"
+    }
+  ],
+  "skipped": [
+    {
+      "symbol": "URGN",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "VCYT",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "ALGM",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "KLIC",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "BLZE",
+      "reason": "below its 200-day average"
+    },
+    {
+      "symbol": "AMBA",
+      "reason": "below its 200-day average"
+    }
+  ],
   "failures": [],
   "alerts": [],
-  "note": "market closed; nothing done"
+  "note": null,
+  "equity": 105855.66,
+  "setups": {
+    "URGN": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "VCYT": {
+      "setup": false,
+      "near_high": false,
+      "tight": true,
+      "breakout": false
+    },
+    "ALGM": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "KLIC": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "REAL": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "BLZE": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    },
+    "AMBA": {
+      "setup": false,
+      "near_high": false,
+      "tight": false,
+      "breakout": false
+    }
+  },
+  "budget": 42342.26,
+  "slot": 2822.82,
+  "invested": 17867.2,
+  "list_date": "2026-11-21",
+  "stops_placed": [
+    "REAL"
+  ]
 }

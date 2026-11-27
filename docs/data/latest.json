@@ -3,11 +3,11 @@
   "run_id": "20261127_150049",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 105689.64,
+    "portfolio_value": 105709.33,
     "cash": 41898.03,
     "buying_power": 39803.1285,
-    "long_market_value": 63791.61,
-    "unrealized_pnl": 2594.74
+    "long_market_value": 63811.3,
+    "unrealized_pnl": 2614.44
   },
   "positions": [
     {
@@ -81,10 +81,10 @@
       "symbol": "ETON",
       "qty": 39,
       "avg_cost": 62.2,
-      "current_price": 66.5,
-      "market_value": 2593.5,
-      "unrealized_pnl": 167.7,
-      "unrealized_pnl_pct": 6.91,
+      "current_price": 66.43,
+      "market_value": 2590.79,
+      "unrealized_pnl": 164.99,
+      "unrealized_pnl_pct": 6.8,
       "stop_loss": 46.65,
       "side": "long",
       "asset_class": "us_equity",
@@ -191,10 +191,10 @@
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 97.46,
-      "market_value": 3703.48,
-      "unrealized_pnl": 141.0,
-      "unrealized_pnl_pct": 3.96,
+      "current_price": 97.56,
+      "market_value": 3707.26,
+      "unrealized_pnl": 144.78,
+      "unrealized_pnl_pct": 4.06,
       "stop_loss": 94.22,
       "side": "long",
       "asset_class": "us_equity",
@@ -257,10 +257,10 @@
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 76.52,
-      "market_value": 3749.48,
-      "unrealized_pnl": 4.02,
-      "unrealized_pnl_pct": 0.11,
+      "current_price": 76.9,
+      "market_value": 3768.1,
+      "unrealized_pnl": 22.64,
+      "unrealized_pnl_pct": 0.6,
       "stop_loss": 71.93,
       "side": "long",
       "asset_class": "us_equity",
@@ -629,7 +629,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-11-27T19:00:47.288118+00:00",
+  "sync_at": "2026-11-27T19:30:41.405647+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -666,6 +666,10 @@
       {
         "time": "19:00",
         "value": 105689.64
+      },
+      {
+        "time": "19:30",
+        "value": 105709.33
       }
     ]
   }

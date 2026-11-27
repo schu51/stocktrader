@@ -435,5 +435,27 @@
     "why": "The flagged 'other' group (AXTQ, SOXS, BEZ) is not a trend: AXTQ and SOXS are inverse ETFs that rose as chip stocks fell, and BEZ is unrelated. The consumer_cyclical (KSS, DKS, CPNG) and healthcare groups are earnings reactions and the existing biotech theme, not new themes. Again suggest auto-excluding inverse/leveraged ETFs from mover stats.",
     "by": "claude",
     "date": "2026-11-24"
+  },
+  "AEHL@2026-11-27": {
+    "catalyst": "unknown",
+    "why": "Thin-float Chinese micro-cap (98% below its 52-week high, with a $100M shelf offering in place) spiked about 81% in the holiday half-session with no company news found; only top-gainer lists covered it.",
+    "lesson": "nothing visible beforehand: volume was a fraction of normal and there were no headlines in the prior week.",
+    "by": "claude",
+    "date": "2026-11-27"
+  },
+  "THEME@2026-11-27": {
+    "proposed_theme": "gold_miners",
+    "members": [
+      "EXK",
+      "EGO",
+      "AG",
+      "CDE",
+      "EQX",
+      "IAG",
+      "AUGO"
+    ],
+    "why": "Silver and gold miners rose together with the gold_miners theme (up about 9.5% this week); these look like missing members of the existing gold_miners theme (or a silver sub-theme for EXK, AG, CDE) rather than a new trend. ALM is a tungsten miner and doesn't belong. The tech group (AAOI, SIMO, INFQ, TTMI) is not one trend: AAOI looks like a missing ai_optical member, while SIMO (storage controllers), INFQ (quantum) and TTMI (circuit boards) are unrelated.",
+    "by": "claude",
+    "date": "2026-11-27"
   }
 }

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-25T20:45:54.894170",
-  "positions_checked": 12,
+  "generated_at": "2026-11-27T14:45:55.576216",
+  "positions_checked": 11,
   "exits_triggered": [],
   "stops_updated": [],
   "stops_placed": [],
@@ -12,7 +12,15 @@
       "qty": 281.0
     }
   ],
-  "broker_exits": [],
+  "broker_exits": [
+    {
+      "symbol": "CBOE",
+      "trigger": "BROKER_STOP",
+      "price": 348.67,
+      "pnl_pct": 0.48,
+      "exit_date": "2026-11-27"
+    }
+  ],
   "sleeve_positions": [
     "ETON",
     "KVYO",

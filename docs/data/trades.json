@@ -4529,7 +4529,7 @@
   {
     "trade_id": "TRD-20261104143030-CBOE",
     "symbol": "CBOE",
-    "status": "OPEN",
+    "status": "CLOSED",
     "entry_date": "2026-11-04",
     "entry_ts": "2026-11-04T14:30:30.677108",
     "entry_price": 347.02,
@@ -4564,14 +4564,16 @@
     "stop_arm": "atr",
     "stop_dist": 0.095425,
     "news_arm": "control",
-    "exit_date": null,
-    "exit_price": null,
-    "exit_reason": null,
-    "pnl_usd": null,
-    "pnl_pct": null,
-    "hold_days": null,
+    "exit_date": "2026-11-27",
+    "exit_price": 348.67,
+    "exit_reason": "BROKER_STOP",
+    "pnl_usd": 26.44,
+    "pnl_pct": 0.48,
+    "hold_days": 23,
     "entry_limit": 349.4,
-    "entry_filled": true
+    "entry_filled": true,
+    "exit_ts": "2026-11-27T14:41:57.640517",
+    "exit_stop": 348.75
   },
   {
     "trade_id": "TRD-20261105143031-TXN",

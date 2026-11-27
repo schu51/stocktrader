@@ -3,11 +3,11 @@
   "run_id": "20261127_150049",
   "model_status": "healthy",
   "account": {
-    "portfolio_value": 105709.33,
+    "portfolio_value": 105687.97,
     "cash": 41898.03,
     "buying_power": 39803.1285,
-    "long_market_value": 63811.3,
-    "unrealized_pnl": 2614.44
+    "long_market_value": 63789.94,
+    "unrealized_pnl": 2593.08
   },
   "positions": [
     {
@@ -169,10 +169,10 @@
       "symbol": "KDP",
       "qty": 103,
       "avg_cost": 36.66,
-      "current_price": 35.79,
-      "market_value": 3686.37,
-      "unrealized_pnl": -89.61,
-      "unrealized_pnl_pct": -2.37,
+      "current_price": 35.71,
+      "market_value": 3678.13,
+      "unrealized_pnl": -97.85,
+      "unrealized_pnl_pct": -2.59,
       "stop_loss": 33.95,
       "side": "long",
       "asset_class": "us_equity",
@@ -191,10 +191,10 @@
       "symbol": "KO",
       "qty": 38,
       "avg_cost": 93.75,
-      "current_price": 97.56,
-      "market_value": 3707.26,
-      "unrealized_pnl": 144.78,
-      "unrealized_pnl_pct": 4.06,
+      "current_price": 97.48,
+      "market_value": 3704.43,
+      "unrealized_pnl": 141.95,
+      "unrealized_pnl_pct": 3.98,
       "stop_loss": 94.22,
       "side": "long",
       "asset_class": "us_equity",
@@ -257,10 +257,10 @@
       "symbol": "MO",
       "qty": 49,
       "avg_cost": 76.44,
-      "current_price": 76.9,
-      "market_value": 3768.1,
-      "unrealized_pnl": 22.64,
-      "unrealized_pnl_pct": 0.6,
+      "current_price": 76.69,
+      "market_value": 3757.81,
+      "unrealized_pnl": 12.35,
+      "unrealized_pnl_pct": 0.33,
       "stop_loss": 71.93,
       "side": "long",
       "asset_class": "us_equity",
@@ -629,7 +629,7 @@
     ],
     "risk_level": "LOW"
   },
-  "sync_at": "2026-11-27T19:30:41.405647+00:00",
+  "sync_at": "2026-11-27T20:00:48.556352+00:00",
   "sync_error": null,
   "market_open": false,
   "intraday_today": {
@@ -670,6 +670,10 @@
       {
         "time": "19:30",
         "value": 105709.33
+      },
+      {
+        "time": "20:00",
+        "value": 105687.97
       }
     ]
   }

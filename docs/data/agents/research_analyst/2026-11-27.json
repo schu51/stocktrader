@@ -1,0 +1,188 @@
+{
+  "agent": "research_analyst",
+  "date": "2026-11-27",
+  "generated_at": "2026-11-27T14:24:19+00:00",
+  "status": "amber",
+  "headline": "Thin day-after-Thanksgiving half-day (13:00 ET close) in a bear regime (SPY 716.7 below its 200MA 730.77) with CBOE only 1.7% above its stop and KO, MO and KDP all within 5% of theirs; premarket gap data is unavailable, so stop risk is the main thing today.",
+  "calls": [
+    {
+      "subject": "CBOE",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "medium",
+      "evidence": [
+        "latest.json:positions.CBOE current_price=354.9 stop_loss=348.75 (1.7% above)",
+        "osint_latest.json:CBOE.score=0, event federal_register Proposed Rule 2026-11-24 (Consolidated Audit Trail funding)",
+        "options_sentiment.json:CBOE.options_score=+2 unusual_calls (2026-11-26 file)"
+      ],
+      "why": "1.7% above its stop on a thin half-day, so a small dip triggers the exit; the SEC audit-trail proposal is routine rule-making, and the bullish options read is context only."
+    },
+    {
+      "subject": "KO",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.KO current_price=96.94 stop_loss=94.22 (2.8% above)",
+        "osint_latest.json:KO insiders_30d.discretionary_sell_value=16480959 (4 sellers), 8-K officer or director change 2026-11-23",
+        "options_sentiment.json:KO.options_score=+3 unusual_calls"
+      ],
+      "why": "Heavy discretionary insider selling and an officer change pull one way, unusual call buying the other, and the stock is 2.8% above its stop."
+    },
+    {
+      "subject": "MO",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.MO current_price=74.4 stop_loss=71.93 (3.3% above), unrealized_pnl_pct=-2.67",
+        "options_sentiment.json:MO.options_score=+2"
+      ],
+      "why": "Underwater and 3.3% above its stop; no OSINT events, so it moves with the tape."
+    },
+    {
+      "subject": "KDP",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "latest.json:positions.KDP current_price=35.68 stop_loss=33.95 (4.8% above), unrealized_pnl_pct=-2.67",
+        "options_sentiment.json:KDP.options_score=+1"
+      ],
+      "why": "Underwater and inside 5% of its stop with no fresh news."
+    },
+    {
+      "subject": "TTAN",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.TTAN=14",
+        "latest.json:positions.TTAN unrealized_pnl_pct=-6.38",
+        "options_sentiment.json:TTAN.options_score=+3 unusual_calls"
+      ],
+      "why": "RS rank 14 is far below the momentum bar and the position is down 6.4%; the unusual call buying is context, not proof."
+    },
+    {
+      "subject": "WK",
+      "direction": "bearish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:rs_ranks.WK=20",
+        "latest.json:positions.WK stop_loss=49.16 (30% below price)"
+      ],
+      "why": "RS rank 20 means it no longer leads, though the stop is far away."
+    },
+    {
+      "subject": "DG",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:DG event finra short_volume 2026-11-27 'Short volume collapsed: 27% vs 45% average (z -2.1)'",
+        "screener.json:catalyst_watch DG earnings_leader earnings_expected 2026-11-26 (estimate)",
+        "options_sentiment.json:DG.options_score=+1"
+      ],
+      "why": "Short selling fell sharply around the expected earnings date, a mild bullish lean; RS 89, 12.7% above its stop."
+    },
+    {
+      "subject": "ECO",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[0] ECO rs_rank=99 thesis_grade=C setup 'modest extension (15% from base)'",
+        "options_sentiment.json:ECO.options_score=-1"
+      ],
+      "why": "Top-ranked candidate on RS, but a C thesis grade, so it does not qualify under today's A/B-only call."
+    },
+    {
+      "subject": "OKTA",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates[1] OKTA rs_rank=98 thesis_grade=B",
+        "options_sentiment.json:OKTA.options_score=-2 (bearish, skew +13)",
+        "screener.json:catalyst_watch OKTA earnings_expected 2026-12-01 (estimate)"
+      ],
+      "why": "The only B-grade name near the top, but its options read is bearish and earnings are expected 12-01, so the entry carries event risk; the OSINT Federal Register hit is a loose name match and is discounted."
+    },
+    {
+      "subject": "XMTR",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates XMTR rs_rank=98 thesis_grade=C setup 'extended 21% from base'",
+        "options_sentiment.json:XMTR.options_score=+1"
+      ],
+      "why": "Strong RS but a C grade and already extended."
+    },
+    {
+      "subject": "DHT",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates DHT rs_rank=96 thesis_grade=C",
+        "options_sentiment.json:DHT.options_score=+3 unusual_calls (81% opening)"
+      ],
+      "why": "Heavy new call buying in an energy-shipping leader; fits the oil-services thesis theme but the grade is C."
+    },
+    {
+      "subject": "HNGE",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates HNGE rs_rank=98 thesis_grade=C setup 'modest extension (19% from base)'"
+      ],
+      "why": "Strong RS, C grade, no OSINT or options signal."
+    },
+    {
+      "subject": "GME",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates GME rs_rank=95 thesis_grade=B",
+        "osint_latest.json:GME short volume collapsed 40% vs 53% (z -2.2), 8-K other event 2026-11-25",
+        "options_sentiment.json:GME.options_score=+3, long-dated OI bullish"
+      ],
+      "why": "B grade with short selling dropping and call-heavy options, a bullish lean but a volatile name."
+    },
+    {
+      "subject": "VRNS",
+      "direction": "bullish",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "screener.json:candidates VRNS rs_rank=92 thesis_grade=B setup 'fresh setup (7% from base) \u00b7 tight base'"
+      ],
+      "why": "The cleanest B-grade setup on the list (fresh, tight base), though BB is near overextended."
+    },
+    {
+      "subject": "SEZL",
+      "direction": "neutral",
+      "horizon_days": 5,
+      "confidence": "low",
+      "evidence": [
+        "osint_latest.json:SEZL.score=+1, 8-K 2026-11-24 material agreement, new debt, item 5.05, shareholder vote",
+        "screener.json:candidates SEZL rs_rank=98 thesis_grade=D 'highly extended 36%'"
+      ],
+      "why": "New debt plus a shareholder vote could mean dilution or financing; the read is unclear and the D grade plus 36% extension rules it out anyway."
+    }
+  ],
+  "notes": [
+    "CALL: SELECTIVE \u2014 the screener is in bear regime (SPY below its 200MA, RS threshold 90), the drawdown is 9.25% (CAUTION) and it is a thin half-day, so take only A/B-thesis entries (OKTA, GME, VRNS among the top names), even though premarket.json says 'NORMAL RUN'.",
+    "File dates: osint_latest, premarket, screener and latest are from today. options_sentiment.json is 2026-11-26 (computed on Thanksgiving, so it reflects the 11-25 session), big_movers.json is 2026-11-25, theses.json is 2026-11-21, ops_status.json is 2026-11-26 22:30Z.",
+    "Screener health: universe_size=1377 (expected ~518, so the universe grew or changed, worth checking), price_source=alpaca, data_coverage=99.7%, 50 final candidates, 146 passed quality.",
+    "Premarket: gap_basis unavailable and 0 premarket quotes, so there are no gap alerts and none can be ruled out.",
+    "CTLP: Alpaca reports the asset as inactive (delisted or acquired) and it has no stop; the position needs manual resolution.",
+    "Catalyst watch (watch-only, estimated dates): earnings leaders BOX (RS 95, 12-01), NTSK (RS 98, 12-02, unusual calls), OKTA (12-01), AEO (12-01), PVH (12-02), SAIC (11-30); far-from-high names DELL (RS 98, 12-01), FCEL (bearish options), AGX (bearish options), CRDO. The BBY, DG, DLTR, S and ULTA dates (11-26) were estimates that fell on the holiday.",
+    "Ops is amber, not red: 9 failure issues have been open more than 2 days (#12 to #62). No notification was sent.",
+    "OSINT minor reads: ANF short volume collapsed after results (bullish lean, but 34% extended); ASO news surge, mild tone (neutral); BRZE $6.6M non-discretionary insider sells plus a loose Federal Register match (neutral); SJM 10-Q and results 8-K (routine)."
+  ]
+}

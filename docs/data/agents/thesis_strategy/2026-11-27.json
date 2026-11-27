@@ -1,0 +1,16 @@
+{
+  "agent": "thesis_strategy",
+  "date": "2026-11-27",
+  "generated_at": "2026-11-27T17:45:00-05:00",
+  "status": "green",
+  "headline": "No change: nothing is ready to propose because the forward window still has 0 backtest trades for every rule set, while spy3 and cap98_tight each fail just one half-period gate.",
+  "calls": [],
+  "notes": [
+    "Half-day session: 1 closed trade (CBOE +0.5%, old rules). Still 1 closed trade under sma200_exit. Account -1.3% vs SPY -4.1% since 2026-11-12 (12 trading days, rollback_watch not triggered); -9.4% from peak.",
+    "Tracking gap -4.0pt (live -5.0% vs backtest -1.0% over 30 days); same-window and matched-trade comparisons still point to period/rules, not execution. Stop fills: median -0.2%, mean -2.8%, 1 of 10 gapped >2%.",
+    "No change to research/challengers.json: no retire rule met (spy1 misses PF gate by 0.20, be3 by 0.24; no 0.3+ run), no errors, list full at 11, no untested 10+-trade weakness (stop_gapped 8, sleeve 4).",
+    "spy3 (PF 1.62) fails second-half PF 1.39 vs 1.41; cap98_tight (PF 1.65, DD -16.8%) fails first-half PF 1.09 vs 1.33. Both also wait on forward (insufficient sample, not failure).",
+    "Crossovers: death_cross_exit is an effective copy of the champion (PF 1.36 vs 1.37); sma50_exit PF 1.27, shallower DD but lower win rate; golden20 PF 1.89 on only 72 trades, PF 0.59 without its best 5. Share of trades closed within 3 days per challenger is still not reported by daily_eval.py.",
+    "Theses all validated 2026-11-21 (6 days); macro_brief clean. No rollback."
+  ]
+}

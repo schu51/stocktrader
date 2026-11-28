@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T14:32:04.956356",
+  "generated_at": "2026-11-28T14:28:31.257125",
   "theses": [
     {
       "theme": "Oil-driven inflation forces the Fed to hike: sustained high crude favors oilfield services and midstream over the integrated majors",
@@ -28,9 +28,11 @@
       ],
       "id": "TH-2026-0001",
       "conviction": 0.512,
-      "status": "active",
+      "status": "retired",
       "created_at": "2026-10-03",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28",
+      "retired_reason": "displaced",
+      "retired_at": "2026-11-28"
     },
     {
       "theme": "Higher-for-longer policy rates: asset-sensitive regional and mid-cap banks and non-bank lenders over the money-center banks",
@@ -57,9 +59,11 @@
       ],
       "id": "TH-2026-0002",
       "conviction": 0.475,
-      "status": "active",
+      "status": "retired",
       "created_at": "2026-10-03",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28",
+      "retired_reason": "displaced",
+      "retired_at": "2026-11-28"
     },
     {
       "theme": "AI/capex-driven demand keeps inflation sticky, so grid equipment makers and merchant power generators benefit more than the AI chip and hyperscaler leaders",
@@ -92,9 +96,11 @@
       ],
       "id": "TH-2026-0003",
       "conviction": 0.562,
-      "status": "active",
+      "status": "retired",
       "created_at": "2026-10-10",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28",
+      "retired_reason": "displaced",
+      "retired_at": "2026-11-28"
     },
     {
       "theme": "Robust capex plus sticky 3.4% inflation supports the electrification metals supply chain (copper and electrical inputs) as an underpriced input to the investment cycle",
@@ -126,9 +132,11 @@
       ],
       "id": "TH-2026-0004",
       "conviction": 0.5,
-      "status": "active",
+      "status": "retired",
       "created_at": "2026-10-10",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28",
+      "retired_reason": "displaced",
+      "retired_at": "2026-11-28"
     },
     {
       "theme": "US gas-oil price dislocation: LNG export growth and unhedged gas producers over the integrated majors",
@@ -163,7 +171,7 @@
       "conviction": 0.6,
       "status": "active",
       "created_at": "2026-10-17",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28"
     },
     {
       "theme": "Munitions and missile-defense replenishment: the defense supply chain over the prime contractors",
@@ -197,9 +205,11 @@
       ],
       "id": "TH-2026-0006",
       "conviction": 0.525,
-      "status": "active",
+      "status": "retired",
       "created_at": "2026-10-17",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28",
+      "retired_reason": "displaced",
+      "retired_at": "2026-11-28"
     },
     {
       "theme": "Real-wage squeeze and stagnating payrolls drive trade-down: discount, dollar-channel and off-price retail over the big-box leaders",
@@ -233,9 +243,11 @@
       ],
       "id": "TH-2026-0007",
       "conviction": 0.5,
-      "status": "active",
+      "status": "retired",
       "created_at": "2026-10-17",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28",
+      "retired_reason": "displaced",
+      "retired_at": "2026-11-28"
     },
     {
       "theme": "Producer-price pass-through: PPI running well ahead of CPI favors pricing-power industrial distributors over the industrial conglomerate leaders",
@@ -264,9 +276,11 @@
       ],
       "id": "TH-2026-0008",
       "conviction": 0.575,
-      "status": "active",
+      "status": "retired",
       "created_at": "2026-10-24",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28",
+      "retired_reason": "displaced",
+      "retired_at": "2026-11-28"
     },
     {
       "theme": "Gulf petrochemical outage plus an oil-gas price gap: US ethane-advantaged polyolefin producers capture an export arbitrage that outlasts the conflict",
@@ -299,7 +313,7 @@
       "conviction": 0.6,
       "status": "active",
       "created_at": "2026-11-14",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28"
     },
     {
       "theme": "Diesel shock reprices freight: fuel-efficient railroads and intermodal take share from truckload carriers",
@@ -331,7 +345,7 @@
       "conviction": 0.625,
       "status": "active",
       "created_at": "2026-11-21",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28"
     },
     {
       "theme": "Mortgage-rate lock-in freezes home turnover: single-family rental and apartment landlords gain pricing power as would-be buyers keep renting",
@@ -362,7 +376,41 @@
       "conviction": 0.6,
       "status": "active",
       "created_at": "2026-11-21",
-      "last_validated": "2026-11-21"
+      "last_validated": "2026-11-28"
+    },
+    {
+      "theme": "Hormuz war-risk repricing: specialty marine and reinsurance underwriters capture a multi-year hard market in war, cargo and hull cover",
+      "causal_chain": "Hormuz oil throughput is still only ~54% of prewar (9.25 mb/d in the week to Nov 24, Kpler) and attacks on tankers and Saudi facilities continued in late November -> tanker war-risk premiums remain at 3.5-7.5% of hull value per voyage versus 0.15-0.25% pre-war, with the London/Bermuda specialty market writing most of the cover -> specialty marine, political-risk and reinsurance underwriters earn sharply higher premium rates on a narrow capacity base, while higher short rates lift their float income -> earnings upgrades for specialty (re)insurers that markets still price as generic P&C.",
+      "beneficiary_sectors": [
+        "financials"
+      ],
+      "second_order": "Rather than buying the obvious oil and defense winners of a Gulf conflict, own the specialty and reinsurance underwriters (e.g. ACGL, AXS, RNR, EG, WRB, MKL) that price and absorb the shipping risk, whose rate gains compound through renewals and float yields as policy rates rise.",
+      "consensus_names_excluded": [
+        "XOM",
+        "CVX",
+        "COP",
+        "LMT",
+        "RTX"
+      ],
+      "conviction_breakdown": {
+        "source_corroboration": 0.55,
+        "causal_directness": 0.5,
+        "non_consensus": 0.65,
+        "invalidation_clarity": 0.7
+      },
+      "invalidation_condition": "Before the horizon date, Kpler-reported weekly Hormuz oil throughput recovers above 13.7 mb/d (80% of the 17.14 mb/d prewar level) for 4 consecutive weeks, or broker-reported (Marsh/Lloyd's List) tanker war-risk premiums for Gulf transits fall below 1% of hull value, or the S&P 500 Property & Casualty Insurance index underperforms the S&P 500 by more than 10 percentage points from 2026-11-27.",
+      "horizon": "2027-12-31",
+      "sources": [
+        "https://houseofsaud.com/hormuz-throughput-sts-capacity-nov2026/",
+        "https://thebostonreport.com/2026/10/18/strait-of-hormuz-war-risk-insurance-rates-explained/",
+        "https://hdfcsky.com/news/brent-crude-jumps-4-4percent-to-96-19-as-hormuz-attacks-and-saudi-refinery-strike-end-three-week-losing-streak",
+        "https://streamlinefeed.co.ke/news/fed-signals-december-rate-hike-after-hot-october-inflation-data"
+      ],
+      "id": "TH-2026-0012",
+      "conviction": 0.6,
+      "status": "active",
+      "created_at": "2026-11-28",
+      "last_validated": "2026-11-28"
     }
   ]
 }
